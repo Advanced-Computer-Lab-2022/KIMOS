@@ -1,17 +1,8 @@
-// .css-sghohy-MuiButtonBase-root-MuiButton-root{
-//     background: linear-gradient(to right, $primary-color, $secondary-color) !important;
-//     padding: 10px 20px 10px 20px !important;
-// }
-
-// .css-1rwt2y5-MuiButtonBase-root-MuiButton-root{
-//     color: $primary-color !important;
-//     border: 1px solid $primary-color !important;
-//     padding: 10px 20px 10px 20px !important;
-// }
-
 .primary-btn{
     background: linear-gradient(to right , $primary-color, $secondary-color);
     padding: 10px 20px 10px 20px !important;
+    box-shadow: none !important;
+
 }
 
 .secondary-btn{

@@ -1,0 +1,47 @@
+.navbar{
+    border-bottom: 1px solid black;
+    height: 100%;
+    @include flex-h-center-spaceB;
+
+}
+
+.title{
+    font-size: max(35px, 1.5vw);
+    font-weight: bolder;
+    margin: 0 10px 0 10px;
+    background: linear-gradient(to right, $primary-color, $secondary-color);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    cursor: pointer;
+}
+
+.options{
+    @include flex-h-center-spaceB;
+    height: 100%;
+}
+
+.option{
+    @include flex-h-center-spaceB;
+    
+    height: 70%;
+    color: $primary-color;
+    margin: 0 10px 0 10px;
+    padding: 0 15px 0 15px;
+    font-size: max(18px, 1vw );
+    font-weight: 1;
+    border-radius: 4px;
+    background: transparent;
+    transition: all 0.4s;
+    cursor: pointer;
+}
+.option:hover{
+    background:linear-gradient(to right, $primary-color-lighter, $secondary-color-lighter);
+    color: white;
+}
+
+.user-options{
+    @include flex-h-center-spaceB;
+    button {
+        margin: 0 10px 0 10px;
+    }
+}
