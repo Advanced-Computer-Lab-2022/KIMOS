@@ -7,11 +7,35 @@ import Stack from '@mui/material/Stack';
 import Slider from '@mui/material/Slider';
 import VolumeDown from '@mui/icons-material/VolumeDown';
 import VolumeUp from '@mui/icons-material/VolumeUp';
-
+import { connect } from 'react-redux';
 
 import tmpImg from '../assets/imgTmp.jpeg';
+import { queryByTestId } from '@testing-library/react';
+import axios from 'axios';
 
 class courses extends Component {
+    componentDidMount(){
+        this.submitSearch(this.getQueryVariable());
+      }
+    getQueryVariable()
+            {
+                var query = window.location.href;
+                var keyword = query.split('?')[1];
+                keyword = keyword.slice(2);
+                return keyword;
+            }
+
+    submitSearch = async(keyword)=>{
+
+        const body = { keyword: keyword }
+        try {
+            const res = await axios.post('http://localhost:5000/Instructor',body,{headers:{"Access-Control-Allow-Origin": "*"}});
+            console.log(res);
+
+        } catch (e) {
+            alert(e)
+        }
+    }
     course = {
         'title':'Introduction to React',
         'price':'999',
@@ -23,7 +47,6 @@ class courses extends Component {
         'subtitles':'i dont know',
         'exercise':'i dont know too lol',
         'img':tmpImg
-
     }
     state ={
         
@@ -53,9 +76,7 @@ class courses extends Component {
         this.setState({courses:tmp})
 
     }
-    componentDidMount(){
-        this.addCourses();
-    }
+
 
     getFilterComp = (filter, options)=>{
         return (
@@ -102,14 +123,12 @@ class courses extends Component {
     }
     updateCourses = ()=>{
         var newCourses = [];
-        this.state.courses.forEach((course)=>{
+        this.props.courses.forEach((course)=>{
             if(course.price <= this.state.priceRange )
             {
                 if(course.rating >= this.state.ratingRange[0] && course.rating <= this.state.ratingRange[1])
                     newCourses.push(course)
-                else{
-                    console.log(course.rating ,this.state.ratingRange[0] )
-                }
+
             }
         })
         this.setState({courses:newCourses})
@@ -136,6 +155,7 @@ class courses extends Component {
 
         )
     }
+    
     render() {
         return (
             <div className="courses-container">
@@ -161,4 +181,10 @@ class courses extends Component {
     }
 }
 
-export default courses;
+
+
+
+
+  
+export default courses
+  

@@ -28,7 +28,7 @@ const courseSchema = mongoose.Schema({
         max:100.0,
         default:0.0
 
-    }
+    },
     subjects:{
         type:[String],
         required:[true,'Please specify at least one subject for the course']
