@@ -1,0 +1,3 @@
+PORT = 3000
+NODE_ENV = development
+MONGO_URI = "mongodb+srv://omar:omar123@kimosdb.b94pd2c.mongodb.net/KIMOS?retryWrites=true&w=majority"
