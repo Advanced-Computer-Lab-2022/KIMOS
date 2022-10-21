@@ -1,9 +1,14 @@
 const express = require('express');
 const dotenv = require('dotenv').config();
-const connectDB = require('./config/db')
+const connectDB = require('./config/db');
+const cors=require('cors');
+const instructorRoutes= require('./routes/instructorRoutes.js');
 
-connectDB();
 const app = express();
+app.use(cors());
+connectDB();
 
-const port = process.env.PORT
+app.use('/Instructor',instructorRoutes);
+
+const port = process.env.PORT;
 app.listen(port,() => console.log(`Server started on port ${port}`));

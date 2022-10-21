@@ -1,0 +1,24 @@
+.appBarContainer{
+    margin-top:20px;
+    border-radius:15;
+    display:flex;
+    flex-direction:row;
+    justify-content:center;
+    align-items:center; 
+    column-gap:50px;
+}
+
+.appBar{
+    margin-top:20px;
+    border-radius:15px;
+    display:flex;
+    flex-direction:column;
+    row-gap:15px;
+    flex-wrap:wrap;
+    justify-content:center;
+    align-items:center; 
+    padding-top:20px;
+    padding-bottom:20px;
+}
+
+

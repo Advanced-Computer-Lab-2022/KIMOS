@@ -3,43 +3,36 @@ const mongoose = require('mongoose');
 const courseSchema = mongoose.Schema({
     title:{
         type:String,
-        required:[true,'Please choose a title for the course']
     },
     price:{
-        type:double,
-        required:[true,'Please specify a price for the course'],
+        type:Number,
         min:0.0
     },
     rating:{
-        type:double,
+        type:Number,
         default:0.0,
         min:0.0,
         max:5.0
     },
     totalHours:{
-        type:double,
-        required:[true,'Please specify the total number of hours for the course'],
+        type:Number,
         min:0.0
-
     },
     discount:{
-        type:double,
+        type:Number,
         min:0.0,
         max:100.0,
         default:0.0
-
-    }
+    },
     subjects:{
         type:[String],
-        required:[true,'Please specify at least one subject for the course']
     },
     instructors:{
         type: [mongoose.Schema.Types.ObjectId],
-        required:[true,'Please specify at least one instructor'],
         ref: 'User'
     },
-    subtitles:{
-        type: [mongoose.Schema.Types.ObjectId],
+    subtitle:{
+        type: String,
         ref: 'Course'
     },
     exercises:{

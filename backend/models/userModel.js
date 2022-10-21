@@ -22,7 +22,7 @@ const userSchema = mongoose.Schema({
         lowercase: true,
         required:true
 
-    }
+    },
 
     country:{
         type:String,
