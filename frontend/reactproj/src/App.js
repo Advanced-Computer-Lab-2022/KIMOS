@@ -5,7 +5,7 @@ import Guest from './components/guest';
 import Admin from './components/admin';
 import Instructor from './components/instructor';
 import Trainee from './components/trainee';
-
+import Courses from './components/courses';
 import {
   BrowserRouter as Router,
   Routes,
@@ -29,6 +29,8 @@ class App extends Component {
                     <Route exact path='/admin' element={<Admin />}></Route>
                     <Route exact path='/instructor' element={<Instructor />}></Route>
                     <Route exact path='/trainee' element={<Trainee />}></Route>
+                    <Route exact path='/courses' element={<Courses />}></Route>
+
 
             </Routes>
         </div>
