@@ -5,14 +5,14 @@
     flex-direction:row;
     justify-content:center;
     align-items:center; 
-    column-gap:50px;
+    column-gap:100px;
 }
 
 .appBar{
     margin-top:20px;
     border-radius:15px;
     display:flex;
-    flex-direction:column;
+    flex-direction:row;
     row-gap:15px;
     flex-wrap:wrap;
     justify-content:center;

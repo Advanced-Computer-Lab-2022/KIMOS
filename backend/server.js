@@ -8,6 +8,9 @@ const app = express();
 app.use(cors());
 connectDB();
 
+app.use(express.urlencoded({extended: true}));
+app.use(express.json({extended: false}));
+
 app.use('/Instructor',instructorRoutes);
 
 const port = process.env.PORT;

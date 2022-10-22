@@ -1,6 +1,5 @@
 const express = require('express');
-const instructorViewCourses=require('../controllers/instructorController.js');
-const instructorCreateCourse=require('../controllers/instructorController.js');
+const {instructorCreateCourse,instructorViewCourses}=require('../controllers/instructorController.js');
 
 
 const router=express.Router();

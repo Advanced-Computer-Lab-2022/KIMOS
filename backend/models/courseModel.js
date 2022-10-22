@@ -24,11 +24,11 @@ const courseSchema = mongoose.Schema({
         max:100.0,
         default:0.0
     },
-    subjects:{
-        type:[String],
+    subject:{
+        type:String,
     },
-    instructors:{
-        type: [mongoose.Schema.Types.ObjectId],
+    instructor:{
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     },
     subtitle:{
