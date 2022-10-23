@@ -7,6 +7,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import axios from 'axios';
+import Button from '@mui/material/Button';
 
  
 
@@ -28,9 +29,9 @@ export default function ShowCourse() {
       <Table sx={{ minWidth: 250 }} aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell>Number</TableCell>
-            <TableCell align="left">Title</TableCell>
-            
+            <TableCell align="center">Number</TableCell>
+            <TableCell align="center">Title</TableCell>
+            <TableCell align="center"></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -39,10 +40,13 @@ export default function ShowCourse() {
               key={key}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
-              <TableCell component="th" scope="row">
+              <TableCell align="center" component="th" scope="row">
                 {i++}
               </TableCell>
-              <TableCell align="left" >{course.title}</TableCell>
+              <TableCell align="center" >{course.title}</TableCell>
+              <TableCell align="center">
+                <Button  variant="contained" style={{maxWidth:"150px",maxHeight:"30px",fontSize:"13px"}}>View</Button>
+              </TableCell> 
             </TableRow>
           ))}
         </TableBody>

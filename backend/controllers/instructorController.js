@@ -17,7 +17,7 @@ const instructorCreateCourse=async(req,res)=>{
     const newCourse=await CourseData.create({
         title:course.title,
         subject:course.subject,
-        subtitle:course.subtitle,
+        subtitles:course.subtitles,
         totalHours:course.totalHours,
         price:course.price,
         summary:course.summary,

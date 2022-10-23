@@ -20,8 +20,8 @@ class instructor extends Component {
                                         <Courses />
                                     </AppBar>
                                 </Grid>
-                                <Grid item xs={12} sm={4}>
-                                    <AppBar className="appBar" position="static" color="inherit">
+                                <Grid item xs={15} sm={4}>
+                                    <AppBar className="appBar2" position="static" color="inherit">
                                         <CreateCourse />
                                     </AppBar>
                                 </Grid>
