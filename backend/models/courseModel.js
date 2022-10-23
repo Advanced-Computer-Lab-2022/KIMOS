@@ -6,24 +6,24 @@ const courseSchema = mongoose.Schema({
         required:[true,'Please choose a title for the course']
     },
     price:{
-        type:double,
+        type:Number,
         required:[true,'Please specify a price for the course'],
         min:0.0
     },
     rating:{
-        type:double,
+        type:Number,
         default:0.0,
         min:0.0,
         max:5.0
     },
     totalHours:{
-        type:double,
+        type:Number,
         required:[true,'Please specify the total number of hours for the course'],
         min:0.0
 
     },
     discount:{
-        type:double,
+        type:Number,
         min:0.0,
         max:100.0,
         default:0.0

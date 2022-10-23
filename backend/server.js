@@ -3,6 +3,8 @@ const dotenv = require('dotenv').config();
 const connectDB = require('./config/db')
 const cors=require('cors');
 
+
+connectDB();
 const app = express();
 app.use(cors());
 connectDB();
@@ -17,6 +19,12 @@ app.use(express.json({extended: false}));
 //adjusted the server to shahd's last updates :)
 
 // app.use('/users',require('./routes/userRoutes'))
+app.use('/courses',require('./routes/courseRoutes'))
+
+app.use(express.urlencoded({extended: true}));
+app.use(express.json({extended: false}));
+
+app.use('/users',require('./routes/userRoutes'))
 app.use('/courses',require('./routes/courseRoutes'))
 
 const port = process.env.PORT

@@ -22,11 +22,10 @@ const userSchema = mongoose.Schema({
         lowercase: true,
         required:true
 
-    }
+    },
 
     country:{
-        type:String,
-        required:[true,'Please choose a country']
+        type:String
     },
 },{
     timestamps:true,
