@@ -12,12 +12,10 @@ import {
   Route
 } from 'react-router-dom';
 
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
 class App extends Component {
   exampleFunction = () => {
     alert("Seweeyyy");
-<<<<<<< HEAD
   }
   state = {
     courses: ['damn']
@@ -29,14 +27,10 @@ class App extends Component {
     // })
   }
 
-=======
-  };
->>>>>>> 22717ee89813a60dab66c20ae2b9777b45c889bb
   render() {
     return (
       <Router>
         <div className="main-content">
-<<<<<<< HEAD
             <Navbar selectCourses={this.handleCoursesChange}/>
 
             <Routes>
@@ -49,17 +43,6 @@ class App extends Component {
 
 
             </Routes>
-=======
-          <Navbar />
-
-          <Routes>
-            <Route exact path="/" element={<TmpRoutes />}></Route>
-            <Route exact path="/guest" element={<Guest />}></Route>
-            <Route exact path="/admin" element={<Admin />}></Route>
-            <Route exact path="/instructor" element={<Instructor />}></Route>
-            <Route exact path="/trainee" element={<Trainee />}></Route>
-          </Routes>
->>>>>>> 22717ee89813a60dab66c20ae2b9777b45c889bb
         </div>
       </Router>
     );

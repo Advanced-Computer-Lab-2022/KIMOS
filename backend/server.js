@@ -10,22 +10,16 @@ app.use(cors());
 connectDB();
 
 
-app.use(express.urlencoded({extended: true}));
-app.use(express.json({extended: false}));
 
 
 
-
-//adjusted the server to shahd's last updates :)
-
-// app.use('/users',require('./routes/userRoutes'))
-app.use('/courses',require('./routes/courseRoutes'))
 
 app.use(express.urlencoded({extended: true}));
 app.use(express.json({extended: false}));
 
+app.use('/', require('./routes/allRoutes'));
 app.use('/users',require('./routes/userRoutes'))
 app.use('/courses',require('./routes/courseRoutes'))
 
-const port = process.env.PORT
+const port = 3000
 app.listen(port,() => console.log(`Server started on port ${port}`));

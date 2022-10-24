@@ -3,20 +3,36 @@ import CourseItem from './courseItem';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
+
 import Slider from '@mui/material/Slider';
-import VolumeDown from '@mui/icons-material/VolumeDown';
-import VolumeUp from '@mui/icons-material/VolumeUp';
 import { connect } from 'react-redux';
 
-import tmpImg from '../assets/imgTmp.jpeg';
-import { queryByTestId } from '@testing-library/react';
+
 import axios from 'axios';
 
 class courses extends Component {
     componentDidMount(){
+        this.getSubjects();
         this.submitSearch(this.getQueryVariable());
       }
+
+    getSubjects = async ()=>{
+
+
+        try {
+            const res = await axios.get('http://localhost:3000/courses/subjects',{headers:{"Access-Control-Allow-Origin": "*"}});
+
+            this.setState({subjects:res.data.subjects}, ()=>{
+                this.state.subjects.forEach((subject)=>{
+                    this.state.subjectsFilter[subject] = false;
+                       
+                })
+            })
+
+        } catch (e) {
+            alert(e)
+        }
+    }
     getQueryVariable()
             {
                 var query = window.location.href;
@@ -27,57 +43,46 @@ class courses extends Component {
 
     submitSearch = async(keyword)=>{
 
-        const body = { keyword: keyword }
+        const body = { 'keyword': keyword };
+
         try {
-            const res = await axios.post('http://localhost:5000/Instructor',body,{headers:{"Access-Control-Allow-Origin": "*"}});
-            console.log(res);
+            const res = await axios.post('http://localhost:3000/courses/findCourse',body,{headers:{"Access-Control-Allow-Origin": "*"}});
+
+            this.setState({courses:res.data, mainCourses:res.data})
 
         } catch (e) {
             alert(e)
         }
     }
-    course = {
-        'title':'Introduction to React',
-        'price':'999',
-        'rating':'4.8',
-        'totalHours':'58',
-        'discount':'0',
-        'subjects':'CS',
-        'instructors':'Marsafy',
-        'subtitles':'i dont know',
-        'exercise':'i dont know too lol',
-        'img':tmpImg
-    }
+
+    //main courses are the ones we got on the post response. Courses are them but after the filters
     state ={
-        
+        mainCourses:[],
         courses :[],
         priceRange: 500,
-        ratingRange:[0,5]
+        ratingRange:[0,5],
+        subjects:['Data science', 'AI','Security'],
+        filterFlag:false,
+        subjectsFilter:{}
 
     }
-    addCourses = ()=>{
-        var tmp = [];
-        const minP = 1;
-        const maxP = 500;
 
-        const minR = 0;
-        const maxR = 5;
-
-        for(let i = 0; i < 15; i++){
-            var tmpCourse = {...this.course};
-             var price = Math.ceil (minP + Math.random() * (maxP - minP));
-             var rating =Math.ceil( minR + Math.random() * (maxR - minR));
-
-            tmpCourse['price'] = price;
-            tmpCourse['rating'] = rating;
-
-            tmp.push(tmpCourse);
+    
+    handleFilterChange = (option)=>{
+        var newFlags = {...this.state.subjectsFilter};
+        if(newFlags[option]){
+            newFlags[option] = false;
         }
-        this.setState({courses:tmp})
+        else{
+            this.setState({filterFlag:true})
+            newFlags[option] = true;
+        }
+        this.setState({subjectsFilter:newFlags}, ()=>{
 
+            this.updateCourses();
+
+        });
     }
-
-
     getFilterComp = (filter, options)=>{
         return (
             <div className="filters__filter-by">
@@ -86,7 +91,7 @@ class courses extends Component {
                     {options.map((option, key)=>{
                         return (
                             <div key={key} className="filters__filter-by__options__option">
-                                <FormControlLabel  control={<Checkbox  />} label={option} />
+                                <FormControlLabel  control={<Checkbox checked={this.state.subjectsFilter.option} onChange={()=>this.handleFilterChange(option)} />} label={option} />
                             </div>
                         )
                     })}
@@ -110,7 +115,7 @@ class courses extends Component {
                             onChange={(event, value)=> this.handleSliderChange(value)}
                             onChangeCommitted = {this.updateCourses}
                             valueLabelDisplay="auto"
-                            max={500}
+                            max={1000}
                             />
                     </Box>
                 </div>
@@ -121,16 +126,47 @@ class courses extends Component {
     updateRating = (value)=>{
         this.setState({ratingRange:value})
     }
+
+    removeCourse =(courses, course)=>{
+        var newArr = [];
+        courses.forEach((course)=>{
+            if(course.title !== course)
+                newArr.push(course);
+        })
+        return newArr;
+    }
     updateCourses = ()=>{
         var newCourses = [];
-        this.props.courses.forEach((course)=>{
+        this.state.mainCourses.forEach((course)=>{
             if(course.price <= this.state.priceRange )
             {
-                if(course.rating >= this.state.ratingRange[0] && course.rating <= this.state.ratingRange[1])
                     newCourses.push(course)
-
             }
         })
+        newCourses.forEach((course)=>{
+            if(course.rating >= this.state.ratingRange[0] && course.rating <= this.state.ratingRange[1])
+            {
+                    newCourses = this.removeCourse(newCourses, course.title);
+            }
+        })
+
+
+        if(this.state.filterFlag)
+            newCourses.forEach((course)=>{
+                if(this.state.subjectsFilter[course.subject] === false)
+                {
+                    newCourses = this.removeCourse(newCourses, course.title);
+                }
+                else{   
+                    console.log(this.state.subjectsFilter);
+                    console.log(course.subject);
+                    console.log(this.state.subjectsFilter[course.subject]);
+                }
+            })
+
+
+
+
         this.setState({courses:newCourses})
     }
     getRatingSlider = ()=>{
@@ -161,7 +197,7 @@ class courses extends Component {
             <div className="courses-container">
 
                 <div className="filters">
-                    {this.getFilterComp("Subjects",['Data science', 'AI','Security'])}
+                    {this.getFilterComp("Subjects", this.state.subjects)}
                     {this.getPriceSlider()}
                     {this.getRatingSlider()}
                 </div>

@@ -9,4 +9,7 @@ const {
 router.post('/admin/addAdmin',addAdmin)
 router.post('/admin/addCorporateTrainee',addCorporateTrainee)
 router.post('/admin/addInstructor',addInstructor)
+
+
+
 module.exports = router;

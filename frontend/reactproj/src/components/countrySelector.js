@@ -1,11 +1,12 @@
 import * as React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
+import axios from 'axios';
 
 // From https://bitbucket.org/atlassian/atlaskit-mk-2/raw/4ad0e56649c3e6c973e226b7efaeb28cb240ccb0/packages/core/select/src/data/countries.js
 const countries = [
@@ -451,9 +452,51 @@ export default function CountrySelect() {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  
+  useEffect(() => {
+    // Update the document title using the browser API
+    getCountry();
+  });
+
+  const getCountryObj = (id)=>{
+
+    var ctr = null;
+    countries.forEach((country)=>{
+      if(country.code === id){ctr = country; }
+    })
+    return ctr;
+  }
+  const getCountry = async(newCountry)=>{
+    
+    const body = { 'newCountry': newCountry };
+
+    try {
+        const res = await axios.get('http://localhost:3000/country',body,{headers:{"Access-Control-Allow-Origin": "*"}});
+
+        var ctrObj = getCountryObj(res.data.country);
+
+        setDefaultCountry(ctrObj);
+    } catch (e) {
+        alert(e)
+    }
+  }
+ 
+  const submitChangeCountry = async(newCountry)=>{
+    
+    const body = { 'newCountry': newCountry };
+
+    try {
+        const res = await axios.post('http://localhost:3000/changeCountry',body,{headers:{"Access-Control-Allow-Origin": "*"}});
+    } catch (e) {
+        alert(e)
+    }
+  }
+ 
   const changeCountry = (event, value)=>{
-    if(value)
+    if(value){
       setDefaultCountry(value);
+      submitChangeCountry(value);
+    }
   }
   const modal = ()=>{
     return (
@@ -470,7 +513,7 @@ export default function CountrySelect() {
               options={countries}
               autoHighlight
               getOptionLabel={(option) => option.label}
-              defaultValue={defaultCountry}
+              value={defaultCountry}
               onChange={(event, value)=>{changeCountry(event, value )}}
               renderOption={(props, option) => (
                 <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>

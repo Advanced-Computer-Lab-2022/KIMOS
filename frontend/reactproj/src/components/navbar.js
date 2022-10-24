@@ -13,44 +13,7 @@ var Navigation = require('react-router').Navigation;
 
 class navbar extends Component {
 
-    course = {
-        'title':'Introduction to React',
-        'price':'999',
-        'rating':'4.8',
-        'totalHours':'58',
-        'discount':'0',
-        'subjects':'CS',
-        'instructors':'Marsafy',
-        'subtitles':'i dont know',
-        'exercise':'i dont know too lol'
-    }
-addCourses = ()=>{
-        var tmp = [];
-        const minP = 1;
-        const maxP = 500;
-
-        const minR = 0;
-        const maxR = 5;
-
-        for(let i = 0; i < 15; i++){
-            var tmpCourse = {...this.course};
-             var price = Math.ceil (minP + Math.random() * (maxP - minP));
-             var rating =Math.ceil( minR + Math.random() * (maxR - minR));
-
-            tmpCourse['price'] = price;
-            tmpCourse['rating'] = rating;
-
-            tmp.push(tmpCourse);
-        }
-        this.setState({courses:tmp}, ()=>{
-            this.setState({searchContent:''})
-            this.props.selectCourses(tmp);
-            // this.props.setCourses(tmp); 
-            // this.transitionTo('foo');
-    //   window.location.href = '/courses'
-
-        });
-    }
+ 
 
 
     state = {
@@ -62,16 +25,7 @@ addCourses = ()=>{
         this.setState({[event.target.id]:event.target.value})
     }
 
-    submitGet = async()=>{
 
-
-        try {
-            const res = await axios.get('http://localhost:3000/courses', { params: { keyword: this.state.searchContent } });
-
-        } catch (e) {
-            console.log(e);
-        }
-    }
     enterSearch = ()=>{
         //write the end point to get the results
         // this.addCourses();

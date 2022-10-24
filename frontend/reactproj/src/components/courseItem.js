@@ -5,6 +5,8 @@ import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
+import tmpImg from '../assets/imgTmp.jpeg';
+
 
 class courseItem extends Component {
     userType = 'guest'
@@ -19,7 +21,7 @@ class courseItem extends Component {
                     component="img"
                     alt="course image"
                     height="140"
-                    image= {this.props.course.img}
+                    image= {tmpImg}
                     />
                     <CardContent>
                     <Typography gutterBottom variant="h5" component="div">
