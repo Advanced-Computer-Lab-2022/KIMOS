@@ -11,6 +11,17 @@ import { connect } from 'react-redux';
 import axios from 'axios';
 
 class courses extends Component {
+        //main courses are the ones we got on the post response. Courses are them but after the filters
+        state ={
+            mainCourses:[],
+            courses :[],
+            priceRange: 10000,
+            ratingRange:[0,5],
+            subjects:[],
+            filterFlag:false,
+            subjectsFilter:{}
+    
+        }
     componentDidMount(){
         this.getSubjects();
         this.submitSearch(this.getQueryVariable());
@@ -23,14 +34,15 @@ class courses extends Component {
             const res = await axios.get('http://localhost:3000/courses/subjects',{headers:{"Access-Control-Allow-Origin": "*"}});
 
             this.setState({subjects:res.data.subjects}, ()=>{
+
                 this.state.subjects.forEach((subject)=>{
                     this.state.subjectsFilter[subject] = false;
-                       
+                  
                 })
             })
 
         } catch (e) {
-            alert(e)
+
         }
     }
     getQueryVariable()
@@ -51,35 +63,36 @@ class courses extends Component {
             this.setState({courses:res.data, mainCourses:res.data})
 
         } catch (e) {
-            alert(e)
+
         }
     }
 
-    //main courses are the ones we got on the post response. Courses are them but after the filters
-    state ={
-        mainCourses:[],
-        courses :[],
-        priceRange: 500,
-        ratingRange:[0,5],
-        subjects:['Data science', 'AI','Security'],
-        filterFlag:false,
-        subjectsFilter:{}
 
-    }
 
     
+    filterExists = (filters)=>{
+
+        var flag = false;
+        Object.keys(filters).forEach((key)=>{
+            if(filters[key]===true){
+                flag = true;
+            }
+        })
+        return flag
+    }
     handleFilterChange = (option)=>{
         var newFlags = {...this.state.subjectsFilter};
         if(newFlags[option]){
             newFlags[option] = false;
         }
         else{
-            this.setState({filterFlag:true})
             newFlags[option] = true;
         }
+        var flag = this.filterExists(newFlags);
         this.setState({subjectsFilter:newFlags}, ()=>{
-
-            this.updateCourses();
+            this.setState({filterFlag:flag}, ()=>{
+                this.updateCourses();
+            })
 
         });
     }
@@ -115,7 +128,7 @@ class courses extends Component {
                             onChange={(event, value)=> this.handleSliderChange(value)}
                             onChangeCommitted = {this.updateCourses}
                             valueLabelDisplay="auto"
-                            max={1000}
+                            max={10000}
                             />
                     </Box>
                 </div>
@@ -129,40 +142,45 @@ class courses extends Component {
 
     removeCourse =(courses, course)=>{
         var newArr = [];
-        courses.forEach((course)=>{
-            if(course.title !== course)
-                newArr.push(course);
+        courses.forEach((courseItem)=>{
+
+            if(courseItem.title !== course)
+                newArr.push(courseItem);
         })
+
         return newArr;
     }
     updateCourses = ()=>{
         var newCourses = [];
-        this.state.mainCourses.forEach((course)=>{
-            if(course.price <= this.state.priceRange )
-            {
-                    newCourses.push(course)
-            }
-        })
-        newCourses.forEach((course)=>{
-            if(course.rating >= this.state.ratingRange[0] && course.rating <= this.state.ratingRange[1])
-            {
-                    newCourses = this.removeCourse(newCourses, course.title);
-            }
-        })
 
 
         if(this.state.filterFlag)
-            newCourses.forEach((course)=>{
-                if(this.state.subjectsFilter[course.subject] === false)
+            this.state.mainCourses.forEach((course)=>{
+                if(this.state.subjectsFilter[course.subject] === true)
                 {
-                    newCourses = this.removeCourse(newCourses, course.title);
+                    newCourses.push(course)
                 }
-                else{   
-                    console.log(this.state.subjectsFilter);
-                    console.log(course.subject);
-                    console.log(this.state.subjectsFilter[course.subject]);
-                }
+
             })
+        else
+            newCourses = [...this.state.mainCourses]
+            
+
+        newCourses.forEach((course)=>{
+            if(course.price > this.state.priceRange )
+            {
+                newCourses = this.removeCourse(newCourses, course.title);
+            }
+        })
+        newCourses.forEach((course)=>{
+            if(!(course.rating >= this.state.ratingRange[0] && course.rating <= this.state.ratingRange[1]))
+            {
+                    newCourses = this.removeCourse(newCourses, course.title);
+            }
+        })
+
+
+
 
 
 

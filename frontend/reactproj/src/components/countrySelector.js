@@ -477,7 +477,7 @@ export default function CountrySelect() {
 
         setDefaultCountry(ctrObj);
     } catch (e) {
-        alert(e)
+
     }
   }
  
@@ -488,7 +488,7 @@ export default function CountrySelect() {
     try {
         const res = await axios.post('http://localhost:3000/changeCountry',body,{headers:{"Access-Control-Allow-Origin": "*"}});
     } catch (e) {
-        alert(e)
+
     }
   }
  
