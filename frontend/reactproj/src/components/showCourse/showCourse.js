@@ -45,7 +45,7 @@ export default function ShowCourse() {
               </TableCell>
               <TableCell align="center" >{course.title}</TableCell>
               <TableCell align="center">
-                <Button  variant="contained" style={{maxWidth:"150px",maxHeight:"30px",fontSize:"13px"}}>View</Button>
+                <Button  variant="contained" style={{maxWidth:"150px",maxHeight:"30px",fontSize:"11px"}}>view</Button>
               </TableCell> 
             </TableRow>
           ))}

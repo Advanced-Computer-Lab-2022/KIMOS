@@ -65,7 +65,7 @@ export default function Create() {
       <TextField required id="outlined-basic5" label="Total Hours" variant="outlined" value={course.totalHours} onChange={(event)=>{setCourse({...course,totalHours:event.target.value})}}/>
       <TextField required id="outlined-basic4" label="Price" variant="outlined" value={course.price} onChange={(event)=>{setCourse({...course,price:event.target.value})}}/>
 
-      <TextField multiline required id="outlined-basic6" InputProps={{ sx: { minHeight: 120,marginLeft:"10px",paddingLeft:"10px"} }}  label="Summary" variant="outlined" value={course.summary} onChange={(event)=>{setCourse({...course,summary:event.target.value})}}/>
+      <TextField multiline required id="outlined-basic6" InputProps={{ sx: { minHeight: 120,minWidth:225}}}  label="Summary" variant="outlined" value={course.summary} onChange={(event)=>{setCourse({...course,summary:event.target.value})}}/>
 
 
       <Button variant="contained" style={{minWidth:"120px",marginLeft:"50px"}} onClick={createCourse}>Add</Button> 
