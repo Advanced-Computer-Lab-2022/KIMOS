@@ -3,6 +3,7 @@ import CourseItem from './courseItem';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import Box from '@mui/material/Box';
+import Pagination from '@mui/material/Pagination';
 
 import Slider from '@mui/material/Slider';
 import { connect } from 'react-redux';
@@ -13,6 +14,8 @@ import axios from 'axios';
 class courses extends Component {
         //main courses are the ones we got on the post response. Courses are them but after the filters
         state ={
+            keyword:'',
+            page:1,
             mainCourses:[],
             courses :[],
             priceRange: 10000,
@@ -48,15 +51,21 @@ class courses extends Component {
     getQueryVariable()
             {
                 var query = window.location.href;
-                var keyword = query.split('?')[1];
-                keyword = keyword.slice(2);
-                return keyword;
+                var keywords = query.split('?')[1];
+                keywords = keywords.split('&');
+                var searchQ = keywords[0].slice(2);
+                var page = keywords[1].slice(5);
+
+                this.setState({keyword:searchQ, page:parseInt(page)})
+                return {keyword:searchQ, page:page};
+
+
             }
 
-    submitSearch = async(keyword)=>{
+    submitSearch = async(keywordObj)=>{
 
-        const body = { 'keyword': keyword };
-
+        const body = keywordObj;
+        console.log(body);
         try {
             const res = await axios.post('http://localhost:3000/courses/findCourse',body,{headers:{"Access-Control-Allow-Origin": "*"}});
 
@@ -209,7 +218,12 @@ class courses extends Component {
 
         )
     }
-    
+    handlePage = (value)=>{
+        this.setState({page:value}, ()=>{
+
+            window.location.href = ('/courses/search?q='+ this.state.keyword+'&page='+value);
+        })
+    }
     render() {
         return (
             <div className="courses-container">
@@ -220,14 +234,23 @@ class courses extends Component {
                     {this.getRatingSlider()}
                 </div>
 
-                <div className="courses">
-                    {this.state.courses.map((course,index)=>{
-                        return ( <CourseItem key={index} course={course}/> )
-                    })}
-                    {this.state.courses.length === 0 && (
-                        <div className="courses__none">No Results were Found</div>
-                    )}
+                <div className="right-side">
+                    <div className="courses">
+                        {this.state.courses.map((course,index)=>{
+                            return ( <CourseItem key={index} course={course}/> )
+                        })}
+                        {this.state.courses.length === 0 && (
+                            <div className="courses__none">No Results were Found</div>
+                        )}
+                    </div>
+
+                    <div className="pagi">
+                        <Pagination page={this.state.page} onChange={(e, value)=>{this.handlePage(value)}} count={10} color="primary" />
+                    </div>
+
                 </div>
+
+
 
                
             </div>

@@ -30,7 +30,7 @@ class navbar extends Component {
         //write the end point to get the results
         // this.addCourses();
         // window.location.href = '/courses'
-        window.location.href = ('/courses/search?q='+ this.state.searchContent);
+        window.location.href = ('/courses/search?q='+ this.state.searchContent+'&page=1');
     }
     goHome = ()=>{
         window.location.href = '/'
