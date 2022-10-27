@@ -1,7 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const { findCourse } = require('../controllers/courseController');
 
-router.post('/findCourse', findCourse);
+
+const { findCourse, findSubjects, findCourseMarsaf } = require("../controllers/courseController");
+
+router.get("/subjects", findSubjects);
+router.post("/findCourse", findCourseMarsaf);
+
 
 module.exports = router;
