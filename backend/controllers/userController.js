@@ -39,11 +39,15 @@ const addCorporateTrainee = async (req,res) => {
 
 }
 
-const getPrice = asnyc(req,res) => {
-    let amount = await convert(2000, 'USD', 'EUR', '2018-01-01');
-    console.log(amount);    // 1667.6394564000002
 
-};
+const getPrice = async (req,res) => {
+
+    let amount = await convert(2000, 'USD', 'EUR', '2018-01-01');
+    console.log(amount); 
+
+}
+
+
 module.exports = {
     addAdmin,
     addInstructor,
