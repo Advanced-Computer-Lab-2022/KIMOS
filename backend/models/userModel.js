@@ -23,6 +23,9 @@ const userSchema = mongoose.Schema(
       required: true
     },
 
+<<<<<<< HEAD
+    },
+=======
     country: {
       type: String
     }
@@ -31,5 +34,6 @@ const userSchema = mongoose.Schema(
     timestamps: true
   }
 );
+>>>>>>> 1stMerge
 
 module.exports = mongoose.model('User', userSchema);

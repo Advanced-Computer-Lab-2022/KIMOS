@@ -1,0 +1,38 @@
+.appBarContainer{
+    margin-top:20px;
+    border-radius:15;
+    display:flex;
+    flex-direction:row;
+    justify-content:center;
+    align-items:center; 
+    column-gap:100px;
+}
+
+.appBar{
+    margin-top:20px;
+    border-radius:15px;
+    display:flex;
+    flex-direction:row;
+    row-gap:15px;
+    flex-wrap:wrap;
+    justify-content:center;
+    align-items:center; 
+    padding-top:20px;
+    padding-bottom:20px;
+}
+
+.appBar2{
+    margin-top:20px;
+    border-radius:15px;
+    display:flex;
+    flex-direction:row;
+    row-gap:15px;
+    flex-wrap:wrap;
+    align-items:start; 
+    padding-top:20px;
+    padding-bottom:20px;
+    padding-left:70px;
+}
+
+
+
