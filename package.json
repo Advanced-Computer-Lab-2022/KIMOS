@@ -20,6 +20,9 @@
   },
   "homepage": "https://github.com/Advanced-Computer-Lab-2022/KIMOS#readme",
   "dependencies": {
+    "@emotion/react": "^11.10.4",
+    "@emotion/styled": "^11.10.4",
+    "@mui/material": "^5.10.10",
     "colors": "^1.4.0",
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
