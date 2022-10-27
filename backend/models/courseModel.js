@@ -44,6 +44,7 @@ const courseSchema = mongoose.Schema(
     exercises: {
       type: [mongoose.Schema.Types.ObjectId],
       ref: 'Exercise'
+
     }
   },
   {
