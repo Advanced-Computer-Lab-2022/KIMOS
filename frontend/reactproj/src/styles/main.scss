@@ -12,9 +12,8 @@ body{
     position: relative;
     height: 100%;
     width: 100%;
-    background: white;
+    background: $background-color;
     font-family: Arial, Helvetica, sans-serif;
-
 }
 
 .main-content{
@@ -41,4 +40,19 @@ body{
     button, a{
         margin: 10px;
     }
+
+.admin-card{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+.admin-box{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+
+}
 }

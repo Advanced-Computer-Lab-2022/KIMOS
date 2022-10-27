@@ -9,9 +9,10 @@
     font-size: max(35px, 1.5vw);
     font-weight: bolder;
     margin: 0 10px 0 10px;
-    background: linear-gradient(to right, $primary-color, $secondary-color);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    // background: linear-gradient(to right, $primary-color, $secondary-color);
+    // -webkit-background-clip: text;
+    // -webkit-text-fill-color: transparent;
+    color: $primary-color;
     cursor: pointer;
 }
 
@@ -43,5 +44,50 @@
     @include flex-h-center-spaceB;
     button {
         margin: 0 10px 0 10px;
+    }
+}
+
+.globe-icon{
+    color: $primary-color;
+    font-size: 40px !important;
+    margin: 0 10px 0 10px;
+    cursor: pointer;
+
+}
+
+
+.search-bar{
+    
+
+    height: 70%;
+    width: 50vw;
+    border-radius: 10px;
+    display: flex;
+    background: linear-gradient(to left, $primary-color, $secondary-color);
+    padding: 4px;
+
+    &__btn{
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: white;
+        padding: 10px;
+        
+    }
+    &__input{
+        border: none;
+        width: 100%;
+        height: 100%;
+        border-radius: 10px;
+        padding-left: 20px;
+        padding-right: 20px;
+        background: $search-bar-color;
+        font-size:18px;
+    }
+
+    &__input:focus{
+        outline: none;
     }
 }
