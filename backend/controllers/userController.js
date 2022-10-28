@@ -64,29 +64,12 @@ const getCountry = async (req, res) => {
   res.status(200).json({ country: country });
 };
 
-<<<<<<< Updated upstream
 }
 
 const getPrice = asnyc(req,res) => {
     let amount = await convert(2000, 'USD', 'EUR', '2018-01-01');
     console.log(amount);    // 1667.6394564000002
 
-=======
-const changeCountry = async (req, res) => {
-  var user_id = '635136c4072311221109475d';
-  const newCountry = req.body.newCountry;
-
-  try {
-    await User.findByIdAndUpdate(user_id, {
-      country: { code: newCountry.code, name: newCountry.label }
-    });
-  } catch (err) {
-    res.status(400).json({ mssg: 'error' });
-    return;
-  }
-
-  res.status(200).json({ mssg: 'updated correctly' });
->>>>>>> Stashed changes
 };
 module.exports = {
   addUser,

@@ -1,7 +1,7 @@
 const Course = require('../models/courseModel');
 const User = require('../models/userModel');
 const { getCountry } = require('./userController');
-const getCountryISO3 = require('country-iso-2-to-3');
+const {getAllInfoByISO} = require( 'iso-country-currency' );
 const COURSES_PER_PAGE = 10;
 
 const viewCourse = async (req, res) => {
@@ -10,8 +10,6 @@ const viewCourse = async (req, res) => {
     return res.status(404).json({ error: 'Invalid id' });
   }
 
-<<<<<<< Updated upstream
-=======
   course = await Course.findById(req.params.id);
 
   if (!course) {
@@ -54,7 +52,6 @@ const viewMyCourses = async (req, res) => {
   res.status(200).json(courses);
 };
 
->>>>>>> Stashed changes
 const findSubjects = async (req, res) => {
   const subjects = await Course.find().distinct('subject');
 
@@ -119,13 +116,6 @@ const findCourse = async (req, res) => {
   res.json(courses);
 };
 
-module.exports = {
-
-    findSubjects,
-  findCourse,
-  findCourseMarsaf
-};
-
 const getCoursePrice = async (req, res) => {
   //bos ana ha5osh anam bas kamel enta el function ele ht3mlo enak fel
   //frontend htzbat el object bta3ak eno y include currencies ba3deen
@@ -134,13 +124,10 @@ const getCoursePrice = async (req, res) => {
   //w tb3at ll front end htb2a per page bardo eb3at prices kol el courses el loaded
   const country = await getCountry(req, res); //get user country
   const price = await Course.findById(req.body.courseId).select('price'); //find course by id passed from frontend
-  const countryCode = getCountryISO3(country.code);
-  let amount = await convert(price, 'USD', countryCode);
-  res.json(200).json({ price: amount });
+  const countryDetails = getAllInfoByISO(country.code);
+  let amount = await convert(price, 'USD', countryDetails.currency);
+  res.json(200).json({ symbol: countryDetails.symbol, price: amount }); //send price to frontend
   console.log(amount); // 1667.6394564000002
-<<<<<<< Updated upstream
-
-=======
 };
 module.exports = {
   findSubjects,
@@ -149,4 +136,3 @@ module.exports = {
   viewCourse,
   viewMyCourses
 };
->>>>>>> Stashed changes
