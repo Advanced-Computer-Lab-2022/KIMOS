@@ -1,75 +1,185 @@
-import React,{useState} from 'react';
+import React, { useState } from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import axios from 'axios';
+import { Container } from '@mui/material';
 
 export default function Create() {
-  var subtitleCount=1;
-    const [course,setCourse]=useState({
-        title:'',
-        subtitles:[],
-        price:'',
-        summary:'',
-        rating:0,
-        totalHours:'',
-        discout:'',
-        subject:'',
-        instructor:"635387b65b29f183de6e32d6",
-        exercises:[]
-    })
+  var subtitleCount = 1;
+  var exercisesCount = 1;
+  const [course, setCourse] = useState({
+    title: '',
+    subtitles: [],
+    price: '',
+    summary: '',
+    rating: 0,
+    totalHours: '',
+    discount: '',
+    subject: '',
+    instructor: '635387b65b29f183de6e32d6',
+    exercises: []
+  });
 
-    const [subtitleList,setSubtitle]=useState([
-      {subtitle:""}
-    ])
+  const [subtitleList, setSubtitle] = useState([{ Title: '', Hours: '' }]);
+  const [exercisesList, setExercises] = useState(['']);
 
-    console.log(subtitleList);
+  //console.log(subtitleList);
 
-    //we use axios to send date from frontend to backend
-    const createCourse= ()=>{
-        axios.post('http://localhost:5000/Instructor',course).then(()=>{
-          window.location.reload(false);
-        })
-    }
+  //we use axios to send date from frontend to backend
+  const createCourse = () => {
+    axios.post('http://localhost:5000/users/instructor/createCourse', course).then(() => {
+      window.location.reload(false);
+    });
+  };
 
-    const addSubTitle=()=>{
-      setSubtitle([...subtitleList,{subtitle:""}])
-    }
+  const addSubTitle = () => {
+    setSubtitle([...subtitleList, { Title: '', Hours: '' }]);
+  };
+  const addExercises = () => {
+    setExercises([...exercisesList, '']);
+  };
 
-    const handleChange=(e,index)=>{
-      const{name,value}=e.target;
-      const list=[...subtitleList];
-      list[index][name]=value;
-      course.subtitles[index]=value;
-      setSubtitle(list);
-    }
-    
+  const handleChange = (event, index) => {
+    console.log(course);
+    const { name, value } = event.target;
+    const list = [...subtitleList];
+    list[index][name] = value;
+    course.subtitles = list;
+    setSubtitle(list);
+  };
+  const handleChangeExercises = (event, index) => {
+    console.log(course);
+    const { value } = event.target;
+    const list = [...exercisesList];
+    list[index] = value;
+    course.exercises = list;
+    setExercises(list);
+  };
+
   return (
     <>
-    <h2>Create A New Course</h2>
+      <h2>Create A New Course</h2>
 
-      <TextField required id="outlined-basic" label="Title" variant="outlined" value={course.title} onChange={(event)=>{setCourse({...course,title:event.target.value})}}/>
-      <TextField required id="outlined-basic2" label="Subject" variant="outlined" value={course.subject} onChange={(event)=>{setCourse({...course,subject:event.target.value})}}/>
+      <TextField
+        required
+        id="Title"
+        className="outlined-basic"
+        label="Title"
+        variant="outlined"
+        value={course.title}
+        onChange={(event) => {
+          setCourse({ ...course, title: event.target.value });
+        }}
+      />
+      <TextField
+        required
+        id="Subject"
+        className="outlined-basic2"
+        label="Subject"
+        variant="outlined"
+        value={course.subject}
+        onChange={(event) => {
+          setCourse({ ...course, subject: event.target.value });
+        }}
+      />
 
-  {/* subtitles */}
-      {subtitleList.map((singleSubtitle,index)=>(
+      {/* subtitles */}
+      {subtitleList.map((singleSubtitle, index) => (
         <div key={index}>
-          <TextField required name="subtitle" id="outlined-basic3" label="SubTitle" variant="outlined" value={singleSubtitle.subtitle} onChange={(e)=>handleChange(e,index)}  />
-          {subtitleList.length-1 === index &&
-          ( <AddCircleOutlineIcon variant="contained" style={{minWidth:"50px",marginTop:"15px"}} onClick={addSubTitle}></AddCircleOutlineIcon>)
-          }
+          <p style={{ fontSize: 15 }}>{`SubTitle ${subtitleCount++}`}</p>
+          <TextField
+            required
+            name="Title"
+            id="outlined-basic3"
+            label="Title"
+            variant="outlined"
+            //value={singleSubtitle.subtitle}
+            onChange={(e) => handleChange(e, index)}
+          />
+          <TextField
+            required
+            name="Hours"
+            id="outlined-basic3"
+            label="Hours"
+            variant="outlined"
+            //value={singleSubtitle.subtitle}
+            onChange={(e) => handleChange(e, index)}
+          />
+
+          {subtitleList.length - 1 === index && (
+            <AddCircleOutlineIcon
+              variant="contained"
+              style={{ minWidth: '50px', marginTop: '15px', cursor: 'pointer' }}
+              onClick={addSubTitle}></AddCircleOutlineIcon>
+          )}
         </div>
       ))}
-      
-      <TextField required id="outlined-basic5" label="Total Hours" variant="outlined" value={course.totalHours} onChange={(event)=>{setCourse({...course,totalHours:event.target.value})}}/>
-      <TextField required id="outlined-basic4" label="Price" variant="outlined" value={course.price} onChange={(event)=>{setCourse({...course,price:event.target.value})}}/>
+      {/* exercises */}
+      {exercisesList.map((singleExercise, index) => (
+        <div key={index}>
+          <p style={{ fontSize: 15 }}>{`Exercise ${exercisesCount++}`}</p>
+          <TextField
+            required
+            name="Title"
+            id="outlined-basic3"
+            label="Title"
+            variant="outlined"
+            //value={singleSubtitle.subtitle}
+            onChange={(e) => handleChangeExercises(e, index)}
+          />
 
-      <TextField multiline required id="outlined-basic6" InputProps={{ sx: { minHeight: 120,minWidth:225}}}  label="Summary" variant="outlined" value={course.summary} onChange={(event)=>{setCourse({...course,summary:event.target.value})}}/>
+          {exercisesList.length - 1 === index && (
+            <AddCircleOutlineIcon
+              variant="contained"
+              style={{ minWidth: '50px', marginTop: '15px', cursor: 'pointer' }}
+              onClick={addExercises}></AddCircleOutlineIcon>
+          )}
+        </div>
+      ))}
 
+      {/* <TextField
+        required
+        id="outlined-basic5"
+        label="Total Hours"
+        variant="outlined"
+        value={course.totalHours}
+        onChange={(event) => {
+          setCourse({ ...course, totalHours: event.target.value });
+        }}
+      /> */}
 
-      <Button variant="contained" style={{minWidth:"120px",marginLeft:"50px"}} onClick={createCourse}>Add</Button> 
-    
+      <TextField
+        required
+        id="outlined-basic4"
+        label="Price"
+        variant="outlined"
+        value={course.price}
+        onChange={(event) => {
+          setCourse({ ...course, price: event.target.value });
+        }}
+      />
+
+      <TextField
+        multiline
+        required
+        id="outlined-basic6"
+        InputProps={{ sx: { minHeight: 120, minWidth: 225 } }}
+        label="Summary"
+        variant="outlined"
+        value={course.summary}
+        onChange={(event) => {
+          setCourse({ ...course, summary: event.target.value });
+        }}
+      />
+
+      <Button
+        variant="contained"
+        style={{ minWidth: '120px', marginLeft: '50px' }}
+        onClick={createCourse}>
+        Add
+      </Button>
     </>
   );
 }
