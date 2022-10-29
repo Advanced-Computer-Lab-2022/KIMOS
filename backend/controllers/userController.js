@@ -1,5 +1,6 @@
 const User = require('../models/userModel')
-const { convert } = require('exchange-rates-api');
+const { getCountry } = require('./userController');
+const {getAllInfoByISO} = require( 'iso-country-currency' );
 // Adminstrator function
 // As an Adminstrator add another adminstrator and assign their username and password
 
@@ -40,12 +41,7 @@ const addCorporateTrainee = async (req,res) => {
 }
 
 
-const getPrice = async (req,res) => {
 
-    let amount = await convert(2000, 'USD', 'EUR', '2018-01-01');
-    console.log(amount); 
-
-}
 
 
 module.exports = {

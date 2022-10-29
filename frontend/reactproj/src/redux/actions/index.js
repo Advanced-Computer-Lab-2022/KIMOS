@@ -4,3 +4,12 @@ export const setCourses = (value) =>{
         payload: value
     }
 }
+
+export const setRate = (value) =>{
+    console.log('reached action');
+    
+    return {
+        type:'CHANGE_RATE',
+        payload: value
+    }
+}

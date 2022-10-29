@@ -6,17 +6,29 @@ import Admin from './components/admin';
 import Instructor from './components/instructor';
 import Trainee from './components/trainee';
 import Courses from './components/courses';
+import MyCourses from './components/myCourses';
+import CourseDetials from './components/courseDetails';
+import axios from 'axios';
 import {
   BrowserRouter as Router, Routes, Route
 } from 'react-router-dom';
 
 
 class App extends Component {
-  exampleFunction = () => {
-    alert("Seweeyyy");
+  getCountry = async(newCountry)=>{
+    
+    const body = { 'newCountry': newCountry };
+
+    try {
+        const res = await axios.get('http://localhost:3000/country',body,{headers:{"Access-Control-Allow-Origin": "*"}});
+
+        
+    } catch (e) {
+
+    }
   }
   state = {
-    courses: ['damn']
+
   }
   handleCoursesChange = (c)=>{
     // this.setState({courses: c},()=>{
@@ -38,7 +50,9 @@ class App extends Component {
                     <Route exact path='/instructor' element={<Instructor />}></Route>
                     <Route exact path='/trainee' element={<Trainee />}></Route>
                     <Route  path='/courses/:search' element={<Courses />}></Route>
-
+                    <Route path='/islam' element={<MyCourses />}></Route>
+                    <Route exact path='/courseDetails' element={<CourseDetials id = "63557a87ed2ca8a28a1a8861"/>}></Route>
+                    <Route exact path='/myCourses' element={<MyCourses id = "635387b65b29f183de6e32d6"/>}></Route>
 
             </Routes>
         </div>

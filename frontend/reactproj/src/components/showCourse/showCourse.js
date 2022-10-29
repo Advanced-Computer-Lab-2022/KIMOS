@@ -17,7 +17,7 @@ export default function ShowCourse() {
     var i=1;
     //call itself whenever the page is refreshed
     useEffect(()=>{
-        axios.get('http://localhost:5000/Instructor').then((allCourses)=>{
+        axios.get('http://localhost:3000/Instructor').then((allCourses)=>{
             setCouseList(allCourses.data);
         })
     },[courseList])

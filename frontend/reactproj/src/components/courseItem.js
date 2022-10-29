@@ -6,17 +6,21 @@ import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import tmpImg from '../assets/imgTmp.jpeg';
-
+import {connect} from 'react-redux';
 
 class courseItem extends Component {
     userType = 'guest'
     componentDidMount() {
 
     }
+//     <CardActions>
+//     <Button size="small">View Details</Button>
+//     {this.userType !== 'cop-trainee' && <Button size="small">Buy</Button> }
+// </CardActions>
     render() {
         return (
             <div className="course-item">
-                <Card sx={{ maxWidth: 345 }}>
+                <Card sx={{ maxWidth: 345, height: 350, display: 'flex', flexDirection:'column', alignItems:'start', justifyContent:'space-between' }}>
                     <CardMedia
                     component="img"
                     alt="course image"
@@ -34,20 +38,26 @@ class courseItem extends Component {
                         {this.props.course.totalHours + ' Hour(s)'}
                     </Typography>
                     {this.userType !== 'cop-trainee' && <Typography variant="h6" >
-                            {this.props.course.price + '$' }
+                            {Math.ceil(this.props.course.price*this.props.rateAndSymbol.rate) +" " +this.props.rateAndSymbol.symbol }
                     </Typography>}
                     </CardContent>
-                    <CardActions>
-                        <Button size="small">View Details</Button>
-                        {this.userType !== 'cop-trainee' && <Button size="small">Buy</Button> }
-                    </CardActions>
+
                 </Card>
             </div>
         );
     }
 }
 
-export default courseItem;
+
+const mapStateToProps = (state) =>{
+   
+    return {
+        rateAndSymbol: state.rateAndSymbol,
+    };
+  }
+  
+
+export default connect(mapStateToProps) (courseItem);
 
 
 

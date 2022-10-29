@@ -16,29 +16,29 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 
-const myCourses = ({id,price,subject}) => {
+const MyCourses = ({id,price,subject}) => {
 
     const [courses,setCourses] = useState(null)
-
+    const fetchCourses = async () => {
+        price = (typeof price === 'undefined'?-1:price);
+        const uri = '/course/viewMyCourses/'+id+"?price="+price+"&subject="+subject
+        const response = await fetch(uri)
+        const json = await response.json()
+        console.log(json)
+        if(response.ok){
+           
+            setCourses(json)
+        }
+    }
     useEffect(()=>{
         //console.log(id)
-        const fetchCourses = async () => {
-            price = (typeof price === 'undefined'?-1:price);
-            const uri = '/course/viewMyCourses/'+id+"?price="+price+"&subject="+subject
-            const response = await fetch(uri)
-            const json = await response.json()
-            console.log(json)
-            if(response.ok){
-               
-                setCourses(json)
-            }
-        }
+
         fetchCourses()
     },[])
 
     return ( 
         
-        <Box    sx={{maxwidth: 0.1 ,textOverflow:"clip"}} marginY={"auto"}>
+        <Box sx={{maxwidth: 0.1 ,textOverflow:"clip"}} marginY={"auto"}>
             <Stack sx={{maxwidth: 0.5}} direction="column-reverse" justifyContent="space-evenly" alignItems="center" spacing={5}>
                 {courses && courses.map((course)=>(
                     
@@ -60,4 +60,4 @@ const myCourses = ({id,price,subject}) => {
      );
 }
  
-export default myCourses;
+export default MyCourses;

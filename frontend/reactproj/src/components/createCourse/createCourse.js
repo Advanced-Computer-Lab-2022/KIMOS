@@ -28,7 +28,7 @@ export default function Create() {
 
     //we use axios to send date from frontend to backend
     const createCourse= ()=>{
-        axios.post('http://localhost:5000/Instructor',course).then(()=>{
+        axios.post('http://localhost:3000/Instructor',course).then(()=>{
           window.location.reload(false);
         })
     }

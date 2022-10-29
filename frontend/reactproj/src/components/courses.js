@@ -4,9 +4,12 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import Box from '@mui/material/Box';
 import Pagination from '@mui/material/Pagination';
-
 import Slider from '@mui/material/Slider';
-import { connect } from 'react-redux';
+import Tooltip from '../components/courseToolTip';
+import { connect} from 'react-redux';
+import PrimaryButton from './buttons/primaryBtn';
+import SecondaryButton from './buttons/secondaryBtn';
+import Switch from '@mui/material/Switch';
 
 
 import axios from 'axios';
@@ -22,7 +25,10 @@ class courses extends Component {
             ratingRange:[0,5],
             subjects:[],
             filterFlag:false,
-            subjectsFilter:{}
+            subjectsFilter:{},
+            rating:1,
+            symbol:'$',
+            instructor:false
     
         }
     componentDidMount(){
@@ -30,6 +36,9 @@ class courses extends Component {
         this.submitSearch(this.getQueryVariable());
       }
 
+    getRateSymbol = async()=>{
+
+    }
     getSubjects = async ()=>{
 
 
@@ -69,14 +78,14 @@ class courses extends Component {
         try {
             const res = await axios.post('http://localhost:3000/courses/findCourse',body,{headers:{"Access-Control-Allow-Origin": "*"}});
 
-            this.setState({courses:res.data, mainCourses:res.data})
+            this.setState({courses:res.data, mainCourses:res.data}, ()=>{this.updateCourses()})
 
         } catch (e) {
 
         }
     }
 
-
+ 
 
     
     filterExists = (filters)=>{
@@ -122,9 +131,16 @@ class courses extends Component {
         )
     }
     handleSliderChange = (value)=>{
+        console.log('trying to change');
+
+        console.log(value);
         this.setState({priceRange:value})
     }
     getPriceSlider = ()=>{
+        var rate = this.props.rate.rate;
+
+
+        // max price is 1000$
         return( 
             <div className="filters__filter-by">
                 <div className="filters__filter-by__title">Price</div>
@@ -132,12 +148,14 @@ class courses extends Component {
                     <Box sx={{ width: '100%', marginLeft:'10px' }}>
                             <Slider
                             getAriaLabel={() => 'Price range'}
-                            value={this.state.priceRange}
-                            valueLabelFormat = {(value)=>{return (value===0)? 'Free':value+'$'}}
-                            onChange={(event, value)=> this.handleSliderChange(value)}
+                            value={(this.state.priceRange*rate )}
+                            valueLabelFormat = {(value)=>{return (value===0)? 'Free':(Math.ceil(value))+ this.props.rate.symbol}}
+                            onChange={(event, value)=> this.handleSliderChange(value/rate)}
                             onChangeCommitted = {this.updateCourses}
                             valueLabelDisplay="auto"
-                            max={10000}
+                            step={15*rate}
+                            marks
+                            max={1500*rate}
                             />
                     </Box>
                 </div>
@@ -176,7 +194,7 @@ class courses extends Component {
             
 
         newCourses.forEach((course)=>{
-            if(course.price > this.state.priceRange )
+            if(course.price * this.props.rate.rate > this.state.priceRange*this.props.rate.rate )
             {
                 newCourses = this.removeCourse(newCourses, course.title);
             }
@@ -199,6 +217,7 @@ class courses extends Component {
     getRatingSlider = ()=>{
         return( 
             <div className="filters__filter-by">
+
                 <div className="filters__filter-by__title">Rating</div>
                 <div className="filters__filter-by__options">
                     <Box sx={{ width: '100%', marginLeft:'10px' }}>
@@ -224,6 +243,20 @@ class courses extends Component {
             window.location.href = ('/courses/search?q='+ this.state.keyword+'&page='+value);
         })
     }
+     
+    getInstructorCources = async()=>{
+
+  
+        try {
+            const res = await axios.get('http://localhost:3000/instructor',{headers:{"Access-Control-Allow-Origin": "*"}});
+
+            this.setState({courses:res.data, mainCourses:res.data}, ()=>{this.updateCourses()})
+
+        } catch (e) {
+
+        }
+    }
+
     render() {
         return (
             <div className="courses-container">
@@ -232,12 +265,21 @@ class courses extends Component {
                     {this.getFilterComp("Subjects", this.state.subjects)}
                     {this.getPriceSlider()}
                     {this.getRatingSlider()}
+                    <div>
+                        <Switch checked={this.state.instructor} onChange={()=>{this.setState({instructor:!this.state.instructor})}}/>
+                        {this.state.instructor && <SecondaryButton function={this.getInstructorCources} btnSize="medium" btnText="My Cources"/>}
+
+                    </div>
+
                 </div>
 
                 <div className="right-side">
                     <div className="courses">
                         {this.state.courses.map((course,index)=>{
-                            return ( <CourseItem key={index} course={course}/> )
+                            return ( 
+                                    <div key={index}>
+                                    <Tooltip  course={course} toolContent={ <CourseItem key={index} course={course}/> }/>
+                                    </div>)
                         })}
                         {this.state.courses.length === 0 && (
                             <div className="courses__none">No Results were Found</div>
@@ -259,9 +301,15 @@ class courses extends Component {
 }
 
 
-
+const mapStateToProps = (state) =>{
+   
+    return {
+        rate: state.rateAndSymbol,
+    };
+  }
+  
 
 
   
-export default courses
+export default connect(mapStateToProps) (courses);
   

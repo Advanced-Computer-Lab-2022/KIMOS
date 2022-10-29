@@ -16,28 +16,28 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 
-const courseDetials = ({id}) => {
+const CourseDetials = ({id}) => {
 
     const [course,setCourse] = useState(null)
+    const fetchCourse = async () => {
+        const uri = '/course/viewCourse/'+id
+        const response = await fetch(uri)
+        const json = await response.json()
+        console.log(json)
 
+        if(response.ok){
+            setCourse(json)
+        }
+    }
     useEffect(()=>{
         //console.log(id)
-        const fetchCourse = async () => {
-            const uri = '/course/viewCourse/'+id
-            const response = await fetch(uri)
-            const json = await response.json()
-            console.log(json)
 
-            if(response.ok){
-                setCourse(json)
-            }
-        }
         fetchCourse()
     },[])
 
     return ( 
         
-        <Box    sx={{maxwidth: 0.1 ,textOverflow:"clip"}} marginY={"auto"}>
+        <Box sx={{maxwidth: 0.1 ,textOverflow:"clip"}} marginY={"auto"}>
             <Stack sx={{maxwidth: 0.5}} direction="column-reverse" justifyContent="space-evenly" alignItems="center" spacing={20}>
                 {course && 
                 <div>
@@ -54,4 +54,4 @@ const courseDetials = ({id}) => {
      );
 }
  
-export default courseDetials;
+export default CourseDetials;

@@ -62,7 +62,7 @@ const findSubjects = async (req, res) => {
 const findCourseMarsaf = async (req, res) => {
 
   //Just 2 for now, because the DB got only 5 courses :)
-  const resultsPerPage = 2;
+  const resultsPerPage = 10;
   let page = req.body.page ? req.body.page:1;
   const keyword = req.body.keyword;
 
@@ -118,17 +118,7 @@ const findCourse = async (req, res) => {
   res.json(courses);
 };
 
-const getCoursePrice = async (req, res) => {
-  //bos ana ha5osh anam bas kamel enta el function ele ht3mlo enak fel
-  //frontend htzbat el object bta3ak eno y include currencies ba3deen
-  //el price fel backend ya2ma hn5leh object feeh el currency wel amount
-  //aw nzwd field amount bas kda htconvert bel function ele 3andak ta7t deh
-  //w tb3at ll front end htb2a per page bardo eb3at prices kol el courses el loaded
-  const user = User.findById(req.body.id); //The id of the user coming from the frontend
-  const country = user.country;
-  let amount = await convert(2000, 'USD', 'EUR');
-  console.log(amount); // 1667.6394564000002
-  }
+
 module.exports = {
 
     findSubjects,
