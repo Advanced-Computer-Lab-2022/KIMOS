@@ -30,12 +30,10 @@ const userSchema = mongoose.Schema(
 
     country: {
       name: {
-        type: String,
-        required: true
+        type: String
       },
       code: {
-        type: String,
-        required: true
+        type: String
       }
     }
   },

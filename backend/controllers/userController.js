@@ -1,8 +1,8 @@
-
-const {getAllInfoByISO} = require( 'iso-country-currency' );
+const { getAllInfoByISO } = require('iso-country-currency');
 const User = require('../models/userModel');
 const Subtitle = require('../models/subtitleModel');
 const CourseData = require('../models/courseModel');
+const dotenv = require('dotenv').config();
 
 const { convert } = require('exchange-rates-api');
 // Adminstrator function
@@ -21,7 +21,9 @@ const addUser = async (req, res) => {
 
 const instructorViewCourses = async (req, res) => {
   try {
-    const instructorCourses = await CourseData.find({ instructor: '635387b65b29f183de6e32d6' });
+    const instructorCourses = await CourseData.find({
+      instructor: '635d70dbf600410aab3c71b0'
+    });
     res.status(201).json(instructorCourses);
   } catch (error) {
     res.status(404).json({ message: error.message });
@@ -29,35 +31,34 @@ const instructorViewCourses = async (req, res) => {
 };
 const instructorCreateCourse = async (req, res) => {
   const course = req.body;
+  console.log(req.body);
 
   const promises = course.subtitles.map(async (subtitle, index) => {
     const sub = await instructorCreateSubtitle(subtitle);
     return sub;
   });
   var subtitles = await Promise.all(promises);
-  console.log('Done');
-  console.log(subtitles);
+  var totalHours = 0;
+  //console.log(subtitles);
+  subtitles.map((subtitle, index) => {
+    totalHours += parseInt(subtitle.hours);
+  });
+  console.log(totalHours);
+  // console.log('Done');
+  // console.log(subtitles);
 
   const newCourse = await CourseData.create({
     title: course.title,
     subject: course.subject,
     subtitles: subtitles,
     price: course.price,
+    totalHours: totalHours,
     summary: course.summary,
     instructor: course.instructor
   });
 };
-
-const getPrice = async (req, res) => {
-  var user_id = '635136c4072311221109475d';
-  let amount = await convert(2000, 'USD', 'EUR', '2018-01-01');
-  console.log(amount);
-};
-
-
-// dy function bta3tk ya omar. zabataha :P
 const getCountry = async (req, res) => {
-  var user_id = '635136c4072311221109475d';
+  var user_id = '635d70dbf600410aab3c71b0';
   var country = null;
 
   try {
@@ -70,33 +71,20 @@ const getCountry = async (req, res) => {
     }
   } catch (err) {
     console.log(err);
-
-    // const ct = await User.create({
-    //     name: req.body.name,
-    //     email: req.body.email,
-    //     password: req.body.password,
-    //     userType: 'corporate trainee'
-    // })
-    res.status(200).json(ct);
-
-}
-
-
-
-
-
-    res.status(400).json({ mssg: 'error' });
-    return;
   }
+
+  res.status(400).json({ mssg: 'error' });
+  return;
+};
 
 const instructorCreateSubtitle = async (subtitle) => {
   const res = await Subtitle.create({
-    Title: subtitle.Title,
-    Hours: subtitle.Hours
+    title: subtitle.Title,
+    hours: subtitle.Hours
   });
-  //console.log('OOGa BOOGa');
   return res;
 };
+
 module.exports = {
   addUser,
   instructorViewCourses,

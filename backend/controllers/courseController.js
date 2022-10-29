@@ -2,7 +2,6 @@ const Course = require('../models/courseModel');
 const User = require('../models/userModel');
 const { getCountry } = require('./userController');
 const { getAllInfoByISO } = require('iso-country-currency');
-const COURSES_PER_PAGE = 10;
 
 const viewCourse = async (req, res) => {
   const id = req.params.id;
@@ -60,6 +59,7 @@ const findSubjects = async (req, res) => {
 
 const findCourseMarsaf = async (req, res) => {
   const resultsPerPage = 10;
+  const instructor_id = req.body.instructor_id || -1;
   let page = req.body.page ? req.body.page : 1;
   const keyword = req.body.keyword;
   console.log('keyword: ', keyword);
@@ -73,55 +73,53 @@ const findCourseMarsaf = async (req, res) => {
   const instructorIds = instructor_details.map((instructor, index) => {
     return instructor._id;
   });
-  console.log(instructorIds);
 
-  const courses = await Course.find({
-    $or: [
-      { title: new RegExp(keyword, 'i') },
-      { subject: new RegExp(keyword, 'i') },
-      { instructor: { $in: instructorIds } }
-    ]
-  })
-    .skip(resultsPerPage * page)
-    .limit(resultsPerPage);
-  // .then((results) => {
-  //   console.log(results);
-  //   return res.status(200).send(results);
-  // })
-  // .catch((err) => {
-  //   return res.status(500).send(err);
-  // });
-  console.log(courses);
-  return res.status(200).send(courses);
+  if (instructor_id != -1) {
+    courses = await Course.find({
+      $and: [
+        {
+          instructor: instructor_id,
+          $or: [
+            { title: new RegExp(keyword, 'i') },
+            { subject: new RegExp(keyword, 'i') },
+            { instructor: { $in: instructorIds } }
+          ]
+        }
+      ]
+    })
+      .skip(resultsPerPage * page)
+      .limit(resultsPerPage)
+      .then((results) => {
+        console.log(results);
+        return res.status(200).send(results);
+      })
+      .catch((err) => {
+        return res.status(500).send(err);
+      });
+  } else {
+    await Course.find({
+      $or: [
+        { title: new RegExp(keyword, 'i') },
+        { subject: new RegExp(keyword, 'i') },
+        { instructor: { $in: instructorIds } }
+      ]
+    })
+      .skip(resultsPerPage * page)
+      .limit(resultsPerPage)
+      .then((results) => {
+        console.log(results);
+        return res.status(200).send(results);
+      })
+      .catch((err) => {
+        return res.status(500).send(err);
+      });
+  }
 
   // res.json({'mssg':'error occured'});
-};
-const findCourse = async (req, res) => {
-  const pageNumber = req.headers.pageNumber;
-  const keyword = req.body.keyword;
-  const instructor_details = await User.findOne({
-    name: new RegExp(keyword, 'i'),
-    userType: 'instructor'
-  });
-
-  const courses = await Course.find({
-    $or: [
-      { title: new RegExp(keyword, 'i') },
-      { subject: new RegExp(keyword, 'i') },
-      {
-        instructor: instructor_details._id
-      }
-    ]
-  })
-    .skip((pageNumber - 1) * COURSES_PER_PAGE)
-    .limit(COURSES_PER_PAGE);
-
-  res.json(courses);
 };
 
 module.exports = {
   findSubjects,
-  findCourse,
   findCourseMarsaf,
   viewCourse,
   viewMyCourses

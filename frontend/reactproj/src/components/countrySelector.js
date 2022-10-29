@@ -481,12 +481,14 @@ function CountrySelect(props) {
         headers: { 'Access-Control-Allow-Origin': '*' }
       });
 
-      var ctrObj = getCountryObj(res.data.country);
+      var ctrObj = getCountryObj(res.data.country.code);
 
       setDefaultCountry(ctrObj);
       getNewRate(ctrObj);
       console.log('got country');
-    } catch (e) {}
+    } catch (e) {
+      getCountryObj('EG');
+    }
   };
   const getNewRate = async (newCountry) => {
     const body = { country: newCountry };

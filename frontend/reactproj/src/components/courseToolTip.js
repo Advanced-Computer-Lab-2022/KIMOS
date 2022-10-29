@@ -1,22 +1,22 @@
 import * as React from 'react';
 import { styled } from '@mui/material/styles';
 import Tooltip, { tooltipClasses } from '@mui/material/Tooltip';
-import { Stack } from "@mui/system";
+import { Stack } from '@mui/system';
 import Paper from '@mui/material/Paper';
 import Box from '@mui/material/Box';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 
 // course.title, course.price, course.discount, course.totalHours, course.subtitles
 const HtmlTooltip = styled(({ className, ...props }) => (
-  <Tooltip {...props} classes={{ popper: className }} placement="right-end"/>
+  <Tooltip {...props} classes={{ popper: className }} placement="right-end" />
 ))(({ theme }) => ({
   [`& .${tooltipClasses.tooltip}`]: {
     backgroundColor: '#f5f5f9',
     color: 'rgba(0, 0, 0, 0.87)',
     maxWidth: 420,
     fontSize: theme.typography.pxToRem(12),
-    border: '1px solid #dadde9',
-  },
+    border: '1px solid #dadde9'
+  }
 }));
 
 const Item = styled(Paper)(({ theme }) => ({
@@ -25,47 +25,69 @@ const Item = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(2),
   margin: 10,
   textAlign: 'center',
-  color: theme.palette.text.secondary,
+  color: theme.palette.text.secondary
 }));
 
-
-
-const courseDetails = (props, title, price, discount, totalHours, subtitles)=>{
-  var stringPrice =  Math.ceil(price*props.rateAndSymbol.rate) +" " +props.rateAndSymbol.symbol 
-  var exercises = ['e1', 'e2','e3'];
-  var subtiteles = [{'title':'sub 1','hours':'2'},{'title':'sub 1','hours':'2'}]
+const courseDetails = (
+  props,
+  title,
+  price,
+  discount,
+  totalHours,
+  subtitles,
+  subject,
+  exercises
+) => {
+  var stringPrice = Math.ceil(price * props.rateAndSymbol.rate) + ' ' + props.rateAndSymbol.symbol;
+  // var exercises = ['e1', 'e2', 'e3'];
+  // var subtiteles = [
+  //   { title: 'sub 1', hours: '2' },
+  //   { title: 'sub 1', hours: '2' }
+  // ];
   return (
-
-
-             
-              <div className='toolTip-container'>
-                  <Item ><strong>Title : </strong>{title}</Item>
-                  <Item ><strong>Price : </strong>{stringPrice}</Item>
-                  <Item ><strong>Discount : </strong>{discount}</Item>
-                  <Item ><strong>Total Hours : </strong>{totalHours}</Item>
-                  <Item ><strong>Exercise </strong>{exercises.map((e,index)=>{
-                    return(
-                      <div key={index}>{e}</div>
-                    )
-                  })}
-                  </Item>
-                  <Item ><strong>Subtitles </strong>{subtiteles.map((s,index)=>{
-                    return(
-                      <div key={index} style={{display:'flex',justifyContent:'space-between'}}>
-                        <div>{s.title}</div>
-                        <div>{s.hours} Hour(s)</div>
-                      </div>
-
-
-                    )
-                  })}
-                  </Item>
+    <div className="toolTip-container">
+      <Item>
+        <strong>Title : </strong>
+        {title}
+      </Item>
+      <Item>
+        <strong>Subject : </strong>
+        {subject}
+      </Item>
+      <Item>
+        <strong>Price : </strong>
+        {stringPrice}
+      </Item>
+      <Item>
+        <strong>Discount : </strong>
+        {discount}
+      </Item>
+      <Item>
+        <strong>Total Hours : </strong>
+        {totalHours}
+      </Item>
+      <Item>
+        <strong>Exercises </strong>
+        {exercises &&
+          exercises.map((e, index) => {
+            return <div key={index}>{e}</div>;
+          })}
+      </Item>
+      <Item>
+        <strong>Subtitles </strong>
+        {subtitles &&
+          subtitles.map((s, index) => {
+            return (
+              <div key={index} style={{ display: 'flex', justifyContent: 'space-between' }}>
+                <div>{s.title}</div>
+                <div>{s.hours} Hour(s)</div>
               </div>
-              
-
-
-  )
-}
+            );
+          })}
+      </Item>
+    </div>
+  );
+};
 function CustomizedTooltips(props) {
   var course = props.course;
   return (
@@ -74,30 +96,29 @@ function CustomizedTooltips(props) {
         title={
           <React.Fragment>
             <div className="toolTip">
-                {courseDetails(props, course.title, course.price, course.discount, course.totalHours, course.subtitles)}
+              {courseDetails(
+                props,
+                course.title,
+                course.price,
+                course.discount,
+                course.totalHours,
+                course.subtitles,
+                course.subject,
+                course.exercises
+              )}
             </div>
           </React.Fragment>
-        }
-      >
-        <div >
-        {props.toolContent}
-        
-        </div>
+        }>
+        <div>{props.toolContent}</div>
       </HtmlTooltip>
     </div>
   );
 }
 
-
-const mapStateToProps = (state) =>{
-   
+const mapStateToProps = (state) => {
   return {
-      rateAndSymbol: state.rateAndSymbol,
+    rateAndSymbol: state.rateAndSymbol
   };
-}
+};
 
-
-export default connect(mapStateToProps) (CustomizedTooltips);
-
-
-
+export default connect(mapStateToProps)(CustomizedTooltips);

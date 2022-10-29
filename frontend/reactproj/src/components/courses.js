@@ -222,7 +222,7 @@ class courses extends Component {
     });
   };
 
-  getInstructorCources = async () => {
+  getInstructorCourses = async () => {
     try {
       const res = await axios.get('http://localhost:5000/users/instructor/viewCourse', {
         headers: { 'Access-Control-Allow-Origin': '*' }
@@ -250,9 +250,9 @@ class courses extends Component {
             />
             {this.state.instructor && (
               <SecondaryButton
-                function={this.getInstructorCources}
+                function={this.getInstructorCourses}
                 btnSize="medium"
-                btnText="My Cources"
+                btnText="My Courses"
               />
             )}
           </div>
