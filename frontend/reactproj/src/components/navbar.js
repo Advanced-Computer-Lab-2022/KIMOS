@@ -3,8 +3,13 @@ import PrimaryButton from './buttons/primaryBtn';
 import SecondaryButton from './buttons/secondaryBtn';
 import SearchIcon from '@mui/icons-material/Search';
 import CountrySelector from './countrySelector';
-import { setCourses } from '../redux/actions/index';
+import { setCourses, setUserType } from '../redux/actions/index';
 import {connect} from 'react-redux';
+import Box from '@mui/material/Box';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 
 
 const axios = require('axios');
@@ -45,6 +50,10 @@ class navbar extends Component {
             </div>
         )
     }
+    changeUserType = (e)=>{
+
+        this.props.setUserType(e.target.value);
+    }
     render() {
         return (
             <div className="navbar">
@@ -59,6 +68,7 @@ class navbar extends Component {
                 </div>
 
                 <div className="user-options">
+
                     <PrimaryButton function={this.exampleFunction} btnSize="medium" btnText="Log In"/>
                     <SecondaryButton function={this.exampleFunction} btnSize="medium" btnText="Sign Up"/>
                     <CountrySelector />
@@ -77,9 +87,10 @@ const mapStateToProps = (state) =>{
    
     return {
         courses: state.courses,
+        uesrType: state.userType
     };
   }
   
   
-export default connect(mapStateToProps, {setCourses:setCourses})(navbar)
+export default connect(mapStateToProps, {setCourses:setCourses, setUserType:setUserType})(navbar)
   

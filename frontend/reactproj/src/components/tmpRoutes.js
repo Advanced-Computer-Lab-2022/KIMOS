@@ -23,7 +23,7 @@ class tmpRoutes extends Component {
           <Link to="/instructor">Instructor</Link>
           <Link to="/admin">Admin</Link>
           <Link to="/trainee">Individual trainee & Corporate trainee</Link>
-          <button onClick={this.submitSearch}>Test</button>
+
         </div>
       </div>
     );

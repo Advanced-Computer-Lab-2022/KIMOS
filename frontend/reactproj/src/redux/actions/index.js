@@ -6,10 +6,18 @@ export const setCourses = (value) =>{
 }
 
 export const setRate = (value) =>{
-    console.log('reached action');
+
     
     return {
         type:'CHANGE_RATE',
+        payload: value
+    }
+}
+export const setUserType = (value) =>{
+
+    
+    return {
+        type:'CHANGE_USER-TYPE',
         payload: value
     }
 }

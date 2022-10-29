@@ -8,7 +8,59 @@
     grid-row: 1fr;
 
 }
+.i-courses-container{
 
+    height: 100%;
+    // this was fit-content
+    padding: 20px;
+    display: grid;
+    grid-template-rows: 10% 90%;
+    grid-row: 1fr;
+    &__main{
+        height: 100%;
+        // this was fit-content
+        padding: 20px;
+        display: grid;
+        grid-template-columns: 15% 85%;
+        grid-row: 1fr;
+    }
+}
+
+.i-search-bar{
+    
+
+    height: 70%;
+    width: 50vw;
+    border-radius: 10px;
+    display: flex;
+    background: rgb(187, 187, 187);
+    padding: 4px;
+
+    &__btn{
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        color: white;
+        padding: 10px;
+        
+    }
+    &__input{
+        border: none;
+        width: 100%;
+        height: 100%;
+        border-radius: 10px;
+        padding-left: 20px;
+        padding-right: 20px;
+        background: white;
+        font-size:18px;
+    }
+
+    &__input:focus{
+        outline: none;
+    }
+}
 .filters{
 
     display: flex;

@@ -62,7 +62,7 @@ export default function Create() {
   };
 
   return (
-    <>
+    <div className="create-course">
       <h2>Create A New Course</h2>
 
       <TextField
@@ -183,6 +183,6 @@ export default function Create() {
         onClick={createCourse}>
         Add
       </Button>
-    </>
+    </div>
   );
 }

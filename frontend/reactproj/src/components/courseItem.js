@@ -13,6 +13,27 @@ class courseItem extends Component {
     componentDidMount() {
 
     }
+    coursePrice = () => {
+        var discount = this.props.course.discount;
+        var oldPrice = Math.ceil(this.props.course.price*this.props.rateAndSymbol.rate)  ;
+        var newPrice = -1;
+        if(discount > 0){
+            newPrice = Math.ceil(oldPrice - (discount/100)* parseInt(oldPrice) ) 
+        }
+        var price = discount > 0 ? newPrice : oldPrice;
+        price += " " +this.props.rateAndSymbol.symbol;
+
+        return (
+            <div style={{color:discount > 0 ? 'red':'black', display:'flex', justifyContent:'space-between'}}>
+                <div>
+                    {price}
+                </div>
+                {discount > 0 && <div>
+                    {discount > 0 ? discount+'%' :''}
+                </div>}
+            </div>
+        )
+    }
 //     <CardActions>
 //     <Button size="small">View Details</Button>
 //     {this.userType !== 'cop-trainee' && <Button size="small">Buy</Button> }
@@ -31,15 +52,15 @@ class courseItem extends Component {
                     <Typography gutterBottom variant="h5" component="div">
                         {this.props.course.title}
                     </Typography>
-                    <Typography variant="body2" color="text.secondary">
+                    {this.props.type !== 'i' && <Typography variant="body2" color="text.secondary">
                         {this.props.course.rating + '/5.0'}
-                    </Typography>
-                    <Typography variant="body2" color="text.secondary">
-                        {this.props.course.totalHours + ' Hour(s)'}
-                    </Typography>
-                    {this.userType !== 'cop-trainee' && <Typography variant="h6" >
-                            {Math.ceil(this.props.course.price*this.props.rateAndSymbol.rate) +" " +this.props.rateAndSymbol.symbol }
                     </Typography>}
+                    {this.props.type !== 'i' && <Typography variant="body2" color="text.secondary">
+                        {this.props.course.totalHours + ' Hour(s)'}
+                    </Typography>}
+                    <Typography variant="h6" >
+                            {this.coursePrice()}
+                    </Typography>
                     </CardContent>
 
                 </Card>

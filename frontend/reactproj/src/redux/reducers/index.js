@@ -32,6 +32,15 @@ const courses = (courses=[], action) => {
     return courses;
 }
 
+const userType = (type='Any', action) => {
+    if(action.type === 'CHANGE_USER-TYPE'){
+
+
+        return action.payload;
+    }
+    return type;
+}
+
 
 
 
@@ -39,7 +48,8 @@ export default combineReducers({
 
     theme:theme,
     courses:courses,
-    rateAndSymbol:rateAndSymbol
+    rateAndSymbol:rateAndSymbol,
+    userType:userType
 
 
 });
