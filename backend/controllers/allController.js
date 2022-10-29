@@ -3,6 +3,7 @@ const { convert } = require('exchange-rates-api');
 const { getAllInfoByISO } = require('iso-country-currency');
 const dotenv = require('dotenv').config();
 const CC = require('currency-converter-lt');
+const subtitleModel = require('../models/subtitleModel');
 
 const getCountry = async (req, res) => {
   var user_id = '635d70dbf600410aab3c71b0';

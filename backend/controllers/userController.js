@@ -54,6 +54,7 @@ const instructorCreateCourse = async (req, res) => {
     price: course.price,
     totalHours: totalHours,
     summary: course.summary,
+    exercises: course.exercises,
     instructor: course.instructor
   });
 };

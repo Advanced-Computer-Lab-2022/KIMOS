@@ -1,7 +1,6 @@
 const Course = require('../models/courseModel');
 const User = require('../models/userModel');
-const { getCountry } = require('./userController');
-const { getAllInfoByISO } = require('iso-country-currency');
+const Subtitle = require('../models/subtitleModel');
 
 const viewCourse = async (req, res) => {
   const id = req.params.id;
@@ -89,9 +88,19 @@ const findCourseMarsaf = async (req, res) => {
     })
       .skip(resultsPerPage * page)
       .limit(resultsPerPage)
-      .then((results) => {
-        console.log(results);
-        return res.status(200).send(results);
+      .then(async (results) => {
+        const bigPromises = results.map(async (result, index) => {
+          console.log(result);
+          const promises = result.subtitles.map(async (subtitle, index) => {
+            const sub = await getSubtitle(subtitle._id);
+            return sub;
+          });
+          var subtitles = await Promise.all(promises);
+          result.subtitles = subtitles;
+          return result;
+        });
+        const finalResults = await Promise.all(bigPromises);
+        return res.status(200).send(finalResults);
       })
       .catch((err) => {
         return res.status(500).send(err);
@@ -106,9 +115,19 @@ const findCourseMarsaf = async (req, res) => {
     })
       .skip(resultsPerPage * page)
       .limit(resultsPerPage)
-      .then((results) => {
-        console.log(results);
-        return res.status(200).send(results);
+      .then(async (results) => {
+        const bigPromises = results.map(async (result, index) => {
+          console.log(result);
+          const promises = result.subtitles.map(async (subtitle, index) => {
+            const sub = await getSubtitle(subtitle._id);
+            return sub;
+          });
+          var subtitles = await Promise.all(promises);
+          result.subtitles = subtitles;
+          return result;
+        });
+        const finalResults = await Promise.all(bigPromises);
+        return res.status(200).send(finalResults);
       })
       .catch((err) => {
         return res.status(500).send(err);
@@ -116,6 +135,11 @@ const findCourseMarsaf = async (req, res) => {
   }
 
   // res.json({'mssg':'error occured'});
+};
+const getSubtitle = async (id) => {
+  const sub = await Subtitle.findById(id);
+  //console.log(sub);
+  return sub;
 };
 
 module.exports = {
