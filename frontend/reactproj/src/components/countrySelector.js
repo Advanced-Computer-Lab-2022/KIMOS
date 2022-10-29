@@ -10,7 +10,6 @@ import axios from 'axios';
 import { setRate } from '../redux/actions/index';
 import { connect } from 'react-redux';
 
-
 // From https://bitbucket.org/atlassian/atlaskit-mk-2/raw/4ad0e56649c3e6c973e226b7efaeb28cb240ccb0/packages/core/select/src/data/countries.js
 const countries = [
   { code: 'AD', label: 'Andorra', phone: '376' },
@@ -450,7 +449,6 @@ const style = {
   p: 4
 };
 function CountrySelect(props) {
-
   const [defaultCountry, setDefaultCountry] = useState({ code: 'EG', label: 'Egypt', phone: '20' });
   const [open, setOpen] = React.useState(false);
   const [firstRender, setFirstRender] = React.useState(true);
@@ -458,11 +456,9 @@ function CountrySelect(props) {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-
-  
   useEffect(() => {
     // Update the document title using the browser API
-    if(firstRender){
+    if (firstRender) {
       getCountry();
       setFirstRender(false);
     }
@@ -481,53 +477,39 @@ function CountrySelect(props) {
     const body = { newCountry: newCountry };
 
     try {
-      const res = await axios.get('http://localhost:3000/country', body, {
+      const res = await axios.get('http://localhost:5000/country', body, {
         headers: { 'Access-Control-Allow-Origin': '*' }
       });
 
       var ctrObj = getCountryObj(res.data.country);
 
-        setDefaultCountry(ctrObj);
-        getNewRate(ctrObj);
-        console.log('got country')
-        
-    } catch (e) {
-
-    }
-  }
-  const getNewRate = async(newCountry)=>{
-
-    const body = { 'country': newCountry };
-
+      setDefaultCountry(ctrObj);
+      getNewRate(ctrObj);
+      console.log('got country');
+    } catch (e) {}
+  };
+  const getNewRate = async (newCountry) => {
+    const body = { country: newCountry };
 
     try {
-        const res = await axios.post('http://localhost:3000/rate',body,{headers:{"Access-Control-Allow-Origin": "*"}});
-        props.setRate({'rate':res.data.rate, 'symbol':res.data.symbol});
-
-
-        
-
-    } catch (e) {
-
-
-    }
-  }
-  const submitChangeCountry = async(newCountry)=>{
-    
-    const body = { 'newCountry': newCountry };
+      const res = await axios.post('http://localhost:5000/rate', body, {
+        headers: { 'Access-Control-Allow-Origin': '*' }
+      });
+      props.setRate({ rate: res.data.rate, symbol: res.data.symbol });
+    } catch (e) {}
+  };
+  const submitChangeCountry = async (newCountry) => {
+    const body = { newCountry: newCountry };
 
     try {
-      await axios.post('http://localhost:3000/users/changeCountry', body, {
+      await axios.post('http://localhost:5000/users/changeCountry', body, {
         headers: { 'Access-Control-Allow-Origin': '*' }
       });
     } catch (e) {}
   };
 
-    
-
- 
-  const changeCountry = (event, value)=>{
-    if(value){
+  const changeCountry = (event, value) => {
+    if (value) {
       getNewRate(value);
       setDefaultCountry(value);
       submitChangeCountry(value);
@@ -589,12 +571,10 @@ function CountrySelect(props) {
     );
 }
 
-
-const mapStateToProps = (state) =>{
-   
+const mapStateToProps = (state) => {
   return {
-      rate: state.rateAndSymbol,
+    rate: state.rateAndSymbol
   };
-}
+};
 
-export default connect(mapStateToProps, {setRate:setRate}) (CountrySelect);
+export default connect(mapStateToProps, { setRate: setRate })(CountrySelect);

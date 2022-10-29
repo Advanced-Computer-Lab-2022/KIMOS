@@ -13,7 +13,4 @@ router.get('/viewMyCourses/:id', viewMyCourses); // view the courses given by me
 router.get('/subjects', findSubjects);
 router.post('/findCourse', findCourseMarsaf);
 
-router.get('/subjects', findSubjects);
-router.post('/findCourse', findCourseMarsaf);
-
 module.exports = router;

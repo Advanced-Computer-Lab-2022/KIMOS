@@ -1,8 +1,7 @@
-
 const Course = require('../models/courseModel');
 const User = require('../models/userModel');
 const { getCountry } = require('./userController');
-const {getAllInfoByISO} = require( 'iso-country-currency' );
+const { getAllInfoByISO } = require('iso-country-currency');
 const COURSES_PER_PAGE = 10;
 
 const viewCourse = async (req, res) => {
@@ -60,10 +59,10 @@ const findSubjects = async (req, res) => {
 };
 
 const findCourseMarsaf = async (req, res) => {
-  //Just 2 for now, because the DB got only 5 courses :)
   const resultsPerPage = 10;
-  let page = req.body.page ? req.body.page:1;
+  let page = req.body.page ? req.body.page : 1;
   const keyword = req.body.keyword;
+  console.log('keyword: ', keyword);
 
   page = page >= 1 ? page - 1 : page;
 
@@ -71,26 +70,29 @@ const findCourseMarsaf = async (req, res) => {
     name: new RegExp(keyword, 'i'),
     userType: 'instructor'
   });
-
-  inst = instructor_details.map((instructor) => {
-    instructor._id;
+  const instructorIds = instructor_details.map((instructor, index) => {
+    return instructor._id;
   });
+  console.log(instructorIds);
 
-  await Course.find({
+  const courses = await Course.find({
     $or: [
       { title: new RegExp(keyword, 'i') },
-      { subjects: [new RegExp(keyword, 'i')] },
-      { instructors: { $elemMatch: { inst } } }
+      { subject: new RegExp(keyword, 'i') },
+      { instructor: { $in: instructorIds } }
     ]
   })
-    .limit(resultsPerPage)
     .skip(resultsPerPage * page)
-    .then((results) => {
-      return res.status(200).send(results);
-    })
-    .catch((err) => {
-      return res.status(500).send(err);
-    });
+    .limit(resultsPerPage);
+  // .then((results) => {
+  //   console.log(results);
+  //   return res.status(200).send(results);
+  // })
+  // .catch((err) => {
+  //   return res.status(500).send(err);
+  // });
+  console.log(courses);
+  return res.status(200).send(courses);
 
   // res.json({'mssg':'error occured'});
 };
