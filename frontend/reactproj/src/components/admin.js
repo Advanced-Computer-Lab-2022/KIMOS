@@ -1,18 +1,3 @@
-<<<<<<< Updated upstream
-import React, { Component } from 'react';
-
-class admin extends Component {
-    render() {
-        return (
-            <div>
-                admin
-            </div>
-        );
-    }
-}
-
-export default admin;
-=======
 import React, { useState } from 'react';
 import AdminCard from './adminCard.js';
 import axios from 'axios';
@@ -62,4 +47,3 @@ function Admin() {
 }
 
 export default Admin;
->>>>>>> Stashed changes

@@ -17,11 +17,11 @@ const courseSchema = mongoose.Schema(
       min: 0.0,
       max: 5.0
     },
-    totalHours: {
-      type: Number,
-      required: [true, 'Please specify the total number of hours for the course'],
-      min: 0.0
-    },
+    // totalHours: {
+    //   type: Number,
+    //   required: [true, 'Please specify the total number of hours for the course'],
+    //   min: 0.0
+    // },
     discount: {
       type: Number,
       min: 0.0,
@@ -37,14 +37,18 @@ const courseSchema = mongoose.Schema(
       required: [true, 'Please specify an instructor'],
       ref: 'User'
     },
-    subtitles: {
-      type: [mongoose.Schema.Types.ObjectId],
-      ref: 'Course'
-    },
-    exercises: {
-      type: [mongoose.Schema.Types.ObjectId],
-      ref: 'Exercise'
-    }
+    subtitles: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Subtitle'
+      }
+    ],
+    exercises: [
+      {
+        type: String,
+        required: true
+      }
+    ]
   },
   {
     timestamps: true

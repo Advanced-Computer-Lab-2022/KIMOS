@@ -1,4 +1,7 @@
 const User = require('../models/userModel');
+const Subtitle = require('../models/subtitleModel');
+const CourseData = require('../models/courseModel');
+
 const { convert } = require('exchange-rates-api');
 // Adminstrator function
 // As an Adminstrator add another adminstrator and assign their username and password
@@ -25,11 +28,18 @@ const instructorViewCourses = async (req, res) => {
 const instructorCreateCourse = async (req, res) => {
   const course = req.body;
 
+  const promises = course.subtitles.map(async (subtitle, index) => {
+    const sub = await instructorCreateSubtitle(subtitle);
+    return sub;
+  });
+  var subtitles = await Promise.all(promises);
+  console.log('Done');
+  console.log(subtitles);
+
   const newCourse = await CourseData.create({
     title: course.title,
     subject: course.subject,
-    subtitles: course.subtitles,
-    totalHours: course.totalHours,
+    subtitles: subtitles,
     price: course.price,
     summary: course.summary,
     instructor: course.instructor
@@ -64,17 +74,18 @@ const getCountry = async (req, res) => {
   res.status(200).json({ country: country });
 };
 
-}
-
-const getPrice = asnyc(req,res) => {
-    let amount = await convert(2000, 'USD', 'EUR', '2018-01-01');
-    console.log(amount);    // 1667.6394564000002
-
+const instructorCreateSubtitle = async (subtitle) => {
+  const res = await Subtitle.create({
+    Title: subtitle.Title,
+    Hours: subtitle.Hours
+  });
+  //console.log('OOGa BOOGa');
+  return res;
 };
 module.exports = {
   addUser,
   instructorViewCourses,
   instructorCreateCourse,
-  changeCountry,
+  instructorCreateSubtitle,
   getCountry
 };

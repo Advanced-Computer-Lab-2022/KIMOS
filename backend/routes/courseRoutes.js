@@ -1,14 +1,6 @@
 const express = require('express');
 const router = express.Router();
 
-<<<<<<< Updated upstream
-
-const { findCourse, findSubjects, findCourseMarsaf } = require("../controllers/courseController");
-
-router.get("/subjects", findSubjects);
-router.post("/findCourse", findCourseMarsaf);
-
-=======
 const { viewCourse, viewMyCourses } = require('../controllers/courseController');
 
 const { findCourse, findSubjects, findCourseMarsaf } = require('../controllers/courseController');
@@ -20,6 +12,5 @@ router.get('/viewMyCourses/:id', viewMyCourses); // view the courses given by me
 
 router.get('/subjects', findSubjects);
 router.post('/findCourse', findCourseMarsaf);
->>>>>>> Stashed changes
 
 module.exports = router;

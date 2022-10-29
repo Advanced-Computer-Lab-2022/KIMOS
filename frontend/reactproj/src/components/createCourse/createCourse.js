@@ -4,9 +4,11 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import axios from 'axios';
+import { Container } from '@mui/material';
 
 export default function Create() {
   var subtitleCount = 1;
+  var exercisesCount = 1;
   const [course, setCourse] = useState({
     title: '',
     subtitles: [],
@@ -14,15 +16,16 @@ export default function Create() {
     summary: '',
     rating: 0,
     totalHours: '',
-    discout: '',
+    discount: '',
     subject: '',
     instructor: '635387b65b29f183de6e32d6',
     exercises: []
   });
 
-  const [subtitleList, setSubtitle] = useState([{ subtitle: '' }]);
+  const [subtitleList, setSubtitle] = useState([{ Title: '', Hours: '' }]);
+  const [exercisesList, setExercises] = useState(['']);
 
-  console.log(subtitleList);
+  //console.log(subtitleList);
 
   //we use axios to send date from frontend to backend
   const createCourse = () => {
@@ -32,15 +35,27 @@ export default function Create() {
   };
 
   const addSubTitle = () => {
-    setSubtitle([...subtitleList, { subtitle: '' }]);
+    setSubtitle([...subtitleList, { Title: '', Hours: '' }]);
+  };
+  const addExercises = () => {
+    setExercises([...exercisesList, '']);
   };
 
-  const handleChange = (e, index) => {
-    const { name, value } = e.target;
+  const handleChange = (event, index) => {
+    console.log(course);
+    const { name, value } = event.target;
     const list = [...subtitleList];
     list[index][name] = value;
-    course.subtitles[index] = value;
+    course.subtitles = list;
     setSubtitle(list);
+  };
+  const handleChangeExercises = (event, index) => {
+    console.log(course);
+    const { value } = event.target;
+    const list = [...exercisesList];
+    list[index] = value;
+    course.exercises = list;
+    setExercises(list);
   };
 
   return (
@@ -49,7 +64,8 @@ export default function Create() {
 
       <TextField
         required
-        id="outlined-basic"
+        id="Title"
+        className="outlined-basic"
         label="Title"
         variant="outlined"
         value={course.title}
@@ -59,7 +75,8 @@ export default function Create() {
       />
       <TextField
         required
-        id="outlined-basic2"
+        id="Subject"
+        className="outlined-basic2"
         label="Subject"
         variant="outlined"
         value={course.subject}
@@ -71,15 +88,26 @@ export default function Create() {
       {/* subtitles */}
       {subtitleList.map((singleSubtitle, index) => (
         <div key={index}>
+          <p style={{ fontSize: 15 }}>{`SubTitle ${subtitleCount++}`}</p>
           <TextField
             required
-            name="subtitle"
+            name="Title"
             id="outlined-basic3"
-            label="SubTitle"
+            label="Title"
             variant="outlined"
-            value={singleSubtitle.subtitle}
+            //value={singleSubtitle.subtitle}
             onChange={(e) => handleChange(e, index)}
           />
+          <TextField
+            required
+            name="Hours"
+            id="outlined-basic3"
+            label="Hours"
+            variant="outlined"
+            //value={singleSubtitle.subtitle}
+            onChange={(e) => handleChange(e, index)}
+          />
+
           {subtitleList.length - 1 === index && (
             <AddCircleOutlineIcon
               variant="contained"
@@ -88,8 +116,30 @@ export default function Create() {
           )}
         </div>
       ))}
+      {/* exercises */}
+      {exercisesList.map((singleExercise, index) => (
+        <div key={index}>
+          <p style={{ fontSize: 15 }}>{`Exercise ${exercisesCount++}`}</p>
+          <TextField
+            required
+            name="Title"
+            id="outlined-basic3"
+            label="Title"
+            variant="outlined"
+            //value={singleSubtitle.subtitle}
+            onChange={(e) => handleChangeExercises(e, index)}
+          />
 
-      <TextField
+          {exercisesList.length - 1 === index && (
+            <AddCircleOutlineIcon
+              variant="contained"
+              style={{ minWidth: '50px', marginTop: '15px', cursor: 'pointer' }}
+              onClick={addExercises}></AddCircleOutlineIcon>
+          )}
+        </div>
+      ))}
+
+      {/* <TextField
         required
         id="outlined-basic5"
         label="Total Hours"
@@ -98,7 +148,8 @@ export default function Create() {
         onChange={(event) => {
           setCourse({ ...course, totalHours: event.target.value });
         }}
-      />
+      /> */}
+
       <TextField
         required
         id="outlined-basic4"
