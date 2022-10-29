@@ -248,7 +248,7 @@ class courses extends Component {
 
   
         try {
-            const res = await axios.get('http://localhost:3000/instructor',{headers:{"Access-Control-Allow-Origin": "*"}});
+            const res = await axios.get('http://localhost:3000/users/instructor/viewCourse',{headers:{"Access-Control-Allow-Origin": "*"}});
 
             this.setState({courses:res.data, mainCourses:res.data}, ()=>{this.updateCourses()})
 

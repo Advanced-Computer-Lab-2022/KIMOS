@@ -17,13 +17,13 @@ const countries = [
   {
     code: 'AE',
     label: 'United Arab Emirates',
-    phone: '971',
+    phone: '971'
   },
   { code: 'AF', label: 'Afghanistan', phone: '93' },
   {
     code: 'AG',
     label: 'Antigua and Barbuda',
-    phone: '1-268',
+    phone: '1-268'
   },
   { code: 'AI', label: 'Anguilla', phone: '1-264' },
   { code: 'AL', label: 'Albania', phone: '355' },
@@ -37,7 +37,7 @@ const countries = [
     code: 'AU',
     label: 'Australia',
     phone: '61',
-    suggested: true,
+    suggested: true
   },
   { code: 'AW', label: 'Aruba', phone: '297' },
   { code: 'AX', label: 'Alland Islands', phone: '358' },
@@ -45,7 +45,7 @@ const countries = [
   {
     code: 'BA',
     label: 'Bosnia and Herzegovina',
-    phone: '387',
+    phone: '387'
   },
   { code: 'BB', label: 'Barbados', phone: '1-246' },
   { code: 'BD', label: 'Bangladesh', phone: '880' },
@@ -70,27 +70,27 @@ const countries = [
     code: 'CA',
     label: 'Canada',
     phone: '1',
-    suggested: true,
+    suggested: true
   },
   {
     code: 'CC',
     label: 'Cocos (Keeling) Islands',
-    phone: '61',
+    phone: '61'
   },
   {
     code: 'CD',
     label: 'Congo, Democratic Republic of the',
-    phone: '243',
+    phone: '243'
   },
   {
     code: 'CF',
     label: 'Central African Republic',
-    phone: '236',
+    phone: '236'
   },
   {
     code: 'CG',
     label: 'Congo, Republic of the',
-    phone: '242',
+    phone: '242'
   },
   { code: 'CH', label: 'Switzerland', phone: '41' },
   { code: 'CI', label: "Cote d'Ivoire", phone: '225' },
@@ -110,7 +110,7 @@ const countries = [
     code: 'DE',
     label: 'Germany',
     phone: '49',
-    suggested: true,
+    suggested: true
   },
   { code: 'DJ', label: 'Djibouti', phone: '253' },
   { code: 'DK', label: 'Denmark', phone: '45' },
@@ -118,7 +118,7 @@ const countries = [
   {
     code: 'DO',
     label: 'Dominican Republic',
-    phone: '1-809',
+    phone: '1-809'
   },
   { code: 'DZ', label: 'Algeria', phone: '213' },
   { code: 'EC', label: 'Ecuador', phone: '593' },
@@ -133,19 +133,19 @@ const countries = [
   {
     code: 'FK',
     label: 'Falkland Islands (Malvinas)',
-    phone: '500',
+    phone: '500'
   },
   {
     code: 'FM',
     label: 'Micronesia, Federated States of',
-    phone: '691',
+    phone: '691'
   },
   { code: 'FO', label: 'Faroe Islands', phone: '298' },
   {
     code: 'FR',
     label: 'France',
     phone: '33',
-    suggested: true,
+    suggested: true
   },
   { code: 'GA', label: 'Gabon', phone: '241' },
   { code: 'GB', label: 'United Kingdom', phone: '44' },
@@ -164,7 +164,7 @@ const countries = [
   {
     code: 'GS',
     label: 'South Georgia and the South Sandwich Islands',
-    phone: '500',
+    phone: '500'
   },
   { code: 'GT', label: 'Guatemala', phone: '502' },
   { code: 'GU', label: 'Guam', phone: '1-671' },
@@ -174,7 +174,7 @@ const countries = [
   {
     code: 'HM',
     label: 'Heard Island and McDonald Islands',
-    phone: '672',
+    phone: '672'
   },
   { code: 'HN', label: 'Honduras', phone: '504' },
   { code: 'HR', label: 'Croatia', phone: '385' },
@@ -188,13 +188,13 @@ const countries = [
   {
     code: 'IO',
     label: 'British Indian Ocean Territory',
-    phone: '246',
+    phone: '246'
   },
   { code: 'IQ', label: 'Iraq', phone: '964' },
   {
     code: 'IR',
     label: 'Iran, Islamic Republic of',
-    phone: '98',
+    phone: '98'
   },
   { code: 'IS', label: 'Iceland', phone: '354' },
   { code: 'IT', label: 'Italy', phone: '39' },
@@ -205,7 +205,7 @@ const countries = [
     code: 'JP',
     label: 'Japan',
     phone: '81',
-    suggested: true,
+    suggested: true
   },
   { code: 'KE', label: 'Kenya', phone: '254' },
   { code: 'KG', label: 'Kyrgyzstan', phone: '996' },
@@ -215,12 +215,12 @@ const countries = [
   {
     code: 'KN',
     label: 'Saint Kitts and Nevis',
-    phone: '1-869',
+    phone: '1-869'
   },
   {
     code: 'KP',
     label: "Korea, Democratic People's Republic of",
-    phone: '850',
+    phone: '850'
   },
   { code: 'KR', label: 'Korea, Republic of', phone: '82' },
   { code: 'KW', label: 'Kuwait', phone: '965' },
@@ -229,7 +229,7 @@ const countries = [
   {
     code: 'LA',
     label: "Lao People's Democratic Republic",
-    phone: '856',
+    phone: '856'
   },
   { code: 'LB', label: 'Lebanon', phone: '961' },
   { code: 'LC', label: 'Saint Lucia', phone: '1-758' },
@@ -246,20 +246,20 @@ const countries = [
   {
     code: 'MD',
     label: 'Moldova, Republic of',
-    phone: '373',
+    phone: '373'
   },
   { code: 'ME', label: 'Montenegro', phone: '382' },
   {
     code: 'MF',
     label: 'Saint Martin (French part)',
-    phone: '590',
+    phone: '590'
   },
   { code: 'MG', label: 'Madagascar', phone: '261' },
   { code: 'MH', label: 'Marshall Islands', phone: '692' },
   {
     code: 'MK',
     label: 'Macedonia, the Former Yugoslav Republic of',
-    phone: '389',
+    phone: '389'
   },
   { code: 'ML', label: 'Mali', phone: '223' },
   { code: 'MM', label: 'Myanmar', phone: '95' },
@@ -268,7 +268,7 @@ const countries = [
   {
     code: 'MP',
     label: 'Northern Mariana Islands',
-    phone: '1-670',
+    phone: '1-670'
   },
   { code: 'MQ', label: 'Martinique', phone: '596' },
   { code: 'MR', label: 'Mauritania', phone: '222' },
@@ -303,14 +303,14 @@ const countries = [
   {
     code: 'PM',
     label: 'Saint Pierre and Miquelon',
-    phone: '508',
+    phone: '508'
   },
   { code: 'PN', label: 'Pitcairn', phone: '870' },
   { code: 'PR', label: 'Puerto Rico', phone: '1' },
   {
     code: 'PS',
     label: 'Palestine, State of',
-    phone: '970',
+    phone: '970'
   },
   { code: 'PT', label: 'Portugal', phone: '351' },
   { code: 'PW', label: 'Palau', phone: '680' },
@@ -332,7 +332,7 @@ const countries = [
   {
     code: 'SJ',
     label: 'Svalbard and Jan Mayen',
-    phone: '47',
+    phone: '47'
   },
   { code: 'SK', label: 'Slovakia', phone: '421' },
   { code: 'SL', label: 'Sierra Leone', phone: '232' },
@@ -344,30 +344,30 @@ const countries = [
   {
     code: 'ST',
     label: 'Sao Tome and Principe',
-    phone: '239',
+    phone: '239'
   },
   { code: 'SV', label: 'El Salvador', phone: '503' },
   {
     code: 'SX',
     label: 'Sint Maarten (Dutch part)',
-    phone: '1-721',
+    phone: '1-721'
   },
   {
     code: 'SY',
     label: 'Syrian Arab Republic',
-    phone: '963',
+    phone: '963'
   },
   { code: 'SZ', label: 'Swaziland', phone: '268' },
   {
     code: 'TC',
     label: 'Turks and Caicos Islands',
-    phone: '1-649',
+    phone: '1-649'
   },
   { code: 'TD', label: 'Chad', phone: '235' },
   {
     code: 'TF',
     label: 'French Southern Territories',
-    phone: '262',
+    phone: '262'
   },
   { code: 'TG', label: 'Togo', phone: '228' },
   { code: 'TH', label: 'Thailand', phone: '66' },
@@ -381,18 +381,18 @@ const countries = [
   {
     code: 'TT',
     label: 'Trinidad and Tobago',
-    phone: '1-868',
+    phone: '1-868'
   },
   { code: 'TV', label: 'Tuvalu', phone: '688' },
   {
     code: 'TW',
     label: 'Taiwan, Republic of China',
-    phone: '886',
+    phone: '886'
   },
   {
     code: 'TZ',
     label: 'United Republic of Tanzania',
-    phone: '255',
+    phone: '255'
   },
   { code: 'UA', label: 'Ukraine', phone: '380' },
   { code: 'UG', label: 'Uganda', phone: '256' },
@@ -400,30 +400,30 @@ const countries = [
     code: 'US',
     label: 'United States',
     phone: '1',
-    suggested: true,
+    suggested: true
   },
   { code: 'UY', label: 'Uruguay', phone: '598' },
   { code: 'UZ', label: 'Uzbekistan', phone: '998' },
   {
     code: 'VA',
     label: 'Holy See (Vatican City State)',
-    phone: '379',
+    phone: '379'
   },
   {
     code: 'VC',
     label: 'Saint Vincent and the Grenadines',
-    phone: '1-784',
+    phone: '1-784'
   },
   { code: 'VE', label: 'Venezuela', phone: '58' },
   {
     code: 'VG',
     label: 'British Virgin Islands',
-    phone: '1-284',
+    phone: '1-284'
   },
   {
     code: 'VI',
     label: 'US Virgin Islands',
-    phone: '1-340',
+    phone: '1-340'
   },
   { code: 'VN', label: 'Vietnam', phone: '84' },
   { code: 'VU', label: 'Vanuatu', phone: '678' },
@@ -434,7 +434,7 @@ const countries = [
   { code: 'YT', label: 'Mayotte', phone: '262' },
   { code: 'ZA', label: 'South Africa', phone: '27' },
   { code: 'ZM', label: 'Zambia', phone: '260' },
-  { code: 'ZW', label: 'Zimbabwe', phone: '263' },
+  { code: 'ZW', label: 'Zimbabwe', phone: '263' }
 ];
 const style = {
   position: 'absolute',
@@ -444,10 +444,10 @@ const style = {
   width: 400,
   bgcolor: 'background.paper',
   borderRadius: '6px',
-  display:'flex',
-  justifyContent:'center',
-  alignItems:'center',
-  p: 4,
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  p: 4
 };
 function CountrySelect(props) {
 
@@ -468,22 +468,24 @@ function CountrySelect(props) {
     }
   });
 
-  const getCountryObj = (id)=>{
-
+  const getCountryObj = (id) => {
     var ctr = null;
-    countries.forEach((country)=>{
-      if(country.code === id){ctr = country; }
-    })
+    countries.forEach((country) => {
+      if (country.code === id) {
+        ctr = country;
+      }
+    });
     return ctr;
-  }
-  const getCountry = async(newCountry)=>{
-    
-    const body = { 'newCountry': newCountry };
+  };
+  const getCountry = async (newCountry) => {
+    const body = { newCountry: newCountry };
 
     try {
-        const res = await axios.get('http://localhost:3000/country',body,{headers:{"Access-Control-Allow-Origin": "*"}});
+      const res = await axios.get('http://localhost:3000/country', body, {
+        headers: { 'Access-Control-Allow-Origin': '*' }
+      });
 
-        var ctrObj = getCountryObj(res.data.country);
+      var ctrObj = getCountryObj(res.data.country);
 
         setDefaultCountry(ctrObj);
         getNewRate(ctrObj);
@@ -515,11 +517,14 @@ function CountrySelect(props) {
     const body = { 'newCountry': newCountry };
 
     try {
-        const res = await axios.post('http://localhost:3000/changeCountry',body,{headers:{"Access-Control-Allow-Origin": "*"}});
-    } catch (e) {
+      await axios.post('http://localhost:3000/users/changeCountry', body, {
+        headers: { 'Access-Control-Allow-Origin': '*' }
+      });
+    } catch (e) {}
+  };
 
-    }
-  }
+    
+
  
   const changeCountry = (event, value)=>{
     if(value){
@@ -527,65 +532,61 @@ function CountrySelect(props) {
       setDefaultCountry(value);
       submitChangeCountry(value);
     }
-  }
-  const modal = ()=>{
+  };
+  const modal = () => {
     return (
       <Modal
         open={open}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
+        aria-describedby="modal-modal-description">
         <Box sx={style}>
           <Autocomplete
-              id="country-select-demo"
-              sx={{ width: 300 }}
-              options={countries}
-              autoHighlight
-              getOptionLabel={(option) => option.label}
-              value={defaultCountry}
-              onChange={(event, value)=>{changeCountry(event, value )}}
-              renderOption={(props, option) => (
-                <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                  <img
-                    loading="lazy"
-                    width="20"
-                    src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
-                    srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
-                    alt=""
-                  />
-                  {option.label} ({option.code}) 
-                </Box>
-              )}
-              renderInput={(params) => (
-                <TextField
-                  {...params}
-                  label="Choose a country"
-        
+            id="country-select-demo"
+            sx={{ width: 300 }}
+            options={countries}
+            autoHighlight
+            getOptionLabel={(option) => option.label}
+            value={defaultCountry}
+            onChange={(event, value) => {
+              changeCountry(event, value);
+            }}
+            renderOption={(props, option) => (
+              <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
+                <img
+                  loading="lazy"
+                  width="20"
+                  src={`https://flagcdn.com/w20/${option.code.toLowerCase()}.png`}
+                  srcSet={`https://flagcdn.com/w40/${option.code.toLowerCase()}.png 2x`}
+                  alt=""
                 />
-              )}
-            />
+                {option.label} ({option.code})
+              </Box>
+            )}
+            renderInput={(params) => <TextField {...params} label="Choose a country" />}
+          />
         </Box>
       </Modal>
-    )
-  }
-  
-  if(true)
-    return(
-        <div className="country-selector">
-            <img
-                loading="lazy"
-                width="60"
-                src={`https://flagcdn.com/w20/${defaultCountry.code.toLowerCase()}.png`}
-                srcSet={`https://flagcdn.com/w40/${defaultCountry.code.toLowerCase()}.png 2x`}
-                alt="current country"
-                className="country"
-                onClick={()=>{handleOpen()}}
-            />
-            {modal()}
-        </div>
-    )
+    );
+  };
 
+  if (true)
+    return (
+      <div className="country-selector">
+        <img
+          loading="lazy"
+          width="60"
+          src={`https://flagcdn.com/w20/${defaultCountry.code.toLowerCase()}.png`}
+          srcSet={`https://flagcdn.com/w40/${defaultCountry.code.toLowerCase()}.png 2x`}
+          alt="current country"
+          className="country"
+          onClick={() => {
+            handleOpen();
+          }}
+        />
+        {modal()}
+      </div>
+    );
 }
 
 
