@@ -1,0 +1,17 @@
+.country{
+    cursor: pointer;
+    position: absolute;
+    left: 50%;
+    top:50%;
+    transform: translate(-50%, -50%);
+}
+.country-selector{
+    position: relative;
+    margin: 0 10px 0 10px;
+    // border: 1px solid black;
+    // border-radius: 100%;
+    width: 40px;
+    height: 40px;
+
+    overflow: hidden;
+}

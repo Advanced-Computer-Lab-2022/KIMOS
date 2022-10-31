@@ -1,0 +1,19 @@
+.course-item{
+    width: 300px;
+    margin: 20px;
+
+    &__footer{
+
+
+        height: 100px;
+    }
+}
+
+.course-toolTip{
+
+    padding: 10px;
+    Item {
+        margin:5px !important;
+        border: 2px solid red !important; 
+    }
+}
