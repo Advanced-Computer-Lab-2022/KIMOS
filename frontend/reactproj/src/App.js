@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import TmpRoutes from './components/tmpRoutes';
+import LoginPage from './components/loginPage';
 import Navbar from './components/navbar';
 import Guest from './components/guest';
 import Admin from './components/admin';
@@ -33,14 +34,15 @@ class App extends Component {
       <Router>
         <div className="main-content">
           <Navbar selectCourses={this.handleCoursesChange} />
-
           <Routes>
-            <Route exact path="/" element={<TmpRoutes />}></Route>
+            <Route exact path="/" element={<LoginPage />}></Route>
+            <Route exact path="/milestone1" element={<TmpRoutes />}></Route>
             <Route exact path="/guest" element={<Guest />}></Route>
             <Route exact path="/admin" element={<Admin />}></Route>
             <Route exact path="/instructor" element={<Instructor />}></Route>
             <Route exact path="/instructor/courses" element={<InstructorCourses />}></Route>
-            <Route exact path="/trainee" element={<Trainee />}></Route>
+            <Route path="/copt/courses/:search" element={<Courses />}></Route>
+            <Route path="/it/courses/:search" element={<Courses />}></Route>
             <Route path="/courses/:search" element={<Courses />}></Route>
 
           </Routes>

@@ -3,8 +3,6 @@ import { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import axios from 'axios';
 import { setRate } from '../redux/actions/index';
@@ -557,17 +555,17 @@ function CountrySelect(props) {
   if (true)
     return (
       <div className="country-selector">
-        <img
-          loading="lazy"
-          width="60"
-          src={`https://flagcdn.com/w20/${defaultCountry.code.toLowerCase()}.png`}
-          srcSet={`https://flagcdn.com/w40/${defaultCountry.code.toLowerCase()}.png 2x`}
-          alt="current country"
-          className="country"
-          onClick={() => {
-            handleOpen();
-          }}
-        />
+      <img
+      loading="lazy"
+      width="40"
+
+      srcSet={`https://flagcdn.com/w40/${defaultCountry.code.toLowerCase()}.png 2x`}
+      alt="current country"
+      className="country"
+      onClick={() => {
+        handleOpen();
+      }}
+      />
         {modal()}
       </div>
     );
@@ -580,3 +578,15 @@ const mapStateToProps = (state) => {
 };
 
 export default connect(mapStateToProps, { setRate: setRate })(CountrySelect);
+
+// <img
+// loading="lazy"
+// width="60"
+// src={`https://flagcdn.com/w20/${defaultCountry.code.toLowerCase()}.png`}
+// srcSet={`https://flagcdn.com/w40/${defaultCountry.code.toLowerCase()}.png 2x`}
+// alt="current country"
+// className="country"
+// onClick={() => {
+//   handleOpen();
+// }}
+// />

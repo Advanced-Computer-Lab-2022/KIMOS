@@ -21,3 +21,13 @@ export const setUserType = (value) =>{
         payload: value
     }
 }
+
+
+export const setUser = (value) =>{
+
+    
+    return {
+        type:'LOG_IN',
+        payload: value
+    }
+}

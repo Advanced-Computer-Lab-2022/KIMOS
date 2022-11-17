@@ -1,0 +1,58 @@
+.login-page{
+
+    @include flex-center-all;
+
+    &__form{
+        border-radius: 5px;
+        overflow: hidden;
+        width: 50%;
+        height: 500px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        &__left{
+
+            height: 100%;
+            width: 80%;
+            background: linear-gradient(45deg, $primary-color-lighter, $secondary-color-lighter);
+            color:white;
+            font-size: 50px;
+            font-weight: bolder;
+            padding: 30px;
+        }
+        &__info{
+            position: relative;
+            height: 100%;
+            border-right: 1px solid $primary-color;
+            border-top: 1px solid $primary-color;
+            border-bottom: 1px solid $primary-color;
+            border-top-right-radius: 5px;
+            border-bottom-right-radius: 5px;
+
+            padding-left: 10px;
+            padding-right: 10px;
+
+            @include flex-center-all;
+        }
+        &__input{
+            display: flex;
+            flex-direction: column;
+
+            &__text{
+                @include flex-center-all;
+                background: linear-gradient(45deg, $primary-color-lighter, $secondary-color-lighter);
+                font-size: 30px;
+                font-weight: bolder;
+                color:transparent;
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                margin-bottom: 10px;
+            }
+            &__btn{
+                @include flex-center-all;
+                margin-top: 20px;
+
+            }
+        }
+    }
+}

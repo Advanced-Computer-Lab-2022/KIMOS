@@ -12,12 +12,10 @@ const theme = (theme = (localStorage.getItem("theme")==="true")|| false, action)
 
 const rateAndSymbol = (rateAndSymbol={'rate':1, 'symbol':'$'}, action) => {
     if(action.type === 'CHANGE_RATE'){
-
-        console.log('reached reducer');
         return action.payload;
     }
     else{
-        console.log('reached not');
+
         
     }
     return rateAndSymbol;
@@ -41,6 +39,16 @@ const userType = (type='Any', action) => {
     return type;
 }
 
+const user = (user={username:"",userType:""}, action) => {
+    console.log(user)
+    if(action.type === 'LOG_IN'){
+
+        return action.payload;
+    }
+    return user;
+}
+
+
 
 
 
@@ -49,7 +57,8 @@ export default combineReducers({
     theme:theme,
     courses:courses,
     rateAndSymbol:rateAndSymbol,
-    userType:userType
+    userType:userType,
+    user:user
 
 
 });

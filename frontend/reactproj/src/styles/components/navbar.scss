@@ -63,7 +63,7 @@
     width: 50vw;
     border-radius: 10px;
     display: flex;
-    background: linear-gradient(to left, $primary-color, $secondary-color);
+    // background: linear-gradient(to left, $primary-color, $secondary-color);
     padding: 4px;
 
     &__btn{
@@ -72,7 +72,7 @@
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        color: white;
+        color: $primary-color;
         padding: 10px;
         
     }
