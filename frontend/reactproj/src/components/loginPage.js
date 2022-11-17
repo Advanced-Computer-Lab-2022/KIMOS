@@ -39,6 +39,7 @@ class loginPage extends Component {
         href = "it/courses/search?q=&page=1";
     if(type === "corporate trainee")
         href = "copt/courses/search?q=&page=1";
+    localStorage.setItem('userData', JSON.stringify({username:this.state.username, userType:type}))
     window.location.href = href;
     //will validate later.
 
