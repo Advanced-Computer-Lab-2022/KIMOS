@@ -9,6 +9,14 @@ const subtitleSchema = mongoose.Schema(
     Hours: {
       type: Number,
       required: true
+    },
+    video: {
+      link: {
+        type: String
+      },
+      description: {
+        type: String
+      }
     }
   },
   {

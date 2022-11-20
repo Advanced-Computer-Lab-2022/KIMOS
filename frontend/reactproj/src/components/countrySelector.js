@@ -477,6 +477,20 @@ export default function CountrySelect() {
       var ctrObj = getCountryObj(res.data.country);
 
       setDefaultCountry(ctrObj);
+      getNewRate(ctrObj);
+      console.log('got country');
+    } catch (e) {
+      getCountryObj('EG');
+    }
+  };
+  const getNewRate = async (newCountry) => {
+    const body = { country: newCountry };
+
+    try {
+      const res = await axios.post('http://localhost:5000/users/rate', body, {
+        headers: { 'Access-Control-Allow-Origin': '*' }
+      });
+      props.setRate({ rate: res.data.rate, symbol: res.data.symbol });
     } catch (e) {}
   };
 
@@ -538,8 +552,7 @@ export default function CountrySelect() {
       <div className="country-selector">
         <img
           loading="lazy"
-          width="60"
-          src={`https://flagcdn.com/w20/${defaultCountry.code.toLowerCase()}.png`}
+          width="40"
           srcSet={`https://flagcdn.com/w40/${defaultCountry.code.toLowerCase()}.png 2x`}
           alt="current country"
           className="country"
@@ -551,3 +564,23 @@ export default function CountrySelect() {
       </div>
     );
 }
+
+const mapStateToProps = (state) => {
+  return {
+    rate: state.rateAndSymbol
+  };
+};
+
+export default connect(mapStateToProps, { setRate: setRate })(CountrySelect);
+
+// <img
+// loading="lazy"
+// width="60"
+// src={`https://flagcdn.com/w20/${defaultCountry.code.toLowerCase()}.png`}
+// srcSet={`https://flagcdn.com/w40/${defaultCountry.code.toLowerCase()}.png 2x`}
+// alt="current country"
+// className="country"
+// onClick={() => {
+//   handleOpen();
+// }}
+// />
