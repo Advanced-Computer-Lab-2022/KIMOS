@@ -140,7 +140,6 @@ const addDiscount = async (title, discount) => {
 };
 module.exports = {
   findSubjects,
-  findCourse,
   findCourseMarsaf,
   createCourse,
   getCourse,

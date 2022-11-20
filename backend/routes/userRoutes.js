@@ -20,7 +20,9 @@ const {
 router.post('/changeCountry', changeCountry);
 router.get('/country', getCountry);
 router.post('/rate', getRate);
+
 router.post('/admin/addUser', addUser);
+
 router.get('/instructor/viewCourse', instructorViewCourses);
 //takes username and courseTitle as params
 router.get('/viewCourse', viewCourse);
