@@ -20,7 +20,7 @@
         display: flex;
         align-items: center;
         justify-content: center;
-        color: $primary-color;
+        color: var(--primary-color);
         cursor: pointer;
     }
 }

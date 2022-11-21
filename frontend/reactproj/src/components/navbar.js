@@ -3,6 +3,8 @@ import PrimaryButton from './buttons/primaryBtn';
 import SecondaryButton from './buttons/secondaryBtn';
 import SearchIcon from '@mui/icons-material/Search';
 import CountrySelector from './countrySelector';
+import ThemeSwitcher from './themeSwitcher';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { setCourses, setUserType } from '../redux/actions/index';
 import {connect} from 'react-redux';
 import Box from '@mui/material/Box';
@@ -68,11 +70,11 @@ class navbar extends Component {
                 </div>
 
                 <div className="user-options">
-
+                    <ThemeSwitcher />
                     <PrimaryButton function={this.exampleFunction} btnSize="medium" btnText="Log In"/>
                     <SecondaryButton function={this.exampleFunction} btnSize="medium" btnText="Sign Up"/>
                     <CountrySelector />
-
+                    <AccountCircleIcon className='profile-icon' />
                 </div>
 
             </div>

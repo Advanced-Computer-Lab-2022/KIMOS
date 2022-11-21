@@ -1,13 +1,13 @@
 import { combineReducers } from 'redux';
 
 
-const theme = (theme = (localStorage.getItem("theme")==="true")|| false, action) => {
+const lightTheme = (lightTheme = true, action) => {
     if(action.type === 'CHANGE_THEME')
     {
-        localStorage.setItem("theme", !theme);
-        return !theme;
+        localStorage.setItem("theme", !lightTheme);
+        return !lightTheme;
     }
-    return theme;
+    return lightTheme;
 } 
 
 const rateAndSymbol = (rateAndSymbol={'rate':1, 'symbol':'$'}, action) => {
@@ -52,9 +52,10 @@ const user = (user={username:"",userType:""}, action) => {
 
 
 
+
 export default combineReducers({
 
-    theme:theme,
+    lightTheme:lightTheme,
     courses:courses,
     rateAndSymbol:rateAndSymbol,
     userType:userType,

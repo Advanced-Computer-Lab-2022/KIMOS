@@ -1,5 +1,5 @@
 .primary-btn{
-    background:$primary-color;
+    background:var(--primary-color )!important;
     padding: 10px 20px 10px 20px !important;
     box-shadow: none !important;
 
@@ -8,7 +8,7 @@
 .secondary-btn{
     box-shadow: none !important;
     background: transparent !important;
-    color: $primary-color !important;
-    border: 1px solid $primary-color !important;
+    color: var(--primary-color) !important;
+    border: 1px solid var(--primary-color) !important;
     padding: 10px 20px 10px 20px !important;
 }
