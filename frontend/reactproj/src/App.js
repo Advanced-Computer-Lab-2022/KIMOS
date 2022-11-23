@@ -37,6 +37,9 @@ class App extends Component {
           <Routes>
             <Route exact path="/" element={<LoginPage />}></Route>
             <Route exact path="/milestone1" element={<TmpRoutes />}></Route>
+            <Route exact path="/forgotPassword" element={<ForgotPassword />}></Route>
+            <Route exact path="/changePassword" element={<ChangePassword />}></Route>
+            <Route exact path="/watchVideo" element={<WatchVideo />}></Route>
             <Route exact path="/guest" element={<Guest />}></Route>
             <Route exact path="/admin" element={<Admin />}></Route>
             <Route exact path="/instructor" element={<Instructor />}></Route>

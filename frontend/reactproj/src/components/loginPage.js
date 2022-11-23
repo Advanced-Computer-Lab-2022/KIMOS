@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import TextField from '@mui/material/TextField';
 import PrimaryButton from './buttons/primaryBtn';
+import { Link } from 'react-router-dom';
 import { setUser } from '../redux/actions/index';
 import { connect } from 'react-redux';
 
@@ -56,6 +57,7 @@ class loginPage extends Component {
                     <div className="login-page__form__input__text">Log In</div>
                     <TextField style={{margin:'5px', width:'250px'}} id="username" label="Username" variant="outlined" onChange={this.handleChange}/>
                     <TextField style={{margin:'5px', width:'250px'}} id="password" label="Password" type="password" variant="outlined"  onChange={this.handleChange}/>
+                    <Link to="/forgotPassword" style={{textDecoration:'none' , margin:'auto',color:"#00308F"}}>Forgot you password?</Link>
                     <div className="login-page__form__input__btn">
                         <PrimaryButton function={this.logIn} btnText="Log In"/>
 

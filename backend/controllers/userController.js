@@ -19,6 +19,40 @@ const addUser = async (req, res) => {
   res.status(200).json(admin);
 };
 
+
+const changePassword = async (req, res) => {
+
+  const { username, oldPassword, newPassword } = req.body;
+  const user = User.findOne({ username: username });
+  if (user.password === oldPassword) {
+    user.findByIdAndUpdate(user._id, { password: newPassword });
+  } else {
+    res.status(400).json({ msg: 'Old password doesnt match' });
+  }
+  res.status(200).json({ msg: 'Ok' });
+};
+
+const editUser = async (req, res) => {
+  const { username, email, biography, password } = req.body;
+  console.log(req.body);
+  try {
+    const user = await User.findOne({
+      username: username
+    });
+    console.log(user);
+    if (user.userType == 'instructor') {
+      user.email = email || user.email;
+      user.biography = biography || user.biography;
+    }
+    user.password = password || user.password;
+    await User.findOneAndUpdate({ username: user.username }, user);
+  } catch (err) {
+    res.status(200).json({ mssg: err.message });
+  }
+  res.status(200).json({ mssg: 'success' });
+};
+
+
 const instructorViewCourses = async (req, res) => {
   try {
     const instructorCourses = await CourseData.find({
@@ -88,6 +122,8 @@ const instructorCreateSubtitle = async (subtitle) => {
 
 module.exports = {
   addUser,
+  changePassword,
+  editUser,
   instructorViewCourses,
   instructorCreateCourse,
   instructorCreateSubtitle,
