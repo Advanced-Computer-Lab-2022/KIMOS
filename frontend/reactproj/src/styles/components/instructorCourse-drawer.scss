@@ -1,0 +1,150 @@
+.instructorCourse-drawer{
+
+    height: 100%;
+    // width: 800px;
+
+    padding: 50px;
+    display: flex;
+    &__left{
+        position: relative;
+        width: 70%;
+        border-right: 1px solid var(--primary-color);
+        padding-right:30px;
+
+    }
+    &__header{
+        color: var(--primary-color);
+        font-size: 45px;
+        font-weight: bolder;
+        margin-left:-20px;
+        margin-top:-20px;
+        margin-bottom:20px;
+    }
+    &__options{
+        &__header{
+            font-size: 30px;
+            font-weight: bolder;
+            margin-bottom: 20px;
+        }
+        &__option{
+            margin-top:40px;
+            margin-bottom: 40px;
+            &__sub-header{
+                font-size: 25px;
+                font-weight: bold;
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-right: 5px;
+
+            }
+        }
+
+    }
+    &__ratingsAndReviews{
+        width: 30%;
+        margin-left: 20px;
+        overflow-y: auto;
+
+        &__header{
+            font-size: 30px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        &__reviews{
+
+            height: calc(100% - 35px);
+            padding-top: 10px;
+
+            padding-left: 20px;
+            &__comment{
+
+            }
+        }
+    }
+}
+
+
+
+
+
+
+.subtitles-display{
+    position: relative;
+    height: 50px;
+    width: calc( 100% - 5px);
+    display: flex;
+    align-items: center;
+    overflow-x: auto;
+
+
+
+    // padding-bottom: 20px;
+    .subtitleD{ 
+
+        @include flex-center-all;
+
+        padding-top:10px;
+        padding-bottom:10px;
+        background: var(--cool-grey);
+
+        border-radius: 10px;
+        margin-left: 5px;
+        height: 40px;
+        min-width:130px;
+        font-size: 14px;
+        color: var(--primary-color);
+        font-weight: lighter;
+        cursor: pointer;
+    }
+    .selected-subtitle{
+        // background: var(--search-bar-color) ;
+        background: linear-gradient( 90deg, #3F0D12, #A71D31);
+        color: white;
+
+
+    }
+}
+
+
+.subtitle{
+    margin-top: 20px;
+    width: 40%;
+    &__header{
+
+        font-weight: lighter;
+    }
+    &__info{
+
+        font-size: 18px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: 10px;
+        margin-bottom: 10px;
+        &__key{
+
+        }
+        &__value{
+
+        }
+    }
+}
+
+
+.save-btn{
+    position: absolute;
+    bottom:5px;
+    right:5px;
+    width:100%;
+    display:flex;
+    justify-content:flex-end;
+}
+
+.date-picker{
+    display: flex;
+    &__sep{
+        // border:2px solid black;
+        width: 12px;
+    }
+}

@@ -40,8 +40,8 @@ const userType = (type='Any', action) => {
 }
 
 const user = (user={username:"",userType:""}, action) => {
-    console.log(user)
     if(action.type === 'LOG_IN'){
+        console.log(action.payload)
 
         return action.payload;
     }

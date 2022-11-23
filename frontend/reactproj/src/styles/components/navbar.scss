@@ -56,11 +56,16 @@
 }
 
 
+.search-bar:focus-within{
+    // border: 2px solid black;
+    // width: 50vw;
+}
 .search-bar{
-    
-
+    // margin-left:-240px;
+    transition: all 0.4s;
     height: 70%;
     width: 50vw;
+    // width: 20vw;
     border-radius: 10px;
     display: flex;
     // background: linear-gradient(to left, $primary-color, $secondary-color);

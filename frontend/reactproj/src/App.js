@@ -7,10 +7,12 @@ import Admin from './components/admin';
 import Instructor from './components/instructor';
 import InstructorDB from './components/instructorDB';
 import InstructorProfile from './components/instructorProfile';
+import InstructorCourses2 from './components/instructorCourses2';
 import Trainee from './components/trainee';
 import Courses from './components/courses';
 import InstructorCourses from './components/instructorCourses';
 import CreateQuiz from './components/createQuiz';
+import Contracts from './components/contracts';
 import axios from 'axios';
 import {connect} from 'react-redux';
 
@@ -48,6 +50,9 @@ class App extends Component {
             <Route exact path="/instructor/courses" element={<InstructorCourses />}></Route>
             <Route exact path="/instructor/createQuiz" element={<CreateQuiz />}></Route>
             <Route exact path="/instructor/profile" element={<InstructorProfile />}></Route>
+            <Route exact path="/instructor/myCourses" element={<InstructorCourses2 />}></Route>
+            <Route exact path="/instructor/contracts" element={<Contracts />}></Route>
+
             <Route path="/copt/courses/:search" element={<Courses />}></Route>
             <Route path="/it/courses/:search" element={<Courses />}></Route>
             <Route path="/courses/:search" element={<Courses />}></Route>

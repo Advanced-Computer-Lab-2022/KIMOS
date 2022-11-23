@@ -5,18 +5,14 @@ import SearchIcon from '@mui/icons-material/Search';
 import CountrySelector from './countrySelector';
 import ThemeSwitcher from './themeSwitcher';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import { setCourses, setUserType } from '../redux/actions/index';
+import { setCourses, setUserType, setUser } from '../redux/actions/index';
 import {connect} from 'react-redux';
-import Box from '@mui/material/Box';
-import InputLabel from '@mui/material/InputLabel';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
 
 
-const axios = require('axios');
 
-var Navigation = require('react-router').Navigation;
+// const axios = require('axios');
+
+// var Navigation = require('react-router').Navigation;
 
 class navbar extends Component {
 
@@ -56,6 +52,9 @@ class navbar extends Component {
 
         this.props.setUserType(e.target.value);
     }
+    logOut = ()=>{
+        this.props.setUser({username:"",userType:""})
+    }
     render() {
         return (
             <div className="navbar">
@@ -64,17 +63,19 @@ class navbar extends Component {
                 </div>
 
                 <div className="options">
-
-
                     {this.searchBar()}
                 </div>
 
                 <div className="user-options">
+
                     <ThemeSwitcher />
-                    <PrimaryButton function={this.exampleFunction} btnSize="medium" btnText="Log In"/>
-                    <SecondaryButton function={this.exampleFunction} btnSize="medium" btnText="Sign Up"/>
+
+                    {this.props.user.username ===''&&<PrimaryButton function={this.exampleFunction} btnSize="medium" btnText="Log In"/>}
+                    {this.props.user.username ===''&&<SecondaryButton function={this.exampleFunction} btnSize="medium" btnText="Sign Up"/>}
+                    {this.props.user.username !==''&&<SecondaryButton function={this.logOut} btnSize="medium" btnText="Log Out"/>}
                     <CountrySelector />
-                    <AccountCircleIcon className='profile-icon' />
+
+
                 </div>
 
             </div>
@@ -89,10 +90,11 @@ const mapStateToProps = (state) =>{
    
     return {
         courses: state.courses,
-        uesrType: state.userType
+        uesrType: state.userType,
+        user: state.user
     };
   }
   
   
-export default connect(mapStateToProps, {setCourses:setCourses, setUserType:setUserType})(navbar)
+export default connect(mapStateToProps, {setUser:setUser,setCourses:setCourses, setUserType:setUserType})(navbar)
   
