@@ -5,6 +5,7 @@ const courseSchema = mongoose.Schema(
   {
     title: {
       type: String,
+      unique: true,
       required: [true, 'Please choose a title for the course']
     },
     price: {
@@ -20,14 +21,24 @@ const courseSchema = mongoose.Schema(
     },
     totalHours: {
       type: Number,
-      required: [true, 'Please specify the total number of hours for the course'],
+      //required: [true, 'Please specify the total number of hours for the course'],
       min: 0.0
     },
     discount: {
-      type: Number,
-      min: 0.0,
-      max: 100.0,
-      default: 0.0
+      amount: {
+        type: Number,
+        min: 0.0,
+        max: 100.0,
+        default: 0.0
+      },
+      duration: {
+        startDate: {
+          type: Date
+        },
+        endDate: {
+          type: Date
+        }
+      }
     },
     subject: {
       type: String,
@@ -38,6 +49,9 @@ const courseSchema = mongoose.Schema(
       required: [true, 'Please specify an instructor'],
       ref: 'User'
     },
+    preview: {
+      type: String
+    },
     subtitles: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -46,8 +60,8 @@ const courseSchema = mongoose.Schema(
     ],
     exercises: [
       {
-        type: String,
-        required: true
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Exercise'
       }
     ]
   },
