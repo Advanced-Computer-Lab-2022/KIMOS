@@ -2,11 +2,11 @@ const mongoose = require('mongoose');
 
 const subtitleSchema = mongoose.Schema(
   {
-    Title: {
+    title: {
       type: String,
       required: true
     },
-    Hours: {
+    hours: {
       type: Number,
       required: true
     },

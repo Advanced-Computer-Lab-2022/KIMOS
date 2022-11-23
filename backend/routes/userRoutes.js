@@ -3,6 +3,7 @@ const router = express.Router();
 const {
   addUser,
   editUser,
+  changePassword,
   instructorViewCourses,
   instructorCreateCourse,
   instructorCreateSubtitle,
@@ -26,6 +27,7 @@ router.post('/admin/addUser', addUser);
 router.get('/instructor/viewCourse', instructorViewCourses);
 //takes username and courseTitle as params
 router.get('/viewCourse', viewCourse);
+router.put('/changePassword', changePassword);
 router.put('/editInformation', editUser);
 //user info user = {username:"", userType:""}
 //course includes preview video link

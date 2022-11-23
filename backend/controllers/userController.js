@@ -69,7 +69,7 @@ const viewCourse = async (req, res) => {
 };
 
 const editUser = async (req, res) => {
-  const { username, email, biography, password } = req.body;
+  const { username, email, biography } = req.body;
 
   console.log(req.body);
   try {
@@ -87,6 +87,17 @@ const editUser = async (req, res) => {
     res.status(200).json({ mssg: err.message });
   }
   res.status(200).json({ mssg: 'success' });
+};
+
+const changePassword = async (req, res) => {
+  const { username, oldPassword, newPassword } = req.body;
+  const user = User.findOne({ username: username });
+  if (user.password === oldPassword) {
+    user.findByIdAndUpdate(user._id, { password: newPassword });
+  } else {
+    res.status(400).json({ msg: 'Old password doesnt match' });
+  }
+  res.status(200).json({ msg: 'Ok' });
 };
 
 const getCountry = async (req, res) => {
@@ -194,6 +205,7 @@ const addUser = async (req, res) => {
 module.exports = {
   addUser,
   editUser,
+  changePassword,
   instructorViewCourses,
   instructorCreateCourse,
   instructorCreateSubtitle,
