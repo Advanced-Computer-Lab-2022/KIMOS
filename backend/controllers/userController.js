@@ -18,43 +18,59 @@ const CC = require('currency-converter-lt');
 
 //All user functions
 
-const userGetExam = async (req, res) => {
-  try {
-    const { userId, examId } = req.query;
-    const courseInfo = await findCourseByExam(examId);
-    const userInfo = await User.findById(userId);
-    if (userInfo.courses.includes(courseInfo._id)) {
-      const exam = await getExam(examId, false);
-      return res.status(200).json({ exam: exam });
-    } else {
-      res.status(400).json({ message: 'Unauthorized access' });
-    }
-  } catch (err) {
-    res.status(400).json({ message: err });
-  }
-};
+// const userGetExam = async (req, res) => {
+//   try {
+//     const { userId, examId } = req.query;
+//     const courseInfo = await findCourseByExam(examId);
+//     const userInfo = await User.findById(userId);
+//     if (userInfo.courses.includes(courseInfo._id)) {
+//       const exam = await getExam(examId, false);
+//       return res.status(200).json({ exam: exam });
+//     } else {
+//       res.status(400).json({ message: 'Unauthorized access' });
+//     }
+//   } catch (err) {
+//     res.status(400).json({ message: err });
+//   }
+// };
 
-const userGetSubtitle = async (req, res) => {
+// const userGetSubtitle = async (req, res) => {
+//   try {
+//     const { userId, subtitleId } = req.query;
+//     const courseInfo = await findCourseBySubtitle(subtitleId);
+//     const userInfo = await User.findById(userId);
+//     if (userInfo.courses.includes(courseInfo._id)) {
+//       const sub = await getSubtitle(subtitleId);
+//       return res.status(200).json({ subtitle: sub });
+//     } else {
+//       res.status(400).json({ message: 'Unauthorized access' });
+//     }
+//   } catch (err) {
+//     res.status(400).json({ message: err });
+//   }
+// };
+const getCountry = async (req, res) => {
+  var user_id = req.query;
+  var country = null;
   try {
-    const { userId, subtitleId } = req.query;
-    const courseInfo = await findCourseBySubtitle(subtitleId);
-    const userInfo = await User.findById(userId);
-    if (userInfo.courses.includes(courseInfo._id)) {
-      const sub = await getSubtitle(subtitleId);
-      return res.status(200).json({ subtitle: sub });
+    const userInfo = await User.findById(user_id);
+    if (userInfo && userInfo.country) {
+      country = userInfo.country;
     } else {
-      res.status(400).json({ message: 'Unauthorized access' });
+      country = { code: 'EG', name: 'Egypt' };
     }
   } catch (err) {
     res.status(400).json({ message: err });
+    return;
   }
+  res.status(200).json({ country: country });
 };
 
 const changeCountry = async (req, res) => {
-  var user_id = req.query;
-  const newCountry = req.body.newCountry;
+  var { userId } = req.query;
+  const { newCountry } = req.body;
   try {
-    await User.findByIdAndUpdate(user_id, { country: newCountry.code });
+    await User.findByIdAndUpdate(userId, { country: newCountry });
   } catch (err) {
     res.status(400).json({ message: err });
     return;
@@ -81,13 +97,31 @@ const getRate = async (req, res) => {
   }
 };
 
-const viewCourse = async (req, res) => {
+const userViewCourse = async (req, res) => {
   const { userId, courseId } = req.query;
   try {
     const userInfo = await User.findById(userId);
     if (userInfo.courses.includes(courseId)) {
       const course = await getCourse(courseId);
-      const courseInfo = await course.populate('subtitles', 'title').populate('exams', 'title');
+      const courseInfo = await course.populate('subtitles').populate('exams');
+      const courseInfoExams = await courseInfo.exams.populate('exercises', '--answer');
+      console.log(courseInfoExams);
+      res.status(200).json(courseInfo);
+    } else res.status(401).json({ message: 'Not registered to course' });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+const instructorViewCourse = async (req, res) => {
+  const { userId, courseId } = req.query;
+  try {
+    const userInfo = await User.findById(userId);
+    if (userInfo.courses.includes(courseId)) {
+      const course = await getCourse(courseId);
+      const courseInfo = await course.populate('subtitles').populate('exams');
+      const courseInfoExams = await courseInfo.exams.populate('exercises');
+      console.log(courseInfoExams);
       res.status(200).json(courseInfo);
     } else res.status(401).json({ message: 'Not registered to course' });
   } catch (error) {
@@ -121,22 +155,6 @@ const changePassword = async (req, res) => {
   res.status(200).json({ message: 'Password Updated Succesfully' });
 };
 
-const getCountry = async (req, res) => {
-  var user_id = req.query;
-  var country = null;
-  try {
-    const userInfo = await User.findById(user_id);
-    if (userInfo && userInfo.country.code) {
-      country = userInfo.country;
-    } else {
-      country = { code: 'EG', name: 'Egypt' };
-    }
-  } catch (err) {
-    res.status(400).json({ message: err });
-    return;
-  }
-  res.status(200).json({ country: country });
-};
 //Instructor Functions
 
 const instructorViewCourses = async (req, res) => {
@@ -252,20 +270,20 @@ const instructorSetAnswer = async (req, res) => {
   }
 };
 
-const instructorGetExam = async (req, res) => {
-  try {
-    const { userId, examId } = req.query;
-    const courseInfo = await findCourseByExam(examId);
-    if (courseInfo.instructor === userId) {
-      const exam = await getExam(examId, true);
-      return res.status(200).json({ message: exam });
-    } else {
-      res.status(400).json({ message: 'Unauthorized access' });
-    }
-  } catch (err) {
-    res.status(400).json({ message: err });
-  }
-};
+// const instructorGetExam = async (req, res) => {
+//   try {
+//     const { userId, examId } = req.query;
+//     const courseInfo = await findCourseByExam(examId);
+//     if (courseInfo.instructor === userId) {
+//       const exam = await getExam(examId, true);
+//       return res.status(200).json({ message: exam });
+//     } else {
+//       res.status(400).json({ message: 'Unauthorized access' });
+//     }
+//   } catch (err) {
+//     res.status(400).json({ message: err });
+//   }
+// };
 
 const instructorAcceptContract = async (req, res) => {
   try {
@@ -299,8 +317,8 @@ const instructorViewContract = async (req, res) => {
 const addUser = async (req, res) => {
   try {
     const user = await User.create({
-      username: req.body.Username,
-      password: req.body.Password,
+      username: req.body.username,
+      password: req.body.password,
       userType: req.body.type
     });
   } catch (err) {
@@ -324,8 +342,6 @@ module.exports = {
   addContract,
   editUser,
   changePassword,
-  userGetExam,
-  userGetSubtitle,
   instructorViewCourses,
   instructorCreateCourse,
   instructorCreateSubtitle,
@@ -334,10 +350,10 @@ module.exports = {
   instructorAddPreviewVideo,
   instructorSetAnswer,
   instructorAddDiscount,
-  instructorGetExam,
   instructorAcceptContract,
   instructorViewContract,
-  viewCourse,
+  instructorViewCourse,
+  userViewCourse,
   getCountry,
   changeCountry,
   getRate

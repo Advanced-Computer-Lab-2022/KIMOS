@@ -12,13 +12,14 @@ const {
   instructorAddPreviewVideo,
   instructorSetAnswer,
   instructorAddDiscount,
-  viewCourse,
+  instructorViewCourse,
+  userViewCourse,
   getCountry,
   changeCountry,
-  getRate,
-  userGetSubtitle,
-  instructorGetExam,
-  userGetExam
+  getRate
+  // userGetSubtitle,
+  // instructorGetExam,
+  // userGetExam
 } = require('../controllers/userController');
 
 router.put('/changeCountry', changeCountry);
@@ -29,7 +30,7 @@ router.post('/admin/addUser', addUser);
 
 router.get('/instructor/viewCourses', instructorViewCourses);
 //takes username and courseTitle as params
-router.get('/viewCourse', viewCourse);
+router.get('/viewCourse', userViewCourse);
 router.put('/changePassword', changePassword);
 router.put('/editInformation', editUser);
 //user info user = {username:"", userType:""}
@@ -38,6 +39,7 @@ router.put('/editInformation', editUser);
 //subtitle Subtitle:{title:"",hours:int,video:{link:"",description}}
 //and exercise:{question:"",choices:[""],answer: int}
 router.post('/instructor/createCourse', instructorCreateCourse);
+router.get('/instructor/viewCourse', instructorViewCourse);
 //send course title in addition to user info and subtitle info
 router.post('/instructor/addSubtitle', instructorCreateSubtitle);
 router.post('/instructor/addExam', instructorCreateExam);
@@ -50,7 +52,7 @@ router.post('/instructor/setAnswer', instructorSetAnswer);
 //send user info, course title as "title" and discount:{amount:int, startDate: date, endDate:date}
 router.post('/instructor/addDiscount', instructorAddDiscount);
 
-router.get('/getSubtitle', userGetSubtitle);
-router.post('/instructor/getExam', instructorGetExam);
-router.post('/getExam', userGetExam);
+// router.get('/getSubtitle', userGetSubtitle);
+// router.post('/instructor/getExam', instructorGetExam);
+// router.post('/getExam', userGetExam);
 module.exports = router;
