@@ -1,4 +1,5 @@
 const Subtitle = require('../models/subtitleModel');
+
 const getSubtitle = async (id) => {
   const sub = await Subtitle.findById(id);
   return sub;
@@ -14,8 +15,10 @@ const createSubtitle = async (subtitle) => {
   return sub;
 };
 
-const enterVideo = async (title, video) => {
-  const sub = await Subtitle.findOneAndUpdate({ title: title }, { video: video });
+const enterVideo = async (subtitleId, video) => {
+  const sub = await Subtitle.findByIdAndUpdate(subtitleId, {
+    video: video
+  });
 };
 
 module.exports = {
