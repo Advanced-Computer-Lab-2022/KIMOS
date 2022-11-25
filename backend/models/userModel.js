@@ -8,8 +8,10 @@ const userSchema = mongoose.Schema(
     },
     email: {
       type: String,
-      //required: [true, 'Please enter an email'],
-      unique: true
+      trim: true,
+      index: true,
+      unique: true,
+      sparse: true
     },
     username: {
       type: String,
@@ -35,6 +37,15 @@ const userSchema = mongoose.Schema(
       code: {
         type: String
       }
+    },
+    courses: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Course'
+      }
+    ],
+    biography: {
+      type: String
     }
   },
   {

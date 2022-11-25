@@ -492,7 +492,7 @@ function CountrySelect(props) {
     const body = { country: newCountry };
 
     try {
-      const res = await axios.post('http://localhost:5000/rate', body, {
+      const res = await axios.post('http://localhost:5000/users/rate', body, {
         headers: { 'Access-Control-Allow-Origin': '*' }
       });
       props.setRate({ rate: res.data.rate, symbol: res.data.symbol });
@@ -555,17 +555,16 @@ function CountrySelect(props) {
   if (true)
     return (
       <div className="country-selector">
-      <img
-      loading="lazy"
-      width="40"
-
-      srcSet={`https://flagcdn.com/w40/${defaultCountry.code.toLowerCase()}.png 2x`}
-      alt="current country"
-      className="country"
-      onClick={() => {
-        handleOpen();
-      }}
-      />
+        <img
+          loading="lazy"
+          width="40"
+          srcSet={`https://flagcdn.com/w40/${defaultCountry.code.toLowerCase()}.png 2x`}
+          alt="current country"
+          className="country"
+          onClick={() => {
+            handleOpen();
+          }}
+        />
         {modal()}
       </div>
     );
