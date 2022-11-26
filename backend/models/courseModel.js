@@ -58,10 +58,10 @@ const courseSchema = mongoose.Schema(
         ref: 'Subtitle'
       }
     ],
-    exercises: [
+    exams: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Exercise'
+        ref: 'Exam'
       }
     ]
   },
@@ -69,5 +69,4 @@ const courseSchema = mongoose.Schema(
     timestamps: true
   }
 );
-
 module.exports = mongoose.model('Course', courseSchema);

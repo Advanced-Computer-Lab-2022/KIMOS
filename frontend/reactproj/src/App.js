@@ -50,6 +50,10 @@ class App extends Component {
             <Route exact path="/instructor/courses" element={<InstructorCourses />}></Route>
             <Route exact path="/instructor/createQuiz" element={<CreateQuiz />}></Route>
             <Route exact path="/instructor/profile" element={<InstructorProfile />}></Route>
+            <Route exact path="/instructor/addCourses" element={<Instructor />}></Route>
+
+            
+
             <Route exact path="/instructor/myCourses" element={<InstructorCourses2 />}></Route>
             <Route exact path="/instructor/contracts" element={<Contracts />}></Route>
 

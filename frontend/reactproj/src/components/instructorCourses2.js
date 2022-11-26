@@ -82,9 +82,7 @@ React.useEffect(() => {
   const getInstructorCourses = async () => {
     console.log('getting')
     try {
-      const res = await axios.post('http://localhost:3000/courses/findCourse',{
-      "instructor_id":"635d70dbf600410aab3c71b0"
-      }, {
+      const res = await axios.get(`http://localhost:3000/courses/findCourse?instructorId=${'635d70dbf600410aab3c71b0'}`, {
         headers: { 'Access-Control-Allow-Origin': '*' }
       });
       console.log('res.data');

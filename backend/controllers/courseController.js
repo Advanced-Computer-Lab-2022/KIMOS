@@ -1,64 +1,13 @@
 const Course = require('../models/courseModel');
 const User = require('../models/userModel');
-const { getSubtitle, createSubtitle } = require('./subtitleController');
-
-// const viewCourse = async (req, res) => {
-//   const id = req.params.id;
-//   if (!mongoose.Types.ObjectId.isValid(id)) {
-//     return res.status(404).json({ error: 'Invalid id' });
-//   }
-
-//   course = await Course.findById(req.params.id);
-
-//   if (!course) {
-//     return res.status(404).json({ error: 'No such course' });
-//   }
-
-//   res.status(200).json(course);
-// };
-
-// const viewMyCourses = async (req, res) => {
-//   // based on instructors id given as parameter , subject and price given in the req's body
-//   const id = req.params.id;
-//   const subject = req.query.subject;
-//   const price = req.query.price;
-//   console.log(price);
-//   console.log(subject);
-//   if (!mongoose.Types.ObjectId.isValid(id)) {
-//     return res.status(404).json({ error: 'Invalid id' });
-//   }
-
-//   if (price != -1 && subject != 'undefined') {
-//     courses = await Course.find({
-//       $and: [{ instructor: id }, { $or: [{ subject: subject }, { price: price }] }]
-//     });
-//   } else if (subject != 'undefined') {
-//     courses = await Course.find({ $and: [{ instructor: id }, { subject: subject }] });
-//   } else if (price != -1) {
-//     courses = await Course.find({ $and: [{ instructor: id }, { price: price }] });
-//   } else {
-//     courses = await Course.find({ instructor: id });
-//   }
-
-//   //courses = await Course.find({instructors:id})
-//   // console.log(courses)
-
-//   if (!courses) {
-//     return res.status(200).json({ error: 'No courses' });
-//   }
-
-//   res.status(200).json(courses);
-// };
+const { createSubtitle } = require('./subtitleController');
 
 const findSubjects = async (req, res) => {
   const subjects = await Course.find().distinct('subject');
-
   res.json({ subjects });
 };
 
 const createCourse = async (course) => {
-  var subtitles = null;
-  var exercises = null;
   var totalHours = 0;
   if (course.subtitles.length) {
     const promises = course.subtitles.map(async (subtitle, index) => {
@@ -118,70 +67,59 @@ const findCourseMarsaf = async (req, res) => {
         }
       ]
     })
-      .skip(resultsPerPage * page)
-      .limit(resultsPerPage)
-      .then(async (results) => {
-        const bigPromises = results.map(async (result, index) => {
-          console.log(result);
-          const promises = result.subtitles.map(async (subtitle, index) => {
-            const sub = await getSubtitle(subtitle._id);
-            return sub;
-          });
-          var subtitles = await Promise.all(promises);
-          result.subtitles = subtitles;
-          return result;
-        });
-        const finalResults = await Promise.all(bigPromises);
-        return res.status(200).send(finalResults);
-      })
-      .catch((err) => {
-        return res.status(500).send(err);
-      });
-  } else {
-    await Course.find({
-      $or: [
-        { title: new RegExp(keyword, 'i') },
-        { subject: new RegExp(keyword, 'i') },
-        { instructor: { $in: instructorIds } }
-      ]
-    })
-      .skip(resultsPerPage * page)
-      .limit(resultsPerPage)
-      .then(async (results) => {
-        const bigPromises = results.map(async (result, index) => {
-          console.log(result);
-          const promises = result.subtitles.map(async (subtitle, index) => {
-            const sub = await getSubtitle(subtitle._id);
-            return sub;
-          });
-          var subtitles = await Promise.all(promises);
-          result.subtitles = subtitles;
-          return result;
-        });
-        const finalResults = await Promise.all(bigPromises);
-        return res.status(200).send(finalResults);
-      })
-      .catch((err) => {
-        return res.status(500).send(err);
-      });
-  }
-
-  // res.json({'mssg':'error occured'});
+    .catch((err) => {
+      return res.status(400).send(err);
+    });
 };
+}
 
-const getCourse = async (title) => {
-  const course = await Course.findOne({ title: title });
+const getCourse = async (id) => {
+  const course = await Course.findById(id);
   return course;
 };
 
-const enterPreviewVideo = async (title, video) => {
-  const course = await Course.findOne({ title: title, preview: video });
+const enterPreviewVideo = async (courseId, video) => {
+  const course = await Course.findByIdAndUpdateAndUpdate(courseId, { preview: video });
+  return course;
+};
+
+const addExercise = async (courseId, exerciseId) => {
+  const course = Course.findByIdAndUpdate(courseId, { $push: { exercises: exerciseId } });
+  return course;
+};
+
+const addSubtitle = async (courseId, subtitleId) => {
+  const course = Course.findByIdAndUpdate(courseId, { $push: { subtitles: subtitleId } });
   return course;
 };
 
 const addDiscount = async (title, discount) => {
+  const { startDate, endDate } = discount.duration;
+  const date = endDate;
   const course = await Course.findOneAndUpdate({ title: title }, { discount: discount });
+  const job = schedule.scheduleJob(date, async function (title) {
+    const courseUpdate = await Course.findOneAndUpdate(
+      { title: title },
+      { discount: {} },
+      { new: true }
+    );
+    return courseUpdate;
+  });
   return course;
+};
+
+const findCourseByExam = async (examId) => {
+  const course = await Course.findOne({ exams: { $elemMatch: examId } });
+  return course;
+};
+const findCourseBySubtitle = async (subtitleId) => {
+  const course = await Course.findOne({ subtitles: { $elemMatch: subtitleId } });
+  return course;
+};
+
+const getCoursesByInstructor = async (instructorId) => {
+  const courses = await Course.find({ instructor: instructorId });
+  return courses;
 };
 module.exports = {
   findSubjects,
@@ -189,7 +127,12 @@ module.exports = {
   createCourse,
   getCourse,
   enterPreviewVideo,
-  addDiscount
+  addExercise,
+  addSubtitle,
+  addDiscount,
+  findCourseByExam,
+  findCourseBySubtitle,
+  getCoursesByInstructor
   //viewCourse
   //viewMyCourses
 };

@@ -7,27 +7,28 @@ const {
   instructorViewCourses,
   instructorCreateCourse,
   instructorCreateSubtitle,
-  instructorCreateExercise,
+  instructorCreateExam,
   instructorAddSubtitleVideo,
   instructorAddPreviewVideo,
   instructorSetAnswer,
   instructorAddDiscount,
-  viewCourse,
+  instructorViewCourse,
+  userViewCourse,
   getCountry,
   changeCountry,
   getRate,
   getInstructor
 } = require('../controllers/userController');
 
-router.post('/changeCountry', changeCountry);
+router.put('/changeCountry', changeCountry);
 router.get('/country', getCountry);
-router.post('/rate', getRate);
+router.get('/rate', getRate);
 
 router.post('/admin/addUser', addUser);
 
-router.get('/instructor/viewCourse', instructorViewCourses);
+router.get('/instructor/viewCourses', instructorViewCourses);
 //takes username and courseTitle as params
-router.get('/viewCourse', viewCourse);
+router.get('/viewCourse', userViewCourse);
 router.put('/changePassword', changePassword);
 router.put('/editInformation', editUser);
 //user info user = {username:"", userType:""}
@@ -37,8 +38,10 @@ router.put('/editInformation', editUser);
 //and exercise:{question:"",choices:[""],answer: int}
 router.post('/instructor/createCourse', instructorCreateCourse);
 router.post('/instructor/getInstructor', getInstructor);
+router.get('/instructor/viewCourse', instructorViewCourse);
+//send course title in addition to user info and subtitle info
 router.post('/instructor/addSubtitle', instructorCreateSubtitle);
-router.post('/instructor/addExercise', instructorCreateExercise);
+router.post('/instructor/addExam', instructorCreateExam);
 //send user info, subtitle title as "title" and video:{link:"",description:""}
 router.post('/instructor/addSubtitleVideo', instructorAddSubtitleVideo);
 //send user info and video:""
@@ -47,4 +50,8 @@ router.post('/instructor/addPreviewVideo', instructorAddPreviewVideo);
 router.post('/instructor/setAnswer', instructorSetAnswer);
 //send user info, course title as "title" and discount:{amount:int, startDate: date, endDate:date}
 router.post('/instructor/addDiscount', instructorAddDiscount);
+
+// router.get('/getSubtitle', userGetSubtitle);
+// router.post('/instructor/getExam', instructorGetExam);
+// router.post('/getExam', userGetExam);
 module.exports = router;

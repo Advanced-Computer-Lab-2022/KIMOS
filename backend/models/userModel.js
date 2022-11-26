@@ -2,9 +2,11 @@ const mongoose = require('mongoose');
 
 const userSchema = mongoose.Schema(
   {
-    name: {
+    firstName: {
       type: String
-      //required: [true, 'Please enter a name']
+    },
+    lastName: {
+      type: String
     },
     email: {
       type: String,
@@ -25,17 +27,19 @@ const userSchema = mongoose.Schema(
 
     userType: {
       type: String,
-      enum: ['adminstrator', 'corporate trainee', 'individual trainee', 'instructor'],
+      enum: ['administrator', 'corporate trainee', 'individual trainee', 'instructor'],
       lowercase: true,
       required: true
     },
 
     country: {
       name: {
-        type: String
+        type: String,
+        default: 'Egypt'
       },
       code: {
-        type: String
+        type: String,
+        default: 'EG'
       }
     },
     courses: [

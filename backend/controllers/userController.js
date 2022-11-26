@@ -1,30 +1,88 @@
 const { getAllInfoByISO } = require('iso-country-currency');
 const User = require('../models/userModel');
 const { getSubtitle, createSubtitle, enterVideo } = require('./subtitleController');
-const { createCourse, getCourse, enterPreviewVideo } = require('./courseController');
-const { createExercise, getExercise, setAnswer } = require('./exerciseController');
+const { getContract, createContract, addInstructor } = require('./contractController');
+const { getCoursesByInstructor } = require('./courseController');
+
+const {
+  createCourse,
+  getCourse,
+  enterPreviewVideo,
+  addDiscount,
+  addExercise,
+  addSubtitle,
+  findCourseBySubtitle,
+  findCourseByExam
+} = require('./courseController');
+const { createExam, getExam, setAnswer } = require('./examController');
 const dotenv = require('dotenv').config();
 
 const CC = require('currency-converter-lt');
 
 //All user functions
 
-const changeCountry = async (req, res) => {
-  var user_id = '635d70dbf600410aab3c71b0';
-  const newCountry = req.body.newCountry;
+// const userGetExam = async (req, res) => {
+//   try {
+//     const { userId, examId } = req.query;
+//     const courseInfo = await findCourseByExam(examId);
+//     const userInfo = await User.findById(userId);
+//     if (userInfo.courses.includes(courseInfo._id)) {
+//       const exam = await getExam(examId, false);
+//       return res.status(200).json({ exam: exam });
+//     } else {
+//       res.status(400).json({ message: 'Unauthorized access' });
+//     }
+//   } catch (err) {
+//     res.status(400).json({ message: err });
+//   }
+// };
 
+// const userGetSubtitle = async (req, res) => {
+//   try {
+//     const { userId, subtitleId } = req.query;
+//     const courseInfo = await findCourseBySubtitle(subtitleId);
+//     const userInfo = await User.findById(userId);
+//     if (userInfo.courses.includes(courseInfo._id)) {
+//       const sub = await getSubtitle(subtitleId);
+//       return res.status(200).json({ subtitle: sub });
+//     } else {
+//       res.status(400).json({ message: 'Unauthorized access' });
+//     }
+//   } catch (err) {
+//     res.status(400).json({ message: err });
+//   }
+// };
+const getCountry = async (req, res) => {
+  var user_id = req.query;
+  var country = null;
   try {
-    await User.findByIdAndUpdate(user_id, { country: newCountry.code });
+    const userInfo = await User.findById(user_id);
+    if (userInfo && userInfo.country) {
+      country = userInfo.country;
+    } else {
+      country = { code: 'EG', name: 'Egypt' };
+    }
   } catch (err) {
-    res.status(400).json({ mssg: 'error' });
+    res.status(400).json({ message: err });
     return;
   }
+  res.status(200).json({ country: country });
+};
 
-  res.status(200).json({ mssg: 'updated correctly' });
+const changeCountry = async (req, res) => {
+  var { userId } = req.query;
+  const { newCountry } = req.body;
+  try {
+    await User.findByIdAndUpdate(userId, { country: newCountry });
+  } catch (err) {
+    res.status(400).json({ message: err });
+    return;
+  }
+  res.status(200).json({ message: 'Country updated' });
 };
 
 const getRate = async (req, res) => {
-  const country = req.body.country;
+  const country = req.query;
   var countryDetails = {};
   try {
     countryDetails = getAllInfoByISO(country.code);
@@ -41,28 +99,33 @@ const getRate = async (req, res) => {
     return res.json({ symbol: '$', rate: 1 }); //send price to frontend
   }
 };
-const viewCourse = async (req, res) => {
-  console.log(req.query);
-  const { username, courseTitle } = req.query;
+
+const userViewCourse = async (req, res) => {
+  const { userId, courseId } = req.query;
   try {
-    const user = await User.findOne({ username: username });
-    const course = await getCourse(courseTitle);
-    if (user.courses.includes(course._id)) {
-      const promises = course.subtitles.map(async (subtitle, index) => {
-        const sub = await getSubtitle(subtitle._id);
-        return sub;
-      });
-      var subtitles = await Promise.all(promises);
-      course.subtitles = subtitles;
-      if (course.exercises.length) {
-        const promises = course.exercises.map(async (exercise, index) => {
-          const ex = await getExercise(exercise._id);
-          return ex;
-        });
-        var exercises = await Promise.all(promises);
-        course.exercises = exercises;
-      }
-      res.status(201).json(course);
+    const userInfo = await User.findById(userId);
+    if (userInfo.courses.includes(courseId)) {
+      const course = await getCourse(courseId);
+      const courseInfo = await course.populate('subtitles').populate('exams');
+      const courseInfoExams = await courseInfo.exams.populate('exercises', '--answer');
+      console.log(courseInfoExams);
+      res.status(200).json(courseInfo);
+    } else res.status(401).json({ message: 'Not registered to course' });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+const instructorViewCourse = async (req, res) => {
+  const { userId, courseId } = req.query;
+  try {
+    const userInfo = await User.findById(userId);
+    if (userInfo.courses.includes(courseId)) {
+      const course = await getCourse(courseId);
+      const courseInfo = await course.populate('subtitles').populate('exams');
+      const courseInfoExams = await courseInfo.exams.populate('exercises');
+      console.log(courseInfoExams);
+      res.status(200).json(courseInfo);
     } else res.status(401).json({ message: 'Not registered to course' });
   } catch (error) {
     res.status(400).json({ message: error.message });
@@ -110,137 +173,228 @@ const editUser = async (req, res) => {
     res.status(200).json({ mssg: err.message });
     return;
   }
-  res.status(200).json({ mssg: 'success' });
+  res.status(200).json({ message: 'Details edited' });
 };
 
 const changePassword = async (req, res) => {
-  const { username, oldPassword, newPassword } = req.body;
-  const user = User.findOne({ username: username });
-  if (user.password === oldPassword) {
-    user.findByIdAndUpdate(user._id, { password: newPassword });
+  const { user, oldPassword, newPassword } = req.body;
+  const userInfo = await User.findById(user.userId);
+  if (userInfo.password === oldPassword) {
+    await User.findByIdAndUpdate(user.userId, { password: newPassword });
   } else {
-    res.status(400).json({ msg: 'Old password doesnt match' });
+    res.status(400).json({ message: 'Old password doesnt match' });
   }
-  res.status(200).json({ msg: 'Ok' });
+  res.status(200).json({ message: 'Password Updated Succesfully' });
 };
 
-const getCountry = async (req, res) => {
-  var user_id = '635d70dbf600410aab3c71b0';
-  var country = null;
-
-  try {
-    const user = await User.findOne({
-      _id: user_id
-    });
-
-    if (user && user.country.code) {
-      country = user.country;
-    } else {
-      country = { code: 'EG', name: 'Egypt' };
-    }
-  } catch (err) {
-    res.status(400).json({ mssg: 'error' });
-    return;
-  }
-
-  res.status(400).json({ mssg: 'error' });
-  return;
-};
 //Instructor Functions
-
-const instructorViewCourses = async (req, res) => {
-  try {
-    const instructorCourses = await CourseData.find({
-      instructor: '635d70dbf600410aab3c71b0'
-    });
-    res.status(201).json(instructorCourses);
-  } catch (error) {
-    res.status(404).json({ message: error.message });
-  }
-};
 
 const instructorCreateCourse = async (req, res) => {
   const { user, course } = req.body;
   if (user.userType === 'instructor') {
     try {
-      createCourse(course);
+      await createCourse(course);
+      res.status(200).json({ message: 'Course Uploaded succesfully' });
     } catch (err) {
-      res.status(400).json(err.message);
+      res.status(400).json({ message: err.message });
     }
-    res.status(200).json({ mssg: 'entered course succesfully' });
   }
 };
-const instructorCreateExercise = async (req, res) => {
-  const { user, exercise } = req.body;
-  if (user.type === 'instructor') {
+
+const instructorViewCourses = async (req, res) => {
+  console.log("here")
+  const { instructorId } = req.query;
+  try {
+    //const userInfo = await User.findById(userId);
+    const courses = await getCoursesByInstructor(instructorId);
+    const promises = courses.map(async (course, index) => {
+      const courseInfo = await course.populate('subtitles').populate('exams');
+      const courseInfoExams = await courseInfo.exams.populate('exercises');
+      return courseInfoExams;
+    });
+    var coursesInfo = [];
+    coursesInfo = Promise.all(promises);
+
+    res.status(200).json({'courses':coursesInfo});
+  } catch (error) {
+    res.status(400).json([]);
+  }
+};
+
+const instructorCreateExam = async (req, res) => {
+  const { user, courseId, exercises } = req.body;
+  const courseInfo = await getCourse(courseId);
+  if (user.userId === courseInfo.instructor) {
     try {
-      createExercise(exercise);
+      const ex = createExam(exercises);
+      addExercise(courseId, ex._id);
+      res.status(200).json({ message: 'Exercise Uploaded Successfully' });
     } catch (err) {
-      res.status(400).json(err.message);
+      res.status(400).json({ message: err });
     }
-    res.status(200).json({ mssg: 'entered course succesfully' });
   }
 };
 
 const instructorCreateSubtitle = async (req, res) => {
-  const { user, subtitle } = req.body;
-  if (user.userType === 'instructor') {
-    createSubtitle(subtitle);
+  const { user, subtitle, courseId } = req.body;
+  const courseInfo = await getCourse(courseId);
+  if (user.userId === courseInfo.instructor) {
+    try {
+      const sub = await createSubtitle(subtitle);
+      addSubtitle(courseId, sub._id);
+    } catch (err) {
+      res.status(400).json({ message: err });
+    }
+    res.status(200).json({ message: 'Subtitle created succesfully' });
+  } else {
+    res.status(401).json({ message: 'Unallowed Access' });
   }
 };
 
 const instructorAddSubtitleVideo = async (req, res) => {
-  const { user, title, video } = req.body;
-  if (user.userType === 'instructor') {
-    enterVideo(title, video);
+  const { user, courseId, subtitleId, video } = req.body;
+  const courseInfo = await getCourse(courseId);
+  if (user.userType === courseInfo.instructor) {
+    try {
+      await enterVideo(subtitleId, video);
+    } catch (err) {
+      res.status(400).json({ message: err });
+    }
+    res.status(200).json({ message: 'Video uploaded succesfully' });
+  } else {
+    res.status(401).json({ message: 'Unauthorized access' });
   }
 };
 
 const instructorAddDiscount = async (req, res) => {
-  const { user, title, discount } = req.body;
-  if (user.userType === 'instructor') {
-    enterVideo(title, discount);
+  const { user, courseId, discount } = req.body;
+  const courseInfo = await getCourse(courseId);
+  if (user.userId === courseInfo.instructor) {
+    try {
+      addDiscount(title, discount);
+    } catch (err) {
+      res.status(400).json({ message: err });
+    }
+    res.status(200).json({ message: 'Subtitle uploaded succesfully' });
+  } else {
+    res.status(401).json({ message: 'Unauthorized access' });
   }
 };
 
 const instructorAddPreviewVideo = async (req, res) => {
-  const { user, title, video } = req.body;
-  if (user.userType === 'instructor') {
-    enterPreviewVideo(title, video);
+  const { user, courseId, video } = req.body;
+  const courseInfo = await getCourse(courseId);
+  if (user.userId === courseInfo.instructor) {
+    try {
+      enterPreviewVideo(courseId, video);
+    } catch (err) {
+      res.status(400).json({ message: err });
+    }
+
+    res.status(200).json({ message: 'Video added successfully' });
+  } else {
+    res.status(401).json({ message: 'Unauthorized access' });
   }
 };
 const instructorSetAnswer = async (req, res) => {
-  const { user, question, answer } = req.body;
-  if (user.userType === 'instructor') {
-    setAnswer(question, answer);
+  const { user, courseId, exerciseId, questionId, answer } = req.body;
+  try {
+    const courseInfo = getCourse(courseId);
+    if (user.userId === courseInfo.instructor) {
+      setAnswer(exerciseId, questionId, answer);
+      res.status(200).json({ message: 'Answer set successfully' });
+    } else {
+      res.status(401).json({ message: 'Unauthorized access' });
+    }
+  } catch (err) {
+    res.status(400).json({ message: err });
   }
 };
 
+// const instructorGetExam = async (req, res) => {
+//   try {
+//     const { userId, examId } = req.query;
+//     const courseInfo = await findCourseByExam(examId);
+//     if (courseInfo.instructor === userId) {
+//       const exam = await getExam(examId, true);
+//       return res.status(200).json({ message: exam });
+//     } else {
+//       res.status(400).json({ message: 'Unauthorized access' });
+//     }
+//   } catch (err) {
+//     res.status(400).json({ message: err });
+//   }
+// };
+
+const instructorAcceptContract = async (req, res) => {
+  try {
+    const { user, contractId } = req.query;
+    if (user.userType === 'instructor') {
+      await addInstructor(contractId, user.userId);
+      res.status(200).json({ message: 'Contract Accepted' });
+    } else {
+      res.status(400).json({ message: 'Unauthorized access' });
+    }
+  } catch (err) {
+    res.status(400).json({ message: err });
+  }
+};
+
+const instructorViewContract = async (req, res) => {
+  try {
+    const { user, contractId } = req.query;
+    if (user.userType === 'instructor') {
+      const contractInfo = await getContract(contractId);
+      return res.status(200).json({ message: contractInfo });
+    } else {
+      res.status(400).json({ message: 'Unauthorized access' });
+    }
+  } catch (err) {
+    res.status(400).json({ message: err });
+  }
+};
 //Admin functions
 
 const addUser = async (req, res) => {
-  console.log(req.body);
-  const user = await User.create({
-    username: req.body.Username,
-    password: req.body.Password,
-    userType: req.body.type
-  });
-  res.status(200).json(admin);
+  try {
+    const user = await User.create({
+      username: req.body.username,
+      password: req.body.password,
+      userType: req.body.type
+    });
+  } catch (err) {
+    res.status(400).json({ message: err });
+  }
+  res.status(200).json({ message: 'User entered successfully' });
+};
+
+const addContract = async (req, res) => {
+  const { title, terms, percentage } = req.body;
+  try {
+    const contract = await createContract(title, terms, percentage);
+  } catch (err) {
+    res.status(400).json({ message: err });
+  }
+  res.status(200).json({ message: 'Contract entered successfully' });
 };
 
 module.exports = {
   addUser,
+  addContract,
   editUser,
   changePassword,
   instructorViewCourses,
   instructorCreateCourse,
   instructorCreateSubtitle,
-  instructorCreateExercise,
+  instructorCreateExam,
   instructorAddSubtitleVideo,
   instructorAddPreviewVideo,
   instructorSetAnswer,
   instructorAddDiscount,
-  viewCourse,
+  instructorAcceptContract,
+  instructorViewContract,
+  instructorViewCourse,
+  userViewCourse,
   getCountry,
   changeCountry,
   getRate,
