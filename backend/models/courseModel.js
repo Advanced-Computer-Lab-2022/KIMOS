@@ -1,3 +1,4 @@
+const { random } = require('colors');
 const mongoose = require('mongoose');
 
 const courseSchema = mongoose.Schema(
@@ -14,11 +15,19 @@ const courseSchema = mongoose.Schema(
     },
     rating: {
       type: Number,
-      default: 0.0,
+      default: Math.floor(Math.random() * 6),
       min: 0.0,
       max: 5.0
     },
     totalHours: {
+<<<<<<< HEAD
+=======
+      type: Number,
+      required: [true, 'Please specify the total number of hours for the course'],
+      min: 0.0
+    },
+    discount: {
+>>>>>>> origin/marsafy
       type: Number,
       //required: [true, 'Please specify the total number of hours for the course'],
       min: 0.0

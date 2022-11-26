@@ -12,7 +12,7 @@ body{
     position: relative;
     height: 100%;
     width: 100%;
-    background: $background-color;
+    background: transparent;
     font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -23,9 +23,10 @@ body{
     display: grid;
     grid-template-columns: 1fr;
     grid-template-rows: max(60px, 8%) 92%;
-
-
+    background: var(--background-color);
+    color: var(--font-color);
 }
+
 .display-content{
 
     height: 100%;
@@ -40,4 +41,25 @@ body{
     button, a{
         margin: 10px;
     }
+
+.admin-card{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+.admin-box{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+
+}
+}
+
+
+.textField{
+
+    color: green !important;
 }

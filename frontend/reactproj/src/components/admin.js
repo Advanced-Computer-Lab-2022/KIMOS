@@ -15,7 +15,7 @@ function Admin() {
     setUser(temp);
     console.log(user);
   }
-  const [user, setUser] = useState({ type: 'Admin' });
+  const [user, setUser] = useState({ type: 'Adminstrator' });
   function addAdmin() {
     axios.post('http://localhost:5000/users/admin/addUser', user).then(() => {});
   }

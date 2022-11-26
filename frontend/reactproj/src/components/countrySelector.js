@@ -3,10 +3,10 @@ import { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
-import Button from '@mui/material/Button';
-import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import axios from 'axios';
+import { setRate } from '../redux/actions/index';
+import { connect } from 'react-redux';
 
 // From https://bitbucket.org/atlassian/atlaskit-mk-2/raw/4ad0e56649c3e6c973e226b7efaeb28cb240ccb0/packages/core/select/src/data/countries.js
 const countries = [
@@ -446,15 +446,20 @@ const style = {
   alignItems: 'center',
   p: 4
 };
-export default function CountrySelect() {
+function CountrySelect(props) {
   const [defaultCountry, setDefaultCountry] = useState({ code: 'EG', label: 'Egypt', phone: '20' });
   const [open, setOpen] = React.useState(false);
+  const [firstRender, setFirstRender] = React.useState(true);
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
   useEffect(() => {
     // Update the document title using the browser API
-    getCountry();
+    if (firstRender) {
+      getCountry();
+      setFirstRender(false);
+    }
   });
 
   const getCountryObj = (id) => {
@@ -470,11 +475,11 @@ export default function CountrySelect() {
     const body = { newCountry: newCountry };
 
     try {
-      const res = await axios.get('http://localhost:5000/users/country', body, {
+      const res = await axios.get('http://localhost:5000/country', body, {
         headers: { 'Access-Control-Allow-Origin': '*' }
       });
 
-      var ctrObj = getCountryObj(res.data.country);
+      var ctrObj = getCountryObj(res.data.country.code);
 
       setDefaultCountry(ctrObj);
       getNewRate(ctrObj);
@@ -487,13 +492,12 @@ export default function CountrySelect() {
     const body = { country: newCountry };
 
     try {
-      const res = await axios.post('http://localhost:5000/users/rate', body, {
+      const res = await axios.post('http://localhost:5000/rate', body, {
         headers: { 'Access-Control-Allow-Origin': '*' }
       });
       props.setRate({ rate: res.data.rate, symbol: res.data.symbol });
     } catch (e) {}
   };
-
   const submitChangeCountry = async (newCountry) => {
     const body = { newCountry: newCountry };
 
@@ -506,6 +510,7 @@ export default function CountrySelect() {
 
   const changeCountry = (event, value) => {
     if (value) {
+      getNewRate(value);
       setDefaultCountry(value);
       submitChangeCountry(value);
     }

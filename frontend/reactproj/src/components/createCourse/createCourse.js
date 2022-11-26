@@ -7,6 +7,8 @@ import axios from 'axios';
 import { Container } from '@mui/material';
 
 export default function Create() {
+  const instructor_id = '635d70dbf600410aab3c71b0';
+  console.log(instructor_id);
   var subtitleCount = 1;
   var exercisesCount = 1;
   const [course, setCourse] = useState({
@@ -18,7 +20,7 @@ export default function Create() {
     totalHours: '',
     discount: '',
     subject: '',
-    instructor: '635387b65b29f183de6e32d6',
+    instructor: instructor_id,
     exercises: []
   });
 
@@ -29,6 +31,7 @@ export default function Create() {
 
   //we use axios to send date from frontend to backend
   const createCourse = () => {
+    course.instructor = instructor_id;
     axios.post('http://localhost:5000/users/instructor/createCourse', course).then(() => {
       window.location.reload(false);
     });
@@ -59,7 +62,7 @@ export default function Create() {
   };
 
   return (
-    <>
+    <div className="create-course">
       <h2>Create A New Course</h2>
 
       <TextField
@@ -180,6 +183,6 @@ export default function Create() {
         onClick={createCourse}>
         Add
       </Button>
-    </>
+    </div>
   );
 }

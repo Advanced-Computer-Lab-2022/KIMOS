@@ -3,13 +3,16 @@ import PrimaryButton from './buttons/primaryBtn';
 import SecondaryButton from './buttons/secondaryBtn';
 import SearchIcon from '@mui/icons-material/Search';
 import CountrySelector from './countrySelector';
-import { setCourses } from '../redux/actions/index';
+import ThemeSwitcher from './themeSwitcher';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { setCourses, setUserType, setUser } from '../redux/actions/index';
 import {connect} from 'react-redux';
 
 
-const axios = require('axios');
 
-var Navigation = require('react-router').Navigation;
+// const axios = require('axios');
+
+// var Navigation = require('react-router').Navigation;
 
 class navbar extends Component {
 
@@ -45,6 +48,13 @@ class navbar extends Component {
             </div>
         )
     }
+    changeUserType = (e)=>{
+
+        this.props.setUserType(e.target.value);
+    }
+    logOut = ()=>{
+        this.props.setUser({username:"",userType:""})
+    }
     render() {
         return (
             <div className="navbar">
@@ -53,15 +63,18 @@ class navbar extends Component {
                 </div>
 
                 <div className="options">
-
-
                     {this.searchBar()}
                 </div>
 
                 <div className="user-options">
-                    <PrimaryButton function={this.exampleFunction} btnSize="medium" btnText="Log In"/>
-                    <SecondaryButton function={this.exampleFunction} btnSize="medium" btnText="Sign Up"/>
+
+                    <ThemeSwitcher />
+
+                    {this.props.user.username ===''&&<PrimaryButton function={this.exampleFunction} btnSize="medium" btnText="Log In"/>}
+                    {this.props.user.username ===''&&<SecondaryButton function={this.exampleFunction} btnSize="medium" btnText="Sign Up"/>}
+                    {this.props.user.username !==''&&<SecondaryButton function={this.logOut} btnSize="medium" btnText="Log Out"/>}
                     <CountrySelector />
+
 
                 </div>
 
@@ -77,9 +90,11 @@ const mapStateToProps = (state) =>{
    
     return {
         courses: state.courses,
+        uesrType: state.userType,
+        user: state.user
     };
   }
   
   
-export default connect(mapStateToProps, {setCourses:setCourses})(navbar)
+export default connect(mapStateToProps, {setUser:setUser,setCourses:setCourses, setUserType:setUserType})(navbar)
   

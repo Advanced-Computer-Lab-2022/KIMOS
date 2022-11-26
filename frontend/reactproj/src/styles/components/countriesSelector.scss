@@ -8,10 +8,19 @@
 .country-selector{
     position: relative;
     margin: 0 10px 0 10px;
-    border: 1px solid black;
-    border-radius: 100%;
-    width: 40px;
+    // border: 1px solid black;
+    // border-radius: 100%;
+    width: 60px;
     height: 40px;
 
     overflow: hidden;
+
+    &__option{
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--primary-color);
+        cursor: pointer;
+    }
 }
