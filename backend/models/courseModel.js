@@ -21,6 +21,7 @@ const courseSchema = mongoose.Schema(
     },
     totalHours: {
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
       type: Number,
       required: [true, 'Please specify the total number of hours for the course'],
@@ -28,6 +29,8 @@ const courseSchema = mongoose.Schema(
     },
     discount: {
 >>>>>>> origin/marsafy
+=======
+>>>>>>> marsafy
       type: Number,
       //required: [true, 'Please specify the total number of hours for the course'],
       min: 0.0

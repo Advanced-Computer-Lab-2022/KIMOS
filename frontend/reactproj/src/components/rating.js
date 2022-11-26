@@ -8,7 +8,7 @@ export default function BasicRating(props) {
 
   return (
     <div>
-        <Rating name="read-only" value={parseInt(props.value)} readOnly />
+        <Rating name="read-only" value={parseInt(props.value)} precision={0.5} readOnly />
     </div>
 
 

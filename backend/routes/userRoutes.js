@@ -16,10 +16,8 @@ const {
   userViewCourse,
   getCountry,
   changeCountry,
-  getRate
-  // userGetSubtitle,
-  // instructorGetExam,
-  // userGetExam
+  getRate,
+  getInstructor
 } = require('../controllers/userController');
 
 router.put('/changeCountry', changeCountry);
@@ -39,6 +37,7 @@ router.put('/editInformation', editUser);
 //subtitle Subtitle:{title:"",hours:int,video:{link:"",description}}
 //and exercise:{question:"",choices:[""],answer: int}
 router.post('/instructor/createCourse', instructorCreateCourse);
+router.post('/instructor/getInstructor', getInstructor);
 router.get('/instructor/viewCourse', instructorViewCourse);
 //send course title in addition to user info and subtitle info
 router.post('/instructor/addSubtitle', instructorCreateSubtitle);

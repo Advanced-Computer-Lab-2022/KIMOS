@@ -34,10 +34,12 @@ const userSchema = mongoose.Schema(
 
     country: {
       name: {
-        type: String
+        type: String,
+        default: 'Egypt'
       },
       code: {
-        type: String
+        type: String,
+        default: 'EG'
       }
     },
     courses: [

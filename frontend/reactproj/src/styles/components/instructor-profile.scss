@@ -16,19 +16,24 @@
 
     }
     &__data{
-
+        position: relative;
         background-color: var(--cool-grey);
         padding: 20px;
 
         display: flex;
         flex-direction: column;
         &__footer{
-
+            position: relative;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            // border: 2px solid lime;
             &__btn{
-                margin-right: 30px;
+                position: absolute;
+                right:30px;
+                bottom:0px;
+
+
             }
         }
         &__bio{
@@ -46,6 +51,9 @@
         align-items: center;
         &__username{
             font-weight: bolder;
+
+            display: flex;
+            flex-direction: column;
         }
         &__rating{
             margin-left: 10px;
@@ -70,6 +78,7 @@
             width: 150px;
             height: 150px;
             overflow: hidden;
+            z-index: 10;
             img{
                 width: 100%;
                 height: 100%;
