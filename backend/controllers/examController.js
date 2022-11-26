@@ -10,12 +10,11 @@ const getExam = async (examId, access) => {
 };
 
 const createExam = async (exercises) => {
-  const examArray = [];
-  exercises.map(async (exercise, index) => {
-    const { question, choices, answer } = exercise;
-    const ex = await createExercise(question, choices, answer);
-    exam.push(ex._id);
+  const promises = exercises.map(async (exercise, index) => {
+    const ex = await createExercise(exercise);
+    return ex;
   });
+  const examArray = await Promise.all(promises);
   const exam = await Exam.create({
     exercises: examArray
   });

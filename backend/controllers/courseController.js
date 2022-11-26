@@ -1,39 +1,52 @@
 const Course = require('../models/courseModel');
 const User = require('../models/userModel');
-const { createSubtitle } = require('./subtitleController');
+const { createSubtitle, updateSubtitle } = require('./subtitleController');
 const { createExam } = require('./examController');
+const mongoose = require('mongoose');
 
-const createCourse = async (course) => {
-  var totalHours = 0;
-  if (course.subtitles.length) {
-    const promises = course.subtitles.map(async (subtitle, index) => {
-      const sub = await createSubtitle(subtitle);
-      return sub;
-    });
-    subtitles = await Promise.all(promises);
-    subtitles.map((subtitle, index) => {
-      totalHours += parseInt(subtitle.hours);
-    });
+const createCourse = async (req, res) => {
+  try {
+    const { user } = req.query;
+    const { course } = req.body;
+    var subtitles = [];
+    if (user.userType === 'instructor') {
+      var totalHours = 0;
+      if (course.subtitles) {
+        const promises = course.subtitles.map(async (subtitle, index) => {
+          const sub = await createSubtitle(subtitle);
+          return sub;
+        });
+        subtitles = await Promise.all(promises);
+        subtitles.map((subtitle, index) => {
+          totalHours += parseInt(subtitle.hours);
+        });
+      }
+      const newCourse = await Course.create({
+        title: course.title,
+        subject: course.subject,
+        subtitles: subtitles,
+        price: course.price,
+        totalHours: totalHours,
+        summary: course.summary || '',
+        exercises: [],
+        preview: course.preview || '',
+        instructor: user.userId
+      });
+      res.status(200).json({ message: 'Course created successfully' });
+    } else {
+      res.status(401).json({ message: 'Unauthorized access' });
+    }
+  } catch (err) {
+    res.status(400).json({ message: err.message });
   }
-  const newCourse = await Course.create({
-    title: course.title,
-    subject: course.subject,
-    subtitles: subtitles,
-    price: course.price,
-    totalHours: totalHours,
-    summary: course.summary || '',
-    exercises: [],
-    preview: course.preview,
-    instructor: course.instructor
-  });
 };
 
 const findCourses = async (req, res) => {
   const resultsPerPage = 10;
   var courses = [];
-  const instructor_id = req.body.instructor_id || -1;
-  let page = req.body.page ? req.body.page : 1;
-  const keyword = req.body.keyword;
+  const instructorId = req.query.instructorSearch ? req.query.user.userId : -1;
+  let page = req.query.page ? req.query.page : 1;
+  const keyword = req.query.keyword || '';
   page = page >= 1 ? page - 1 : page;
 
   const instructor_details = await User.find({
@@ -44,11 +57,12 @@ const findCourses = async (req, res) => {
     return instructor._id;
   });
 
-  if (instructor_id != -1) {
+  if (instructorId != -1) {
+    //console.log(instructorId);
     courses = await Course.find({
       $and: [
         {
-          instructor: instructor_id,
+          instructor: instructorId,
           $or: [
             { title: new RegExp(keyword, 'i') },
             { subject: new RegExp(keyword, 'i') },
@@ -61,13 +75,15 @@ const findCourses = async (req, res) => {
       .limit(resultsPerPage)
       .then(async (results) => {
         const promises = results.map(async (result, index) => {
-          console.log(result);
-          var finalResults = await (await result.populate('subtitles')).populate('exams');
-          finalResults.exams = await finalResults.exams.populate('exercises');
-          return finalResults;
+          if (result.subtitles.length) result = await result.populate('subtitles');
+          if (result.exams.length) {
+            result = await result.populate('exams');
+            result.exams = await result.exams.populate('exercises');
+          }
+          return result;
         });
-        const returnResult = Promise.all(promises);
-        return res.status(200).send(returnResult);
+        const returnResult = await Promise.all(promises);
+        return res.status(200).json(returnResult);
       })
       .catch((err) => {
         return res.status(500).send(err);
@@ -84,14 +100,15 @@ const findCourses = async (req, res) => {
       .limit(resultsPerPage)
       .then(async (results) => {
         const promises = results.map(async (result, index) => {
-          console.log(result);
-          var finalResults = await (
-            await result.populate('subtitles', 'title')
-          ).populate('exams', 'title');
-          return finalResults;
+          if (result.subtitles.length) result = await result.populate('subtitles', 'title');
+          if (result.exams.length) {
+            result = await result.populate('exams', 'title');
+            //result.exams = await result.exams.populate('exercises', '--answer');
+          }
+          return result;
         });
         const returnResult = Promise.all(promises);
-        return res.status(200).send(returnResult);
+        return res.status(200).json(returnResult);
       })
       .catch((err) => {
         return res.status(500).send(err);
@@ -120,8 +137,8 @@ const viewCourse = async (req, res) => {
   const { userId, courseId } = req.query;
   try {
     var courseInfo = Course.findById(courseId);
-    if (courseInfo.registeredUsers.includes(userId)) {
-      const course = await getCourse(courseId);
+    if (courseInfo.registeredUsers.includes(mongoose.Types.ObjectId(userId))) {
+      const course = await Course.findById(courseId);
       courseInfo = await course.populate('subtitles').populate('exams');
       courseInfo.exams = courseInfo.exams.map(async (exam, index) => {
         const ex = await getExam(exam._id, false);
@@ -136,12 +153,16 @@ const viewCourse = async (req, res) => {
 };
 
 const addExam = async (req, res) => {
-  const { userId, courseId, exercises } = req.body;
-  const courseInfo = await getCourse(courseId);
-  if (userId === courseInfo.instructor) {
+  const { user } = req.query;
+  const { courseId, exercises } = req.body;
+  const courseInfo = await Course.findById(courseId);
+  if (mongoose.Types.ObjectId(user.userId).equals(courseInfo.instructor)) {
     try {
-      const exam = createExam(exercises);
-      Course.findByIdAndUpdate(courseId, { $push: { exams: exam._id } });
+      const exam = await createExam(exercises);
+      await Course.findByIdAndUpdate(courseId, {
+        $push: { exams: exam }
+      });
+      res.status(200).json({ message: 'Successful' });
     } catch (err) {
       res.status(400).json({ message: err.message });
     }
@@ -150,7 +171,7 @@ const addExam = async (req, res) => {
 
 const findExam = async (req, res) => {
   const { userId, courseId, examId } = req.body;
-  const courseInfo = await getCourse(courseId);
+  const courseInfo = await Course.findById(courseId);
   if (userId === courseInfo.instructor) {
     try {
       const exam = getExam(examId, true);
@@ -179,19 +200,26 @@ const modifyExam = async (req, res) => {
 };
 
 const editCourse = async (req, res) => {
-  const { user, courseId, course, flagDiscount } = req.body;
-  const courseInfo = Course.findById(courseId);
-  if (user.userId === courseInfo.instructor) {
-    if (flagDiscount) {
+  const { user } = req.query;
+  const { courseId, course, flagDiscount } = req.body;
+  const courseInfo = await Course.findById(courseId);
+  const userId = mongoose.Types.ObjectId(user.userId);
+  console.log(courseInfo.instructor);
+  if (userId.equals(courseInfo.instructor)) {
+    if (flagDiscount === true) {
       await addDiscount(courseId, course.discount);
     }
-    course.subtitles.map((subtitle, index) => {
+    promises = course.subtitles.map(async (subtitle, index) => {
+      var sub;
       if (subtitle._id) {
-        updateSubtitle(subtitle._id, subtitle);
+        sub = await updateSubtitle(subtitle._id, subtitle);
       } else {
-        createSubtitle(subtitle);
+        sub = await createSubtitle(subtitle);
       }
+      return sub;
     });
+    course.subtitles = await Promise.all(promises);
+    await Course.findByIdAndUpdate(courseId, course);
 
     res.status(200).json({ message: 'Successful' });
   } else {

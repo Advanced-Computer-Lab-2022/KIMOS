@@ -6,17 +6,17 @@ const CC = require('currency-converter-lt');
 //All user functions
 
 const getCountry = async (req, res) => {
-  var user_id = req.query;
+  var { userId } = req.query;
   var country = null;
   try {
-    const userInfo = await User.findById(user_id);
+    const userInfo = await User.findById(userId);
     if (userInfo && userInfo.country) {
       country = userInfo.country;
     } else {
       country = { code: 'EG', name: 'Egypt' };
     }
   } catch (err) {
-    res.status(400).json({ message: err });
+    res.status(400).json({ message: err.message });
     return;
   }
   res.status(200).json({ country: country });
@@ -35,7 +35,7 @@ const changeCountry = async (req, res) => {
 };
 
 const getRate = async (req, res) => {
-  const country = req.query;
+  const { country } = req.query;
   var countryDetails = {};
   try {
     countryDetails = getAllInfoByISO(country.code);
@@ -82,14 +82,13 @@ const getUser = async (req, res) => {
 };
 
 const editUser = async (req, res) => {
-  const { user, email, bio } = req.body;
+  const { user } = req.query;
+  const { email, biography } = req.body;
   try {
-    const userInfo = await User.findOne({
-      id: user.userId
-    });
+    const userInfo = await User.findById(user.userId);
     if (user.userType == 'instructor') {
       userInfo.email = email || user.email;
-      userInfo.biography = bio || user.biography;
+      userInfo.biography = biography || user.biography;
     }
     await User.findByIdAndUpdate(user.userId, userInfo);
   } catch (err) {
@@ -100,7 +99,8 @@ const editUser = async (req, res) => {
 };
 
 const changePassword = async (req, res) => {
-  const { user, oldPassword, newPassword } = req.body;
+  const { user } = req.query;
+  const { oldPassword, newPassword } = req.body;
   const userInfo = await User.findById(user.userId);
   if (userInfo.password === oldPassword) {
     await User.findByIdAndUpdate(user.userId, { password: newPassword });
@@ -112,12 +112,13 @@ const changePassword = async (req, res) => {
 
 const addUser = async (req, res) => {
   try {
-    if (req.body.userType === 'administrator') {
+    if (req.query.userType === 'administrator') {
       const user = await User.create({
         username: req.body.username,
         password: req.body.password,
         userType: req.body.type
       });
+      res.status(200).json({ message: 'Successful' });
     } else {
       res.status(401).json({ message: 'Unauthorized access' });
     }

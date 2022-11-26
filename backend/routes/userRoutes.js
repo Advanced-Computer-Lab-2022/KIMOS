@@ -11,8 +11,7 @@ const {
 } = require('../controllers/userController');
 
 router.route('/').post(addUser).put(editUser).get(getUser);
-router.put('/changeCountry', changeCountry);
-router.get('/country', getCountry);
+router.route('/country').get(getCountry).put(changeCountry);
 router.get('/rate', getRate);
 router.put('/changePassword', changePassword);
 module.exports = router;
