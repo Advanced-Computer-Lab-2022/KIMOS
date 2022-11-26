@@ -42,12 +42,6 @@ const userSchema = mongoose.Schema(
         default: 'EG'
       }
     },
-    courses: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Course'
-      }
-    ],
     biography: {
       type: String
     }

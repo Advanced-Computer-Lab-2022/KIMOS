@@ -1,6 +1,6 @@
 const Exam = require('../models/examModel');
 
-const { createExercise, setExerciseAnswer } = require('./exerciseController');
+const { createExercise, editExercise } = require('./exerciseController');
 
 const getExam = async (examId, access) => {
   const exam = null;
@@ -19,21 +19,22 @@ const createExam = async (exercises) => {
   const exam = await Exam.create({
     exercises: examArray
   });
-
   return exam;
 };
-
-const setAnswer = async (examId, exerciseId, answer) => {
-  const check = await Exam.findById(examId);
-  if (check.exercises.includes(exerciseId)) {
-    setExerciseAnswer(exerciseId, answer);
-  } else {
-    throw new Error('Exercise not in this exam');
-  }
+const editExam = async (examId, exercises) => {
+  const ex = Exam.findById(examId);
+  ex.exercises.map(async (exercise, index) => {
+    if (exercise._id) {
+      editExercise(exercise._id, exercise);
+    } else {
+      createExercise(exercise);
+      Exam.findByIdAndUpdate(examId, { $push: { exercises: exercise._id } });
+    }
+  });
 };
 
 module.exports = {
   createExam,
   getExam,
-  setAnswer
+  editExam
 };

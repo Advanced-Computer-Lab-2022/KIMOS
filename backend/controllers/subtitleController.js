@@ -10,19 +10,18 @@ const createSubtitle = async (subtitle) => {
   const sub = await Subtitle.create({
     title: title,
     hours: hours,
-    video: video || {}
+    video: video
   });
   return sub;
 };
 
-const enterVideo = async (subtitleId, video) => {
-  const sub = await Subtitle.findByIdAndUpdate(subtitleId, {
-    video: video
-  });
+const updateSubtitle = async (subtitleId, subtitle) => {
+  const sub = await Subtitle.findByIdAndUpdate(subtitleId, subtitle, { new: true });
+  return sub;
 };
 
 module.exports = {
   getSubtitle,
   createSubtitle,
-  enterVideo
+  updateSubtitle
 };

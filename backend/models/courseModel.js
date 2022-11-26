@@ -20,17 +20,11 @@ const courseSchema = mongoose.Schema(
       max: 5.0
     },
     totalHours: {
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
       type: Number,
       required: [true, 'Please specify the total number of hours for the course'],
       min: 0.0
     },
     discount: {
->>>>>>> origin/marsafy
-=======
->>>>>>> marsafy
       type: Number,
       //required: [true, 'Please specify the total number of hours for the course'],
       min: 0.0
@@ -73,6 +67,12 @@ const courseSchema = mongoose.Schema(
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Exam'
+      }
+    ],
+    registeredUsers: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
       }
     ]
   },

@@ -1,22 +1,21 @@
 const Exercise = require('../models/exerciseModel');
 
-const createExercise = async (question, choices, answer) => {
-  const exercise = Exercise.create({
+const createExercise = async (exercise) => {
+  const { question, c1, c2, c3, c4, answer } = exercise;
+  const ex = Exercise.create({
     question: question,
-    choices: choices,
+    choices: [c1, c2, c3, c4],
     answer: answer
   });
-  return exercise;
+  return ex;
 };
 
-const setExerciseAnswer = async (exerciseId, answer) => {
-  const exercise = Exercise.findByIdAndUpdate(exerciseId, {
-    answer: answer
-  });
+const editExercise = async (exerciseId, newExercise) => {
+  const exercise = Exercise.findByIdAndUpdate(exerciseId, newExercise);
   return exercise;
 };
 
 module.exports = {
   createExercise,
-  setExerciseAnswer
+  editExercise
 };
