@@ -124,7 +124,33 @@ const addUser = async (req, res) => {
   } catch (err) {
     res.status(400).json({ message: err });
   }
-  res.status(200).json({ message: 'User entered successfully' });
+};
+
+// const instructorGetExam = async (req, res) => {
+//   try {
+//     const { userId, examId } = req.query;
+//     const courseInfo = await findCourseByExam(examId);
+//     if (courseInfo.instructor === userId) {
+//       const exam = await getExam(examId, true);
+//       return res.status(200).json({ message: exam });
+//     } else {
+//       res.status(400).json({ message: 'Unauthorized access' });
+//     }
+//   } catch (err) {
+//     res.status(400).json({ message: err });
+//   }
+// };
+
+  res.status(400).json({ mssg: 'error' });
+  return;
+};
+
+const instructorCreateSubtitle = async (subtitle) => {
+  const res = await Subtitle.create({
+    title: subtitle.Title,
+    hours: subtitle.Hours
+  });
+  return res;
 };
 
 module.exports = {

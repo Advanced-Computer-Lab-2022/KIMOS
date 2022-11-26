@@ -21,7 +21,7 @@ const courseSchema = mongoose.Schema(
     },
     totalHours: {
       type: Number,
-      required: [true, 'Please specify the total number of hours for the course'],
+      //required: [true, 'Please specify the total number of hours for the course'],
       min: 0.0
     },
     discount: {
