@@ -11,6 +11,12 @@ import Visibility from '@mui/icons-material/Visibility';
 import CheckIcon from '@mui/icons-material/Check';
 
 
+//array of objects 
+// each object
+// question, choices, answer ( int ) 
+
+
+
 // import Stepper from '@mui/material/Stepper';
 // import Step from '@mui/material/Step';
 // import StepLabel from '@mui/material/StepLabel';
@@ -20,7 +26,9 @@ import CheckIcon from '@mui/icons-material/Check';
 
 export default class createQuiz extends Component {
     // steps = ['Write Your Question', 'Create an ad group', 'Create an ad'];
-
+    showQuiz = ()=>{
+        console.log(this.state.questions);
+    }
     state = {
         questions:[{id:0, question:'',choices:[], correct_answer:1}],
         currentQ :0,
@@ -104,7 +112,7 @@ export default class createQuiz extends Component {
             </div>
             <div className='create-quiz__questions__question__options'>
                 <SecondaryBtn function={this.handleAddQuestion} btnText='Add Question'/>
-                <PrimaryBtn btnText='Submit Quiz'/>
+                <PrimaryBtn function = {this.showQuiz} btnText='Submit Quiz'/>
 
             </div>
         </div>
