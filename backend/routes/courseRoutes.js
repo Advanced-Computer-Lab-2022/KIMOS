@@ -13,9 +13,7 @@ const {
 
 router.get('/subjects', findSubjects);
 router.get('/findCourses', findCourses);
-
 router.route('/exam').get(findExam).post(addExam).put(modifyExam);
-
 router.route('/').get(viewCourse).post(createCourse).put(editCourse);
 
 module.exports = router;
