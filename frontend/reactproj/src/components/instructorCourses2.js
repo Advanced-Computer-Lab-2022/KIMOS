@@ -4,9 +4,13 @@ import Rating from '../components/rating';
 import ShowCourse from './showCourse/showCourse';
 import Drawer from '@mui/material/Drawer';
 import InstructorCourse from './instructorCourse';
+import axios from 'axios';
 const columns = [
   { 
     field: 'id', headerName: 'ID',
+    renderCell: rowData => {
+      return rowData.row.rating
+    },
     flex: 0.05,
     minWidth: 40,
     align:'center',
@@ -71,8 +75,26 @@ var courseObj ={id : 1, title: "Course Name",price:100,rating:3,  totalHours: 99
 subtitles:[{title:"Subtitle Title",hours: 23, video: {link:"link as a string", description: "string"} },
            {title:"Subtitle Title Two",hours: 93, video: {link:"link as a string", description: "string"} }]};
 React.useEffect(() => {
-    generateRows();
+    // generateRows();
+    getInstructorCourses();
   }, []);
+
+  const getInstructorCourses = async () => {
+    console.log('getting')
+    try {
+      const res = await axios.post('http://localhost:3000/courses/findCourse',{
+      "instructor_id":"635d70dbf600410aab3c71b0"
+      }, {
+        headers: { 'Access-Control-Allow-Origin': '*' }
+      });
+      console.log('res.data');
+
+      console.log(res.data);
+      setRows(res.data);
+    } catch (e) {
+      console.log(e)
+    }
+  };
     const generateRows = ()=>{
 
         var i = 0;
@@ -101,9 +123,9 @@ React.useEffect(() => {
                 rows={rows}
                 columns={columns}
                 pageSize={20}
-                rowsPerPageOptions={[5]}
+                rowsPerPageOptions={[20]}
                 onRowClick = {showCourse}
-               
+                getRowId = {(row)=>{return row['_id']}}
             />
     </div>
     <Drawer

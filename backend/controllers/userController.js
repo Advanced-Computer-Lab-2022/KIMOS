@@ -69,23 +69,46 @@ const viewCourse = async (req, res) => {
   }
 };
 
-const editUser = async (req, res) => {
-  const { username, email, biography } = req.body;
 
+const getInstructor = async (req, res) => {
+  // const { username, email, bio, password } = req.body;
+  const { id } = req.body;
   console.log(req.body);
+
   try {
     const user = await User.findOne({
-      username: username
+      id: id
     });
-    console.log(user);
-    if (user.userType == 'instructor') {
-      user.email = email || user.email;
-      user.biography = biography || user.biography;
-    }
-    user.password = password || user.password;
-    await User.findOneAndUpdate({ username: user.username }, user);
+    res.status(200).json(user);
+    return;
+
+// '635d70dbf600410aab3c71b0'
   } catch (err) {
     res.status(200).json({ mssg: err.message });
+    return;
+  }
+};
+
+const editUser = async (req, res) => {
+  const { username, email, bio, password } = req.body;
+
+  console.log(req.body);
+
+  try {
+    const user = await User.findOne({
+      id: '635d70dbf600410aab3c71b0'
+    });
+
+    user.username = username || user.username;
+    if (user.userType == 'instructor') {
+      user.email = email || user.email;
+      user.biography = bio || user.biography;
+    }
+    user.password = password || user.password;
+    await User.findOneAndUpdate({  id: '635d70dbf600410aab3c71b0'}, user);
+  } catch (err) {
+    res.status(200).json({ mssg: err.message });
+    return;
   }
   res.status(200).json({ mssg: 'success' });
 };
@@ -220,5 +243,6 @@ module.exports = {
   viewCourse,
   getCountry,
   changeCountry,
-  getRate
+  getRate,
+  getInstructor
 };

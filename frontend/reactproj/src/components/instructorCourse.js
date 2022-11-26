@@ -26,18 +26,33 @@ class instructorCourse extends Component {
     updateSubVideoDesc = (e)=>{
         var subtitle = {...this.state.currentSubtitle};
         subtitle.video.description = e.target.value;
-        this.setState({updated:true, currentSubtitle:subtitle});
+        this.updateAnySub(subtitle);
+
     }
     updateSubVideoLink = (e)=>{
         var subtitle = {...this.state.currentSubtitle};
         subtitle.video.link = e.target.value;
-        this.setState({updated:true, currentSubtitle:subtitle});
+
     }
     
     updateSubHours = (e)=>{
         var subtitle = {...this.state.currentSubtitle};
         subtitle.hours = e.target.value;
-        this.setState({updated:true, currentSubtitle:subtitle});
+
+        this.updateAnySub(subtitle);
+
+    }
+    updateSubTitle = (e)=>{
+        var subtitle = {...this.state.currentSubtitle};
+        subtitle.title = e.target.value;
+        this.updateAnySub(subtitle);
+    }
+    updateAnySub = (newSubtitle)=>{
+        var course = {...this.state.course};
+        course.subtitles[this.state.currentSIndex] = newSubtitle;
+
+        this.setState({updated:true,currentSubtitle:newSubtitle, course: course})
+
     }
     updatePreviewLink = (e)=>{
         var course = {...this.state.course};
@@ -50,7 +65,9 @@ class instructorCourse extends Component {
         return(
             <div className='subtitle'>
                 <div className='subtitle__header'>
-                    {subtitle.title}
+                    
+                    <TextField id={subtitle.title + '1'} onChange={this.updateSubTitle} value={subtitle.title} label="Subtitle Title" variant="outlined" />
+
                 </div>
 
                 <div className='subtitle__info'>
@@ -108,7 +125,7 @@ class instructorCourse extends Component {
 
              return(
                  <div id={index} className= {`subtitleD ${this.state.currentSIndex === index? 'selected-subtitle':''}`} onClick={() => {this.changeSubtitle(index)}}>
-                     Subtitle {index+1}
+                    {true? 'Subtitle'+(index+1):subtitle.title}
                  </div>
              )
          })

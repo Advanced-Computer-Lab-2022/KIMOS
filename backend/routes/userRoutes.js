@@ -15,7 +15,8 @@ const {
   viewCourse,
   getCountry,
   changeCountry,
-  getRate
+  getRate,
+  getInstructor
 } = require('../controllers/userController');
 
 router.post('/changeCountry', changeCountry);
@@ -35,6 +36,7 @@ router.put('/editInformation', editUser);
 //subtitle Subtitle:{title:"",hours:int,video:{link:"",description}}
 //and exercise:{question:"",choices:[""],answer: int}
 router.post('/instructor/createCourse', instructorCreateCourse);
+router.post('/instructor/getInstructor', getInstructor);
 router.post('/instructor/addSubtitle', instructorCreateSubtitle);
 router.post('/instructor/addExercise', instructorCreateExercise);
 //send user info, subtitle title as "title" and video:{link:"",description:""}
