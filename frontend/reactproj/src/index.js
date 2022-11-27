@@ -23,24 +23,15 @@ let persistor = persistStore(store)
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
-const theme = createTheme({
-    palette: {
-      primary: {
-        main: '#D80621',
-        },
-      secondary: {
-        main: '#E33E7F'
-      }
-    }
-  });
+
 
 root.render(
     <Provider store = {store}>
-        <ThemeProvider theme={theme}>
-        <PersistGate loading={null} persistor={persistor}> 
+
+
           <App />
-        </PersistGate>
+
                
-        </ThemeProvider>
+
     </Provider>
 );

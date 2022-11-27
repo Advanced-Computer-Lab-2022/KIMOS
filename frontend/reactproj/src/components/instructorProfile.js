@@ -49,13 +49,13 @@ class InstructorProfile extends Component {
     }
     getUserInfo = async () => {
         try {
-          const res = await axios.post('http://localhost:3000/users/instructor/getInstructor',{
-            "instructor_id":"635d70dbf600410aab3c71b0"
-          }, {
+          const res = await axios.get('http://localhost:3000/users/?userId=638117c243cba3f0babcc3a9', {
             headers: { 'Access-Control-Allow-Origin': '*' }
           });
           
+          console.log(res);
           var info = {
+            'id':res.data['_id'] || 0,
             'username':res.data.username  || '',
             'email':res.data.email  || '',
             'bio':res.data.biography || '',
@@ -71,7 +71,8 @@ class InstructorProfile extends Component {
       };
     updateUserInfo = async () => {
         try {
-          const res = await axios.put('http://localhost:3000/users/editInformation',{
+          const res = await axios.put('http://localhost:3000/users',{
+            userId: this.state.instructor['id'],
             username:this.state.new_instructor.username,
             email:this.state.new_instructor.email,
             bio:this.state.new_instructor.bio,
@@ -111,7 +112,6 @@ class InstructorProfile extends Component {
     render() {
         return (
             <div className='instructor-profile'>
-                <button onClick={this.getUserInfo} >Get</button>
                 <div className='instructor-profile__header'>
                     <img src={topGcover} alt='profile'/> 
                     <div className='instructor-profile__header__pp'>

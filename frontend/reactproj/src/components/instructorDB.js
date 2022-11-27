@@ -19,6 +19,7 @@ export default class InstructorDB extends Component {
   
     window.location.href = '/instructor/'+link;
   }
+  // {this.makeCard(<QuizIcon className='instructorDB__container__option__icon'/>, 'Create A Quiz','createQuiz')}
 
   render() {
 
@@ -29,7 +30,6 @@ export default class InstructorDB extends Component {
             {this.makeCard(<PersonIcon className='instructorDB__container__option__icon'/>, 'My Profile','profile')}
             {this.makeCard(<GavelIcon className='instructorDB__container__option__icon'/>, 'Contracts', 'contracts')}
             {this.makeCard(<MenuBookIcon className='instructorDB__container__option__icon'/>, 'My Courses', 'myCourses')}
-            {this.makeCard(<QuizIcon className='instructorDB__container__option__icon'/>, 'Create A Quiz','createQuiz')}
 
         </div>
       

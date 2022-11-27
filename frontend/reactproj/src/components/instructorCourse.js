@@ -7,8 +7,9 @@ import SecondaryBtn from './buttons/secondaryBtn';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import axios from 'axios';
 
-import Box from '@mui/material/Box';
+
 
 class instructorCourse extends Component {
 
@@ -16,10 +17,20 @@ class instructorCourse extends Component {
         course:{},
         currentSubtitle:{video:{}},
         currentSIndex:0,
+        displayedStartDate:new Date(),
+        displayedEndDate:new Date(),
+        discountFlag: false,
         updated:false
     }
     componentDidMount(){
         this.setState({course:this.props.course, currentSubtitle:this.props.course.subtitles[0]})
+        if(this.props.course.discount.duration && this.props.course.discount.duration.startDate){
+            this.setState({displayedStartDate: this.props.course.discount.duration.startDate})
+        }
+        if(this.props.course.discount.duration && this.props.course.discount.duration.endDate){
+            this.setState({displayedEndDate: this.props.course.discount.duration.endDate})
+
+        }
         
     }
 
@@ -32,7 +43,8 @@ class instructorCourse extends Component {
     updateSubVideoLink = (e)=>{
         var subtitle = {...this.state.currentSubtitle};
         subtitle.video.link = e.target.value;
-
+        this.updateAnySub(subtitle);
+        
     }
     
     updateSubHours = (e)=>{
@@ -81,13 +93,13 @@ class instructorCourse extends Component {
 
                 <div className='subtitle__info'>
                     <div className='subtitle__info__key'>
-                        <TextField id={this.state.course.title+'0'} onChange={this.updateSubVideoLink} value={subtitle.video.link} label="Videl URL" variant="outlined" />
+                        <TextField id={this.state.course.title+'0'} onChange={this.updateSubVideoLink} value={subtitle.video.link} label="Video URL" variant="outlined" />
                     </div>
                 </div>
 
                 <div className='subtitle__info'>
                     <div className='subtitle__info__key' style={{width:'100%'}}>
-                        <TextField id={this.state.course.title+'2'} onChange={this.updateSubVideoDesc} value={subtitle.video.description} label="Videl Description" variant="outlined" multiline rows={3} fullWidth />
+                        <TextField id={this.state.course.title+'2'} onChange={this.updateSubVideoDesc} value={subtitle.video.description} label="Video Description" variant="outlined" multiline rows={3} fullWidth />
                     </div>
                 </div>
             </div>
@@ -118,7 +130,7 @@ class instructorCourse extends Component {
         var newCourse = {...this.state.course};
         newCourse.subtitles = currentSubs;
         // this.changeSubtitle(newSubIndex);
-        this.setState({course:newCourse,currentSubtitle:newSubtitle ,currentSIndex:newSubIndex})
+        this.setState({course:newCourse,currentSubtitle:newSubtitle ,currentSIndex:newSubIndex, updated:true})
     }
     displaySubtitles = ()=>{
         return this.state.course.subtitles&&this.state.course.subtitles.map((subtitle, index)=>{
@@ -143,13 +155,68 @@ class instructorCourse extends Component {
         // console.log(this.currentSubtitle);
         // console.log(this.state.course.discount);
         // console.log(this.state.course.preview);
-        console.log(this.state.course);
+        var toBeSubmitted = {}
+        toBeSubmitted.discountFlag = this.state.discountFlag;
+        toBeSubmitted.courseId = this.state.course['_id'];
+        toBeSubmitted.course = this.state.course;
+        if(this.state.discountFlag){
+            console.log("discount flag working")
+            if(this.state.course.discount.amount > 0){
+            console.log("discount flag working for bigger than 0")
+            console.log(this.state.displayedStartDate);
+            console.log(this.state.displayedEndDate);
+
+
+                toBeSubmitted.course.discount.duration = {};
+                toBeSubmitted.course.discount.duration.startDate = this.state.displayedStartDate;
+                toBeSubmitted.course.discount.duration.endDate = this.state.displayedEndDate;
+            }
+
+        }
+
+
+
+
+        this.submitNewCourse(toBeSubmitted)
+
 
     }
+
+     
+    submitNewCourse = async (course) => {
+        try {
+          const res = await axios.put('http://localhost:3000/courses/?user[userId]=638117c243cba3f0babcc3a9',course, {
+            headers: { 'Access-Control-Allow-Origin': '*' }
+          });
+          
+            console.log(res);
+   
+        } catch (e) {
+            console.log(e);
+
+        }
+      };
+
     updateDiscount = (e)=>{
         var course = {...this.state.course};
         course.discount.amount = e.target.value;
-        this.setState({updated:true, course:course});
+        this.setState({updated:true, course:course, discountFlag:true});
+    }
+    setStartDate = (newValue)=>{
+        console.log(newValue);
+        // var course = {...this.state.course};
+        // course.discount.startDate = newValue;
+        this.setState({updated:true, discountFlag:true, displayedStartDate:newValue});
+    };
+
+    setEndDate = (newValue)=>{
+        // var course = {...this.state.course};
+        // course.discount.endDate = newValue;
+        this.setState({updated:true, discountFlag:true, displayedEndDate:newValue});
+
+    };
+    createExam = ()=>{
+        window.location.href = '/instructor/createQuiz?courseId='+this.props.course['_id'];
     }
     displayDate = ()=>{
 
@@ -160,9 +227,11 @@ class instructorCourse extends Component {
                 <div className='date-picker'>
                     <DatePicker
                     label="Start Date"
-                    // value={value}
+                    value={this.state.displayedStartDate}
                     onChange={(newValue) => {
                         // setValue(newValue);
+
+                        this.setStartDate(newValue);
                     }}
                     renderInput={(params) => <TextField {...params} />}
                     />
@@ -170,9 +239,13 @@ class instructorCourse extends Component {
                     <DatePicker
 
                     label="Ending Date"
-                    // value={value}
+                    value={this.state.displayedEndDate}
+
                     onChange={(newValue) => {
                         // setValue(newValue);
+                        this.setEndDate(newValue);
+
+
                     }}
                     renderInput={(params) => <TextField {...params} />}
                     />
@@ -243,7 +316,9 @@ class instructorCourse extends Component {
                             <div>
                                 Subtitle(s)
                             </div>
-                            <div>
+                            <div style={{display:'flex'}}>
+                                <SecondaryBtn function={this.createExam} btnText="Create Exam"/>
+                                <div className='date-picker__sep'/>
                                 <SecondaryBtn btnText='Add Subtitle' function={this.addSubtitle}/>
                             </div>
                         </div>      

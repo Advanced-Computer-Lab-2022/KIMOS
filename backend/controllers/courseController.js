@@ -78,15 +78,21 @@ const findCourses = async (req, res) => {
           if (result.subtitles.length) result = await result.populate('subtitles');
           if (result.exams.length) {
             result = await result.populate('exams');
-            result.exams = await result.exams.populate('exercises');
+            // result.exams = await result.exams.populate('exercises');
+            var promises = result.exams.map(async (e) =>{
+              return await e.populate('exercises');
+            })
+            result.exams = await Promise.all(promises);
+            console.log(result.exams)
           }
+
           return result;
         });
         const returnResult = await Promise.all(promises);
         return res.status(200).json(returnResult);
       })
       .catch((err) => {
-        return res.status(500).send(err);
+        return res.status(500).json(err.message);
       });
   } else {
     await Course.find({
@@ -107,7 +113,7 @@ const findCourses = async (req, res) => {
           }
           return result;
         });
-        const returnResult = Promise.all(promises);
+        const returnResult = await Promise.all(promises);
         return res.status(200).json(returnResult);
       })
       .catch((err) => {

@@ -9,7 +9,7 @@ import InputAdornment from '@mui/material/InputAdornment';
 import FormControl from '@mui/material/FormControl';
 import Visibility from '@mui/icons-material/Visibility';
 import CheckIcon from '@mui/icons-material/Check';
-
+import axios from 'axios';
 
 //array of objects 
 // each object
@@ -27,8 +27,27 @@ import CheckIcon from '@mui/icons-material/Check';
 export default class createQuiz extends Component {
     // steps = ['Write Your Question', 'Create an ad group', 'Create an ad'];
     showQuiz = ()=>{
-        console.log(this.state.questions);
+        this.submitQuiz();
     }
+    submitQuiz = async () => {
+
+        const queryParams = new URLSearchParams(window.location.search)
+        const courseId = queryParams.get("courseId")
+
+        try {
+          const res = await axios.post('http://localhost:3000/courses/exam?user[userId]=638117c243cba3f0babcc3a9',{
+                courseId:courseId,
+                exercises: this.state.questions
+          }, {
+            headers: { 'Access-Control-Allow-Origin': '*' }
+          });
+          
+            console.log(res);
+        } catch (e) {
+            console.log(e);
+
+        }
+      };
     state = {
         questions:[{id:0, question:'',choices:[], correct_answer:1}],
         currentQ :0,

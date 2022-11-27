@@ -7,7 +7,7 @@ import ThemeSwitcher from './themeSwitcher';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { setCourses, setUserType, setUser } from '../redux/actions/index';
 import {connect} from 'react-redux';
-
+import ColorRangePicker from './colorRangePicker';
 
 
 // const axios = require('axios');
@@ -69,7 +69,7 @@ class navbar extends Component {
                 <div className="user-options">
 
                     <ThemeSwitcher />
-
+                    <ColorRangePicker/>
                     {this.props.user.username ===''&&<PrimaryButton function={this.exampleFunction} btnSize="medium" btnText="Log In"/>}
                     {this.props.user.username ===''&&<SecondaryButton function={this.exampleFunction} btnSize="medium" btnText="Sign Up"/>}
                     {this.props.user.username !==''&&<SecondaryButton function={this.logOut} btnSize="medium" btnText="Log Out"/>}

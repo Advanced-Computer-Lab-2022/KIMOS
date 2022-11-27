@@ -3,12 +3,13 @@ const mongoose = require('mongoose');
 const examSchema = mongoose.Schema(
   {
     title: {
-      type: String
+      type: String,
+      default: 'Exam Title'
     },
     exercises: [
       {
         type: mongoose.Types.ObjectId,
-        ref: 'Question'
+        ref: 'Exercise'
       }
     ]
   },

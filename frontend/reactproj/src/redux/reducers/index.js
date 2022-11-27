@@ -49,6 +49,15 @@ const user = (user={username:"",userType:""}, action) => {
 }
 
 
+const primaryColor = (primaryColor="#D80621", action) => {
+    if(action.type === 'CHANGE_COLOR'){
+        console.log('changed to '+action.payload.color) 
+        return action.payload.color;
+    }
+    return primaryColor;
+}
+
+
 
 
 
@@ -59,7 +68,8 @@ export default combineReducers({
     courses:courses,
     rateAndSymbol:rateAndSymbol,
     userType:userType,
-    user:user
+    user:user,
+    primaryColor:primaryColor
 
 
 });

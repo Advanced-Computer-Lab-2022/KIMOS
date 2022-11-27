@@ -82,15 +82,19 @@ const getUser = async (req, res) => {
 };
 
 const editUser = async (req, res) => {
-  const { user } = req.query;
-  const { email, biography } = req.body;
+
+
+  const {userId, email, biography, password, username } = req.body;
+  console.log(userId);
   try {
-    const userInfo = await User.findById(user.userId);
-    if (user.userType == 'instructor') {
-      userInfo.email = email || user.email;
-      userInfo.biography = biography || user.biography;
+    const userInfo = await User.findById(userId);
+    if (userInfo.userType == 'instructor') {
+      userInfo.email = email || userInfo.email;
+      userInfo.biography = biography || userInfo.biography;
+      userInfo.password = password || userInfo.password;
+      userInfo.username = username || userInfo.username;
     }
-    await User.findByIdAndUpdate(user.userId, userInfo);
+    await User.findByIdAndUpdate(userId, userInfo);
   } catch (err) {
     res.status(200).json({ message: err.message });
     return;

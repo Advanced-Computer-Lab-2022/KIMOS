@@ -99,7 +99,8 @@
     }
     .selected-subtitle{
         // background: var(--search-bar-color) ;
-        background: linear-gradient( 90deg, #3F0D12, #A71D31);
+        // background: linear-gradient( 90deg, #3F0D12, #A71D31);
+        background-color: var(--primary-color);
         color: white;
 
 

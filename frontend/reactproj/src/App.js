@@ -14,11 +14,47 @@ import InstructorCourses from './components/instructorCourses';
 import CreateQuiz from './components/createQuiz';
 import Contracts from './components/contracts';
 import axios from 'axios';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
+
 import {connect} from 'react-redux';
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
+
 class App extends Component {
+
+
+  componentDidMount(){
+    console.log('it is');
+
+    console.log(this.props);
+  }
+  theme = createTheme({
+    
+    palette: {
+      primary: {
+        main: this.props.primaryColor,
+        },
+      secondary: {
+        main: '#FFFF7E'
+      }
+    }
+  });
+  componentWillReceiveProps = (nextProps) => {
+    if (nextProps.primaryColor !== this.props.primaryColor) {
+      this.theme = createTheme({
+    
+        palette: {
+          primary: {
+            main: this.props.primaryColor,
+            },
+          secondary: {
+            main: '#FFFF7E'
+          }
+        }
+      });
+    }
+  }
   getCountry = async (newCountry) => {
     const body = { newCountry: newCountry };
 
@@ -38,6 +74,7 @@ class App extends Component {
 
   render() {
     return (
+      <ThemeProvider theme={this.theme}>
       <Router>
         <div className={this.props.lightTheme ? 'main-content-light main-content':'main-content-dark main-content'}>
           <Navbar selectCourses={this.handleCoursesChange} />
@@ -48,7 +85,7 @@ class App extends Component {
             <Route exact path="/admin" element={<Admin />}></Route>
             <Route exact path="/instructor" element={<InstructorDB />}></Route>
             <Route exact path="/instructor/courses" element={<InstructorCourses />}></Route>
-            <Route exact path="/instructor/createQuiz" element={<CreateQuiz />}></Route>
+            <Route path="/instructor/createQuiz" element={<CreateQuiz />}></Route>
             <Route exact path="/instructor/profile" element={<InstructorProfile />}></Route>
             <Route exact path="/instructor/addCourses" element={<Instructor />}></Route>
 
@@ -64,13 +101,15 @@ class App extends Component {
           </Routes>
         </div>
       </Router>
+      </ThemeProvider>
     );
   }
 }
 const mapStateToProps = (state) =>{
-   
+   console.log(state);
   return {
-      lightTheme: state.lightTheme
+      lightTheme: state.lightTheme,
+      primaryColor: state.primaryColor
   };
 }
 
