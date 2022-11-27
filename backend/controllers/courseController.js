@@ -141,13 +141,13 @@ const addDiscount = async (courseId, discount) => {
     const job1 = schedule.scheduleJob(courseId + 'start', startDate, async function (title) {
       const course = await Course.findByIdAndUpdate(courseId, { discount: discount });
     });
-    console.log(job1);
+    //console.log(job1);
   }
   const job2 = schedule.scheduleJob(courseId + 'end', endDate, async function (title) {
     const courseUpdate = await Course.findByIdAndUpdate(courseId, { discount: {} }, { new: true });
     return courseUpdate;
   });
-  console.log(job2);
+  //console.log(job2);
   return returnDiscount;
 };
 
@@ -157,14 +157,20 @@ const viewCourse = async (req, res) => {
     var courseInfo = Course.findById(courseId);
     if (courseInfo.registeredUsers.includes(mongoose.Types.ObjectId(userId))) {
       const course = await Course.findById(courseId);
-      courseInfo = await course.populate('subtitles').populate('exams');
-      courseInfo.exams = courseInfo.exams.map(async (exam, index) => {
+      if (courseInfo.subtitles.length) courseInfo = await course.populate('subtitles');
+      if (courseInfo.exams.length) courseInfo = await course.populate('exams');
+      const promises = courseInfo.exams.map(async (exam, index) => {
         const ex = await getExam(exam._id, false);
         return ex;
       });
-      console.log(courseInfo);
+      courseInfo.exams = Promise.all(promises);
       res.status(200).json(courseInfo);
-    } else res.status(401).json({ message: 'Not registered to course' });
+    } else {
+      const course = await Course.findById(courseId);
+      if (courseInfo.subtitles.length) courseInfo = await course.populate('subtitles', 'title');
+      if (courseInfo.exams.length) courseInfo = await course.populate('exams', 'title');
+      res.status(200).json(courseInfo);
+    }
   } catch (error) {
     res.status(400).json({ message: error.message });
   }

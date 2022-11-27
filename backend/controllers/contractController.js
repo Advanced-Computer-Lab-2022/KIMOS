@@ -47,7 +47,7 @@ const editContract = async (req, res) => {
 const addInstructor = async (req, res) => {
   const { contractId, instructorId } = req.body;
   const cont = await Contract.findByIdAndUpdate(contractId, {
-    instructors: { $push: { instructorId } }
+    $push: { instructors: instructorId }
   });
   res.status(200).json({ message: 'Success' });
 };
