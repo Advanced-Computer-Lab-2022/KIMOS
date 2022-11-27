@@ -3,6 +3,7 @@ const User = require('../models/userModel');
 const { createSubtitle, updateSubtitle } = require('./subtitleController');
 const { createExam } = require('./examController');
 const mongoose = require('mongoose');
+const schedule = require('node-schedule');
 
 const createCourse = async (req, res) => {
   try {
@@ -79,11 +80,11 @@ const findCourses = async (req, res) => {
           if (result.exams.length) {
             result = await result.populate('exams');
             // result.exams = await result.exams.populate('exercises');
-            var promises = result.exams.map(async (e) =>{
+            var promises = result.exams.map(async (e) => {
               return await e.populate('exercises');
-            })
+            });
             result.exams = await Promise.all(promises);
-            console.log(result.exams)
+            console.log(result.exams);
           }
 
           return result;
@@ -129,14 +130,25 @@ const findSubjects = async (req, res) => {
 
 const addDiscount = async (courseId, discount) => {
   const { startDate, endDate } = discount.duration;
-  await schedule.gracefulShutdown();
-  const job1 = schedule.scheduleJob(startDate, async function (title) {
-    const course = await Course.findByIdAndUpdate(courseId, { discount: discount });
-  });
-  const job2 = schedule.scheduleJob(endDate, async function (title) {
+  const startJob = schedule.scheduledJobs(courseId + 'start');
+  const endJob = schedule.scheduledJobs(courseId + 'end');
+  if (startJob) startJob.cancel();
+  if (endJob) endJob.cancel();
+  var returnDiscount = {};
+  var todayDate = new Date();
+  if (todayDate >= startDate) returnDiscount = discount;
+  else {
+    const job1 = schedule.scheduleJob(courseId + 'start', startDate, async function (title) {
+      const course = await Course.findByIdAndUpdate(courseId, { discount: discount });
+    });
+    console.log(job1);
+  }
+  const job2 = schedule.scheduleJob(courseId + 'end', endDate, async function (title) {
     const courseUpdate = await Course.findByIdAndUpdate(courseId, { discount: {} }, { new: true });
     return courseUpdate;
   });
+  console.log(job2);
+  return returnDiscount;
 };
 
 const viewCourse = async (req, res) => {
@@ -212,8 +224,9 @@ const editCourse = async (req, res) => {
   const userId = mongoose.Types.ObjectId(user.userId);
   console.log(courseInfo.instructor);
   if (userId.equals(courseInfo.instructor)) {
-    if (flagDiscount === true) {
-      await addDiscount(courseId, course.discount);
+    if (flagDiscount === 'true') {
+      console.log('wee');
+      course.discount = await addDiscount(courseId, course.discount);
     }
     promises = course.subtitles.map(async (subtitle, index) => {
       var sub;
