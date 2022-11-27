@@ -2,6 +2,7 @@ const Course = require('../models/courseModel');
 const User = require('../models/userModel');
 const { createSubtitle, updateSubtitle } = require('./subtitleController');
 const { createExam } = require('./examController');
+const { viewRating, createRating, updateRating, deleteRating } = require('./ratingController');
 const mongoose = require('mongoose');
 const schedule = require('node-schedule');
 
@@ -252,6 +253,23 @@ const editCourse = async (req, res) => {
   }
 };
 
+const rateCourse = async (req, res) => {
+  try {
+    const { courseId, userId, rating } = req.body;
+    await updateRating(userId, courseId, rating);
+    const currRating = Course.findById(courseId).rating;
+    const newRating =
+      currRating.value * currRating.numberOfRatings + rating / currRating.numberOfRatings + 1;
+    Course.findByIdAndUpdate(courseId, {
+      rating: newRating,
+      numberOfRatings: currRating.numberOfRatings + 1
+    });
+  } catch (err) {
+    res.status(400).json({ message: err });
+  }
+  res.status(200).json({ message: 'Course Rated Successfully!' });
+};
+
 module.exports = {
   findSubjects,
   findCourses,
@@ -260,5 +278,6 @@ module.exports = {
   modifyExam,
   findExam,
   addExam,
-  editCourse
+  editCourse,
+  rateCourse
 };

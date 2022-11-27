@@ -53,21 +53,21 @@ const getRate = async (req, res) => {
   }
 };
 
-const userViewRegisteredCourses = async (req, res) => {
-  const { userId, courseId } = req.query;
-  try {
-    const userInfo = await User.findById(userId);
-    if (userInfo.courses.includes(courseId)) {
-      const course = await getCourse(courseId);
-      const courseInfo = await course.populate('subtitles').populate('exams');
-      const courseInfoExams = await courseInfo.exams.populate('exercises', '--answer');
-      console.log(courseInfoExams);
-      res.status(200).json(courseInfo);
-    } else res.status(401).json({ message: 'Not registered to course' });
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-};
+// const userViewRegisteredCourses = async (req, res) => {
+//   const { userId, courseId } = req.query;
+//   try {
+//     const userInfo = await User.findById(userId);
+//     if (userInfo.courses.includes(courseId)) {
+//       const course = await getCourse(courseId);
+//       const courseInfo = await course.populate('subtitles').populate('exams');
+//       const courseInfoExams = await courseInfo.exams.populate('exercises', '--answer');
+//       console.log(courseInfoExams);
+//       res.status(200).json(courseInfo);
+//     } else res.status(401).json({ message: 'Not registered to course' });
+//   } catch (error) {
+//     res.status(400).json({ message: error.message });
+//   }
+// };
 
 const getUser = async (req, res) => {
   const { userId } = req.query;
@@ -82,17 +82,13 @@ const getUser = async (req, res) => {
 };
 
 const editUser = async (req, res) => {
-
-
-  const {userId, email, biography, password, username } = req.body;
+  const { userId, email, biography } = req.body;
   console.log(userId);
   try {
     const userInfo = await User.findById(userId);
     if (userInfo.userType == 'instructor') {
       userInfo.email = email || userInfo.email;
       userInfo.biography = biography || userInfo.biography;
-      userInfo.password = password || userInfo.password;
-      userInfo.username = username || userInfo.username;
     }
     await User.findByIdAndUpdate(userId, userInfo);
   } catch (err) {
@@ -129,6 +125,75 @@ const addUser = async (req, res) => {
   } catch (err) {
     res.status(400).json({ message: err });
   }
+};
+
+const uploadSolutions = async (req, res) => {
+  const { userId, examId, userSolutions } = req.body;
+  try {
+    const userSol = new UserSolutions({
+      userId: userId,
+      examId: examId,
+      userSolutions: userSolutions
+    });
+    userSol.save((req, res) => {
+      if (err) {
+        return res.status(400).json({ message: err });
+      }
+    });
+  } catch (err) {
+    res.status(400).json({ message: err });
+  }
+  res.status(200).json({ message: 'Exam solutions uploaded successfully' });
+};
+
+const getGrades = async (req, res) => {
+  const { userId, examId } = req.body;
+  const correctAnswers = 0;
+  try {
+    const userSolutions = await UserSolutions.findById({ userId: userId, examId: examId });
+    const exam = await Exam.findById(examId);
+    userSolutions.userSolutions.forEach((userSol) => {
+      const exercise = exam.exercises.find(userSol.exercise);
+      if (userSol.answer == exercise.answer) {
+        correctAnswers += 1;
+      }
+    });
+    const grade = correctAnswers + '/' + userSolutions.userSolutions.length;
+    res.send(grade);
+    res.status(200).json({ message: 'Grade retrieved successfully' });
+  } catch (err) {
+    res.status(400).json({ message: err });
+  }
+};
+
+const findExamAndSol = async (res, req) => {
+  const { userId, examId } = req.body;
+  try {
+    const examSol = await Exam.findOne(examId).exercises;
+    const userSol = await UserSolutions.findOne({ userId, examId }).userSolutoins;
+    const examPsol = { userSol, examSol };
+    res.status(200).json({ message: 'Grade retrieved successfully', payload: examPsol });
+  } catch (err) {
+    res.status(400).json({ message: err });
+  }
+};
+
+const rateInstructor = async (res, req) => {
+  try {
+    const { userId, rating, instructorId } = req.body;
+    const ratedInstructor = await User.findOne(instructorId);
+    const currRating = ratedInstructor.rating;
+    const newRating =
+      currRating.value * currRating.numberOfRatings + rating / currRating.numberOfRatings + 1;
+    User.findByIdAndUpdate(instructorId, {
+      rating: newRating,
+      numberOfRatings: currRating.numberOfRatings + 1
+    });
+    Rating.findByIdAndUpdate({ userId, instructorId }, { rating: newRating });
+  } catch (err) {
+    res.status(400).json({ message: err });
+  }
+  res.status(200).json({ message: 'Course Rated Successfully!' });
 };
 
 module.exports = {
