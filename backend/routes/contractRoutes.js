@@ -4,10 +4,12 @@ const {
   addInstructor,
   getContract,
   createContract,
-  editContract
+  editContract,
+  tmpGetContract,
+  removeInstructor
 } = require('../controllers/contractController');
 
-router.route('/').get(getContract).post(createContract).put(editContract);
-router.route('/instructor').post(addInstructor);
+router.route('/').get(tmpGetContract).post(createContract).put(editContract);
+router.route('/instructor').post(addInstructor).delete(removeInstructor);
 
 module.exports = router;

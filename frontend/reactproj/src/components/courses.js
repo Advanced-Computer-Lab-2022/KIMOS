@@ -42,7 +42,7 @@ class courses extends Component {
   getRateSymbol = async () => {};
   getSubjects = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/courses/subjects', {
+      const res = await axios.get('http://localhost:3000/courses/subjects', {
         headers: { 'Access-Control-Allow-Origin': '*' }
       });
 
@@ -68,7 +68,7 @@ class courses extends Component {
     const body = keywordObj;
     console.log(body);
     try {
-      const res = await axios.post('http://localhost:5000/courses/findCourse', body, {
+      const res = await axios.get('http://localhost:3000/courses/findCourses', {
         headers: { 'Access-Control-Allow-Origin': '*' }
       });
 

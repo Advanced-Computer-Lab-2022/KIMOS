@@ -5,13 +5,18 @@ const { createExam } = require('./examController');
 const mongoose = require('mongoose');
 
 const createCourse = async (req, res) => {
+  console.log('adding course');
   try {
     const { user } = req.query;
     const { course } = req.body;
+  console.log(user);
+  console.log(course);
+
     var subtitles = [];
     if (user.userType === 'instructor') {
+      console.log('in inner cond')
       var totalHours = 0;
-      if (course.subtitles) {
+      if (course.subtitles.length) {
         const promises = course.subtitles.map(async (subtitle, index) => {
           const sub = await createSubtitle(subtitle);
           return sub;
@@ -37,6 +42,7 @@ const createCourse = async (req, res) => {
       res.status(401).json({ message: 'Unauthorized access' });
     }
   } catch (err) {
+    console.log(err);
     res.status(400).json({ message: err.message });
   }
 };

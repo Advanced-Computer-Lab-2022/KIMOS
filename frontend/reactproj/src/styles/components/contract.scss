@@ -71,3 +71,29 @@
         
     }
 }
+
+.accepted{
+    border: 2px solid #48A14D;
+    margin-left: 20px;
+    height: 100%;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top:5px;
+    padding-bottom:5px;
+    border-radius: 10px;
+    background: #48a14ca7;
+    font-weight: lighter;
+}   
+
+.rejected{
+    border: 2px solid #D61A3C;
+    margin-left: 20px;
+    height: 100%;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top:5px;
+    padding-bottom:5px;
+    border-radius: 10px;
+    background: #d61a3c95;
+    font-weight: lighter;
+}

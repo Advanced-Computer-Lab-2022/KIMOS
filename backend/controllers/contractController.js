@@ -1,8 +1,32 @@
 const Contract = require('../models/contractModel');
 
-const getContract = async (req, res) => {
-  if (req.body.userType === 'instructor') {
+
+
+//6383b1fa6b97907bd6a90ca6
+const tmpGetContract = async (req, res) => {
+  if (req.query.userType === 'instructor') {
     try {
+      const id = req.query.userId;
+      const contract = await Contract.findById('6383b1fa6b97907bd6a90ca6');
+      if(contract !== null && contract.instructors.includes(id))
+        res.status(200).json({ accepted:true });
+      else 
+        res.status(200).json({ accepted:false });
+
+    } catch (err) {
+      res.status(400).json({ message: err.message });
+    }
+  } else {
+    res.status(401).json({ message: 'Unauthorized access' });
+  }
+};
+
+
+
+const getContract = async (req, res) => {
+  if (req.query.userType === 'instructor') {
+    try {
+      const id = req.query.userId;
       const contract = await Contract.findById(id);
       res.status(200).json({ contract });
     } catch (err) {
@@ -43,11 +67,22 @@ const editContract = async (req, res) => {
   }
   res.status(200).json({ message: 'Contract entered successfully' });
 };
-
+//currently we will be working on only one contractId with ID = 9999
 const addInstructor = async (req, res) => {
-  const { contractId, instructorId } = req.body;
-  const cont = await Contract.findByIdAndUpdate(contractId, {
-    instructors: { $push: { instructorId } }
+  const { instructorId } = req.body;
+  const cont = await Contract.findByIdAndUpdate("6383b1fa6b97907bd6a90ca6", {
+    $push: { instructors: instructorId }
+  });
+  res.status(200).json({ message: 'Success' });
+};
+
+
+const removeInstructor = async (req, res) => {
+  const { instructorId } = req.query;
+
+
+  const cont = await Contract.findByIdAndUpdate("6383b1fa6b97907bd6a90ca6", {
+    $pull: { instructors: instructorId }
   });
   res.status(200).json({ message: 'Success' });
 };
@@ -56,5 +91,7 @@ module.exports = {
   getContract,
   createContract,
   addInstructor,
-  editContract
+  editContract,
+  tmpGetContract,
+  removeInstructor
 };

@@ -24,7 +24,7 @@ export default function Create() {
     exercises: []
   });
 
-  const [subtitleList, setSubtitle] = useState([{ Title: '', Hours: '' }]);
+  const [subtitleList, setSubtitle] = useState([{ title: '', hours: '' }]);
   const [exercisesList, setExercises] = useState(['']);
 
   //console.log(subtitleList);
@@ -32,7 +32,7 @@ export default function Create() {
   //we use axios to send date from frontend to backend
   const createCourse = () => {
     course.instructor = instructor_id;
-    axios.post('http://localhost:3000/users/instructor/createCourse', {
+    axios.post('http://localhost:3000/courses/?user[userId]=638117c243cba3f0babcc3a9&user[userType]=instructor', {
       user:{userType:'instructor'},
       course: course
     }).then(() => {
@@ -41,7 +41,7 @@ export default function Create() {
   };
 
   const addSubTitle = () => {
-    setSubtitle([...subtitleList, { Title: '', Hours: '' }]);
+    setSubtitle([...subtitleList, { title: '', hours: '' }]);
   };
   const addExercises = () => {
     setExercises([...exercisesList, '']);
@@ -97,7 +97,7 @@ export default function Create() {
           <p style={{ fontSize: 15 }}>{`SubTitle ${subtitleCount++}`}</p>
           <TextField
             required
-            name="Title"
+            name="title"
             id="outlined-basic3"
             label="Title"
             variant="outlined"
@@ -106,7 +106,7 @@ export default function Create() {
           />
           <TextField
             required
-            name="Hours"
+            name="hours"
             id="outlined-basic3"
             label="Hours"
             variant="outlined"

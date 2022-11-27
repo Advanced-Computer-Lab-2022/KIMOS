@@ -35,11 +35,12 @@ const changeCountry = async (req, res) => {
 };
 
 const getRate = async (req, res) => {
-  const { country } = req.query;
+  const { countryCode } = req.query;
   var countryDetails = {};
   try {
-    countryDetails = getAllInfoByISO(country.code);
+    countryDetails = getAllInfoByISO(countryCode);
   } catch (err) {
+
     return res.json({ symbol: '$', rate: 1 }); //send price to frontend
   }
   try {

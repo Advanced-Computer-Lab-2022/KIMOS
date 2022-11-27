@@ -30,6 +30,8 @@ export default class InstructorDB extends Component {
             {this.makeCard(<PersonIcon className='instructorDB__container__option__icon'/>, 'My Profile','profile')}
             {this.makeCard(<GavelIcon className='instructorDB__container__option__icon'/>, 'Contracts', 'contracts')}
             {this.makeCard(<MenuBookIcon className='instructorDB__container__option__icon'/>, 'My Courses', 'myCourses')}
+            {this.makeCard(<MenuBookIcon className='instructorDB__container__option__icon'/>, 'Create Courses', 'createCourse')}
+
 
         </div>
       

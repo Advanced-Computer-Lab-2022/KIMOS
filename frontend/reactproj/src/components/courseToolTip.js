@@ -100,7 +100,7 @@ function CustomizedTooltips(props) {
                 props,
                 course.title,
                 course.price,
-                course.discount,
+                course.discount.amount,
                 course.totalHours,
                 course.subtitles,
                 course.subject,
