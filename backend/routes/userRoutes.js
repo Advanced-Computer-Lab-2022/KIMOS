@@ -7,10 +7,12 @@ const {
   getCountry,
   changeCountry,
   getRate,
-  getUser
+  getUser,
+  rateInstructor
 } = require('../controllers/userController');
 
 router.route('/').post(addUser).put(editUser).get(getUser);
+router.post('/rateInstructor', rateInstructor);
 router.route('/country').get(getCountry).put(changeCountry);
 router.get('/rate', getRate);
 router.put('/changePassword', changePassword);

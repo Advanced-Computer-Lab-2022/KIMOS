@@ -1,10 +1,11 @@
 const Course = require('../models/courseModel');
 const User = require('../models/userModel');
 const { createSubtitle, updateSubtitle } = require('./subtitleController');
-const { createExam } = require('./examController');
-const { viewRating, createRating, updateRating, deleteRating } = require('./ratingController');
+const { createExam, getExam } = require('./examController');
+const { viewRating, createRating, updateRating } = require('./ratingController');
 const mongoose = require('mongoose');
 const schedule = require('node-schedule');
+const { createSolution, getSolution } = require('./userSolutionController');
 
 const createCourse = async (req, res) => {
   try {
@@ -270,6 +271,53 @@ const rateCourse = async (req, res) => {
   res.status(200).json({ message: 'Course Rated Successfully!' });
 };
 
+const submitSolution = async (req, res) => {
+  const { userId, courseId, examId } = req.query;
+  const { userSolutions } = req.body;
+  try {
+    const courseInfo = await Course.findById(courseId);
+    if (
+      courseInfo.registeredUsers.length &&
+      courseInfo.registeredUsers.includes(mongoose.Types.ObjectId(userId))
+    ) {
+      createSolution(userId, examId, userSolutions);
+    } else {
+      res.status(401).json({ message: 'Unauthorized access' });
+    }
+  } catch (err) {
+    res.status(400).json({ message: err });
+  }
+  res.status(200).json({ message: 'Exam solutions uploaded successfully' });
+};
+
+const getGradeAndSolution = async (req, res) => {
+  const { userId, courseId, examId } = req.body;
+  const correctAnswers = 0;
+  try {
+    const courseInfo = await Course.findById(courseId);
+    if (
+      courseInfo.registeredUsers.length &&
+      courseInfo.registeredUsers.includes(mongoose.Types.ObjectId(userId))
+    ) {
+      const solutionArray = await getSolution(userId, examId);
+      const promises = userSolutions.solutions.map(async (solution, index) => {
+        const { exercise, choice } = await solution.populate('exercise');
+        if (choice === exercise.answer) {
+          correctAnswers += 1;
+        }
+        return solution;
+      });
+      const returnSolutions = await Promise.all(promises);
+      const grade = correctAnswers + '/' + solutionArray.solutions.length;
+      res.status(200).json({ grade: grade, solutions: returnSolutions });
+    } else {
+      res.status(401).json({ message: 'Unauthorized access' });
+    }
+  } catch (err) {
+    res.status(400).json({ message: err });
+  }
+};
+
 module.exports = {
   findSubjects,
   findCourses,
@@ -279,5 +327,7 @@ module.exports = {
   findExam,
   addExam,
   editCourse,
-  rateCourse
+  rateCourse,
+  submitSolution,
+  getGradeAndSolution
 };
