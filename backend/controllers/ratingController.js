@@ -9,9 +9,13 @@ const createRating = async (userId, ratedId) => {
 };
 
 const updateRating = async (userId, ratedId, newRating) => {
-  const rating = Rating.findOneAndUpdate({userId: userId, ratedId:ratedId}, {
-    rating: newRating
-  });
+  const rating = Rating.findOneAndUpdate(
+    { userId: userId, ratedId: ratedId },
+    {
+      rating: newRating
+    },
+    { upsert: true }
+  );
   return rating;
 };
 
