@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const questionSchema = mongoose.Schema({
+const exerciseSchema = mongoose.Schema({
   question: {
     type: String
   },
@@ -19,4 +19,4 @@ const questionSchema = mongoose.Schema({
 function choiceSize(val) {
   return val.length == 4;
 }
-module.exports = mongoose.model('Question', questionSchema);
+module.exports = mongoose.model('Exercise', exerciseSchema);

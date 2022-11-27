@@ -1,6 +1,8 @@
 const Course = require('../models/courseModel');
 const User = require('../models/userModel');
 const { createSubtitle } = require('./subtitleController');
+const { createRating, updateRating, deleteRating } = require('./ratingController');
+
 
 const findSubjects = async (req, res) => {
   const subjects = await Course.find().distinct('subject');
@@ -69,6 +71,7 @@ const findCourseMarsaf = async (req, res) => {
     .catch((err) => {
       return res.status(400).send(err);
     });
+  }
 };
 
 const getCourse = async (id) => {
@@ -115,6 +118,23 @@ const findCourseBySubtitle = async (subtitleId) => {
   return course;
 };
 
+const rateCourse = async (req , res) =>{
+  try{
+    const {courseId, userId, rating} = req.body;
+    const r = await viewRating(userId, courseId);
+    updateRating(userId, courseId, rating);
+    const currRating = Course.findById(courseId).rating;
+    const newRating = currRating.value*currRating.numberOfRatings+rating/currRating.numberOfRatings+1;
+    Course.findByIdAndUpdate(courseId,{rating:newRating, numberOfRatings: currRating.numberOfRatings+1});
+   
+  }
+  catch(err){
+    res.status(400).json({ message: err });
+  }
+  res.status(200).json({ message: 'Course Rated Successfully!' });
+};
+
+
 module.exports = {
   findSubjects,
   findCourseMarsaf,
@@ -125,7 +145,8 @@ module.exports = {
   addSubtitle,
   addDiscount,
   findCourseByExam,
-  findCourseBySubtitle
+  findCourseBySubtitle,
+  rateCourse
   //viewCourse
   //viewMyCourses
 };

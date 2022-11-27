@@ -8,7 +8,7 @@ const examSchema = mongoose.Schema(
     exercises: [
       {
         type: mongoose.Types.ObjectId,
-        ref: 'Question'
+        ref: 'Exercise'
       }
     ]
   },

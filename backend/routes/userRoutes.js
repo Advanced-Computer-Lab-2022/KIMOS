@@ -18,7 +18,11 @@ const {
   getRate,
   userGetSubtitle,
   instructorGetExam,
-  userGetExam
+  userGetExam,
+  uploadSolutions,
+  getGrades,
+  findExamAndSol,
+  rateInstructor
 } = require('../controllers/userController');
 
 router.put('/changeCountry', changeCountry);
@@ -53,4 +57,10 @@ router.post('/instructor/addDiscount', instructorAddDiscount);
 router.get('/getSubtitle', userGetSubtitle);
 router.post('/instructor/getExam', instructorGetExam);
 router.post('/getExam', userGetExam);
+router.post('/takeExam', uploadSolutions);
+router.get('/checkGrade', getGrades);
+router.get('/findExamAndSol', findExamAndSol);
+router.post('/rateInstructor', rateInstructor);
+
+
 module.exports = router;

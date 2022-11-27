@@ -1,5 +1,6 @@
 const { getAllInfoByISO } = require('iso-country-currency');
 const User = require('../models/userModel');
+const UserSolutions = require('../models/userSolutionsModel');
 const { getSubtitle, createSubtitle, enterVideo } = require('./subtitleController');
 const { getContract, createContract, addInstructor } = require('./contractController');
 const {
@@ -14,8 +15,9 @@ const {
 } = require('./courseController');
 const { createExam, getExam, setAnswer } = require('./examController');
 const dotenv = require('dotenv').config();
-const { getAllInfoByISO } = require('iso-country-currency');
 const CC = require('currency-converter-lt');
+const Exercise = require('../models/exerciseModel');
+const Exam = require('../models/examModel');
 
 //All user functions
 
@@ -319,6 +321,63 @@ const addContract = async (req, res) => {
   }
   res.status(200).json({ message: 'Contract entered successfully' });
 };
+const uploadSolutions = async (req,res) =>{
+  const {userId, examId, userSolutions} = req.body;
+  try{
+    const userSol = new UserSolutions({userId:userId, examId:examId, userSolutions:userSolutions});
+    userSol.save((req,res) => {
+      if(err){
+        return res.status(400).json({ message: err });
+      }
+    });
+  }
+  catch(err){
+    res.status(400).json({ message: err });
+  }
+  res.status(200).json({ message: 'Exam solutions uploaded successfully' });
+};
+
+const getGrades = async (req, res) =>{
+  const {userId, examId} = req.body;
+  const correctAnswers = 0;
+  try{
+    const userSolutions = await UserSolutions.findById({userId:userId, examId:examId});
+    const exam = await Exam.findById(examId);
+    userSolutions.userSolutions.forEach((userSol) => {
+      const exercise = exam.exercises.find(userSol.exercise);
+      if(userSol.answer == exercise.answer){
+        correctAnswers += 1;
+      }
+    });
+    const grade = correctAnswers + "/" + userSolutions.userSolutions.length;
+    res.send(grade);
+    res.status(200).json({ message: 'Grade retrieved successfully' });
+  }
+  catch(err){
+    res.status(400).json({ message: err });
+  }
+
+};
+
+const findExamAndSol = (res,req) => {
+  const {userId, examId} = req.body;
+  try{
+    const examSol = Exam.findOne(examId).exercises;
+    const userSol = UserSolutions.findOne({userId, examId}).userSolutoins;
+    const examPsol = {userSol , examSol};
+    res.status(200).json({ message: 'Grade retrieved successfully', payload: examPsol });
+  }
+  catch(err){
+    res.status(400).json({ message: err });
+  }
+ 
+
+
+};
+
+const rateInstructor = (res,req) =>{
+
+}
 
 module.exports = {
   addUser,
@@ -341,5 +400,9 @@ module.exports = {
   viewCourse,
   getCountry,
   changeCountry,
-  getRate
+  getRate,
+  uploadSolutions,
+  getGrades,
+  findExamAndSol,
+  rateInstructor
 };
