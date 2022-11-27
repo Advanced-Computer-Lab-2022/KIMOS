@@ -256,7 +256,8 @@ const editCourse = async (req, res) => {
 
 const rateCourse = async (req, res) => {
   try {
-    const { courseId, userId, rating } = req.body;
+    const { courseId, userId } = req.query;
+    const { rating } = req.body;
     await updateRating(userId, courseId, rating);
     const currRating = Course.findById(courseId).rating;
     const newRating =

@@ -2,6 +2,7 @@ const { getAllInfoByISO } = require('iso-country-currency');
 const User = require('../models/userModel');
 const dotenv = require('dotenv').config();
 const CC = require('currency-converter-lt');
+const nodemailer = require('nodemailer');
 const { updateRating } = require('./ratingController');
 
 //All user functions
@@ -131,6 +132,41 @@ const rateInstructor = async (res, req) => {
   res.status(200).json({ message: 'Instructor Rated Successfully!' });
 };
 
+const resetPasswordSendEmail = async (req, res) => {
+  const { email } = req.body;
+  const userInfo = await User.findOne({ email: email });
+  const transporter = nodemailer.createTransport({
+    service: EMAIL_SERVICE,
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASSWORD
+    }
+  });
+
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: EMAIL_SUBJECT,
+    text: `Hi ${userInfo.firstName},
+    
+    There was a request to change your password!
+    
+    If you did not make this request then please ignore this email.
+    
+    Otherwise, please click this link to change your password: ${'Link for forgot page in frontend goes here'}`
+  };
+};
+
+const resetPassword = async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const userInfo = await User.findOneAndUpdate({ email: email }, { password: password });
+    res.status(200).json({ message: Success });
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+};
+
 module.exports = {
   getCountry,
   changeCountry,
@@ -139,5 +175,7 @@ module.exports = {
   editUser,
   changePassword,
   rateInstructor,
+  resetPasswordSendEmail,
+  resetPassword,
   getUser
 };
