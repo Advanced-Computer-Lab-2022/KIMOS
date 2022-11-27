@@ -18,6 +18,7 @@ const dotenv = require('dotenv').config();
 const CC = require('currency-converter-lt');
 const Exercise = require('../models/exerciseModel');
 const Exam = require('../models/examModel');
+const { Rating } = require('@mui/material');
 
 //All user functions
 
@@ -359,11 +360,11 @@ const getGrades = async (req, res) =>{
 
 };
 
-const findExamAndSol = (res,req) => {
+const findExamAndSol = async (res,req) => {
   const {userId, examId} = req.body;
   try{
-    const examSol = Exam.findOne(examId).exercises;
-    const userSol = UserSolutions.findOne({userId, examId}).userSolutoins;
+    const examSol = await Exam.findOne(examId).exercises;
+    const userSol = await UserSolutions.findOne({userId, examId}).userSolutoins;
     const examPsol = {userSol , examSol};
     res.status(200).json({ message: 'Grade retrieved successfully', payload: examPsol });
   }
@@ -375,9 +376,22 @@ const findExamAndSol = (res,req) => {
 
 };
 
-const rateInstructor = (res,req) =>{
-
+const rateInstructor = async (res,req) =>{
+  try{
+    const {userId, rating, instructorId} = req.body;
+    const ratedInstructor = await User.findOne(instructorId);
+    const currRating = ratedInstructor.rating;
+    const newRating = currRating.value*currRating.numberOfRatings+rating/currRating.numberOfRatings+1;
+    User.findByIdAndUpdate(instructorId,{rating:newRating, numberOfRatings: currRating.numberOfRatings+1});
+    Rating.findByIdAndUpdate({userId,instructorId}, {rating:newRating});
+   
+  }
+  catch(err){
+    res.status(400).json({ message: err });
+  }
+  res.status(200).json({ message: 'Course Rated Successfully!' });
 }
+
 
 module.exports = {
   addUser,
