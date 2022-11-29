@@ -165,28 +165,37 @@ const viewCourse = async (req, res) => {
   console.log('here');
   try {
     var courseInfo = await Course.findById(courseId);
-    console.log(courseInfo);
+    //console.log(courseInfo);
     if (courseInfo.registeredUsers.includes(mongoose.Types.ObjectId(userId))) {
+      var examsArray = [];
       const course = await Course.findById(courseId);
       if (courseInfo.subtitles.length) courseInfo = await course.populate('subtitles');
       if (courseInfo.exams.length) {
-        courseInfo.exams = await Promise.all(
-          courseInfo.exams.map(async (exam, index) => {
-            return getExam(exam, false);
-          })
-        );
+        const promises = courseInfo.exams.map(async (exam, index) => {
+          var ans = await getGradeAndSolution(userId, exam);
+          return ans;
+        });
+        examsArray = await Promise.all(promises);
       }
-      const promises = courseInfo.exams.map(async (exam, index) => {
-        const ex = await getExam(exam._id, false);
-        return ex;
-      });
-      courseInfo.exams = Promise.all(promises);
       courseInfo = await courseInfo.populate('instructor', 'firstName lastName');
-      res.status(200).json(courseInfo);
+      res.status(200).json({
+        rating: courseInfo.rating,
+        _id: courseInfo._id,
+        discount: courseInfo.discount,
+        title: courseInfo.title,
+        price: courseInfo.price,
+        totalHours: courseInfo.totalHours,
+        subject: courseInfo.subject,
+        instructor: courseInfo.instructor,
+        preview: courseInfo.preview,
+        subtitles: courseInfo.subtitles,
+        exams: examsArray
+      });
     } else {
       const course = await Course.findById(courseId);
       if (courseInfo.subtitles.length) courseInfo = await course.populate('subtitles', 'title');
-      if (courseInfo.exams.length) courseInfo = await course.populate('exams', 'title');
+      if (courseInfo.exams.length) courseInfo = await courseInfo.populate('exams', 'title');
+      courseInfo = await courseInfo.populate('instructor', 'firstName lastName');
       res.status(200).json(courseInfo);
     }
   } catch (error) {
@@ -308,33 +317,38 @@ const submitSolution = async (req, res) => {
   res.status(200).json({ message: 'Exam solutions uploaded successfully' });
 };
 
-const getGradeAndSolution = async (req, res) => {
-  const { userId, courseId, examId } = req.query;
-  try {
-    const courseInfo = await Course.findById(courseId);
-    if (
-      courseInfo.registeredUsers.length &&
-      courseInfo.registeredUsers.includes(mongoose.Types.ObjectId(userId))
-    ) {
-      const { grade, solutions } = await getSolution(userId, examId);
-      const promises = solutions.map(async (solution, index) => {
-        const correctSolution = await getExercise(solution.exercise);
-        var solutionObject = {
-          _id: correctSolution._id,
-          question: correctSolution.question,
-          choices: correctSolution.choices,
-          correctAnswer: correctSolution.answer,
-          userAnswer: solution.choice
-        };
-        return solutionObject;
-      });
-      const returnSolutions = await Promise.all(promises);
-      res.status(200).json({ grade: grade, solution: returnSolutions });
-    } else {
-      res.status(401).json({ message: 'Unauthorized access' });
-    }
-  } catch (err) {
-    res.status(400).json({ message: err.message });
+const getGradeAndSolution = async (userId, examId) => {
+  const s = await getSolution(userId, examId);
+  const examDetails = await getExam(examId);
+  if (s) {
+    const { grade, solutions } = s;
+    const promises = solutions.map(async (solution, index) => {
+      const correctSolution = await getExercise(solution.exercise);
+      var solutionObject = {
+        _id: correctSolution._id,
+        question: correctSolution.question,
+        choices: correctSolution.choices,
+        correctAnswer: correctSolution.answer,
+        userAnswer: solution.choice
+      };
+      return solutionObject;
+    });
+    const returnSolutions = await Promise.all(promises);
+    return {
+      _id: examId,
+      title: examDetails.title,
+      solved: true,
+      grade: grade,
+      solution: returnSolutions
+    };
+  } else {
+    var d = await examDetails.populate('exercises');
+    return {
+      _id: d._id,
+      title: d.title,
+      exercises: d.exercises,
+      solved: false
+    };
   }
 };
 
