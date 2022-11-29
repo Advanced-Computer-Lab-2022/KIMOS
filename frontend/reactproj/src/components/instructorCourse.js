@@ -23,7 +23,18 @@ class instructorCourse extends Component {
         updated:false
     }
     componentDidMount(){
+
         this.setState({course:this.props.course, currentSubtitle:this.props.course.subtitles[0]})
+        if(!this.props.course.video){
+            var course = this.props.course;
+            course.subtitles.forEach((subtitle,index)=>{
+                if(!subtitle.video){
+                    course.subtitles[index].video = {link:"",description:""};
+                }
+            })
+
+            this.setState({course:course})
+        }
         if(this.props.course.discount.duration && this.props.course.discount.duration.startDate){
             this.setState({displayedStartDate: this.props.course.discount.duration.startDate})
         }
