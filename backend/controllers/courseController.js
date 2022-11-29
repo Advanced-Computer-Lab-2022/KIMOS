@@ -1,23 +1,24 @@
 const Course = require('../models/courseModel');
 const User = require('../models/userModel');
 const { createSubtitle, updateSubtitle } = require('./subtitleController');
-const { createExam, getExam } = require('./examController');
+const { createExam, getExam, editExam } = require('./examController');
 const { viewRating, createRating, updateRating } = require('./ratingController');
 const mongoose = require('mongoose');
 const schedule = require('node-schedule');
 const { createSolution, getSolution } = require('./userSolutionController');
+const { getExercise } = require('./exerciseController');
 
 const createCourse = async (req, res) => {
   console.log('adding course');
   try {
     const { user } = req.query;
     const { course } = req.body;
-  console.log(user);
-  console.log(course);
+    console.log(user);
+    console.log(course);
 
     var subtitles = [];
     if (user.userType === 'instructor') {
-      console.log('in inner cond')
+      console.log('in inner cond');
       var totalHours = 0;
       if (course.subtitles.length) {
         const promises = course.subtitles.map(async (subtitle, index) => {
@@ -161,17 +162,26 @@ const addDiscount = async (courseId, discount) => {
 
 const viewCourse = async (req, res) => {
   const { userId, courseId } = req.query;
+  console.log('here');
   try {
-    var courseInfo = Course.findById(courseId);
+    var courseInfo = await Course.findById(courseId);
+    console.log(courseInfo);
     if (courseInfo.registeredUsers.includes(mongoose.Types.ObjectId(userId))) {
       const course = await Course.findById(courseId);
       if (courseInfo.subtitles.length) courseInfo = await course.populate('subtitles');
-      if (courseInfo.exams.length) courseInfo = await course.populate('exams');
+      if (courseInfo.exams.length) {
+        courseInfo.exams = await Promise.all(
+          courseInfo.exams.map(async (exam, index) => {
+            return getExam(exam, false);
+          })
+        );
+      }
       const promises = courseInfo.exams.map(async (exam, index) => {
         const ex = await getExam(exam._id, false);
         return ex;
       });
       courseInfo.exams = Promise.all(promises);
+      courseInfo = await courseInfo.populate('instructor', 'firstName lastName');
       res.status(200).json(courseInfo);
     } else {
       const course = await Course.findById(courseId);
@@ -181,6 +191,7 @@ const viewCourse = async (req, res) => {
     }
   } catch (error) {
     res.status(400).json({ message: error.message });
+    console.log(error.message);
   }
 };
 
@@ -221,7 +232,7 @@ const findExam = async (req, res) => {
 
 const modifyExam = async (req, res) => {
   const { user, courseId, exercises } = req.body;
-  const courseInfo = await getCourse(courseId);
+  const courseInfo = await Course.findById(courseId);
   if (user.userId === courseInfo.instructor) {
     try {
       const exam = editExam(exercises);
@@ -242,7 +253,7 @@ const editCourse = async (req, res) => {
       console.log('wee');
       course.discount = await addDiscount(courseId, course.discount);
     }
-    promises = course.subtitles.map(async (subtitle, index) => {
+    const promises = course.subtitles.map(async (subtitle, index) => {
       var sub;
       if (subtitle._id) {
         sub = await updateSubtitle(subtitle._id, subtitle);
@@ -280,14 +291,14 @@ const rateCourse = async (req, res) => {
 
 const submitSolution = async (req, res) => {
   const { userId, courseId, examId } = req.query;
-  const { userSolutions } = req.body;
+  const { solutions } = req.body;
   try {
     const courseInfo = await Course.findById(courseId);
     if (
       courseInfo.registeredUsers.length &&
       courseInfo.registeredUsers.includes(mongoose.Types.ObjectId(userId))
     ) {
-      createSolution(userId, examId, userSolutions);
+      createSolution(userId, examId, solutions);
     } else {
       res.status(401).json({ message: 'Unauthorized access' });
     }
@@ -298,30 +309,32 @@ const submitSolution = async (req, res) => {
 };
 
 const getGradeAndSolution = async (req, res) => {
-  const { userId, courseId, examId } = req.body;
-  const correctAnswers = 0;
+  const { userId, courseId, examId } = req.query;
   try {
     const courseInfo = await Course.findById(courseId);
     if (
       courseInfo.registeredUsers.length &&
       courseInfo.registeredUsers.includes(mongoose.Types.ObjectId(userId))
     ) {
-      const solutionArray = await getSolution(userId, examId);
-      const promises = userSolutions.solutions.map(async (solution, index) => {
-        const { exercise, choice } = await solution.populate('exercise');
-        if (choice === exercise.answer) {
-          correctAnswers += 1;
-        }
-        return solution;
+      const { grade, solutions } = await getSolution(userId, examId);
+      const promises = solutions.map(async (solution, index) => {
+        const correctSolution = await getExercise(solution.exercise);
+        var solutionObject = {
+          _id: correctSolution._id,
+          question: correctSolution.question,
+          choices: correctSolution.choices,
+          correctAnswer: correctSolution.answer,
+          userAnswer: solution.choice
+        };
+        return solutionObject;
       });
       const returnSolutions = await Promise.all(promises);
-      const grade = correctAnswers + '/' + solutionArray.solutions.length;
-      res.status(200).json({ grade: grade, solutions: returnSolutions });
+      res.status(200).json({ grade: grade, solution: returnSolutions });
     } else {
       res.status(401).json({ message: 'Unauthorized access' });
     }
   } catch (err) {
-    res.status(400).json({ message: err });
+    res.status(400).json({ message: err.message });
   }
 };
 

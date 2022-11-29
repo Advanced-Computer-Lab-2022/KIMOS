@@ -42,7 +42,6 @@ const getRate = async (req, res) => {
   try {
     countryDetails = getAllInfoByISO(countryCode);
   } catch (err) {
-
     return res.json({ symbol: '$', rate: 1 }); //send price to frontend
   }
   try {
@@ -57,9 +56,9 @@ const getRate = async (req, res) => {
 };
 
 const getUser = async (req, res) => {
-  const { userId } = req.query;
+  const { username } = req.query;
   try {
-    const user = await User.findById(userId);
+    const user = await User.findById({ username: username });
     res.status(200).json(user);
     return;
   } catch (err) {

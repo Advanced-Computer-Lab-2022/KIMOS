@@ -10,6 +10,9 @@ const userSolutionSchema = mongoose.Schema(
       type: mongoose.Types.ObjectId,
       ref: 'Exam'
     },
+    grade: {
+      type: String
+    },
     solutions: [
       {
         exercise: {
