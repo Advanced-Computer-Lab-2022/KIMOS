@@ -10,7 +10,6 @@ import axios from 'axios';
 import Button from '@mui/material/Button';
 
  
-
 export default function ShowCourse() {
 
     const[courseList,setCouseList]=useState([]);

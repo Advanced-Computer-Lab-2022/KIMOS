@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import {Container,AppBar,Typography,Grow,Grid} from '@mui/material';
 import useStyles from '../styles/styles.scss';
 import {Link} from 'react-router-dom';
-import Courses from '../components/traineeCourses/traineeCourses';
+import Courses from './traineeCourses';
 
 class trainee extends Component {
     render() {

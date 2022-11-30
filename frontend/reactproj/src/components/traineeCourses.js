@@ -13,11 +13,7 @@ export default function TraineeCourses() {
   const [courseList, setCourseList] = useState([]);
   var i = 1;
   //call itself whenever the page is refreshed
-  useEffect(() => {
-    axios.get('http://localhost:5000/users/instructor/viewCourse').then((allCourses) => {
-      setCourseList(allCourses.data);
-    });
-  }, [courseList]);
+  
 
   return (
     <>
@@ -41,8 +37,7 @@ export default function TraineeCourses() {
                 <TableCell align="center">
                   <Button
                     variant="contained"
-                    style={{ maxWidth: '150px', maxHeight: '30px', fontSize: '11px' }}
-                    onClick={() =>window.location.href=`course/viewCourse/${course._id}`}>
+                    style={{ maxWidth: '150px', maxHeight: '30px', fontSize: '11px' }}>
                     view
                   </Button>
                 </TableCell>

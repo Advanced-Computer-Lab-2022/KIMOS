@@ -2,31 +2,59 @@ const mongoose = require('mongoose');
 
 const userSchema = mongoose.Schema(
   {
-    name: {
-      type: String,
-      required: [true, 'Please enter a name']
+    firstName: {
+      type: String
+    },
+    lastName: {
+      type: String
     },
     email: {
       type: String,
-      required: [true, 'Please enter an email'],
+      trim: true,
+      index: true,
+      unique: true,
+      sparse: true
+    },
+    username: {
+      type: String,
+      required: [true, 'Please enter a username'],
       unique: true
     },
     password: {
       type: String,
       required: [true, 'Please enter a password']
     },
+    rating: {
+      value:{
+        type: Number,
+        default: 0,
+        min: 0.0,
+        max: 5.0
+      },
+      numberOfRatings:{
+        type: Number,
+        default:0
+      }
+    },
 
     userType: {
       type: String,
-      enum: ['adminstrator', 'corporate trainee', 'individual trainee', 'instructor'],
+      enum: ['administrator', 'corporate trainee', 'individual trainee', 'instructor'],
       lowercase: true,
       required: true
     },
 
-<<<<<<< HEAD
-    },
-=======
     country: {
+      name: {
+        type: String,
+        default: 'Egypt'
+      },
+      code: {
+        type: String,
+        default: 'EG'
+      }
+    },
+    biography: {
       type: String
     }
   },
@@ -34,6 +62,5 @@ const userSchema = mongoose.Schema(
     timestamps: true
   }
 );
->>>>>>> 1stMerge
 
 module.exports = mongoose.model('User', userSchema);
