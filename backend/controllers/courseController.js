@@ -222,18 +222,19 @@ const addExam = async (req, res) => {
 };
 
 const findExam = async (req, res) => {
-  const { userId, courseId, examId } = req.body;
+  const { userId, courseId, examId } = req.query;
   const courseInfo = await Course.findById(courseId);
-  if (userId === courseInfo.instructor) {
+  console.log(courseInfo);
+  if (mongoose.Types.ObjectId(userId).equals(courseInfo.instructor)) {
     try {
-      const exam = getExam(examId, true);
+      const exam = await getExam(examId, true);
       res.status(200).json({ exam });
     } catch (err) {
       res.status(400).json({ message: err.message });
     }
   } else {
     if (courseInfo.registeredUsers.includes(userId)) {
-      const exam = getExam(examId, false);
+      const exam = await getExam(examId, false);
       res.status(200).json({ exam });
     }
   }
