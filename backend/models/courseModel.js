@@ -14,17 +14,18 @@ const courseSchema = mongoose.Schema(
       min: 0.0
     },
     rating: {
-      type: Number,
-      default: Math.floor(Math.random() * 6),
-      min: 0.0,
-      max: 5.0
+      value:{
+        type: Number,
+        default: 0,
+        min: 0.0,
+        max: 5.0
+      },
+      numberOfRatings:{
+        type: Number,
+        default:0
+      }
     },
     totalHours: {
-      type: Number,
-      //required: [true, 'Please specify the total number of hours for the course'],
-      min: 0.0
-    },
-    discount: {
       type: Number,
       //required: [true, 'Please specify the total number of hours for the course'],
       min: 0.0
