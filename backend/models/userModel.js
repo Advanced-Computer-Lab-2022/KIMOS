@@ -24,18 +24,6 @@ const userSchema = mongoose.Schema(
       type: String,
       required: [true, 'Please enter a password']
     },
-    rating: {
-      value:{
-        type: Number,
-        default: 0,
-        min: 0.0,
-        max: 5.0
-      },
-      numberOfRatings:{
-        type: Number,
-        default:0
-      }
-    },
 
     userType: {
       type: String,

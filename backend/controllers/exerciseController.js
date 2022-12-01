@@ -15,13 +15,7 @@ const editExercise = async (exerciseId, newExercise) => {
   return exercise;
 };
 
-const getExercise = async (exerciseId) => {
-  const exercise = Exercise.findById(exerciseId);
-  return exercise;
-};
-
 module.exports = {
   createExercise,
-  editExercise,
-  getExercise
+  editExercise
 };
