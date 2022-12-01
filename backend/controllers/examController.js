@@ -3,10 +3,10 @@ const Exam = require('../models/examModel');
 const { createExercise, editExercise } = require('./exerciseController');
 
 const getExam = async (examId, access) => {
-  var exam = null;
+  const exam = null;
   if (access) exam = await Exam.findById(examId).populate('exercises');
-  else exam = await Exam.findById(examId).populate('exercises', '-answer');
-  return exam;
+  else exam = await Exam.findById(examId).populate('exercises', '--answer');
+  return exercise;
 };
 
 const createExam = async (exercises) => {
