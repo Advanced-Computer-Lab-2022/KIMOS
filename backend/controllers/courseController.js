@@ -160,42 +160,72 @@ const addDiscount = async (courseId, discount) => {
   return returnDiscount;
 };
 
+// const viewCourse = async (req, res) => {
+//   const { userId, courseId } = req.query;
+//   console.log('here');
+//   try {
+//     var courseInfo = await Course.findById(courseId);
+//     if (courseInfo.registeredUsers.includes(mongoose.Types.ObjectId(userId))) {
+//       var examsArray = [];
+//       const course = await Course.findById(courseId);
+//       if (courseInfo.subtitles.length) courseInfo = await course.populate('subtitles');
+//       if (courseInfo.exams.length) {
+//         const promises = courseInfo.exams.map(async (exam, index) => {
+//           var ans = await getGradeAndSolution(userId, exam);
+//           return ans;
+//         });
+//         examsArray = await Promise.all(promises);
+//       }
+//       courseInfo = await courseInfo.populate('instructor', 'firstName lastName');
+//       res.status(200).json({
+//         rating: courseInfo.rating,
+//         _id: courseInfo._id,
+//         discount: courseInfo.discount,
+//         title: courseInfo.title,
+//         price: courseInfo.price,
+//         totalHours: courseInfo.totalHours,
+//         subject: courseInfo.subject,
+//         instructor: courseInfo.instructor,
+//         preview: courseInfo.preview,
+//         subtitles: courseInfo.subtitles,
+//         exams: examsArray
+//       });
+//     } else {
+//       const course = await Course.findById(courseId);
+//       if (courseInfo.subtitles.length) courseInfo = await course.populate('subtitles', 'title');
+//       if (courseInfo.exams.length) courseInfo = await courseInfo.populate('exams', 'title');
+//       courseInfo = await courseInfo.populate('instructor', 'firstName lastName');
+//       res.status(200).json(courseInfo);
+//     }
+//   } catch (error) {
+//     res.status(400).json({ message: error.message });
+//     console.log(error.message);
+//   }
+// };
+
 const viewCourse = async (req, res) => {
   const { userId, courseId } = req.query;
-  console.log('here');
+  //console.log('here');
   try {
     var courseInfo = await Course.findById(courseId);
     //console.log(courseInfo);
     if (courseInfo.registeredUsers.includes(mongoose.Types.ObjectId(userId))) {
-      var examsArray = [];
       const course = await Course.findById(courseId);
       if (courseInfo.subtitles.length) courseInfo = await course.populate('subtitles');
       if (courseInfo.exams.length) {
-        const promises = courseInfo.exams.map(async (exam, index) => {
-          var ans = await getGradeAndSolution(userId, exam);
-          return ans;
-        });
-        examsArray = await Promise.all(promises);
+        courseInfo = await course.populate('exams', 'title');
       }
-      courseInfo = await courseInfo.populate('instructor', 'firstName lastName');
-      res.status(200).json({
-        rating: courseInfo.rating,
-        _id: courseInfo._id,
-        discount: courseInfo.discount,
-        title: courseInfo.title,
-        price: courseInfo.price,
-        totalHours: courseInfo.totalHours,
-        subject: courseInfo.subject,
-        instructor: courseInfo.instructor,
-        preview: courseInfo.preview,
-        subtitles: courseInfo.subtitles,
-        exams: examsArray
+      const promises = courseInfo.exams.map(async (exam, index) => {
+        const ex = await getExam(exam._id, false);
+        return ex;
       });
+      courseInfo.exams = Promise.all(promises);
+      courseInfo = await courseInfo.populate('instructor', 'firstName lastName');
+      res.status(200).json(courseInfo);
     } else {
       const course = await Course.findById(courseId);
       if (courseInfo.subtitles.length) courseInfo = await course.populate('subtitles', 'title');
-      if (courseInfo.exams.length) courseInfo = await courseInfo.populate('exams', 'title');
-      courseInfo = await courseInfo.populate('instructor', 'firstName lastName');
+      if (courseInfo.exams.length) courseInfo = await course.populate('exams', 'title');
       res.status(200).json(courseInfo);
     }
   } catch (error) {
@@ -224,7 +254,7 @@ const addExam = async (req, res) => {
 const findExam = async (req, res) => {
   const { userId, courseId, examId } = req.query;
   const courseInfo = await Course.findById(courseId);
-  console.log(courseInfo);
+  //console.log(courseInfo);
   if (mongoose.Types.ObjectId(userId).equals(courseInfo.instructor)) {
     try {
       const exam = await getExam(examId, true);
@@ -260,7 +290,6 @@ const editCourse = async (req, res) => {
   console.log(courseInfo.instructor);
   if (userId.equals(courseInfo.instructor)) {
     if (flagDiscount === 'true') {
-      console.log('wee');
       course.discount = await addDiscount(courseId, course.discount);
     }
     const promises = course.subtitles.map(async (subtitle, index) => {
@@ -302,57 +331,95 @@ const rateCourse = async (req, res) => {
 const submitSolution = async (req, res) => {
   const { userId, courseId, examId } = req.query;
   const { solutions } = req.body;
+  console.log(req.query);
+  console.log(req.body);
   try {
-    const courseInfo = await Course.findById(courseId);
+    const courseInfo = await Course.findById(mongoose.Types.ObjectId(courseId));
     if (
       courseInfo.registeredUsers.length &&
       courseInfo.registeredUsers.includes(mongoose.Types.ObjectId(userId))
     ) {
       createSolution(userId, examId, solutions);
+      res.status(200).json({ message: 'Exam solutions uploaded successfully' });
     } else {
       res.status(401).json({ message: 'Unauthorized access' });
     }
   } catch (err) {
-    res.status(400).json({ message: err });
+    res.status(400).json({ message: err.message });
   }
-  res.status(200).json({ message: 'Exam solutions uploaded successfully' });
 };
 
-const getGradeAndSolution = async (userId, examId) => {
-  const s = await getSolution(userId, examId);
-  const examDetails = await getExam(examId);
-  if (s) {
-    const { grade, solutions } = s;
-    const promises = solutions.map(async (solution, index) => {
-      const correctSolution = await getExercise(solution.exercise);
-      var solutionObject = {
-        _id: correctSolution._id,
-        question: correctSolution.question,
-        choices: correctSolution.choices,
-        correctAnswer: correctSolution.answer,
-        userAnswer: solution.choice
+// const getGradeAndSolution = async (userId, examId) => {
+//   const s = await getSolution(userId, examId);
+//   const examDetails = await getExam(examId);
+//   if (s) {
+//     const { grade, solutions } = s;
+//     const promises = solutions.map(async (solution, index) => {
+//       const correctSolution = await getExercise(solution.exercise);
+//       var solutionObject = {
+//         _id: correctSolution._id,
+//         question: correctSolution.question,
+//         choices: correctSolution.choices,
+//         correctAnswer: correctSolution.answer,
+//         userAnswer: solution.choice
+//       };
+//       return solutionObject;
+//     });
+//     const returnSolutions = await Promise.all(promises);
+//     return {
+//       _id: examId,
+//       title: examDetails.title,
+//       solved: true,
+//       grade: grade,
+//       solution: returnSolutions
+//     };
+//   } else {
+//     var d = await examDetails.populate('exercises');
+//     return {
+//       _id: d._id,
+//       title: d.title,
+//       exercises: d.exercises,
+//       solved: false
+//     };
+//   }
+// };
+
+const getGradeAndSolution = async (req, res) => {
+  const { userId, courseId, examId } = req.query;
+  try {
+    const courseInfo = await Course.findById(mongoose.Types.ObjectId(courseId));
+    if (
+      courseInfo.registeredUsers.length &&
+      courseInfo.registeredUsers.includes(mongoose.Types.ObjectId(userId))
+    ) {
+      const examInfo = await getExam(examId, true);
+      const { grade, solutions } = await getSolution(userId, examId);
+      const promises = solutions.map(async (solution, index) => {
+        const correctSolution = await getExercise(solution.exercise);
+        var solutionObject = {
+          _id: correctSolution._id,
+          question: correctSolution.question,
+          choices: correctSolution.choices,
+          correctAnswer: correctSolution.answer,
+          userAnswer: solution.choice
+        };
+        return solutionObject;
+      });
+      const returnSolutions = await Promise.all(promises);
+      const returnObject = {
+        _id: examId,
+        grade: grade,
+        title: examInfo.title,
+        solutions: returnSolutions
       };
-      return solutionObject;
-    });
-    const returnSolutions = await Promise.all(promises);
-    return {
-      _id: examId,
-      title: examDetails.title,
-      solved: true,
-      grade: grade,
-      solution: returnSolutions
-    };
-  } else {
-    var d = await examDetails.populate('exercises');
-    return {
-      _id: d._id,
-      title: d.title,
-      exercises: d.exercises,
-      solved: false
-    };
+      res.status(200).json({ returnObject });
+    } else {
+      res.status(401).json({ message: 'Unauthorized access' });
+    }
+  } catch (err) {
+    res.status(400).json({ message: err.message });
   }
 };
-
 module.exports = {
   findSubjects,
   findCourses,
