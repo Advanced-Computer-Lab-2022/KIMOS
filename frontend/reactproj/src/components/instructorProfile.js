@@ -49,7 +49,7 @@ class InstructorProfile extends Component {
     }
     getUserInfo = async () => {
         try {
-          const res = await axios.get('http://localhost:3000/users/?userId=638117c243cba3f0babcc3a9', {
+          const res = await axios.get('http://localhost:5000/users/?userId=638117c243cba3f0babcc3a9', {
             headers: { 'Access-Control-Allow-Origin': '*' }
           });
           
@@ -71,7 +71,7 @@ class InstructorProfile extends Component {
       };
     updateUserInfo = async () => {
         try {
-          const res = await axios.put('http://localhost:3000/users',{
+          const res = await axios.put('http://localhost:5000/users',{
             userId: this.state.instructor['id'],
             username:this.state.new_instructor.username,
             email:this.state.new_instructor.email,

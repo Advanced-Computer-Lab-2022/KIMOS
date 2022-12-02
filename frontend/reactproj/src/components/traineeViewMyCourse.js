@@ -48,83 +48,83 @@ export default function TraineeViewMyCourse() {
 
   return (
     <>
-    <div style={{paddingTop:50,paddingLeft:150,backgroundColor:'#A30000',maxHeight:350,display:'flex',flexDirection:'column',rowGap:14}}>
-      <h1 style={{color:'white'}}>{myCourse.title}</h1>
+    <div className='user-course'>
+      <div className='user-course__header'>
+        <div className='user-course__header__left'>
+          <div className='user-course__header__left__title'>
+            <h1 >{myCourse.title}</h1>
+          </div>
 
-    {/* summary */}
-      <div style={{maxWidth:600,lineHeight:1.8}}>
-        <h4 style={{color:'white',fontWeight:"normal"}}>{myCourse.summary}</h4>
+          {/* summary */}
+          <div className='user-course__header__left__summary'>
+            <p > Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed placerat diam ac imperdiet accumsan. Phasellus varius neque vel dolor accumsan, eget hendrerit tellus congue. this is a static summary because myCourse.summary is missing</p>
+          </div>
+
+          <div className="user-course__header__left__extras">
+            {/* Total Hours */}
+              <div className="user-course__header__left__extras__hours"> <span style={{fontWeight:'bolder'}}>Total Hours</span> {myCourse.totalHours} hour(s)</div>
+
+            {/* Instructor Name */}
+              <div className="user-course__header__left__extras__instructor"><span style={{fontWeight:'bolder'}}>Instructor</span> {myCourse.instructor.firstName} {myCourse.instructor.lastName}</div>
+
+            {/* Rating */}
+              <div className="user-course__header__left__extras__rating">
+                <div>Rating</div><Rating name="read-only" value={value}  />
+              </div>
+
+          </div>
+
+        </div>
+
+        <div className='user-course__header__right'>
+
+          <div className='user-course__header__right__video'>
+            <iframe 
+              src={'https://www.youtube.com/embed/Rr3dcyN6Xdk'} title="preview">      
+            </iframe>
+          </div>
+
+        </div>
+
+
+
+      </div>     
+      
+      
+      <div className='user-course__content'>
+        <div className='user-course__content__section'>
+          <div className='user-course__content__section__title'>Subtitle(s)</div>
+          <div className='user-course__content__section__content'>
+            <div className='user-course__content__section__content__accordions'>    
+              {myCourse.subtitles.map((subtitle)=>{
+                return <AccordionSubtitle title={`Subtitle ${subTitleCount++} : ${subtitle.title}`} duration={`${subtitle.hours} hrs`} link={subtitle.video.link}/>
+              })}
+            </div>
+
+          
+          </div>
+        </div>
+        <div className='user-course__content__section'>
+          <div className='user-course__content__section__title'>Exercise(s)</div>
+          <div className='user-course__content__section__content'>
+            <div className='user-course__content__section__content__accordions'>    
+              {myCourse.exams.map((exam)=>{
+                return <Accordion title={`Exercise ${exerciseCount++}`} content={`Grade: ${exam.grade}`} exam={exam}/>
+            })}
+            </div>
+          </div>
+        </div>
+
+
+
+
       </div>
 
-    {/* Total Hours */}
-      <h4 style={{color:'black'}}>Total Hours: {myCourse.totalHours} hrs</h4>
+      </div>
 
-    {/* Instructor Name */}
-      <h4 style={{color:'black'}}>Instructor: {myCourse.instructor.firstName} {myCourse.instructor.lastName}</h4>
 
-    {/* Rating */}
-      <Rating
-         name="read-only" value={value} 
-      />
-    </div>
-
-    {/* Preview Video */}
-    <Grow in>
-    <Container style={{maxWidth:800}}>
-    
-    <AppBar position="static" color="inherit" style={{paddingTop:20,marginTop:-140,display:"flex",alignItems:"center",rowGap:30,minHeight:400}}>
-    <h1 >Preview</h1>
-        <iframe Width="600" Height="250"
-            src={myCourse.preview} >
-        </iframe>
-    
-    </AppBar>
-    </Container>
-    </Grow>
     
 
-    <Container style={{display:"flex"}}>
-     {/* subTitles */}
-     <Grow in>
-    <Container style={{maxWidth:800}}>
-    
-    <AppBar className="appBar3" position="static" color="inherit" style={{marginTop:50,display:"flex",flexDirection:"column",justifyContent:"center",alignItems:"center",rowGap:10,paddingTop:20}}>
-        <h1 style={{marginBottom:10}}>Subtitles</h1>
-
-     
-      {myCourse.subtitles.map((subtitle)=>{
-        return <AccordionSubtitle title={`Subtitle ${subTitleCount++} : ${subtitle.title}`} duration={`${subtitle.hours} hrs`} link={subtitle.video.link}/>
-      })}
-
-        <div style={{minHeight:30}}> </div>
-    
-    </AppBar>
-  </Container>
-  </Grow>
-
-    {/* Exercises */}
-    <Grow in>
-    <Container style={{maxWidth:400}}>
-    
-    <AppBar className="appBar4" position="static" color="inherit" style={{marginTop:50,display:"flex",flexDirection:"column",justifyContent:"center",alignItems:"center",rowGap:10,paddingTop:20}}>
-       
-        <h1 style={{marginBottom:10}}>Exercises</h1>
-
-        {myCourse.exams.map((exam)=>{
-         return <Accordion title={`Exercise ${exerciseCount++}`} content={`Grade: ${exam.grade}`} exam={exam}/>
-      })}
-        <div style={{minHeight:30}}></div>
-
-    </AppBar>
-  
-    </Container>
-    </Grow>
-
-    </Container>
-
-
-    <div style={{minHeight:50}}></div>
-    
     
     </>
   )

@@ -475,7 +475,7 @@ function CountrySelect(props) {
     // const body = { newCountry: newCountry };
 
     try {
-      const res = await axios.get('http://localhost:3000/users/country', {
+      const res = await axios.get('http://localhost:5000/users/country', {
         headers: { 'Access-Control-Allow-Origin': '*' }
       });
 
@@ -492,7 +492,7 @@ function CountrySelect(props) {
     // const body = { country: newCountry };
     console.log('gettiing rate')
     try {
-      const res = await axios.get('http://localhost:3000/users/rate?countryCode='+newCountry.code, {
+      const res = await axios.get('http://localhost:5000/users/rate?countryCode='+newCountry.code, {
         headers: { 'Access-Control-Allow-Origin': '*' }
       });
 
@@ -507,7 +507,7 @@ function CountrySelect(props) {
     const body = { newCountry: newCountry };
 
     try {
-      await axios.put('http://localhost:3000/users/country?userId=638117c243cba3f0babcc3a9', body, {
+      await axios.put('http://localhost:5000/users/country?userId=638117c243cba3f0babcc3a9', body, {
         headers: { 'Access-Control-Allow-Origin': '*' }
       });
     } catch (e) {}

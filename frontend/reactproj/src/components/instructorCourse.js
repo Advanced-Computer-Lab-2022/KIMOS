@@ -196,7 +196,7 @@ class instructorCourse extends Component {
      
     submitNewCourse = async (course) => {
         try {
-          const res = await axios.put('http://localhost:3000/courses/?user[userId]=638117c243cba3f0babcc3a9',course, {
+          const res = await axios.put('http://localhost:5000/courses/?user[userId]=638117c243cba3f0babcc3a9',course, {
             headers: { 'Access-Control-Allow-Origin': '*' }
           });
           
