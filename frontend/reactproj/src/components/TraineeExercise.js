@@ -3,7 +3,7 @@ import axios from 'axios';
 import useStyles from '../styles/traineeExercise.scss';
 import ClearIcon from '@mui/icons-material/Clear';
 import DoneIcon from '@mui/icons-material/Done';
-
+import PrimaryBtn from './buttons/primaryBtn';
 function App() {
   // Properties
   const [showResults, setShowResults] = useState(false);
@@ -104,7 +104,7 @@ function App() {
 
   return (
     <div className="App">
-      <h1 style={{ marginTop: 20 }}>Exercise 1</h1>
+
 
       {/* Show results   */}
       {showResults ? (
@@ -113,7 +113,8 @@ function App() {
           <div className="final-results">
             <h1>Final Results</h1>
             <h2>Score: {displaySolution.grade}</h2>
-            <button onClick={() => solution()}>Show Solution</button>
+
+            <PrimaryBtn function={solution} btnText="Show Solution"/>
           </div>
 
           {/*solution*/}
@@ -181,8 +182,8 @@ function App() {
         /*  Question Card  */
         <div className="question-card" style={{ marginTop: 20 }}>
           {/* Current Question  */}
-          <h2>
-            Question: {currentQuestion + 1} out of {myExam.exercises && myExam.exercises.length}
+          <h2 className="currentqheader">
+            Question {currentQuestion + 1} out of {myExam.exercises && myExam.exercises.length}
           </h2>
           <h3 className="question-text">
             {myExam.exercises && myExam.exercises[currentQuestion].question}

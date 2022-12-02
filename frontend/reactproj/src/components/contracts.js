@@ -15,7 +15,7 @@ export default class Contracts extends Component {
     submitRejection = async () => {
         console.log('submitting')
         try {
-          const res = await axios.delete('http://localhost:3000/contracts/instructor',{
+          const res = await axios.delete('http://localhost:5000/contracts/instructor',{
             params :{"instructorId":"638117c243cba3f0babcc3a9"}
           }, {
             headers: { 'Access-Control-Allow-Origin': '*' }
@@ -31,7 +31,7 @@ export default class Contracts extends Component {
 
     submitAcceptance = async () => {
         try {
-          const res = await axios.post('http://localhost:3000/contracts/instructor',{
+          const res = await axios.post('http://localhost:5000/contracts/instructor',{
             "instructorId":"638117c243cba3f0babcc3a9"
           }, {
             headers: { 'Access-Control-Allow-Origin': '*' }
@@ -47,7 +47,7 @@ export default class Contracts extends Component {
 
     
         try {
-          const res = await axios.get('http://localhost:3000/contracts/?userType=instructor&userId=638117c243cba3f0babcc3a9', {
+          const res = await axios.get('http://localhost:5000/contracts/?userType=instructor&userId=638117c243cba3f0babcc3a9', {
             headers: { 'Access-Control-Allow-Origin': '*' }
          
           });

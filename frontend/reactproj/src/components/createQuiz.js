@@ -35,7 +35,7 @@ export default class createQuiz extends Component {
         const courseId = queryParams.get("courseId")
 
         try {
-          const res = await axios.post('http://localhost:3000/courses/exam?user[userId]=638117c243cba3f0babcc3a9',{
+          const res = await axios.post('http://localhost:5000/courses/exam?user[userId]=638117c243cba3f0babcc3a9',{
                 courseId:courseId,
                 exercises: this.state.questions
           }, {
