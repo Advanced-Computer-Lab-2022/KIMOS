@@ -9,15 +9,11 @@ import Paper from '@mui/material/Paper';
 import axios from 'axios';
 import Button from '@mui/material/Button';
 
-export default function ShowCourse() {
+export default function TraineeCourses() {
   const [courseList, setCourseList] = useState([]);
   var i = 1;
   //call itself whenever the page is refreshed
-  useEffect(() => {
-    axios.get('http://localhost:5000/users/instructor/viewCourse').then((allCourses) => {
-      setCourseList(allCourses.data);
-    });
-  }, [courseList]);
+  
 
   return (
     <>

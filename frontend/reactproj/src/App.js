@@ -9,6 +9,7 @@ import InstructorDB from './components/instructorDB';
 import InstructorProfile from './components/instructorProfile';
 import InstructorCourses2 from './components/instructorCourses2';
 import Trainee from './components/trainee';
+import TraineeViewMyCourse from './components/traineeViewMyCourse';
 import Courses from './components/courses';
 import InstructorCourses from './components/instructorCourses';
 import CreateQuiz from './components/createQuiz';
@@ -19,6 +20,13 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import {connect} from 'react-redux';
 
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+/*import InstructorCourses from './components/instructorCourses';*/
+import TraineeExercise from './components/TraineeExercise'
+
+
+
+
+
 
 
 class App extends Component {
@@ -88,7 +96,10 @@ class App extends Component {
             <Route path="/instructor/createQuiz" element={<CreateQuiz />}></Route>
             <Route exact path="/instructor/profile" element={<InstructorProfile />}></Route>
             <Route exact path="/instructor/createCourse" element={<Instructor />}></Route>
-
+            
+            <Route exact path="/trainee" element={<Trainee />}></Route>
+            <Route exact path="myCourseTrainee" element={<TraineeViewMyCourse />}></Route>
+            <Route exact path="exercise" element={<TraineeExercise />}></Route>
             
 
             <Route exact path="/instructor/myCourses" element={<InstructorCourses2 />}></Route>

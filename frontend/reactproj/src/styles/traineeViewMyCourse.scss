@@ -1,0 +1,24 @@
+*{
+    margin:0;
+    padding:0;
+    box-sizing: border-box;
+}
+
+.card{
+    background: white;
+    
+}
+
+.card p{
+    padding-top: 1rem;
+    line-height: 150%;
+}
+
+.expand{
+    display: flex;
+    flex-direction: column;
+    row-gap: 10px;
+    justify-content: center;
+    align-items: center;
+   width:300px;
+}

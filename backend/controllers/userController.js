@@ -2,6 +2,8 @@ const { getAllInfoByISO } = require('iso-country-currency');
 const User = require('../models/userModel');
 const dotenv = require('dotenv').config();
 const CC = require('currency-converter-lt');
+const nodemailer = require('nodemailer');
+const { updateRating } = require('./ratingController');
 
 //All user functions
 
@@ -40,7 +42,6 @@ const getRate = async (req, res) => {
   try {
     countryDetails = getAllInfoByISO(countryCode);
   } catch (err) {
-
     return res.json({ symbol: '$', rate: 1 }); //send price to frontend
   }
   try {
@@ -54,26 +55,10 @@ const getRate = async (req, res) => {
   }
 };
 
-const userViewRegisteredCourses = async (req, res) => {
-  const { userId, courseId } = req.query;
-  try {
-    const userInfo = await User.findById(userId);
-    if (userInfo.courses.includes(courseId)) {
-      const course = await getCourse(courseId);
-      const courseInfo = await course.populate('subtitles').populate('exams');
-      const courseInfoExams = await courseInfo.exams.populate('exercises', '--answer');
-      console.log(courseInfoExams);
-      res.status(200).json(courseInfo);
-    } else res.status(401).json({ message: 'Not registered to course' });
-  } catch (error) {
-    res.status(400).json({ message: error.message });
-  }
-};
-
 const getUser = async (req, res) => {
-  const { userId } = req.query;
+  const { username } = req.query;
   try {
-    const user = await User.findById(userId);
+    const user = await User.findById({ username: username });
     res.status(200).json(user);
     return;
   } catch (err) {
@@ -132,6 +117,60 @@ const addUser = async (req, res) => {
   }
 };
 
+const rateInstructor = async (res, req) => {
+  try {
+    const { userId, instructorId } = req.query;
+    const { rating } = req.body;
+    const ratedInstructor = await User.findOne(instructorId);
+    updateRating(userId, instructorId, newRating);
+    const currRating = ratedInstructor.rating;
+    const newRating =
+      currRating.value * currRating.numberOfRatings + rating / currRating.numberOfRatings + 1;
+    User.findByIdAndUpdate(instructorId, {
+      rating: newRating,
+      numberOfRatings: currRating.numberOfRatings + 1
+    });
+  } catch (err) {
+    res.status(400).json({ message: err });
+  }
+  res.status(200).json({ message: 'Instructor Rated Successfully!' });
+};
+
+const resetPasswordSendEmail = async (req, res) => {
+  const { email } = req.body;
+  const userInfo = await User.findOne({ email: email });
+  const transporter = nodemailer.createTransport({
+    service: EMAIL_SERVICE,
+    auth: {
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASSWORD
+    }
+  });
+
+  const mailOptions = {
+    from: process.env.EMAIL_USER,
+    to: email,
+    subject: EMAIL_SUBJECT,
+    text: `Hi ${userInfo.firstName},
+    
+    There was a request to change your password!
+    
+    If you did not make this request then please ignore this email.
+    
+    Otherwise, please click this link to change your password: ${'Link for forgot page in frontend goes here'}`
+  };
+};
+
+const resetPassword = async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const userInfo = await User.findOneAndUpdate({ email: email }, { password: password });
+    res.status(200).json({ message: Success });
+  } catch (err) {
+    res.status(400).json({ message: err.message });
+  }
+};
+
 module.exports = {
   getCountry,
   changeCountry,
@@ -139,5 +178,8 @@ module.exports = {
   addUser,
   editUser,
   changePassword,
+  rateInstructor,
+  resetPasswordSendEmail,
+  resetPassword,
   getUser
 };

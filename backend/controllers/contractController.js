@@ -21,8 +21,6 @@ const tmpGetContract = async (req, res) => {
   }
 };
 
-
-
 const getContract = async (req, res) => {
   if (req.query.userType === 'instructor') {
     try {
