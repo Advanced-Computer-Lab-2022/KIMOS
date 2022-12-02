@@ -68,13 +68,24 @@ const getUser = async (req, res) => {
 };
 
 const editUser = async (req, res) => {
+<<<<<<< HEAD
   const { userId, email, biography } = req.body;
+=======
+
+
+  const {userId, email, biography, password, username } = req.body;
+>>>>>>> marsafy
   console.log(userId);
   try {
     const userInfo = await User.findById(userId);
     if (userInfo.userType == 'instructor') {
       userInfo.email = email || userInfo.email;
       userInfo.biography = biography || userInfo.biography;
+<<<<<<< HEAD
+=======
+      userInfo.password = password || userInfo.password;
+      userInfo.username = username || userInfo.username;
+>>>>>>> marsafy
     }
     await User.findByIdAndUpdate(userId, userInfo);
   } catch (err) {

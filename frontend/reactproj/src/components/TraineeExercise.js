@@ -35,7 +35,6 @@ function App() {
       .then((exam) => {
         //console.log(exam);
         setMyExam(exam.data.exam);
-        console.log(myExam.exercises);
       });
   };
 
@@ -50,15 +49,15 @@ function App() {
       })
       .then((solution) => {
         console.log(solution);
-        // setMyExam(exam.data.exam);
+        setMyExam(solution.data.exam);
         // console.log(myExam.exercises);
       });
   };
 
-  const postSolution = async () => {
-    await axios.post(
+  const postSolution = async (sol) => {
+    const res = await axios.post(
       'http://localhost:5000/courses/exam/solution',
-      { body: userSolution },
+      { body: sol },
       {
         params: {
           courseId: '638281a7b05c30a726283c28',
@@ -67,6 +66,10 @@ function App() {
         }
       }
     );
+    if (res.data) {
+      console.log(res.data);
+      setShowResults(true);
+    }
   };
 
   useEffect(() => {
@@ -82,9 +85,15 @@ function App() {
 
   /* A possible answer was clicked */
   const optionClicked = (option, questionId) => {
-    setUserSolution([...userSolution, { choice: option + 1, exercise: questionId }]);
-    setCurrentQuestion(currentQuestion + 1);
-    console.log(userSolution);
+    if (myExam && currentQuestion + 1 < myExam.exercises.length) {
+      setUserSolution([...userSolution, { choice: option + 1, exercise: questionId }]);
+      setCurrentQuestion(currentQuestion + 1);
+      // console.log(userSolution);
+    } else {
+      //submit the exam
+
+      postSolution([...userSolution, { choice: option + 1, exercise: questionId }]);
+    }
   };
 
   /* show solution */
@@ -128,7 +137,7 @@ function App() {
                       paddingTop: 20
                     }}>
                     <h4 className="question-text" style={{ marginBottom: 10 }}>
-                      Q{solutionIndex + 1}) {q.question}
+                      Q{solutionIndex + 1}) {q && q.question}
                     </h4>
                     <ul style={{ marginBottom: 30 }}>
                       {displaySolution[solutionIndex++].choices.map((option, index) => {

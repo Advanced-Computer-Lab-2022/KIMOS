@@ -28,8 +28,8 @@
     "colors": "^1.4.0",
     "cors": "^2.8.5",
     "country-iso-2-to-3": "^1.1.0",
-    "country-to-currency": "^1.0.6",
     "currency-converter-lt": "^2.0.0-beta.0",
+    "country-to-currency": "^1.0.6",
     "dotenv": "^16.0.3",
     "exchange-rates-api": "^1.1.0",
     "express": "^4.18.2",
@@ -41,6 +41,7 @@
     "nodemon": "^2.0.20",
     "react-file-base64": "^1.0.3",
     "redux": "^4.2.0",
-    "redux-thunk": "^2.4.1"
+    "redux-thunk": "^2.4.1",
+    "nodemailer": "^6.8.0"
   }
 }

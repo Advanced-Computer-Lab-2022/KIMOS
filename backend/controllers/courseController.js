@@ -205,7 +205,7 @@ const addDiscount = async (courseId, discount) => {
 
 const viewCourse = async (req, res) => {
   const { userId, courseId } = req.query;
-  //console.log('here');
+  console.log('here');
   try {
     var courseInfo = await Course.findById(courseId);
     //console.log(courseInfo);
@@ -254,7 +254,7 @@ const addExam = async (req, res) => {
 const findExam = async (req, res) => {
   const { userId, courseId, examId } = req.query;
   const courseInfo = await Course.findById(courseId);
-  //console.log(courseInfo);
+  console.log(courseInfo);
   if (mongoose.Types.ObjectId(userId).equals(courseInfo.instructor)) {
     try {
       const exam = await getExam(examId, true);
@@ -289,7 +289,8 @@ const editCourse = async (req, res) => {
   const userId = mongoose.Types.ObjectId(user.userId);
   console.log(courseInfo.instructor);
   if (userId.equals(courseInfo.instructor)) {
-    if (flagDiscount === 'true') {
+    if (flagDiscount === true) {
+      console.log('wee');
       course.discount = await addDiscount(courseId, course.discount);
     }
     const promises = course.subtitles.map(async (subtitle, index) => {
