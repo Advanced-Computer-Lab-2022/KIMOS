@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
 import TmpRoutes from './components/tmpRoutes';
+import LoginPage from './components/loginPage';
 import Navbar from './components/navbar';
 import Guest from './components/guest';
 import Admin from './components/admin';
 import Instructor from './components/instructor';
+import InstructorDB from './components/instructorDB';
+import InstructorProfile from './components/instructorProfile';
+import InstructorCourses2 from './components/instructorCourses2';
 import Trainee from './components/trainee';
 import TraineeViewMyCourse from './components/traineeViewMyCourse';
 import Courses from './components/courses';
@@ -18,6 +22,8 @@ import { connect } from 'react-redux';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 /*import InstructorCourses from './components/instructorCourses';*/
 import TraineeExercise from './components/TraineeExercise';
+import TraineeSolution from './components/TraineeSolution';
+import TraineeViewCourseDetails from './components/traineeViewCourseDetails';
 
 class App extends Component {
   exampleFunction = () => {
@@ -54,8 +60,13 @@ class App extends Component {
             <Route exact path="/instructor/profile" element={<InstructorProfile />}></Route>
             <Route exact path="/instructor/createCourse" element={<Instructor />}></Route>
 
+            <Route exact path="/exercise/solution" element={<TraineeSolution />}></Route>
             <Route exact path="/trainee" element={<Trainee />}></Route>
             <Route exact path="myCourseTrainee" element={<TraineeViewMyCourse />}></Route>
+            <Route
+              exact
+              path="myCourseTrainee/content"
+              element={<TraineeViewCourseDetails />}></Route>
             <Route exact path="exercise" element={<TraineeExercise />}></Route>
 
             <Route exact path="/instructor/myCourses" element={<InstructorCourses2 />}></Route>

@@ -9,7 +9,7 @@
 
     background-color:var(--cool-grey);
     height: fit-content;
-    margin-left: 10%;
+    //margin-left: 10%;
     margin-right: 10%;
     margin-top: 2%;
 
@@ -55,17 +55,14 @@
     }
 
     &__header{
-
- 
         display: flex;
-
+        height: fit-content;
         background: rgb(220, 226, 228);
 
         // background-color: lighten(#D80621, 50);
 
         border-radius: 10px;
         padding:10px;
-        height: 40vh;
         &__right{
 
             width: 50%;
@@ -100,16 +97,18 @@
             &__summary{
                 color: var(--font-color);
                 font-weight: lighter;
-                padding-left: 20px;
+                //padding-left: 20px;
                 padding-right: 20px;
+                padding-top: 20px;
+
 
             }
             &__extras{
 
 
-                padding-left: 20px;
+                //padding-left: 20px;
                 padding-right: 20px;
-                padding-top: 10px;
+                padding-top: 20px;
                 padding-bottom: 10px;
 
                 display: flex;

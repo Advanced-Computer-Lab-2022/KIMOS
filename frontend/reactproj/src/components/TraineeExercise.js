@@ -1,27 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import useStyles from '../styles/traineeExercise.scss';
 import ClearIcon from '@mui/icons-material/Clear';
 import DoneIcon from '@mui/icons-material/Done';
-import PrimaryBtn from './buttons/primaryBtn';
+import PrimaryButton from './buttons/primaryBtn';
 function App() {
   // Properties
-  const [showResults, setShowResults] = useState(false);
   const [currentQuestion, setCurrentQuestion] = useState(0);
-  const [showSolution, setShowSolution] = useState(false);
   const [userSolution, setUserSolution] = useState([]);
-  const [displaySolution, setDisplaySolution] = useState([]);
-  var solutionIndex = 0;
-  var counter = 0;
-
   const params = new URLSearchParams(window.location.search);
   const examId = params.get('exam_id');
-  //console.log(examId);
-  const [myExam, setMyExam] = useState({
-    /* question_id:"",
-    question:"",
-    choices:[]*/
-  });
+  const [myExam, setMyExam] = useState({});
+  const [submitSuccess, setSubmitSuccess] = useState(false);
 
   const getExam = async () => {
     await axios
@@ -33,31 +22,15 @@ function App() {
         }
       })
       .then((exam) => {
-        //console.log(exam);
         setMyExam(exam.data.exam);
       });
   };
 
-  const getSolution = async () => {
-    await axios
-      .get('http://localhost:5000/courses/exam/solution', {
-        params: {
-          courseId: '638281a7b05c30a726283c28',
-          userId: '63811834d00e598aac52a58a',
-          examId: examId
-        }
-      })
-      .then((solution) => {
-        console.log(solution);
-        setMyExam(solution.data.exam);
-        // console.log(myExam.exercises);
-      });
-  };
-
-  const postSolution = async (sol) => {
+  const postSolution = async () => {
+    console.log('here');
     const res = await axios.post(
       'http://localhost:5000/courses/exam/solution',
-      { body: sol },
+      { solutions: userSolution },
       {
         params: {
           courseId: '638281a7b05c30a726283c28',
@@ -66,144 +39,108 @@ function App() {
         }
       }
     );
-    if (res.data) {
-      console.log(res.data);
-      setShowResults(true);
+    console.log(res);
+    if (res.statusText === 'OK') {
+      setSubmitSuccess(true);
     }
   };
 
   useEffect(() => {
     getExam();
-  }, []);
-
-  // useEffect(() => {
-  //   if (myExam && currentQuestion + 1 >= myExam.exercises.length) {
-  //     setShowResults(true);
-  //     postSolution();
-  //   }
-  // }, []);
+  });
 
   /* A possible answer was clicked */
   const optionClicked = (option, questionId) => {
-    if (myExam && currentQuestion + 1 < myExam.exercises.length) {
-      setUserSolution([...userSolution, { choice: option + 1, exercise: questionId }]);
-      setCurrentQuestion(currentQuestion + 1);
-      // console.log(userSolution);
+    if (currentQuestion < userSolution.length) {
+      const newArr = userSolution.map((solution, index) => {
+        if (index !== currentQuestion) {
+          return solution;
+        } else {
+          return { choice: option + 1, exercise: questionId };
+        }
+      });
+      setUserSolution(newArr);
     } else {
-      //submit the exam
-
-      postSolution([...userSolution, { choice: option + 1, exercise: questionId }]);
+      setUserSolution([...userSolution, { choice: option + 1, exercise: questionId }]);
     }
+    if (myExam.exercises && currentQuestion < myExam.exercises.length - 1)
+      setCurrentQuestion(currentQuestion + 1);
   };
 
-  /* show solution */
-  const solution = () => {
-    setShowSolution(true);
-    getSolution();
+  const changeDisplayedQuestion = (index) => {
+    setCurrentQuestion(index);
   };
 
   return (
     <div className="App">
-
-
-      {/* Show results   */}
-      {showResults ? (
-        /* Final Results */
+      {submitSuccess ? (
         <>
           <div className="final-results">
-            <h1>Final Results</h1>
-            <h2>Score: {displaySolution.grade}</h2>
-
-            <PrimaryBtn function={solution} btnText="Show Solution"/>
-          </div>
-
-          {/*solution*/}
-          {showSolution && (
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                rowGap: 30,
-                justifyContent: 'center',
-                alignItems: 'center'
-              }}>
-              <h1>Solution</h1>
-              {displaySolution.solutions.map((q) => (
-                <>
-                  <div
-                    style={{
-                      backgroundColor: '#D3D3D3',
-                      width: 900,
-                      borderRadius: 20,
-                      paddingTop: 20
-                    }}>
-                    <h4 className="question-text" style={{ marginBottom: 10 }}>
-                      Q{solutionIndex + 1}) {q && q.question}
-                    </h4>
-                    <ul style={{ marginBottom: 30 }}>
-                      {displaySolution[solutionIndex++].choices.map((option, index) => {
-                        return index === q.correctAnswer - 1 ? (
-                          <li
-                            key={index}
-                            style={{
-                              display: 'flex',
-                              columnGap: 10,
-                              alignItems: 'center',
-                              justifyContent: 'center'
-                            }}>
-                            - {option}
-                            <DoneIcon style={{ color: 'green' }}></DoneIcon>
-                          </li>
-                        ) : index !== q.userAnswer ? (
-                          <li key={index}>- {option}</li>
-                        ) : (
-                          <li
-                            key={index}
-                            style={{
-                              display: 'flex',
-                              columnGap: 10,
-                              alignItems: 'center',
-                              justifyContent: 'center'
-                            }}>
-                            - {option}
-                            <ClearIcon style={{ color: '#AA0000' }}></ClearIcon>
-                          </li>
-                        );
-                      })}
-                    </ul>
-                  </div>
-                  <div style={{ display: 'none' }}>{counter++}</div>
-                </>
-              ))}
+            <h1>Your results have been recorded</h1>
+            <div className="user-options">
+              <PrimaryButton
+                function={() => {
+                  window.location.href = `/exercise/solution?exam_id=${examId}`;
+                }}
+                btnText="Show Solution"
+              />
+              <PrimaryButton
+                function={() => {
+                  window.location.href = `/myCourseTrainee`;
+                }}
+                btnText="Go back to course page"
+              />
             </div>
-          )}
+          </div>
         </>
       ) : (
-        /*  Question Card  */
-        <div className="question-card" style={{ marginTop: 20 }}>
-          {/* Current Question  */}
-          <h2 className="currentqheader">
-            Question {currentQuestion + 1} out of {myExam.exercises && myExam.exercises.length}
-          </h2>
-          <h3 className="question-text">
-            {myExam.exercises && myExam.exercises[currentQuestion].question}
-          </h3>
-
-          {/* List of possible answers  */}
-          <ul>
+        <>
+          <div className="questions-display">
             {myExam.exercises &&
-              myExam.exercises[currentQuestion].choices.map((choice, index) => {
+              myExam.exercises.map((question, index) => {
                 return (
-                  <li
-                    key={index}
-                    className="questions_li"
-                    onClick={() => optionClicked(index, myExam.exercises[currentQuestion]._id)}>
-                    {choice}
-                  </li>
+                  <div
+                    className={`question ${currentQuestion === index ? 'selected-q' : ''}`}
+                    onClick={() => {
+                      changeDisplayedQuestion(index);
+                    }}>
+                    Question {index + 1}
+                  </div>
                 );
               })}
-          </ul>
-        </div>
+          </div>
+          <div className="question-card" style={{ marginTop: 20 }}>
+            {/* Current Question  */}
+            <h2 className="currentqheader">
+              Question {currentQuestion + 1} out of {myExam.exercises && myExam.exercises.length}
+            </h2>
+            <h3 className="question-text">
+              {myExam.exercises && myExam.exercises[currentQuestion].question}
+            </h3>
+            {/* List of possible answers  */}
+            <ul>
+              {myExam.exercises &&
+                myExam.exercises[currentQuestion].choices.map((choice, index) => {
+                  return (
+                    <li
+                      key={index}
+                      className={
+                        userSolution[currentQuestion] &&
+                        userSolution[currentQuestion].choice === index + 1
+                          ? 'questions_li_selected'
+                          : 'questions_li'
+                      }
+                      onClick={() => optionClicked(index, myExam.exercises[currentQuestion]._id)}>
+                      {choice}
+                    </li>
+                  );
+                })}
+            </ul>
+            {myExam.exercises && currentQuestion + 1 === myExam.exercises.length && (
+              <PrimaryButton btnText="Submit" function={postSolution} size="10" />
+            )}
+          </div>
+        </>
       )}
     </div>
   );

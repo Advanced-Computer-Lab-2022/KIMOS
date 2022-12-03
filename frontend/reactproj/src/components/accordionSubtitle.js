@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React, { useState } from 'react';
 import Button from '@mui/material/Button';
 import useStyles from '../styles/accordionSubtitle.scss';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
@@ -13,43 +13,53 @@ const ExpandMore = styled((props) => {
 })(({ theme, expand }) => ({
   transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
   marginLeft: 'auto',
-  maxWidth:30,
+  maxWidth: 30,
   transition: theme.transitions.create('transform', {
-    duration: theme.transitions.duration.shortest,
-  }),
+    duration: theme.transitions.duration.shortest
+  })
 }));
 
 export default function AccordionSubtitle(props) {
-  const [expanded, setExpanded] = React.useState(false);
-  
-    const handleExpandClick = () => {
-      setExpanded(!expanded);
-    }
+  const [expanded, setExpanded] = useState(false);
+
+  const handleExpandClick = () => {
+    setExpanded(!expanded);
+  };
 
   return (
     <div className="accordionSubtitle__section">
-        <button className="accordionSubtitle" expand={expanded} onClick={handleExpandClick} aria-expanded={expanded}>
-            <p classname="accordion__title">{props.title}</p>
-            <ExpandMore
-                expand={expanded}
-                onClick={handleExpandClick}
-                aria-expanded={expanded}
-              >
-                <ExpandMoreIcon />
-            </ExpandMore>
-            
-        </button>
-        
-        <Collapse in={expanded} timeout="auto" unmountOnExit>
-          <div className="accordionSubtitle__content" >
-              {/* <div className="accordion__text" dangerouslySetInnerHTML={{__html:props.videoSubtitle}}/> */}
-              <div style={{display:"flex",justifyContent:"center",alignItems:"center",columnGap:"12px"}}>
-                    <a style={{color:"black"}} href={props.link}> <PlayCircleIcon cursor="pointer"> </PlayCircleIcon></a>
-                    <a style={{color:"#3E424B"}} href={props.link}>Video</a>
-                    <label>({props.duration})</label>
-            </div>
+      <button
+        className="accordionSubtitle"
+        expand={expanded}
+        onClick={handleExpandClick}
+        aria-expanded={expanded}>
+        <p classname="accordion__title">{props.title}</p>
+        <ExpandMore expand={expanded} onClick={handleExpandClick} aria-expanded={expanded}>
+          <ExpandMoreIcon />
+        </ExpandMore>
+      </button>
+
+      <Collapse in={expanded} timeout="auto" unmountOnExit>
+        <div className="accordionSubtitle__content">
+          {/* <div className="accordion__text" dangerouslySetInnerHTML={{__html:props.videoSubtitle}}/> */}
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              columnGap: '12px'
+            }}>
+            <a style={{ color: 'black' }} href={props.link}>
+              {' '}
+              <PlayCircleIcon cursor="pointer"> </PlayCircleIcon>
+            </a>
+            <a style={{ color: '#3E424B' }} href={props.link}>
+              Video
+            </a>
+            <label>({props.duration})</label>
           </div>
-        </Collapse>
+        </div>
+      </Collapse>
     </div>
-  )
+  );
 }

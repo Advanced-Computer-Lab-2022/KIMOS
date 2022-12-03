@@ -31,7 +31,7 @@ const viewRating = async (userId, ratedId) => {
     userId: userId,
     ratedId: ratedId
   });
-  return rating;
+  return rating || 0;
 };
 
 module.exports = {

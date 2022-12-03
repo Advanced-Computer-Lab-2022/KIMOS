@@ -56,9 +56,9 @@ const getRate = async (req, res) => {
 };
 
 const getUser = async (req, res) => {
-  const { username } = req.query;
+  const { userId } = req.query;
   try {
-    const user = await User.findById({ username: username });
+    const user = await User.findById(userId);
     res.status(200).json(user);
     return;
   } catch (err) {

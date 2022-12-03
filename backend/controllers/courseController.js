@@ -9,16 +9,16 @@ const { createSolution, getSolution } = require('./userSolutionController');
 const { getExercise } = require('./exerciseController');
 
 const createCourse = async (req, res) => {
-  console.log('adding course');
+  //console.log('adding course');
   try {
     const { user } = req.query;
     const { course } = req.body;
-    console.log(user);
-    console.log(course);
+    //console.log(user);
+    //console.log(course);
 
     var subtitles = [];
     if (user.userType === 'instructor') {
-      console.log('in inner cond');
+      // console.log('in inner cond');
       var totalHours = 0;
       if (course.subtitles.length) {
         const promises = course.subtitles.map(async (subtitle, index) => {
@@ -46,7 +46,7 @@ const createCourse = async (req, res) => {
       res.status(401).json({ message: 'Unauthorized access' });
     }
   } catch (err) {
-    console.log(err);
+    //console.log(err);
     res.status(400).json({ message: err.message });
   }
 };
@@ -93,7 +93,7 @@ const findCourses = async (req, res) => {
               return await e.populate('exercises');
             });
             result.exams = await Promise.all(promises);
-            console.log(result.exams);
+            // console.log(result.exams);
           }
 
           return result;
@@ -205,23 +205,49 @@ const addDiscount = async (courseId, discount) => {
 
 const viewCourse = async (req, res) => {
   const { userId, courseId } = req.query;
-  console.log('here');
   try {
     var courseInfo = await Course.findById(courseId);
-    //console.log(courseInfo);
+    var examsArray = [];
     if (courseInfo.registeredUsers.includes(mongoose.Types.ObjectId(userId))) {
-      const course = await Course.findById(courseId);
+      var course = await Course.findById(courseId);
       if (courseInfo.subtitles.length) courseInfo = await course.populate('subtitles');
       if (courseInfo.exams.length) {
-        courseInfo = await course.populate('exams', 'title');
+        examsArray = await Promise.all(
+          courseInfo.exams.map(async (exam, index) => {
+            const s = await getSolution(userId, exam);
+            const ex = await getExam(exam, false);
+            if (s) {
+              return {
+                _id: ex._id,
+                title: ex.title,
+                solved: true,
+                grade: s.grade
+              };
+            } else {
+              return {
+                _id: ex._id,
+                title: ex.title,
+                solved: false
+              };
+            }
+          })
+        );
       }
-      const promises = courseInfo.exams.map(async (exam, index) => {
-        const ex = await getExam(exam._id, false);
-        return ex;
-      });
-      courseInfo.exams = Promise.all(promises);
       courseInfo = await courseInfo.populate('instructor', 'firstName lastName');
-      res.status(200).json(courseInfo);
+      res.status(200).json({
+        _id: courseInfo._id,
+        discount: courseInfo.discount,
+        title: courseInfo.title,
+        price: courseInfo.price,
+        totalHours: courseInfo.totalHours,
+        subject: courseInfo.subject,
+        instructor: courseInfo.instructor,
+        preview: courseInfo.preview,
+        subtitles: courseInfo.subtitles,
+        summary: courseInfo.summary,
+        averageRating: courseInfo.rating,
+        exams: examsArray
+      });
     } else {
       const course = await Course.findById(courseId);
       if (courseInfo.subtitles.length) courseInfo = await course.populate('subtitles', 'title');
@@ -230,7 +256,6 @@ const viewCourse = async (req, res) => {
     }
   } catch (error) {
     res.status(400).json({ message: error.message });
-    console.log(error.message);
   }
 };
 
@@ -254,7 +279,6 @@ const addExam = async (req, res) => {
 const findExam = async (req, res) => {
   const { userId, courseId, examId } = req.query;
   const courseInfo = await Course.findById(courseId);
-  console.log(courseInfo);
   if (mongoose.Types.ObjectId(userId).equals(courseInfo.instructor)) {
     try {
       const exam = await getExam(examId, true);
@@ -287,10 +311,8 @@ const editCourse = async (req, res) => {
   const { courseId, course, flagDiscount } = req.body;
   const courseInfo = await Course.findById(courseId);
   const userId = mongoose.Types.ObjectId(user.userId);
-  console.log(courseInfo.instructor);
   if (userId.equals(courseInfo.instructor)) {
     if (flagDiscount === true) {
-      console.log('wee');
       course.discount = await addDiscount(courseId, course.discount);
     }
     const promises = course.subtitles.map(async (subtitle, index) => {
@@ -323,17 +345,15 @@ const rateCourse = async (req, res) => {
       rating: newRating,
       numberOfRatings: currRating.numberOfRatings + 1
     });
+    res.status(200).json({ userRating: rating, averageRating: newRating });
   } catch (err) {
     res.status(400).json({ message: err });
   }
-  res.status(200).json({ message: 'Course Rated Successfully!' });
 };
 
 const submitSolution = async (req, res) => {
   const { userId, courseId, examId } = req.query;
   const { solutions } = req.body;
-  console.log(req.query);
-  console.log(req.body);
   try {
     const courseInfo = await Course.findById(mongoose.Types.ObjectId(courseId));
     if (
@@ -413,7 +433,9 @@ const getGradeAndSolution = async (req, res) => {
         title: examInfo.title,
         solutions: returnSolutions
       };
-      res.status(200).json({ returnObject });
+      console.log(returnObject);
+      res.status(200).json(returnObject);
+      // console.log(res);
     } else {
       res.status(401).json({ message: 'Unauthorized access' });
     }
