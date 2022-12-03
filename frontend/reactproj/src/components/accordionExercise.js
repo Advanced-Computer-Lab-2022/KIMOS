@@ -20,19 +20,19 @@ const ExpandMore = styled((props) => {
   })
 }));
 
-const viewExam = (event) => {
-  const exam_id = event.target.id;
-  window.location.href = `/exercise?exam_id=${exam_id}`;
-};
-
-const viewSolution = (event) => {
-  const exam_id = event.target.id;
-  window.location.href = `/exercise/solution?exam_id=${exam_id}`;
-};
-
 export default function Accordion(props) {
-  const [expanded, setExpanded] = useState(false);
+  const viewExam = (event) => {
+    const exam_id = event.target.id;
+    props.changeViewExam(true);
+    props.changeCurrentExam(exam_id);
+  };
 
+  const viewSolution = (event) => {
+    const exam_id = event.target.id;
+    props.changeSolveExam(true);
+    props.changeCurrentExam(exam_id);
+  };
+  const [expanded, setExpanded] = useState(false);
   const handleExpandClick = () => {
     setExpanded(!expanded);
   };
@@ -59,7 +59,7 @@ export default function Accordion(props) {
             <Button
               variant="outlined"
               style={{ borderColor: '#3E424B', color: '#3E424B', maxWidth: '110px' }}
-              id={props.exam._id}
+              id={props.examId}
               onClick={viewExam}>
               Solve
             </Button>
@@ -67,7 +67,7 @@ export default function Accordion(props) {
             <Button
               variant="outlined"
               style={{ borderColor: '#3E424B', color: '#3E424B', maxWidth: '110px' }}
-              id={props.exam._id}
+              id={props.examId}
               onClick={viewSolution}>
               View Solution
             </Button>

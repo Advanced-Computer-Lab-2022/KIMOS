@@ -3,12 +3,10 @@ import axios from 'axios';
 import ClearIcon from '@mui/icons-material/Clear';
 import DoneIcon from '@mui/icons-material/Done';
 import PrimaryButton from './buttons/primaryBtn';
-function App() {
+function App(props) {
   // Properties
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [userSolution, setUserSolution] = useState([]);
-  const params = new URLSearchParams(window.location.search);
-  const examId = params.get('exam_id');
   const [myExam, setMyExam] = useState({});
   const [submitSuccess, setSubmitSuccess] = useState(false);
 
@@ -18,7 +16,7 @@ function App() {
         params: {
           courseId: '638281a7b05c30a726283c28',
           userId: '63811834d00e598aac52a58a',
-          examId: examId
+          examId: props.examId
         }
       })
       .then((exam) => {
@@ -35,7 +33,7 @@ function App() {
         params: {
           courseId: '638281a7b05c30a726283c28',
           userId: '63811834d00e598aac52a58a',
-          examId: examId
+          examId: props.examId
         }
       }
     );
@@ -78,12 +76,7 @@ function App() {
           <div className="final-results">
             <h1>Your results have been recorded</h1>
             <div className="user-options">
-              <PrimaryButton
-                function={() => {
-                  window.location.href = `/exercise/solution?exam_id=${examId}`;
-                }}
-                btnText="Show Solution"
-              />
+              <PrimaryButton function={props.showSolution} btnText="Show Solution" />
               <PrimaryButton
                 function={() => {
                   window.location.href = `/myCourseTrainee`;

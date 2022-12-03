@@ -3,12 +3,10 @@ import axios from 'axios';
 import ClearIcon from '@mui/icons-material/Clear';
 import DoneIcon from '@mui/icons-material/Done';
 import PrimaryButton from './buttons/primaryBtn';
-function TraineeSolution() {
+function TraineeSolution(props) {
   const [displaySolution, setDisplaySolution] = useState({});
   const [currentQuestion, setCurrentQuestion] = useState(0);
   var counter = 0;
-  const params = new URLSearchParams(window.location.search);
-  const examId = params.get('exam_id');
 
   const getSolution = async () => {
     await axios
@@ -16,7 +14,7 @@ function TraineeSolution() {
         params: {
           courseId: '638281a7b05c30a726283c28',
           userId: '63811834d00e598aac52a58a',
-          examId: examId
+          examId: props.examId
         }
       })
       .then((solution) => {
@@ -26,6 +24,7 @@ function TraineeSolution() {
   };
 
   useEffect(() => {
+    //console.log(props);
     getSolution();
   }, []);
 

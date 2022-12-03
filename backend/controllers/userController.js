@@ -87,11 +87,12 @@ const editUser = async (req, res) => {
 };
 
 const changePassword = async (req, res) => {
-  const { user } = req.query;
+  const { userId } = req.query;
   const { oldPassword, newPassword } = req.body;
-  const userInfo = await User.findById(user.userId);
+  console.log(userId);
+  const userInfo = await User.findById(userId);
   if (userInfo.password === oldPassword) {
-    await User.findByIdAndUpdate(user.userId, { password: newPassword });
+    await User.findByIdAndUpdate(userId, { password: newPassword });
   } else {
     res.status(400).json({ message: 'Old password doesnt match' });
   }
@@ -136,9 +137,10 @@ const rateInstructor = async (res, req) => {
 
 const resetPasswordSendEmail = async (req, res) => {
   const { email } = req.body;
+  console.log(email);
   const userInfo = await User.findOne({ email: email });
   const transporter = nodemailer.createTransport({
-    service: EMAIL_SERVICE,
+    service: process.env.EMAIL_SERVICE,
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASSWORD
@@ -148,23 +150,32 @@ const resetPasswordSendEmail = async (req, res) => {
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: email,
-    subject: EMAIL_SUBJECT,
+    subject: process.env.EMAIL_SUBJECT,
     text: `Hi ${userInfo.firstName},
     
     There was a request to change your password!
     
     If you did not make this request then please ignore this email.
     
-    Otherwise, please click this link to change your password: ${'Link for forgot page in frontend goes here'}`
+    Otherwise, please click this link to change your password: http://localhost:3000/passwordReset `
   };
+  transporter.sendMail(mailOptions, function (err, data) {
+    if (err) {
+      console.log(err.message);
+    } else {
+      console.log('Email sent successfully');
+    }
+  });
+  res.status(200).json({ message: 'success' });
 };
 
 const resetPassword = async (req, res) => {
   const { email, password } = req.body;
   try {
     const userInfo = await User.findOneAndUpdate({ email: email }, { password: password });
-    res.status(200).json({ message: Success });
+    res.status(200).json({ message: 'Success' });
   } catch (err) {
+    console.log(err.message);
     res.status(400).json({ message: err.message });
   }
 };

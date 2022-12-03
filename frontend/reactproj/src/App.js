@@ -14,6 +14,11 @@ import Courses from './components/courses';
 import InstructorCourses from './components/instructorCourses';
 import CreateQuiz from './components/createQuiz';
 import Contracts from './components/contracts';
+import ChangePassword from './components/changePassword';
+import ForgotPassword from './components/forgotPassword';
+import WatchVideo from './components/watchVideo';
+import PasswordReset from './components/passwordReset';
+
 import axios from 'axios';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
@@ -54,6 +59,7 @@ class App extends Component {
             <Route exact path="/milestone1" element={<TmpRoutes />}></Route>
             <Route exact path="/forgotPassword" element={<ForgotPassword />}></Route>
             <Route exact path="/changePassword" element={<ChangePassword />}></Route>
+            <Route exact path="/passwordReset" element={<PasswordReset />}></Route>
             <Route exact path="/watchVideo" element={<WatchVideo />}></Route>
             <Route exact path="/guest" element={<Guest />}></Route>
             <Route exact path="/admin" element={<Admin />}></Route>

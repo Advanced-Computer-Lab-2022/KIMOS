@@ -49,13 +49,17 @@ export default function AccordionSubtitle(props) {
               alignItems: 'center',
               columnGap: '12px'
             }}>
-            <a style={{ color: 'black' }} href={props.link}>
+            <a style={{ color: 'black' }}>
               {' '}
-              <PlayCircleIcon cursor="pointer"> </PlayCircleIcon>
+              <PlayCircleIcon
+                cursor="pointer"
+                onClick={() => {
+                  props.changeCurrentSubtitle(props.subtitleId);
+                }}>
+                {' '}
+              </PlayCircleIcon>
             </a>
-            <a style={{ color: '#3E424B' }} href={props.link}>
-              Video
-            </a>
+            <a style={{ color: '#3E424B' }}>Video</a>
             <label>({props.duration})</label>
           </div>
         </div>
