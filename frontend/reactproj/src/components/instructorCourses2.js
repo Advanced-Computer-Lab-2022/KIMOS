@@ -9,7 +9,7 @@ const columns = [
   { 
     field: 'id', headerName: 'ID',
     renderCell: rowData => {
-      return rowData.row.rating
+      return rowData.row.rating.value
     },
     flex: 0.05,
     minWidth: 40,

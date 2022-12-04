@@ -72,7 +72,6 @@ class courses extends Component {
         headers: { 'Access-Control-Allow-Origin': '*' }
       });
 
-      console.log(res.data);
       this.setState({ courses: res.data, mainCourses: res.data }, () => {
         this.updateCourses();
       });
@@ -189,7 +188,7 @@ class courses extends Component {
     });
     newCourses.forEach((course) => {
       if (
-        !(course.rating >= this.state.ratingRange[0] && course.rating <= this.state.ratingRange[1])
+        !(course.rating.value >= this.state.ratingRange[0] && course.rating.value <= this.state.ratingRange[1])
       ) {
         newCourses = this.removeCourse(newCourses, course.title);
       }
@@ -269,22 +268,23 @@ class courses extends Component {
             )}
           </div>
 
-          <div className="pagi">
-            <Pagination
-              page={this.state.page}
-              onChange={(e, value) => {
-                this.handlePage(value);
-              }}
-              count={10}
-              color="primary"
-            />
-          </div>
+
         </div>
       </div>
     );
   }
 }
 
+// <div style={{border:'2px solid lime'}} className="pagi">
+// <Pagination
+//   page={this.state.page}
+//   onChange={(e, value) => {
+//     this.handlePage(value);
+//   }}
+//   count={10}
+//   color="primary"
+// />
+// </div>
 const mapStateToProps = (state) => {
   return {
     rate: state.rateAndSymbol

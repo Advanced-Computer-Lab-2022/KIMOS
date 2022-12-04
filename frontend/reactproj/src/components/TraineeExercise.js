@@ -49,7 +49,7 @@ function App(props) {
 
   useEffect(() => {
     getExam();
-  },[]);
+  },[props.examId]);
 
   /* A possible answer was clicked */
   const optionClicked = (option, questionId) => {

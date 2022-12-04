@@ -48,11 +48,11 @@ export default class createQuiz extends Component {
     }
   };
   state = {
-    questions: [{ id: 0, question: '', choices: [], correct_answer: 1 }],
+    questions: [{ id: 0, question: '', choices: [], answer: 1 }],
     currentQ: 0,
     lastQ: 1
   };
-  // object { question:'', choices:[], correct_answer:'' }
+  // object { question:'', choices:[], answer:'' }
 
   handleChange = (e) => {
     var newInfo = [...this.state.questions];
@@ -68,7 +68,7 @@ export default class createQuiz extends Component {
       c2: '',
       c3: '',
       c4: '',
-      correct_answer: 1
+      answer: 1
     });
     this.setState({ questions: tmp, currentQ: this.state.lastQ, lastQ: this.state.lastQ + 1 });
   };
@@ -90,7 +90,7 @@ export default class createQuiz extends Component {
   };
   correctChoice = (index) => {
     var newInfo = [...this.state.questions];
-    newInfo[this.state.currentQ]['correct_answer'] = index;
+    newInfo[this.state.currentQ]['answer'] = index;
     this.setState({ questions: newInfo });
   };
   choice = (index, choice, correct) => {
@@ -137,10 +137,10 @@ export default class createQuiz extends Component {
           />
         </div>
         <div className="create-quiz__questions__question__choices">
-          {this.choice(1, 'choice_1', info['correct_answer'] === 1)}
-          {this.choice(2, 'choice_1', info['correct_answer'] === 2)}
-          {this.choice(3, 'choice_1', info['correct_answer'] === 3)}
-          {this.choice(4, 'choice_1', info['correct_answer'] === 4)}
+          {this.choice(1, 'choice_1', info['answer'] === 1)}
+          {this.choice(2, 'choice_1', info['answer'] === 2)}
+          {this.choice(3, 'choice_1', info['answer'] === 3)}
+          {this.choice(4, 'choice_1', info['answer'] === 4)}
         </div>
         <div className="create-quiz__questions__question__options">
           <SecondaryBtn function={this.handleAddQuestion} btnText="Add Question" />

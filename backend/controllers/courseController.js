@@ -121,9 +121,11 @@ const findCourses = async (req, res) => {
             result = await result.populate('exams', 'title');
             //result.exams = await result.exams.populate('exercises', '--answer');
           }
+          
           return result;
         });
         const returnResult = await Promise.all(promises);
+        console.log(returnResult);
         return res.status(200).json(returnResult);
       })
       .catch((err) => {
