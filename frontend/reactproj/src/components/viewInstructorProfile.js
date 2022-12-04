@@ -1,26 +1,31 @@
 import React, { Component } from 'react';
 import eren from '../assets/eren-yeager.png';
 import erenSmiling from '../assets/eren-smiliing.png';
-
-import Rating from '../components/rating';
+import RatingComp from '../components/rating';
 import SecondaryBtn from './buttons/secondaryBtn';
-import PrimaryBtn from './buttons/primaryBtn';
-import TextField from '@mui/material/TextField';
 import axios from 'axios';
+import AddIcon from '@mui/icons-material/Add';
+import Modal from '@mui/material/Modal';
+import Rating from '@mui/material/Rating';
+
+
+
 
 class InstructorProfile extends Component {
   state = {
+    openRating:false,
+    instructorRatingValue:0,
     editing: false,
     instructor: {
       username: 'Eren',
       email: 'eren@topE.com',
-      bio: 'Instructor',
+      bio: 'Instructor at the paradise.',
       password: ''
     },
     new_instructor: {
       username: 'Eren',
-      email: 'eren@topE.com',
-      bio: 'Instructor',
+      email: 'eren@earth.com',
+      bio: 'Instructor at the paradise.',
       password: ''
     }
   };
@@ -73,7 +78,7 @@ class InstructorProfile extends Component {
           userId: this.state.instructor['id'],
           username: this.state.new_instructor.username,
           email: this.state.new_instructor.email,
-          biography: this.state.new_instructor.bio,
+          bio: this.state.new_instructor.bio,
           password: this.state.new_instructor.password
         },
         {
@@ -98,7 +103,7 @@ class InstructorProfile extends Component {
           <div className="comment__header">
             <div className="comment__header__name">Username</div>
             <div className="comment__header__rating">
-              <Rating value={3} />
+              <RatingComp value={3} />
             </div>
           </div>
 
@@ -110,6 +115,23 @@ class InstructorProfile extends Component {
   render() {
     return (
       <div className="instructor-profile">
+      <Modal
+            open={this.state.openRating}
+            onClose={()=>{this.setState({openRating:false})}}
+            >
+            <div style={{borderRadius:'10px',backgroundColor:'white',display:'flex',justifyContent:'center',alignItems:'center',width:'30%',height:'10%', position:'absolute', left:'50%', top:'35%', transform:'translate(-50%,-35%)'}}>
+            Rate This Instructor
+            <div><Rating
+                name="rating-the-couse"
+                value={this.state.instructorRatingValue}
+                onChange={(event, newValue) => {
+                    this.setState({instructorRatingValue:newValue})
+                }}
+                sx = {{width:'100%', height:'100%', fontSize:'3.5vw'}}
+            />
+            </div>
+            </div>
+        </Modal>
         <div className="instructor-profile__header">
           <img src={eren} alt="profile" />
           <div className="instructor-profile__header__pp">
@@ -123,30 +145,10 @@ class InstructorProfile extends Component {
                 {this.state.instructor.username}
               </div>
             )}
-            {this.state.editing && (
-              <div className="instructor-profile__info__username">
-                <TextField
-                  id="username"
-                  style={{ width: '100%', marginTop: '20px' }}
-                  onChange={this.handleChange}
-                  value={this.state.new_instructor.username}
-                  label="Username"
-                  variant="outlined"
-                />
-                <TextField
-                  id="password"
-                  type="password"
-                  style={{ width: '100%', marginTop: '20px' }}
-                  onChange={this.handleChange}
-                  value={this.state.new_instructor.password}
-                  label="Password"
-                  variant="outlined"
-                />
-              </div>
-            )}
+
             {!this.state.editing && (
               <div className="instructor-profile__info__rating">
-                <Rating value={this.state.instructor.rating} />
+                <RatingComp value={this.state.instructor.rating} />
               </div>
             )}
           </div>
@@ -155,44 +157,16 @@ class InstructorProfile extends Component {
               <div className="instructor-profile__data__bio">{this.state.instructor.bio}</div>
             )}
 
-            {this.state.editing && (
-              <div className="instructor-profile__data__bio">
-                <TextField
-                  id="email"
-                  style={{ width: '100%', marginTop: '20px' }}
-                  onChange={this.handleChange}
-                  value={this.state.new_instructor.email}
-                  label="Email"
-                  variant="outlined"
-                />
 
-                <TextField
-                  id="bio"
-                  style={{ width: '100%', marginTop: '20px' }}
-                  multiline
-                  rows={3}
-                  onChange={this.handleChange}
-                  value={this.state.new_instructor.bio}
-                  label="Bio"
-                  variant="outlined"
-                />
-              </div>
-            )}
             <div className="instructor-profile__data__footer__btn">
-              {!this.state.editing && <SecondaryBtn btnText="Edit" function={this.toggleEditing} />}
-              {this.state.editing && (
-                <div style={{ display: 'flex', alignItems: 'center' }}>
-                  <SecondaryBtn btnText="Cancel" function={this.cancel} />
-                  <div className="date-picker__sep" />
-                  <PrimaryBtn btnText="Save" function={this.save} />
-                </div>
-              )}
+              {<SecondaryBtn btnText="Follow" />}
+              
             </div>
           </div>
         </div>
         <div className="instructor-profile__content">
           <div className="instructor-profile__content__reviews">
-            <div className="instructor-profile__content__reviews__header">Reviews</div>
+            <div className="instructor-profile__content__reviews__header" ><div>Reviews</div><div style={{fontWeight:'bolder',display:'flex', alignItems:'center',cursor:'pointer'}}><AddIcon onClick={()=>{this.setState({openRating:true})}} style={{fontSize:'40px', color:'var(--primary-color)'}}/></div></div>
             <div className="instructor-profile__content__reviews__comments">
               {this.getComments()}
             </div>

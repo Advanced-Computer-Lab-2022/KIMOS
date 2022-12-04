@@ -8,16 +8,21 @@ import BottomNavigation from '@mui/material/BottomNavigation';
 import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import RestoreIcon from '@mui/icons-material/Restore';
 import FavoriteIcon from '@mui/icons-material/Favorite';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
-import Box from '@mui/material/Box';
+import StarIcon from '@mui/icons-material/Star';
+import Modal from '@mui/material/Modal';
+import Rating from '@mui/material/Rating';
+
+
+
 
 export default function TraineeViewMyCourse(props) {
   const [viewExam, setViewExam] = useState(false);
   const [value, setValue] = useState(0);
-
+  const [openRating, setOpenRating] = useState(false);
   const [solveExam, setSolveExam] = useState(false);
   const [currentSubtitle, setCurrentSubtitle] = useState(-1);
   const [currentExam, setCurrentExam] = useState(-1);
+  const [courseRatingValue, setCourseRatingValue] = useState(0);
   const onChangeExam = (newExamId) => {
     console.log('the exam id ' +newExamId);
     setCurrentExam(newExamId);
@@ -82,7 +87,6 @@ export default function TraineeViewMyCourse(props) {
       )
   }
   useEffect(() => {
-    console.log(props.course.subtitles)
     handleMenuChange(0);
   }, []);
   var subTitleCount = 1;
@@ -127,10 +131,29 @@ export default function TraineeViewMyCourse(props) {
   };
   return (
     <div style={{position:'relative'}}>
+      <Modal
+        open={openRating}
+        onClose={()=>{setOpenRating(false)}}
+      >
+      <div style={{borderRadius:'10px',backgroundColor:'white',display:'flex',justifyContent:'center',alignItems:'center',width:'30%',height:'10%', position:'absolute', left:'50%', top:'35%', transform:'translate(-50%,-35%)'}}>
+        Rate this course
+        <div><Rating
+          name="rating-the-couse"
+          value={courseRatingValue}
+          onChange={(event, newValue) => {
+            setCourseRatingValue(newValue);
+          }}
+          sx = {{width:'100%', height:'100%', fontSize:'3.5vw'}}
+        />
+      </div>
+      </div>
+      </Modal>
       <div style={{zIndex:'10',background:'var(--cool-grey)', position:'absolute', bottom:'0', width:'100%'}}>
+      <div onClick={()=>{setOpenRating(true )}} style={{cursor:'pointer',position:'absolute', left:'0',top:'50%', transform:'translate(10%,-50%)', display:'flex', alignItems:'center', color:'grey', fontWeight:'lighter'}}>Leave Rating <StarIcon /></div>
+        
         <BottomNavigation
           showLabels
-          value={value}
+          value={0}
           style={{background:'var(--cool-grey)', borderTop:'0.5px solid grey'}}
           onChange={(event, newValue) => {
               handleMenuChange(newValue);

@@ -70,6 +70,8 @@ const getUser = async (req, res) => {
 const editUser = async (req, res) => {
   const { userId, email, biography, password, username } = req.body;
   console.log(userId);
+  console.log(biography);
+
   try {
     const userInfo = await User.findById(userId);
     if (userInfo.userType == 'instructor') {

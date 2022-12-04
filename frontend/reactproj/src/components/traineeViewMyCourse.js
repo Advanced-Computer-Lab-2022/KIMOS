@@ -7,7 +7,7 @@ import TraineeViewCourseDetails from './traineeViewCourseDetails';
 import Accordion from './accordionExercise.js';
 import AccordionSubtitle from './accordionSubtitle.js';
 import { textAlign } from '@mui/system';
-
+import PrimaryBtn from './buttons/primaryBtn';
 export default function TraineeViewMyCourse() {
   var subTitleCount = 1;
   var exerciseCount = 1;
@@ -63,7 +63,13 @@ export default function TraineeViewMyCourse() {
     getCourse();
     console.log(myCourse.averageRating);
   }, []);
-
+  const goToProfile =()=>{
+    var url = 'http://localhost:3000/viewInstructorProfile/'+myCourse.instructor['_id'];
+    window.open(
+      url,
+      '_blank' // <- This is what makes it open in a new window.
+    );
+  }
   return (
     <>
       {viewContent ? (
@@ -90,9 +96,10 @@ export default function TraineeViewMyCourse() {
                   </div>
 
                   {/* Instructor Name */}
-                  <div className="user-course__header__left__extras__instructor">
-                    <span style={{ fontWeight: 'bolder' }}>Instructor</span>{' '}
-                    {myCourse.instructor.firstName} {myCourse.instructor.lastName}
+                  <div className="user-course__header__left__extras__instructor" style={{display:'flex', width:'100%', alignItems:'center', justifyContent:'space-between'}}>
+                    <span ><span style={{ fontWeight: 'bolder' }}>Instructor</span>
+                    {' '+myCourse.instructor.firstName} {myCourse.instructor.lastName}</span>
+                    <div style={{marginLeft:'1vw'}}><PrimaryBtn function={goToProfile} btnText="View Profile"/></div>
                   </div>
 
                   {/* Rating */}

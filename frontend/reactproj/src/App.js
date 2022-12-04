@@ -18,6 +18,7 @@ import ChangePassword from './components/changePassword';
 import ForgotPassword from './components/forgotPassword';
 import WatchVideo from './components/watchVideo';
 import PasswordReset from './components/passwordReset';
+import ViewInstructorProfile from './components/viewInstructorProfile';
 
 import axios from 'axios';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -115,6 +116,8 @@ class App extends Component {
               path="myCourseTrainee/content"
               element={<TraineeViewCourseDetails />}></Route>
             <Route exact path="exercise" element={<TraineeExercise />}></Route>
+            <Route  path="viewInstructorProfile/:id" element={<ViewInstructorProfile />}></Route>
+
 
             <Route exact path="/instructor/myCourses" element={<InstructorCourses2 />}></Route>
             <Route exact path="/instructor/contracts" element={<Contracts />}></Route>
