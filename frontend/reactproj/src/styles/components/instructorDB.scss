@@ -1,0 +1,59 @@
+.instructorDB{
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    &__container{
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+        // border: 2px solid red;
+        border-radius: 15px;
+        height: 50%;
+        width: 70%;
+        padding: 50px;
+        &__option{
+            transition: all 0.4s;
+
+            border-radius: 10px;
+            height: 100%;
+            width: 30%;
+            margin: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            // background: var(--search-bar-color);
+            // background: linear-gradient(45deg, var(--primary-color-lighter), var(--secondary-color-lighter));
+            background: var(--cool-grey);
+
+
+
+            &__icon{
+                font-size: max(5vw, 15vh ) !important;
+                color: var(--primary-color);
+                // color: rgba(255, 255, 255, 0.56);
+            }
+            &__text{
+                font-weight: lighter;
+                margin-top: 20px;
+                color: var(--font-color);
+            }
+        }
+    }
+}
+
+.instructorDB__container__option:hover{
+    transform: scale(1.1);
+    background: var(--primary-color);
+}
+.instructorDB__container__option:hover .instructorDB__container__option__icon{
+    color: white; 
+}
+.instructorDB__container__option:hover .instructorDB__container__option__text{
+    color: white; 
+}
+.instructorDB__container__option:active{
+    transform: translate(0, 1vh);
+}

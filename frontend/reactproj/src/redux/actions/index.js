@@ -31,3 +31,21 @@ export const setUser = (value) =>{
         payload: value
     }
 }
+
+export const changeTheme = () =>{
+
+    
+    return {
+        type:'CHANGE_THEME'
+    }
+}
+
+
+export const changeColor = (color) =>{
+
+    
+    return {
+        type:'CHANGE_COLOR',
+        payload:{color}
+    }
+}

@@ -2,14 +2,18 @@ const mongoose = require('mongoose');
 
 const userSchema = mongoose.Schema(
   {
-    name: {
+    firstName: {
       type: String
-      //required: [true, 'Please enter a name']
+    },
+    lastName: {
+      type: String
     },
     email: {
       type: String,
-      //required: [true, 'Please enter an email'],
-      unique: true
+      trim: true,
+      index: true,
+      unique: true,
+      sparse: true
     },
     username: {
       type: String,
@@ -20,21 +24,38 @@ const userSchema = mongoose.Schema(
       type: String,
       required: [true, 'Please enter a password']
     },
+    rating: {
+      value:{
+        type: Number,
+        default: 0,
+        min: 0.0,
+        max: 5.0
+      },
+      numberOfRatings:{
+        type: Number,
+        default:0
+      }
+    },
 
     userType: {
       type: String,
-      enum: ['adminstrator', 'corporate trainee', 'individual trainee', 'instructor'],
+      enum: ['administrator', 'corporate trainee', 'individual trainee', 'instructor'],
       lowercase: true,
       required: true
     },
 
     country: {
       name: {
-        type: String
+        type: String,
+        default: 'Egypt'
       },
       code: {
-        type: String
+        type: String,
+        default: 'EG'
       }
+    },
+    biography: {
+      type: String
     }
   },
   {

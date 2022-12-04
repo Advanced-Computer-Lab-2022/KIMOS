@@ -1,0 +1,99 @@
+.contract{
+    position: relative;
+    padding-top:20px ;
+    padding-left:20px ;
+    padding-right:20px ;
+
+
+    &__title{
+        color: var(--primary-color);
+        font-weight: bolder;
+        font-size: 40px;
+
+    }
+    &__content{
+        width: 100%;
+        height: calc(100% - 63px);
+        padding-top:10px;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        &__percentage-taken{
+            padding-left: 40px;
+
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            &__btns{
+
+                display: flex;
+                align-items: center;
+            }
+            &__info{
+                display: flex;
+                align-items: center;
+                &__left{
+                    font-weight: bolder;
+                }
+                &__amount{
+                    margin-left: 20px;
+                    font-size: 20px;
+                    font-weight: bolder;
+                    color: var(--primary-color);
+                }
+            }
+
+        }
+        &__rights{
+
+            padding-left: 40px;
+            padding-right: 40px;
+            ul{
+                margin-left: 30px;
+                li{
+                    margin-top: 10px;
+                    margin-bottom: 10px;
+                    font-weight: lighter;
+                }
+            }
+            &__header{
+                font-size: 30px;
+                font-weight: bolder;
+                color:grey;
+                margin-bottom: 30px;
+            }
+
+
+
+        }
+        
+    }
+}
+
+.accepted{
+    border: 2px solid #48A14D;
+    margin-left: 20px;
+    height: 100%;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top:5px;
+    padding-bottom:5px;
+    border-radius: 10px;
+    background: #48a14ca7;
+    font-weight: lighter;
+}   
+
+.rejected{
+    border: 2px solid #D61A3C;
+    margin-left: 20px;
+    height: 100%;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top:5px;
+    padding-bottom:5px;
+    border-radius: 10px;
+    background: #d61a3c95;
+    font-weight: lighter;
+}

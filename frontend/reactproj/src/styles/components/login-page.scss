@@ -14,7 +14,11 @@
 
             height: 100%;
             width: 80%;
-            background: linear-gradient(45deg, $primary-color-lighter, $secondary-color-lighter);
+            // background: linear-gradient(45deg, var(--primary-color-lighter), var(--secondary-color-lighter));
+            // background: linear-gradient( 90deg, #3F0D12, #A71D31);
+            background: linear-gradient( 90deg, var(--primary-color), var(--primary-color));
+
+
             color:white;
             font-size: 50px;
             font-weight: bolder;
@@ -23,9 +27,9 @@
         &__info{
             position: relative;
             height: 100%;
-            border-right: 1px solid $primary-color;
-            border-top: 1px solid $primary-color;
-            border-bottom: 1px solid $primary-color;
+            border-right: 1px solid var(--primary-color);
+            border-top: 1px solid var(--primary-color);
+            border-bottom: 1px solid var(--primary-color);
             border-top-right-radius: 5px;
             border-bottom-right-radius: 5px;
 
@@ -40,7 +44,9 @@
 
             &__text{
                 @include flex-center-all;
-                background: linear-gradient(45deg, $primary-color-lighter, $secondary-color-lighter);
+                // background: linear-gradient(45deg, var(--primary-color-lighter), var(--secondary-color-lighter));
+                background: linear-gradient( 90deg, var(--primary-color), var(--primary-color));
+
                 font-size: 30px;
                 font-weight: bolder;
                 color:transparent;

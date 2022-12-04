@@ -2,16 +2,23 @@ const express = require('express');
 const router = express.Router();
 const {
   addUser,
-  instructorCreateCourse,
-  instructorViewCourses,
-  instructorCreateSubtitle,
-  getCountry
+  editUser,
+  changePassword,
+  getCountry,
+  changeCountry,
+  getRate,
+  getUser,
+  resetPasswordSendEmail,
+  resetPassword,
+  rateInstructor
 } = require('../controllers/userController');
 
-router.post('/admin/addUser', addUser);
-router.get('/instructor/viewCourse', instructorViewCourses);
-router.post('/instructor/addSubtitle', instructorCreateSubtitle);
-router.post('/instructor/createCourse', instructorCreateCourse);
-//router.post('/changeCountry', changeCountry);
-router.get('/country', getCountry);
+router.route('/').post(addUser).put(editUser).get(getUser);
+router.post('/rateInstructor', rateInstructor);
+router.route('/country').get(getCountry).put(changeCountry);
+router.get('/rate', getRate);
+router.put('/changePassword', changePassword);
+router.post('/passwordResetEmail', resetPasswordSendEmail);
+router.post('/passwordReset', resetPassword);
+router.put('/changePassword', changePassword);
 module.exports = router;

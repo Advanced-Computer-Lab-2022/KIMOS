@@ -1,0 +1,115 @@
+.instructor-profile{
+    position: relative;
+
+
+    &__content{
+        padding: 50px;
+        &__reviews{
+            &__header{
+                font-size: 30px;
+                font-weight: bold;
+            }
+            &__comments{
+                padding: 20px;
+            }
+        }
+
+    }
+    &__data{
+        position: relative;
+        background-color: var(--cool-grey);
+        padding: 20px;
+
+        display: flex;
+        flex-direction: column;
+        &__footer{
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            // border: 2px solid lime;
+            &__btn{
+                position: absolute;
+                right:30px;
+                bottom:0px;
+
+
+            }
+        }
+        &__bio{
+            color: grey;
+
+            width: 30%;
+        }
+
+
+    }
+    &__info{
+        margin-top: 40px;
+
+        display: flex;
+        align-items: center;
+        &__username{
+            font-weight: bolder;
+
+            display: flex;
+            flex-direction: column;
+        }
+        &__rating{
+            margin-left: 10px;
+        }
+    }
+    &__header{
+        position: relative;
+
+        height: 300px;
+        img{
+            width: 100%;
+            height: 300px;
+            object-fit: cover;
+        }
+        &__pp{
+            cursor: pointer;
+            position: absolute;
+            left:40px;
+            bottom: -40px;
+            border: 7px solid white;
+            border-radius: 100%;
+            width: 150px;
+            height: 150px;
+            overflow: hidden;
+            z-index: 10;
+            img{
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+        }
+
+    }
+}
+
+.comment{
+    background-color: var(--cool-grey);
+
+    border-radius: 10px;
+    width: fit-content;
+    padding: 10px;
+    margin-bottom: 10px;
+    &__header{
+        display: flex;
+
+        align-items: center;
+        &__name{
+            color:black;
+            font-weight: bolder;
+        }
+        &__rating{
+            margin-left: 10px;
+        }
+    }
+    &__comment{
+        margin-left: 5px;
+        color: grey;
+    }
+}

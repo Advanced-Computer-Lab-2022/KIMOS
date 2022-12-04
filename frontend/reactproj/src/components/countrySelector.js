@@ -460,7 +460,7 @@ function CountrySelect(props) {
       getCountry();
       setFirstRender(false);
     }
-  });
+  },[]);
 
   const getCountryObj = (id) => {
     var ctr = null;
@@ -472,10 +472,10 @@ function CountrySelect(props) {
     return ctr;
   };
   const getCountry = async (newCountry) => {
-    const body = { newCountry: newCountry };
+    // const body = { newCountry: newCountry };
 
     try {
-      const res = await axios.get('http://localhost:5000/country', body, {
+      const res = await axios.get('http://localhost:5000/users/country', {
         headers: { 'Access-Control-Allow-Origin': '*' }
       });
 
@@ -483,26 +483,31 @@ function CountrySelect(props) {
 
       setDefaultCountry(ctrObj);
       getNewRate(ctrObj);
-      console.log('got country');
+
     } catch (e) {
       getCountryObj('EG');
     }
   };
   const getNewRate = async (newCountry) => {
-    const body = { country: newCountry };
-
+    // const body = { country: newCountry };
+    console.log('gettiing rate')
     try {
-      const res = await axios.post('http://localhost:5000/rate', body, {
+      const res = await axios.get('http://localhost:5000/users/rate?countryCode='+newCountry.code, {
         headers: { 'Access-Control-Allow-Origin': '*' }
       });
+
+      console.log({rate: res.data.rate, symbol: res.data.symbol})
       props.setRate({ rate: res.data.rate, symbol: res.data.symbol });
-    } catch (e) {}
+    } catch (e) {
+    console.log(e.message)
+
+    }
   };
   const submitChangeCountry = async (newCountry) => {
     const body = { newCountry: newCountry };
 
     try {
-      await axios.post('http://localhost:5000/users/changeCountry', body, {
+      await axios.put('http://localhost:5000/users/country?userId=638117c243cba3f0babcc3a9', body, {
         headers: { 'Access-Control-Allow-Origin': '*' }
       });
     } catch (e) {}
@@ -555,17 +560,16 @@ function CountrySelect(props) {
   if (true)
     return (
       <div className="country-selector">
-      <img
-      loading="lazy"
-      width="40"
-
-      srcSet={`https://flagcdn.com/w40/${defaultCountry.code.toLowerCase()}.png 2x`}
-      alt="current country"
-      className="country"
-      onClick={() => {
-        handleOpen();
-      }}
-      />
+        <img
+          loading="lazy"
+          width="40"
+          srcSet={`https://flagcdn.com/w40/${defaultCountry.code.toLowerCase()}.png 2x`}
+          alt="current country"
+          className="country"
+          onClick={() => {
+            handleOpen();
+          }}
+        />
         {modal()}
       </div>
     );

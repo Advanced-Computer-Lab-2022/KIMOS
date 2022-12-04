@@ -12,7 +12,7 @@
     // background: linear-gradient(to right, $primary-color, $secondary-color);
     // -webkit-background-clip: text;
     // -webkit-text-fill-color: transparent;
-    color: $primary-color;
+    color: var(--primary-color);
     cursor: pointer;
 }
 
@@ -25,7 +25,7 @@
     @include flex-h-center-spaceB;
     
     height: 70%;
-    color: $primary-color;
+    color: var(--primary-color);
     margin: 0 10px 0 10px;
     padding: 0 15px 0 15px;
     font-size: max(18px, 1vw );
@@ -36,7 +36,7 @@
     cursor: pointer;
 }
 .option:hover{
-    background:linear-gradient(to right, $primary-color-lighter, $secondary-color-lighter);
+    background:linear-gradient(to right, var(--primary-color-lighter), var(--secondary-color-lighter));
     color: white;
 }
 
@@ -48,7 +48,7 @@
 }
 
 .globe-icon{
-    color: $primary-color;
+    color: var(--primary-color);
     font-size: 40px !important;
     margin: 0 10px 0 10px;
     cursor: pointer;
@@ -56,11 +56,16 @@
 }
 
 
+.search-bar:focus-within{
+    // border: 2px solid black;
+    // width: 50vw;
+}
 .search-bar{
-    
-
+    // margin-left:-240px;
+    transition: all 0.4s;
     height: 70%;
     width: 50vw;
+    // width: 20vw;
     border-radius: 10px;
     display: flex;
     // background: linear-gradient(to left, $primary-color, $secondary-color);
@@ -72,7 +77,7 @@
         align-items: center;
         justify-content: center;
         cursor: pointer;
-        color: $primary-color;
+        color: var(--primary-color);
         padding: 10px;
         
     }
@@ -83,11 +88,18 @@
         border-radius: 10px;
         padding-left: 20px;
         padding-right: 20px;
-        background: $search-bar-color;
+        background: $cool-grey;
         font-size:18px;
     }
 
     &__input:focus{
         outline: none;
     }
+}
+.profile-icon{
+
+    font-size:40px !important;
+    color: var(--secondary-color);
+    margin-right: 0.5rem;
+    cursor: pointer;
 }

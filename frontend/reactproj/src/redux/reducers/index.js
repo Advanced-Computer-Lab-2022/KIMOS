@@ -1,13 +1,13 @@
 import { combineReducers } from 'redux';
 
 
-const theme = (theme = (localStorage.getItem("theme")==="true")|| false, action) => {
+const lightTheme = (lightTheme = true, action) => {
     if(action.type === 'CHANGE_THEME')
     {
-        localStorage.setItem("theme", !theme);
-        return !theme;
+        localStorage.setItem("theme", !lightTheme);
+        return !lightTheme;
     }
-    return theme;
+    return lightTheme;
 } 
 
 const rateAndSymbol = (rateAndSymbol={'rate':1, 'symbol':'$'}, action) => {
@@ -40,8 +40,8 @@ const userType = (type='Any', action) => {
 }
 
 const user = (user={username:"",userType:""}, action) => {
-    console.log(user)
     if(action.type === 'LOG_IN'){
+        console.log(action.payload)
 
         return action.payload;
     }
@@ -49,16 +49,27 @@ const user = (user={username:"",userType:""}, action) => {
 }
 
 
+const primaryColor = (primaryColor="#D80621", action) => {
+    if(action.type === 'CHANGE_COLOR'){
+        console.log('changed to '+action.payload.color) 
+        return action.payload.color;
+    }
+    return primaryColor;
+}
+
+
+
 
 
 
 export default combineReducers({
 
-    theme:theme,
+    lightTheme:lightTheme,
     courses:courses,
     rateAndSymbol:rateAndSymbol,
     userType:userType,
-    user:user
+    user:user,
+    primaryColor:primaryColor
 
 
 });

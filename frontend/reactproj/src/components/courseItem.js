@@ -14,7 +14,8 @@ class courseItem extends Component {
 
     }
     coursePrice = () => {
-        var discount = this.props.course.discount;
+        console.log(this.props);
+        var discount = this.props.course.discount.amount;
         var oldPrice = Math.ceil(this.props.course.price*this.props.rateAndSymbol.rate)  ;
         var newPrice = -1;
         if(discount > 0){
@@ -28,7 +29,7 @@ class courseItem extends Component {
                 <div>
                     {price}
                 </div>
-                {discount > 0 && <div>
+                {discount > 0 && <div style={{marginLeft:'20px'}}>
                     {discount > 0 ? discount+'%' :''}
                 </div>}
             </div>
