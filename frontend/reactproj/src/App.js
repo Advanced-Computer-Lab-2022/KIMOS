@@ -30,22 +30,60 @@ import TraineeExercise from './components/TraineeExercise';
 import TraineeSolution from './components/TraineeSolution';
 import TraineeViewCourseDetails from './components/traineeViewCourseDetails';
 
+
 class App extends Component {
-  exampleFunction = () => {
-    alert('Seweeyyy');
+
+
+  componentDidMount(){
+    console.log('it is');
+
+    console.log(this.props);
+  }
+  theme = createTheme({
+    
+    palette: {
+      primary: {
+        main: this.props.primaryColor,
+        },
+      secondary: {
+        main: '#FFFF7E'
+      }
+    }
+  });
+  componentWillReceiveProps = (nextProps) => {
+    if (nextProps.primaryColor !== this.props.primaryColor) {
+      this.theme = createTheme({
+    
+        palette: {
+          primary: {
+            main: this.props.primaryColor,
+            },
+          secondary: {
+            main: '#FFFF7E'
+          }
+        }
+      });
+    }
+  }
+  getCountry = async (newCountry) => {
+    const body = { newCountry: newCountry };
+
+    try {
+      const res = await axios.get('http://localhost:5000/country', body, {
+        headers: { 'Access-Control-Allow-Origin': '*' }
+      });
+    } catch (e) {}
   };
-  state = {
-    courses: ['damn']
-  };
+  state = {};
   handleCoursesChange = (c) => {
     // this.setState({courses: c},()=>{
     console.log(c);
     window.location.href = '/courses';
     // })
   };
-
   render() {
     return (
+      <ThemeProvider theme={this.theme}>
       <Router>
         <div
           className={
@@ -87,8 +125,17 @@ class App extends Component {
           </Routes>
         </div>
       </Router>
+      </ThemeProvider>
     );
   }
 }
+const mapStateToProps = (state) =>{
+  console.log(state);
+ return {
+     lightTheme: state.lightTheme,
+     primaryColor: state.primaryColor
+ };
+}
 
-export default App;
+
+export default connect(mapStateToProps)(App)

@@ -80,12 +80,12 @@ export default class createQuiz extends Component {
   };
   displayQuestions = () => {
     return this.state.questions.map((question, index) => {
-      console.log('hahaha');
-      // return(
-      //     <div className= {`question ${this.state.currentQ === index? 'selected-q':''}`} onClick={() => {this.changeDisplayedQuestion(index)}}>
-      //         Question {index+1}
-      //     </div>
-      // )
+
+      return(
+          <div className= {`question ${this.state.currentQ === index? 'selected-q':''}`} onClick={() => {this.changeDisplayedQuestion(index)}}>
+              Question {index+1}
+          </div>
+      )
     });
   };
   correctChoice = (index) => {

@@ -41,7 +41,6 @@
     "nodemon": "^2.0.20",
     "react-file-base64": "^1.0.3",
     "redux": "^4.2.0",
-    "redux-thunk": "^2.4.1",
-    "nodemailer": "^6.8.0"
+    "redux-thunk": "^2.4.1"
   }
 }

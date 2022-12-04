@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Rating from '@mui/material/Rating';
 import PrimaryButton from './buttons/primaryBtn';
+import SecondaryBtn from './buttons/secondaryBtn';
 import TraineeViewCourseDetails from './traineeViewCourseDetails';
 import Accordion from './accordionExercise.js';
 import AccordionSubtitle from './accordionSubtitle.js';
@@ -105,7 +106,7 @@ export default function TraineeViewMyCourse() {
               <div className="user-course__header__right">
                 <div className="user-course__header__right__video">
                   <iframe
-                    src={'https://www.youtube.com/embed/Rr3dcyN6Xdk'}
+                    src={myCourse.preview}
                     title="preview"></iframe>
                 </div>
               </div>
@@ -116,13 +117,24 @@ export default function TraineeViewMyCourse() {
                 <div className="user-course__content__section__title">Subtitle(s)</div>
                 <div className="user-course__content__section__content">
                   <div className="user-course__content__section__content__accordions">
-                    {myCourse.subtitles.map((subtitle) => {
+                    {myCourse.subtitles.map((subtitle, index) => {
                       return (
                         <div
                           style={{
-                            textAlign: 'center',
-                            marginBottom: '5px'
-                          }}>{` ${subtitle.title} (${subtitle.hours}) hrs`}</div>
+
+                            marginBottom: '5px',
+                            background: 'rgb(220, 226, 228)',
+                            paddingLeft:'20px',
+                            paddingRight:'20px',
+                            paddingTop:'15px',
+                            paddingBottom:'15px',
+                            borderRadius:'10px',
+                            width:'100%',
+                            display:'flex',
+                            alignItems:'center',
+                            justifyContent:'space-between'
+
+                          }}><div style={{fontWeight:'bolder'}}>{index+1}. {subtitle.title}</div> <div> {subtitle.hours} Hour(s)</div></div>
                       );
                     })}
                   </div>
@@ -132,22 +144,38 @@ export default function TraineeViewMyCourse() {
                 <div className="user-course__content__section__content">
                   <div className="user-course__content__section__title">Exercise(s)</div>
                   <div className="user-course__content__section__content__accordions">
-                    {myCourse.exams.map((exam) => {
-                      return <div>{` ${exam.title}`}</div>;
+                    {myCourse.exams.map((exam, index) => {
+                      return (
+                        <div
+                          style={{
+
+                            marginBottom: '5px',
+                            background: 'rgb(220, 226, 228)',
+                            paddingLeft:'20px',
+                            paddingRight:'20px',
+                            paddingTop:'15px',
+                            paddingBottom:'15px',
+                            borderRadius:'10px',
+                            width:'100%',
+                            display:'flex',
+                            alignItems:'center',
+                            justifyContent:'space-between'
+
+                          }}><div style={{fontWeight:'bolder'}}>{index+1}. {exam.title}</div> </div>
+                      );
                     })}
                   </div>
                 </div>
               </div>
-
-              <div>
-                <PrimaryButton
-                  btnText="Jump to Course Content"
-                  function={() => {
-                    setViewContent(true);
-                  }}
-                />
-              </div>
             </div>
+            <div style={{display:'flex', justifyContent:'flex-end'}}>
+            <SecondaryBtn
+            btnText="Course Content"
+            function={() => {
+              setViewContent(true);
+            }}
+          />
+          </div>
           </div>
         </>
       )}

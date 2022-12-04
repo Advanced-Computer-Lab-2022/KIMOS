@@ -1,17 +1,21 @@
 .user-course{
-
+    position: relative;
 
     padding-left: 70px;
     padding-right: 70px;
     padding-top: 50px;
+    padding-bottom: 50px;
+
 
     border-radius: 10px;
 
     background-color:var(--cool-grey);
     height: fit-content;
-    //margin-left: 10%;
+    margin-left: 10%;
     margin-right: 10%;
     margin-top: 2%;
+    margin-bottom: 2%;
+
 
 
     display:flex;
@@ -21,7 +25,7 @@
 
     &__content{
 
-        height: 50vh;
+        height: fit-content;
         margin-top: 50px;
 
         display: flex;

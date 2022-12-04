@@ -11,6 +11,8 @@ function App(props) {
   const [submitSuccess, setSubmitSuccess] = useState(false);
 
   const getExam = async () => {
+    console.log('getting exam');
+
     await axios
       .get('http://localhost:5000/courses/exam', {
         params: {
@@ -20,6 +22,8 @@ function App(props) {
         }
       })
       .then((exam) => {
+      console.log('got exam 2');
+
         setMyExam(exam.data.exam);
       });
   };
@@ -45,7 +49,7 @@ function App(props) {
 
   useEffect(() => {
     getExam();
-  });
+  },[]);
 
   /* A possible answer was clicked */
   const optionClicked = (option, questionId) => {
@@ -69,8 +73,19 @@ function App(props) {
     setCurrentQuestion(index);
   };
 
+  const displayQuestions = ()=>{
+    return myExam.exercises&&myExam.exercises.map((question, index)=>{
+
+         return(
+             <div id={index} className= {`subtitleD ${currentQuestion === index? 'selected-subtitle':''}`} onClick={() => {changeDisplayedQuestion(index)}}>
+              {'Question ' + (index + 1)}
+             </div>
+         )
+     })
+ }
+
   return (
-    <div className="App">
+    <div className="App" style={{height:'100%', display:'flex',flexDirection:'column'}}>
       {submitSuccess ? (
         <>
           <div className="final-results">
@@ -88,20 +103,10 @@ function App(props) {
         </>
       ) : (
         <>
-          <div className="questions-display">
-            {myExam.exercises &&
-              myExam.exercises.map((question, index) => {
-                return (
-                  <div
-                    className={`question ${currentQuestion === index ? 'selected-q' : ''}`}
-                    onClick={() => {
-                      changeDisplayedQuestion(index);
-                    }}>
-                    Question {index + 1}
-                  </div>
-                );
-              })}
-          </div>
+        <div className='subtitles-display' style={{ position:'absolute', top:'0'}}>
+            {displayQuestions()}
+        </div>
+          
           <div className="question-card" style={{ marginTop: 20 }}>
             {/* Current Question  */}
             <h2 className="currentqheader">

@@ -1,8 +1,9 @@
 const WatchVideo = (props) => {
   console.log(props);
   return (
-    <div className="watchVideo">
+    <div className="watchVideo" >
       <iframe
+        style={{borderRadius:'10px'}}
         width="853"
         height="480"
         src={props.link}

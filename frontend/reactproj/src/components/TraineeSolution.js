@@ -31,24 +31,23 @@ function TraineeSolution(props) {
   const changeDisplayedQuestion = (index) => {
     setCurrentQuestion(index);
   };
+  const displayQuestions = ()=>{
+    return displaySolution.solutions&&displaySolution.solutions.map((question, index)=>{
 
+         return(
+             <div id={index} className= {`subtitleD ${currentQuestion === index? 'selected-subtitle':''}`} onClick={() => {changeDisplayedQuestion(index)}}>
+              {'Question ' + (index + 1)}
+             </div>
+         )
+     })
+ }
   return (
-    <div className="App">
-      <div className="questions-display">
-        {displaySolution.solutions &&
-          displaySolution.solutions.map((question, index) => {
-            return (
-              <div
-                className={`question ${currentQuestion === index ? 'selected-q' : ''}`}
-                onClick={() => {
-                  changeDisplayedQuestion(index);
-                }}>
-                Question {index + 1}
-              </div>
-            );
-          })}
-      </div>
-      <div className="final-results">
+    <div className="App" style={{height:'100%', display:'flex',flexDirection:'column'}}>
+    <div className='subtitles-display' style={{ position:'absolute', top:'0'}}>
+        {displayQuestions()}
+    </div>
+
+      <div className="final-results" style={{ position:'absolute',}}>
         <div
           style={{
             display: 'flex',
