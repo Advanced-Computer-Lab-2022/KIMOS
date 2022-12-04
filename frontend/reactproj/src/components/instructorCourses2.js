@@ -45,7 +45,7 @@ const columns = [
     field: 'rating',
     type:'number',
     renderCell: rowData => {
-        return <Rating value={rowData.row.rating}/>;
+        return <Rating value={rowData.row.rating.value}/>;
     },
     headerName: 'Course Rating',
     flex: 1,
