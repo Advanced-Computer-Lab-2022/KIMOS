@@ -337,17 +337,31 @@ const rateCourse = async (req, res) => {
   try {
     const { courseId, userId } = req.query;
     const { rating } = req.body;
+    var newRating = 0;
     await updateRating(userId, courseId, rating);
-    const currRating = Course.findById(courseId).rating;
-    const newRating =
-      currRating.value * currRating.numberOfRatings + rating / currRating.numberOfRatings + 1;
-    Course.findByIdAndUpdate(courseId, {
-      rating: newRating,
-      numberOfRatings: currRating.numberOfRatings + 1
-    });
+    const courseInfo = await Course.findById(courseId);
+    const currRating = courseInfo.rating;
+    const check = await viewRating(userId, courseId);
+    if (check) {
+      await updateRating(userId, instructorId, rating);
+      newRating =
+        (currRating.value * currRating.numberOfRatings - check.rating + rating) /
+        currRating.numberOfRatings;
+      await User.findByIdAndUpdate(instructorId, {
+        rating: { value: newRating, numberOfRatings: currRating.numberOfRatings }
+      });
+    } else {
+      await createRating(userId, instructorId, rating);
+      newRating =
+        (currRating.value * currRating.numberOfRatings + rating) / (currRating.numberOfRatings + 1);
+      await User.findByIdAndUpdate(instructorId, {
+        rating: { value: newRating, numberOfRatings: currRating.numberOfRatings + 1 }
+      });
+    }
     res.status(200).json({ userRating: rating, averageRating: newRating });
   } catch (err) {
-    res.status(400).json({ message: err });
+    console.log(err.message);
+    res.status(400).json({ message: err.message });
   }
 };
 

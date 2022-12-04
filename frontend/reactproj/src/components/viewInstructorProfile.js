@@ -8,13 +8,10 @@ import AddIcon from '@mui/icons-material/Add';
 import Modal from '@mui/material/Modal';
 import Rating from '@mui/material/Rating';
 
-
-
-
 class InstructorProfile extends Component {
   state = {
-    openRating:false,
-    instructorRatingValue:0,
+    openRating: false,
+    instructorRatingValue: 0,
     editing: false,
     instructor: {
       username: 'Eren',
@@ -70,6 +67,25 @@ class InstructorProfile extends Component {
       console.log(e);
     }
   };
+
+  postRating = async () => {
+    const res = await axios.post(
+      'http://localhost:5000/users/rateInstructor',
+      { rating: this.state.instructorRatingValue },
+      {
+        params: {
+          courseId: '638281a7b05c30a726283c28',
+          userId: '63811834d00e598aac52a58a',
+          instructorId: '638117c243cba3f0babcc3a9'
+        }
+      }
+    );
+    console.log(res);
+    if (res.statusText === 'OK') {
+      //setSubmitSuccess(true);
+    }
+  };
+
   updateUserInfo = async () => {
     try {
       const res = await axios.put(
@@ -115,22 +131,37 @@ class InstructorProfile extends Component {
   render() {
     return (
       <div className="instructor-profile">
-      <Modal
-            open={this.state.openRating}
-            onClose={()=>{this.setState({openRating:false})}}
-            >
-            <div style={{borderRadius:'10px',backgroundColor:'white',display:'flex',justifyContent:'center',alignItems:'center',width:'30%',height:'10%', position:'absolute', left:'50%', top:'35%', transform:'translate(-50%,-35%)'}}>
+        <Modal
+          open={this.state.openRating}
+          onClose={() => {
+            this.setState({ openRating: false });
+          }}>
+          <div
+            style={{
+              borderRadius: '10px',
+              backgroundColor: 'white',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              width: '30%',
+              height: '10%',
+              position: 'absolute',
+              left: '50%',
+              top: '35%',
+              transform: 'translate(-50%,-35%)'
+            }}>
             Rate This Instructor
-            <div><Rating
+            <div>
+              <Rating
                 name="rating-the-couse"
                 value={this.state.instructorRatingValue}
                 onChange={(event, newValue) => {
-                    this.setState({instructorRatingValue:newValue})
+                  this.setState({ instructorRatingValue: newValue }, this.postRating);
                 }}
-                sx = {{width:'100%', height:'100%', fontSize:'3.5vw'}}
-            />
+                sx={{ width: '100%', height: '100%', fontSize: '3.5vw' }}
+              />
             </div>
-            </div>
+          </div>
         </Modal>
         <div className="instructor-profile__header">
           <img src={eren} alt="profile" />
@@ -157,16 +188,30 @@ class InstructorProfile extends Component {
               <div className="instructor-profile__data__bio">{this.state.instructor.bio}</div>
             )}
 
-
             <div className="instructor-profile__data__footer__btn">
               {<SecondaryBtn btnText="Follow" />}
-              
             </div>
           </div>
         </div>
         <div className="instructor-profile__content">
           <div className="instructor-profile__content__reviews">
-            <div className="instructor-profile__content__reviews__header" ><div>Reviews</div><div style={{fontWeight:'bolder',display:'flex', alignItems:'center',cursor:'pointer'}}><AddIcon onClick={()=>{this.setState({openRating:true})}} style={{fontSize:'40px', color:'var(--primary-color)'}}/></div></div>
+            <div className="instructor-profile__content__reviews__header">
+              <div>Reviews</div>
+              <div
+                style={{
+                  fontWeight: 'bolder',
+                  display: 'flex',
+                  alignItems: 'center',
+                  cursor: 'pointer'
+                }}>
+                <AddIcon
+                  onClick={() => {
+                    this.setState({ openRating: true });
+                  }}
+                  style={{ fontSize: '40px', color: 'var(--primary-color)' }}
+                />
+              </div>
+            </div>
             <div className="instructor-profile__content__reviews__comments">
               {this.getComments()}
             </div>
