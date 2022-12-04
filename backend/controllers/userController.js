@@ -3,7 +3,7 @@ const User = require('../models/userModel');
 const dotenv = require('dotenv').config();
 const CC = require('currency-converter-lt');
 const nodemailer = require('nodemailer');
-const { updateRating } = require('./ratingController');
+const { updateRating, viewRating, createRating } = require('./ratingController');
 
 //All user functions
 
@@ -70,6 +70,8 @@ const getUser = async (req, res) => {
 const editUser = async (req, res) => {
   const { userId, email, biography, password, username } = req.body;
   console.log(userId);
+  console.log(biography);
+
   try {
     const userInfo = await User.findById(userId);
     if (userInfo.userType == 'instructor') {
@@ -116,23 +118,36 @@ const addUser = async (req, res) => {
   }
 };
 
-const rateInstructor = async (res, req) => {
+const rateInstructor = async (req, res) => {
   try {
     const { userId, instructorId } = req.query;
     const { rating } = req.body;
-    const ratedInstructor = await User.findOne(instructorId);
-    updateRating(userId, instructorId, newRating);
+    var newRating = 0;
+    const ratedInstructor = await User.findById(instructorId);
+    const check = await viewRating(userId, instructorId);
+    console.log(check);
     const currRating = ratedInstructor.rating;
-    const newRating =
-      currRating.value * currRating.numberOfRatings + rating / currRating.numberOfRatings + 1;
-    User.findByIdAndUpdate(instructorId, {
-      rating: newRating,
-      numberOfRatings: currRating.numberOfRatings + 1
-    });
+    if (check) {
+      await updateRating(userId, instructorId, rating);
+      newRating =
+        (currRating.value * currRating.numberOfRatings - check.rating + rating) /
+        currRating.numberOfRatings;
+      await User.findByIdAndUpdate(instructorId, {
+        rating: { value: newRating, numberOfRatings: currRating.numberOfRatings }
+      });
+    } else {
+      await createRating(userId, instructorId, rating);
+      newRating =
+        (currRating.value * currRating.numberOfRatings + rating) / (currRating.numberOfRatings + 1);
+      await User.findByIdAndUpdate(instructorId, {
+        rating: { value: newRating, numberOfRatings: currRating.numberOfRatings + 1 }
+      });
+    }
+    res.status(200).json({ message: 'Instructor Rated Successfully!' });
   } catch (err) {
+    console.log(err.message);
     res.status(400).json({ message: err });
   }
-  res.status(200).json({ message: 'Instructor Rated Successfully!' });
 };
 
 const resetPasswordSendEmail = async (req, res) => {

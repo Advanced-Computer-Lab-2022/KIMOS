@@ -1,11 +1,12 @@
 const Rating = require('../models/ratingModel');
 
-const createRating = async (userId, ratedId) => {
-  const rating = Rating.create({
+const createRating = async (userId, ratedId, rating) => {
+  const rate = Rating.create({
     userId: userId,
-    ratedId: ratedId
+    ratedId: ratedId,
+    rating: rating
   });
-  return rating;
+  return rate;
 };
 
 const updateRating = async (userId, ratedId, newRating) => {
@@ -13,8 +14,7 @@ const updateRating = async (userId, ratedId, newRating) => {
     { userId: userId, ratedId: ratedId },
     {
       rating: newRating
-    },
-    { upsert: true }
+    }
   );
   return rating;
 };
@@ -31,7 +31,7 @@ const viewRating = async (userId, ratedId) => {
     userId: userId,
     ratedId: ratedId
   });
-  return rating || 0;
+  return rating;
 };
 
 module.exports = {

@@ -27,6 +27,9 @@ class loginPage extends Component {
     if(this.state.username==="instructor"){
         type = "instructor"
     }
+    if(this.state.username==='shahd'){
+        type='myCourseTrainee'
+    }
     if(this.state.username==="IT"){
         type = "individual trainee"
     }
@@ -57,7 +60,7 @@ class loginPage extends Component {
                     <div className="login-page__form__input__text">Log In</div>
                     <TextField style={{margin:'5px', width:'250px'}} id="username" label="Username" variant="outlined" onChange={this.handleChange}/>
                     <TextField style={{margin:'5px', width:'250px'}} id="password" label="Password" type="password" variant="outlined"  onChange={this.handleChange}/>
-                    <Link to="/forgotPassword" style={{textDecoration:'none' , margin:'auto',color:"#00308F"}}>Forgot you password?</Link>
+                    <Link to="/forgotPassword" style={{textDecoration:'none' , margin:'auto',color:"#00308F"}}><small>Forgot your password?</small></Link>
                     <div className="login-page__form__input__btn">
                         <PrimaryButton function={this.logIn} btnText="Log In"/>
 
