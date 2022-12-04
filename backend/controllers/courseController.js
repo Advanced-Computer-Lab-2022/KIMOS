@@ -37,7 +37,7 @@ const createCourse = async (req, res) => {
         price: course.price,
         totalHours: totalHours,
         summary: course.summary || '',
-        exercises: [],
+        exams: [],
         preview: course.preview || '',
         instructor: user.userId
       });
