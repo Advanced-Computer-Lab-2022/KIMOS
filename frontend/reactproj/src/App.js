@@ -19,6 +19,7 @@ import ForgotPassword from './components/forgotPassword';
 import WatchVideo from './components/watchVideo';
 import PasswordReset from './components/passwordReset';
 import ViewInstructorProfile from './components/viewInstructorProfile';
+import HomeLand from './components/homeLand';
 
 import axios from 'axios';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -94,7 +95,9 @@ class App extends Component {
           }>
           <Navbar selectCourses={this.handleCoursesChange} />
           <Routes>
-            <Route exact path="/" element={<LoginPage />}></Route>
+          
+            <Route exact path="/" element={<HomeLand />}></Route>
+            <Route exact path="/login" element={<LoginPage />}></Route>
             <Route exact path="/milestone1" element={<TmpRoutes />}></Route>
             <Route exact path="/forgotPassword" element={<ForgotPassword />}></Route>
             <Route exact path="/changePassword" element={<ChangePassword />}></Route>

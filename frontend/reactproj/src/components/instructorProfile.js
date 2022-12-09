@@ -58,7 +58,7 @@ class InstructorProfile extends Component {
         email: res.data.email || '',
         bio: res.data.biography || '',
         password: res.data.password || '',
-        rating: res.data.rating || 1
+        rating: res.data.rating.value || 1
       };
       this.setState({ instructor: info, new_instructor: info });
     } catch (e) {

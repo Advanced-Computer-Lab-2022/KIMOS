@@ -1,0 +1,126 @@
+@font-face {
+    font-family: "Raleway Bold";
+    src: url("../../assets/fonts/Raleway-ExtraBold.ttf") format("truetype");
+    // font-weight: bold;
+    // font-display: swap;
+  }
+
+
+
+.homeland{
+
+
+    .section_1{
+        &__left{
+
+            width: 50%;
+            display:flex;
+            flex-direction: column;
+            justify-content: center;
+            padding-left:5vw;
+            padding-right: 5vw;
+            .t1{
+                height: fit-content;
+                color: $secondary-color;
+
+                font-size: 40px;
+            }
+            .t2{
+                color: var(--primary-color);
+
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+                font-family: "Raleway Bold";
+                font-size: 60px;
+
+            }
+            .t3{
+                color: grey;
+                margin-top: 1vh;
+
+            }
+            &__text{
+                height: fit-content;
+            }
+        }
+        &__right{
+            margin: 20px;
+            border-radius: 30% 70% 70% 30% / 42% 30% 70% 58% ;
+            width: 48%;
+            height: 97%;
+
+            // img{
+            //     width:200px;
+            //     height: 200px;
+            // }
+            position: relative;
+            background: linear-gradient(45deg, $primary-color-linear, $primary-color);
+            .features{
+                position: absolute;
+                left: 30%;
+                top: 30%;
+                transform: translate(-30%, -30%);
+                border-radius: 10px;
+                margin: 50px;
+                width: 80%;
+                padding: 20px;
+                // background-color: darken($primary-color,10);
+                .ul{
+                    color: white;
+                    background-color: rgba(0, 0, 0, 0.367);
+                    padding: 20px;
+                    border-radius: 10px;
+                    &__text{
+                        color: white;
+                    }
+                }
+
+                &__text{
+                    margin-bottom: 10px;
+                    font-size: 40px;
+                    -webkit-font-smoothing: antialiased;
+                    -moz-osx-font-smoothing: grayscale;
+                    font-family: "Raleway Bold";
+                    color: White;
+                }
+            }
+            .images{
+                .image{
+
+                    &:nth-child(1){
+                        position: absolute;
+                        left: 50%;
+                        top: 100%;
+                        transform: translate(-50%, -100%);
+                        width:25vw;
+                        height: 27vh; 
+                        z-index: 10; 
+                    }
+                    &:nth-child(2){
+                        position: absolute;
+                        left: 100%;
+                        top: 90%;
+                        transform: translate(-100%, -90%);
+                        width:25vw;
+                        height: 27vh;
+                        z-index: 0;  
+    
+                    }
+                    &:nth-child(3){
+                        width:20vw;
+                        height: 23vh;    
+                    }
+                }
+            }
+
+        }
+    }
+    &__section{
+
+        height: 100%;
+        background: var(--cool-grey);
+        display: flex;
+
+ 
+    }
+}

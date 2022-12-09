@@ -52,9 +52,10 @@ const user = (user={username:"",userType:""}, action) => {
 const primaryColor = (primaryColor="#D80621", action) => {
     if(action.type === 'CHANGE_COLOR'){
         console.log('changed to '+action.payload.color) 
-        return action.payload.color;
+        // return action.payload.color;
+        return '#D80621'
     }
-    return primaryColor;
+    return '#D80621'
 }
 
 

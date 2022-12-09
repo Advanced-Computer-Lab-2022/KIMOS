@@ -63,3 +63,16 @@ body{
 
     color: green !important;
 }
+
+@font-face {
+    font-family: "Raleway Regular";
+    src: url("../assets/fonts/Raleway-Medium.ttf") format("truetype");
+    // font-weight: bold;
+    // font-display: swap;
+  }
+  * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-family: "Raleway Regular";
+
+  }

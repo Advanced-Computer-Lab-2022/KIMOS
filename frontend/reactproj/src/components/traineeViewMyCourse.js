@@ -105,7 +105,7 @@ export default function TraineeViewMyCourse() {
                   {/* Rating */}
                   <div className="user-course__header__left__extras__rating">
                     <div>Rating</div>
-                    <Rating name="read-only" value={myCourse.averageRating} readOnly />
+                    <Rating name="read-only" value={myCourse.averageRating ?myCourse.averageRating.value: 0} readOnly />
                   </div>
                 </div>
               </div>

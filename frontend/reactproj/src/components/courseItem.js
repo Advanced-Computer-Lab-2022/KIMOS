@@ -54,7 +54,7 @@ class courseItem extends Component {
                         {this.props.course.title}
                     </Typography>
                     {this.props.type !== 'i' && <Typography variant="body2" color="text.secondary">
-                        {this.props.course.rating + '/5.0'}
+                        {Math.round(this.props.course.rating.value) + '/5.0'}
                     </Typography>}
                     {this.props.type !== 'i' && <Typography variant="body2" color="text.secondary">
                         {this.props.course.totalHours + ' Hour(s)'}
