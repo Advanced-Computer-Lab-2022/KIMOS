@@ -7,49 +7,42 @@ const mongoose = require('mongoose');
 const schedule = require('node-schedule');
 const { createSolution, getSolution } = require('./userSolutionController');
 const { getExercise } = require('./exerciseController');
-
-const createCourse = async (req, res) => {
-  //console.log('adding course');
-  try {
-    const { user } = req.query;
-    const { course } = req.body;
-    //console.log(user);
-    //console.log(course);
-
-    var subtitles = [];
-    if (user.userType === 'instructor') {
-      // console.log('in inner cond');
-      var totalHours = 0;
-      if (course.subtitles.length) {
-        const promises = course.subtitles.map(async (subtitle, index) => {
-          const sub = await createSubtitle(subtitle);
-          return sub;
-        });
-        subtitles = await Promise.all(promises);
-        subtitles.map((subtitle, index) => {
-          totalHours += parseInt(subtitle.hours);
-        });
-      }
-      const newCourse = await Course.create({
-        title: course.title,
-        subject: course.subject,
-        subtitles: subtitles,
-        price: course.price,
-        totalHours: totalHours,
-        summary: course.summary || '',
-        exams: [],
-        preview: course.preview || '',
-        instructor: user.userId
-      });
-      res.status(200).json({ message: 'Course created successfully' });
-    } else {
-      res.status(401).json({ message: 'Unauthorized access' });
-    }
-  } catch (err) {
-    //console.log(err);
-    res.status(400).json({ message: err.message });
-  }
+const asyncHandler = require('express-async-handler');
+const getCourseInfo = async (id) => {
+  const courseInfo = await Course.findById(id)
+    .populate('instructor', 'firstName lastName')
+    .select('title instructor');
+  return courseInfo;
 };
+
+const createCourse = asyncHandler(async (req, res) => {
+  const userId = res.locals('userId');
+  const { course } = req.body;
+  var subtitles = [];
+  var totalHours = 0;
+  if (course.subtitles.length) {
+    const promises = course.subtitles.map(async (subtitle, index) => {
+      const sub = await createSubtitle(subtitle);
+      return sub;
+    });
+    subtitles = await Promise.all(promises);
+    subtitles.map((subtitle, index) => {
+      totalHours += parseInt(subtitle.hours);
+    });
+  }
+  const newCourse = await Course.create({
+    title: course.title,
+    subject: course.subject,
+    subtitles: subtitles,
+    price: course.price,
+    totalHours: totalHours,
+    summary: course.summary || '',
+    exams: [],
+    preview: course.preview || '',
+    instructor: userId
+  });
+  res.status(200).json({ message: 'Course created successfully' });
+});
 
 const findCourses = async (req, res) => {
   const resultsPerPage = 10;
@@ -121,7 +114,7 @@ const findCourses = async (req, res) => {
             result = await result.populate('exams', 'title');
             //result.exams = await result.exams.populate('exercises', '--answer');
           }
-          
+
           return result;
         });
         const returnResult = await Promise.all(promises);
@@ -459,6 +452,7 @@ const getGradeAndSolution = async (req, res) => {
     res.status(400).json({ message: err.message });
   }
 };
+
 module.exports = {
   findSubjects,
   findCourses,
@@ -470,5 +464,6 @@ module.exports = {
   editCourse,
   rateCourse,
   submitSolution,
-  getGradeAndSolution
+  getGradeAndSolution,
+  getCourseInfo
 };

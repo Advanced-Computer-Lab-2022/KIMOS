@@ -3,13 +3,21 @@ const mongoose = require('mongoose');
 
 const courseSchema = mongoose.Schema(
   {
+    visibility: {
+      type: String,
+      enum: ['public', 'private'],
+      lowercase: true,
+      required: true,
+      default: 'private'
+    },
     title: {
       type: String,
       unique: true,
       required: [true, 'Please choose a title for the course']
     },
     summary: {
-      type: String
+      type: String,
+      default: ''
     },
     price: {
       type: Number,
@@ -17,40 +25,53 @@ const courseSchema = mongoose.Schema(
       min: 0.0
     },
     rating: {
-      value: {
-        type: Number,
-        default: 0,
-        min: 0.0,
-        max: 5.0
+      type: {
+        value: {
+          type: Number,
+          default: 0,
+          min: 0.0,
+          max: 5.0
+        },
+        numberOfRatings: {
+          type: Number,
+          default: 0
+        }
       },
-      numberOfRatings: {
-        type: Number,
-        default: 0
+      default: {
+        value: 0.0,
+        numberOfRatings: 0
       }
     },
     totalHours: {
       type: Number,
-      //required: [true, 'Please specify the total number of hours for the course'],
+      required: [true, 'Specify total hours'],
       min: 0.0
     },
     discount: {
-      amount: {
-        type: Number,
-        min: 0.0,
-        max: 100.0,
-        default: 0.0
-      },
-      duration: {
-        startDate: {
-          type: Date
+      type: {
+        amount: {
+          type: Number,
+          min: 0.0,
+          max: 100.0,
+          default: 0.0
         },
-        endDate: {
-          type: Date
+        duration: {
+          startDate: {
+            type: Date
+          },
+          endDate: {
+            type: Date
+          }
         }
+      },
+      default: {
+        amount: 0.0,
+        duration: {}
       }
     },
     subject: {
-      type: String,
+      type: mongoose.Types.ObjectId,
+      ref: 'Subject',
       required: [true, 'Please specify a subject for the course']
     },
     instructor: {
@@ -59,26 +80,25 @@ const courseSchema = mongoose.Schema(
       ref: 'User'
     },
     preview: {
-      type: String
+      type: String,
+      default: ''
     },
-    subtitles: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Subtitle'
-      }
-    ],
-    exams: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Exam'
-      }
-    ],
-    registeredUsers: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User'
-      }
-    ]
+    subtitles: {
+      type: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'Subtitle'
+        }
+      ]
+    },
+    exams: {
+      type: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'Exam'
+        }
+      ]
+    }
   },
   {
     timestamps: true

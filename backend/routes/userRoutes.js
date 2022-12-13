@@ -10,15 +10,31 @@ const {
   getUser,
   resetPasswordSendEmail,
   resetPassword,
-  rateInstructor
+  rateInstructor,
+  getCertificate,
+  sendCertificateEmail
 } = require('../controllers/userController');
 
-router.route('/').post(addUser).put(editUser).get(getUser);
-router.post('/rateInstructor', rateInstructor);
+const {
+  isAdmin,
+  loggedIn,
+  isRegisteredWithInstructor,
+  resetPasswordAuth,
+  isRegisteredToCourse,
+  isInstructor,
+  isCorporateTrainee
+} = require('../middleware/auth');
+
+router.route('/', loggedIn).post(isAdmin, addUser).put(editUser).get(getUser);
+router.post('/rateInstructor', loggedIn, isRegisteredWithInstructor, rateInstructor);
 router.route('/country').get(getCountry).put(changeCountry);
 router.get('/rate', getRate);
-router.put('/changePassword', changePassword);
+router.put('/changePassword', loggedIn, changePassword);
 router.post('/passwordResetEmail', resetPasswordSendEmail);
-router.post('/passwordReset', resetPassword);
-router.put('/changePassword', changePassword);
+router.post('/passwordReset', resetPasswordAuth, resetPassword);
+router.put('/changePassword', loggedIn, changePassword);
+router
+  .route('/certificate', loggedIn, isRegisteredToCourse)
+  .get(getCertificate)
+  .post(sendCertificateEmail);
 module.exports = router;

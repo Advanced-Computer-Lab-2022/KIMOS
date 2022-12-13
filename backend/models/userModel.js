@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Joi = require('joi');
 
 const userSchema = mongoose.Schema(
   {
@@ -13,7 +14,8 @@ const userSchema = mongoose.Schema(
       trim: true,
       index: true,
       unique: true,
-      sparse: true
+      sparse: true,
+      validate: [validateEmail, 'Please enter a valid email address']
     },
     username: {
       type: String,
@@ -25,18 +27,23 @@ const userSchema = mongoose.Schema(
       required: [true, 'Please enter a password']
     },
     rating: {
-      value:{
-        type: Number,
-        default: 0,
-        min: 0.0,
-        max: 5.0
+      type: {
+        value: {
+          type: Number,
+          default: 0,
+          min: 0.0,
+          max: 5.0
+        },
+        numberOfRatings: {
+          type: Number,
+          default: 0
+        }
       },
-      numberOfRatings:{
-        type: Number,
-        default:0
+      default: {
+        value: 0.0,
+        numberOfRatings: 0
       }
     },
-
     userType: {
       type: String,
       enum: ['administrator', 'corporate trainee', 'individual trainee', 'instructor'],
@@ -45,22 +52,45 @@ const userSchema = mongoose.Schema(
     },
 
     country: {
-      name: {
-        type: String,
-        default: 'Egypt'
+      type: {
+        name: {
+          type: String
+        },
+        code: {
+          type: String
+        }
       },
-      code: {
-        type: String,
-        default: 'EG'
+      default: {
+        name: 'Egypt',
+        code: 'EG'
       }
     },
     biography: {
-      type: String
+      type: String,
+      default: ''
+    },
+    reset: {
+      type: {
+        initiated: {
+          type: String
+        },
+        token: {
+          type: String
+        }
+      },
+      default: {
+        initiated: 'false',
+        token: ''
+      }
     }
   },
   {
     timestamps: true
   }
 );
+function validateEmail(email) {
+  var re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ || null;
+  return re.test(email);
+}
 
 module.exports = mongoose.model('User', userSchema);

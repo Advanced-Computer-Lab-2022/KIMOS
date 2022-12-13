@@ -8,15 +8,24 @@ const subtitleSchema = mongoose.Schema(
     },
     hours: {
       type: Number,
-      required: true
+      default: 0
     },
-    video: {
-      link: {
-        type: String
-      },
-      description: {
-        type: String
-      }
+    quizzes: {
+      type: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'Exam'
+        }
+      ]
+    },
+    videos: {
+      type: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'Video'
+        }
+      ],
+      validate: [arraySize, 'Must have at least one video']
     }
   },
   {
@@ -24,4 +33,7 @@ const subtitleSchema = mongoose.Schema(
   }
 );
 
+function arraySize(val) {
+  return val.length >= 1;
+}
 module.exports = mongoose.model('Subtitle', subtitleSchema);
