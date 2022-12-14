@@ -4,6 +4,7 @@ import PrimaryButton from './buttons/primaryBtn';
 import { Link } from 'react-router-dom';
 import { setUser } from '../redux/actions/index';
 import { connect } from 'react-redux';
+import LoadingPage from './loadingPage';
 
 class loginPage extends Component {
 
@@ -50,6 +51,7 @@ class loginPage extends Component {
   }
   render() {
     return (
+      
       <div className="login-page">
         <div className='login-page__form'>
             <div className="login-page__form__left">

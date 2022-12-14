@@ -4,6 +4,8 @@ import LoginPage from './components/loginPage';
 import Navbar from './components/navbar';
 import Guest from './components/guest';
 import Admin from './components/admin';
+import AdminDB from './components/adminDB';
+import AddPromotions from './components/addPromotions';
 import Instructor from './components/instructor';
 import InstructorDB from './components/instructorDB';
 import InstructorProfile from './components/instructorProfile';
@@ -20,6 +22,12 @@ import WatchVideo from './components/watchVideo';
 import PasswordReset from './components/passwordReset';
 import ViewInstructorProfile from './components/viewInstructorProfile';
 import HomeLand from './components/homeLand';
+import UserReports from './components/userReports';
+import AdminReports from './components/adminReports';
+import RequestCourseAccess from './components/requestCourseAccess';
+import AdminCourseReqs from './components/adminCourseReqs';
+import UserProfile from './components/userProfile';
+import Loading from './components/loadingPage';
 
 import axios from 'axios';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -104,12 +112,27 @@ class App extends Component {
             <Route exact path="/passwordReset" element={<PasswordReset />}></Route>
             <Route exact path="/watchVideo" element={<WatchVideo />}></Route>
             <Route exact path="/guest" element={<Guest />}></Route>
-            <Route exact path="/admin" element={<Admin />}></Route>
+            <Route exact path="/admin/addUsers" element={<Admin />}></Route>
+            <Route exact path="/admin/promotions" element={<AddPromotions />}></Route>
+            <Route exact path="/admin" element={<AdminDB />}></Route>
+            <Route exact path="/admin/courseRequests" element={<AdminCourseReqs />}></Route>
+
+            
+            
+
+
             <Route exact path="/instructor" element={<InstructorDB />}></Route>
             <Route exact path="/instructor/courses" element={<InstructorCourses />}></Route>
             <Route path="/instructor/createQuiz" element={<CreateQuiz />}></Route>
             <Route exact path="/instructor/profile" element={<InstructorProfile />}></Route>
             <Route exact path="/instructor/createCourse" element={<Instructor />}></Route>
+            
+            <Route exact path="/user/profile" element={<UserProfile />}></Route>
+            <Route exact path="/user/reports" element={<UserReports />}></Route>
+            <Route exact path="/user/requestCourseAccess" element={<RequestCourseAccess />}></Route>
+            <Route exact path="/admin/reports" element={<AdminReports />}></Route>
+
+
 
             <Route exact path="/exercise/solution" element={<TraineeSolution />}></Route>
             <Route exact path="/trainee" element={<Trainee />}></Route>
@@ -119,6 +142,8 @@ class App extends Component {
               path="myCourseTrainee/content"
               element={<TraineeViewCourseDetails />}></Route>
             <Route exact path="exercise" element={<TraineeExercise />}></Route>
+            <Route exact path="loading" element={<Loading />}></Route>
+
             <Route  path="viewInstructorProfile/:id" element={<ViewInstructorProfile />}></Route>
 
 
@@ -136,7 +161,7 @@ class App extends Component {
   }
 }
 const mapStateToProps = (state) =>{
-  console.log(state);
+
  return {
      lightTheme: state.lightTheme,
      primaryColor: state.primaryColor

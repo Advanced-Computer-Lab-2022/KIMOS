@@ -1,28 +1,27 @@
 import React, { Component } from 'react';
 import eren from '../assets/eren-yeager.png';
 import erenSmiling from '../assets/eren-smiliing.png';
-import RatingComp from '../components/rating';
+import PaidIcon from '@mui/icons-material/Paid';
+import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
+import Rating from '../components/rating';
 import SecondaryBtn from './buttons/secondaryBtn';
+import PrimaryBtn from './buttons/primaryBtn';
+import TextField from '@mui/material/TextField';
 import axios from 'axios';
-import AddIcon from '@mui/icons-material/Add';
-import Modal from '@mui/material/Modal';
-import Rating from '@mui/material/Rating';
 
-class InstructorProfile extends Component {
+class UserProfile extends Component {
   state = {
-    openRating: false,
-    instructorRatingValue: 0,
     editing: false,
     instructor: {
       username: 'Eren',
       email: 'eren@topE.com',
-      bio: 'Instructor at the paradise.',
+      bio: 'Instructor',
       password: ''
     },
     new_instructor: {
       username: 'Eren',
-      email: 'eren@earth.com',
-      bio: 'Instructor at the paradise.',
+      email: 'eren@topE.com',
+      bio: 'Instructor',
       password: ''
     }
   };
@@ -42,7 +41,7 @@ class InstructorProfile extends Component {
     this.toggleEditing();
   };
   save = async () => {
-
+    console.log(this.state.new_instructor);
     this.setState({ instructor: this.state.new_instructor });
     this.updateUserInfo();
     this.toggleEditing();
@@ -53,39 +52,20 @@ class InstructorProfile extends Component {
         headers: { 'Access-Control-Allow-Origin': '*' }
       });
 
-
+      console.log(res);
       var info = {
         id: res.data['_id'] || 0,
         username: res.data.username || '',
         email: res.data.email || '',
         bio: res.data.biography || '',
         password: res.data.password || '',
-        rating: res.data.rating.value || 0
+        rating: res.data.rating.value || 1
       };
       this.setState({ instructor: info, new_instructor: info });
     } catch (e) {
-
+      console.log(e);
     }
   };
-
-  postRating = async () => {
-    const res = await axios.post(
-      'http://localhost:5000/users/rateInstructor',
-      { rating: this.state.instructorRatingValue },
-      {
-        params: {
-          courseId: '638281a7b05c30a726283c28',
-          userId: '63811834d00e598aac52a58a',
-          instructorId: '638117c243cba3f0babcc3a9'
-        }
-      }
-    );
-
-    if (res.statusText === 'OK') {
-      //setSubmitSuccess(true);
-    }
-  };
-
   updateUserInfo = async () => {
     try {
       const res = await axios.put(
@@ -94,16 +74,16 @@ class InstructorProfile extends Component {
           userId: this.state.instructor['id'],
           username: this.state.new_instructor.username,
           email: this.state.new_instructor.email,
-          bio: this.state.new_instructor.bio,
+          biography: this.state.new_instructor.bio,
           password: this.state.new_instructor.password
         },
         {
           headers: { 'Access-Control-Allow-Origin': '*' }
         }
       );
-
+      console.log(res);
     } catch (e) {
-
+      console.log(e);
     }
   };
   getComments = () => {
@@ -119,7 +99,7 @@ class InstructorProfile extends Component {
           <div className="comment__header">
             <div className="comment__header__name">Username</div>
             <div className="comment__header__rating">
-              <RatingComp value={3} />
+              <Rating value={3} />
             </div>
           </div>
 
@@ -128,41 +108,16 @@ class InstructorProfile extends Component {
       );
     });
   };
+  getStars = ()=>{
+
+    return [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19].map((value,i)=>{
+    return (<div className='shooting_star'/>)
+
+    })
+  }
   render() {
     return (
       <div className="instructor-profile">
-        <Modal
-          open={this.state.openRating}
-          onClose={() => {
-            this.setState({ openRating: false });
-          }}>
-          <div
-            style={{
-              borderRadius: '10px',
-              backgroundColor: 'white',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              width: '30%',
-              height: '10%',
-              position: 'absolute',
-              left: '50%',
-              top: '35%',
-              transform: 'translate(-50%,-35%)'
-            }}>
-            Rate This Instructor
-            <div>
-              <Rating
-                name="rating-the-couse"
-                value={this.state.instructorRatingValue}
-                onChange={(event, newValue) => {
-                  this.setState({ instructorRatingValue: newValue }, this.postRating);
-                }}
-                sx={{ width: '100%', height: '100%', fontSize: '3.5vw' }}
-              />
-            </div>
-          </div>
-        </Modal>
         <div className="instructor-profile__header">
           <img src={eren} alt="profile" />
           <div className="instructor-profile__header__pp">
@@ -176,10 +131,30 @@ class InstructorProfile extends Component {
                 {this.state.instructor.username}
               </div>
             )}
-
+            {this.state.editing && (
+              <div className="instructor-profile__info__username">
+                <TextField
+                  id="username"
+                  style={{ width: '100%', marginTop: '20px' }}
+                  onChange={this.handleChange}
+                  value={this.state.new_instructor.username}
+                  label="Username"
+                  variant="outlined"
+                />
+                <TextField
+                  id="password"
+                  type="password"
+                  style={{ width: '100%', marginTop: '20px' }}
+                  onChange={this.handleChange}
+                  value={this.state.new_instructor.password}
+                  label="Password"
+                  variant="outlined"
+                />
+              </div>
+            )}
             {!this.state.editing && (
               <div className="instructor-profile__info__rating">
-                <RatingComp value={this.state.instructor.rating} />
+                <Rating value={this.state.instructor.rating} />
               </div>
             )}
           </div>
@@ -188,32 +163,55 @@ class InstructorProfile extends Component {
               <div className="instructor-profile__data__bio">{this.state.instructor.bio}</div>
             )}
 
+            {this.state.editing && (
+              <div className="instructor-profile__data__bio">
+                <TextField
+                  id="email"
+                  style={{ width: '100%', marginTop: '20px' }}
+                  onChange={this.handleChange}
+                  value={this.state.new_instructor.email}
+                  label="Email"
+                  variant="outlined"
+                />
+
+                <TextField
+                  id="bio"
+                  style={{ width: '100%', marginTop: '20px' }}
+                  multiline
+                  rows={3}
+                  onChange={this.handleChange}
+                  value={this.state.new_instructor.bio}
+                  label="Bio"
+                  variant="outlined"
+                />
+              </div>
+            )}
             <div className="instructor-profile__data__footer__btn">
-              {<SecondaryBtn btnText="Follow" />}
+              {!this.state.editing && <SecondaryBtn btnText="Edit" function={this.toggleEditing} />}
+              {this.state.editing && (
+                <div style={{ display: 'flex', alignItems: 'center' }}>
+                  <SecondaryBtn btnText="Cancel" function={this.cancel} />
+                  <div className="date-picker__sep" />
+                  <PrimaryBtn btnText="Save" function={this.save} />
+                </div>
+              )}
             </div>
           </div>
         </div>
         <div className="instructor-profile__content">
           <div className="instructor-profile__content__reviews">
-            <div className="instructor-profile__content__reviews__header">
-              <div>Reviews</div>
-              <div
-                style={{
-                  fontWeight: 'bolder',
-                  display: 'flex',
-                  alignItems: 'center',
-                  cursor: 'pointer'
-                }}>
-                <AddIcon
-                  onClick={() => {
-                    this.setState({ openRating: true });
-                  }}
-                  style={{ fontSize: '40px', color: 'var(--primary-color)' }}
-                />
-              </div>
-            </div>
-            <div className="instructor-profile__content__reviews__comments">
-              {this.getComments()}
+            <div className="instructor-profile__content__reviews__header">My Wallet</div>
+            <div className="instructor-profile__content__reviews__comments" >
+                <div className="wallet" >
+                    <div className="wallet__content night-container night">
+                        {this.getStars()}
+                        
+
+                        <div className="wallet__content__value">39$</div>
+                            <div className="wallet__content__icon wallet__content__icon-1"><AttachMoneyIcon sx={{fontSize:'150px'}}/></div>
+                            <div className="wallet__content__icon wallet__content__icon-2"><PaidIcon sx={{fontSize:'150px'}}/></div>
+                        </div>
+                </div>
             </div>
           </div>
         </div>
@@ -222,4 +220,4 @@ class InstructorProfile extends Component {
   }
 }
 
-export default InstructorProfile;
+export default UserProfile;

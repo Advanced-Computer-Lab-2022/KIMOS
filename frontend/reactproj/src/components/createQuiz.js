@@ -109,8 +109,8 @@ export default class createQuiz extends Component {
           onChange={this.handleChange}
           endAdornment={
             <InputAdornment position="end">
-              <IconButton edge="end" onClick={() => this.correctChoice(index)}>
-                <CheckIcon style={{ color: correct ? 'green' : 'grey' }} />
+              <IconButton style={{ backgroundColor: correct ? '#339966' : 'var(--cool-grey)' }} edge="end" onClick={() => this.correctChoice(index)}>
+                <CheckIcon style={{ color: correct? 'white':'grey' }} />
               </IconButton>
             </InputAdornment>
           }

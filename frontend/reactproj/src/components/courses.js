@@ -7,6 +7,7 @@ import Pagination from '@mui/material/Pagination';
 import Slider from '@mui/material/Slider';
 import Tooltip from '../components/courseToolTip';
 import { connect } from 'react-redux';
+import Loading from './loadingPage';
 
 
 import axios from 'axios';
@@ -14,6 +15,7 @@ import axios from 'axios';
 class courses extends Component {
   //main courses are the ones we got on the post response. Courses are them but after the filters
   state = {
+    loading:true,
     keyword: '',
     page: 1,
     mainCourses: [],
@@ -194,7 +196,7 @@ class courses extends Component {
       }
     });
 
-    this.setState({ courses: newCourses });
+    this.setState({ courses: newCourses, loading:false });
   };
   getRatingSlider = () => {
     return (
@@ -241,7 +243,7 @@ class courses extends Component {
   render() {
     return (
       <div className="courses-container">
-
+        {this.state.loading && <Loading />}
         
         <div className="filters">
           {this.getFilterComp('Subjects', this.state.subjects)}

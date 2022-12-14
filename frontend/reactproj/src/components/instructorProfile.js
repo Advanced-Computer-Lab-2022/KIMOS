@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import eren from '../assets/eren-yeager.png';
 import erenSmiling from '../assets/eren-smiliing.png';
+import Loading from './loadingPage';
 
 import Rating from '../components/rating';
 import SecondaryBtn from './buttons/secondaryBtn';
@@ -11,6 +12,7 @@ import axios from 'axios';
 class InstructorProfile extends Component {
   state = {
     editing: false,
+    loading:true,
     instructor: {
       username: 'Eren',
       email: 'eren@topE.com',
@@ -60,7 +62,7 @@ class InstructorProfile extends Component {
         password: res.data.password || '',
         rating: res.data.rating.value || 1
       };
-      this.setState({ instructor: info, new_instructor: info });
+      this.setState({ instructor: info, new_instructor: info }, ()=>{this.setState({loading:false})});
     } catch (e) {
       console.log(e);
     }
@@ -110,6 +112,7 @@ class InstructorProfile extends Component {
   render() {
     return (
       <div className="instructor-profile">
+        {this.state.loading && <Loading/>}
         <div className="instructor-profile__header">
           <img src={eren} alt="profile" />
           <div className="instructor-profile__header__pp">
