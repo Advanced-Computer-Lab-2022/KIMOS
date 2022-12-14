@@ -21,6 +21,9 @@ import PasswordReset from './components/passwordReset';
 import ViewInstructorProfile from './components/viewInstructorProfile';
 import HomeLand from './components/homeLand';
 
+import PaymentPolicy from './components/paymentPolicy';
+import MyEnrolledCourses from './components/myEnrolledCourses';
+
 import axios from 'axios';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
@@ -128,6 +131,10 @@ class App extends Component {
             <Route path="/copt/courses/:search" element={<Courses />}></Route>
             <Route path="/it/courses/:search" element={<Courses />}></Route>
             <Route path="/courses/:search" element={<Courses />}></Route>
+
+            <Route path="/paymentPolicy" element={<PaymentPolicy />}></Route>
+            <Route path="/myEnrolledCourses" element={<MyEnrolledCourses />}></Route>
+            
           </Routes>
         </div>
       </Router>

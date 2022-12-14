@@ -123,4 +123,118 @@
 
  
     }
+
+    .section_2{
+        padding-top:30px;
+        display:flex;
+        flex-direction: column;
+        row-gap: 30px;
+        padding-left: 5vw;
+        padding-right: 5vw;
+        height: fit-content;
+        padding-bottom: 40px;
+
+        &__allPopular{
+            display: flex;
+            flex-direction: row;
+            column-gap: 30px;
+            justify-content: flex-start;
+            align-items:center;
+            padding: 20px;
+            height: fit-content;
+            width:1055px;
+            background-color: white;
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+           
+
+            &__popularDiv{
+                display:flex;
+                flex-direction:column;
+                max-width:230px;
+                row-gap:7px;
+                background-color: white;
+
+                &__image{
+                    margin-bottom: 10px;
+                    width:230px;
+                    height:140px;
+                    border:solid;
+                    border-color:#F8F8FF;
+                    border-width:thin;
+                    background-color: #F8F8FF;
+                    border-radius: 10px;
+                }
+                
+                &__title{
+                    //line-height:1.5px;
+                    font-size:14px;
+                    font-weight:600;
+                    height: fit-content;
+                    background-color: white;
+
+                }
+    
+                &__instructor{
+                    font-size:12px;
+                    font-weight:100;
+                    height: fit-content;
+                    color:var(--primary-color);
+                    background-color: white;
+                }
+    
+                &__price{
+                    font-size:16px;
+                    font-weight:600;
+                    height: fit-content;
+                    background-color: white;
+                }
+            }
+        }
+        
+    }
 }
+
+.appBarX{
+   padding-top: 20px;
+   padding-bottom: 20px;
+   padding-left: 20px;
+   border-radius: 10px;
+}
+
+.hovering:hover{
+    opacity: 0.5;
+    transition: all 0.2s ease-in;
+    padding-top:10px;
+    padding-bottom:10px;
+    cursor:pointer;
+}
+
+.arrowLeft{
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    width:35px;
+    height:60px;
+    padding-left:5px;
+}
+
+.arrowRight{
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    width:35px;
+    height:60px;
+}
+
+.arrowLeft:hover,.arrowRight:hover{
+    opacity: 0.5;
+    transition: all 0.2s ease-in;
+    padding-top:5px;
+    padding-bottom:5px;
+    cursor:pointer;
+    background-color: lightgray;
+}
+
