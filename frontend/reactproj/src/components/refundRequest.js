@@ -72,6 +72,10 @@ export default function RefundRequest() {
           (for example, a facilitator or instructor) purchased your course access from our
           website, please ask that individual to request the refund.
         </label>
+
+        <label style={{color:"var(--primary-color)"}}>
+          We will replay to you via email within 3 days from the moment you submit this form.
+        </label>
         
         <h1>Reasons for Denial of Refund</h1>
 
