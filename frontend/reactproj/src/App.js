@@ -23,6 +23,7 @@ import HomeLand from './components/homeLand';
 
 import PaymentPolicy from './components/paymentPolicy';
 import MyEnrolledCourses from './components/myEnrolledCourses';
+import RefundRequest from './components/refundRequest';
 
 import axios from 'axios';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -134,6 +135,7 @@ class App extends Component {
 
             <Route path="/paymentPolicy" element={<PaymentPolicy />}></Route>
             <Route path="/myEnrolledCourses" element={<MyEnrolledCourses />}></Route>
+            <Route path="/refundRequest" element={<RefundRequest />}></Route>
             
           </Routes>
         </div>

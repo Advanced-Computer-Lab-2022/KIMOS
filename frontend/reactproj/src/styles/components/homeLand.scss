@@ -137,7 +137,7 @@
         &__allPopular{
             display: flex;
             flex-direction: row;
-            column-gap: 30px;
+            column-gap: 25px;
             justify-content: flex-start;
             align-items:center;
             padding: 20px;
@@ -151,19 +151,24 @@
             &__popularDiv{
                 display:flex;
                 flex-direction:column;
-                max-width:230px;
+                width:240px;
                 row-gap:7px;
-                background-color: white;
+                background-color: #F8F8FF;
+                padding-left: 5px;
+                padding-right: 5px;
+                padding-bottom: 5px;
+                padding-top: 5px;
+                border-radius: 15px;
 
                 &__image{
                     margin-bottom: 10px;
-                    width:230px;
+                    width:222px;
                     height:140px;
                     border:solid;
                     border-color:#F8F8FF;
                     border-width:thin;
                     background-color: #F8F8FF;
-                    border-radius: 10px;
+                    border-radius: 15px;
                 }
                 
                 &__title{
@@ -171,7 +176,7 @@
                     font-size:14px;
                     font-weight:600;
                     height: fit-content;
-                    background-color: white;
+                    background-color: #F8F8FF;
 
                 }
     
@@ -180,16 +185,18 @@
                     font-weight:100;
                     height: fit-content;
                     color:var(--primary-color);
-                    background-color: white;
+                    background-color: #F8F8FF;
                 }
     
                 &__price{
                     font-size:16px;
                     font-weight:600;
                     height: fit-content;
-                    background-color: white;
+                    background-color: #F8F8FF;
                 }
+
             }
+            
         }
         
     }
@@ -199,7 +206,7 @@
    padding-top: 20px;
    padding-bottom: 20px;
    padding-left: 20px;
-   border-radius: 10px;
+   border-radius: 15px;
 }
 
 .hovering:hover{

@@ -64,8 +64,8 @@ class homeLand extends Component {
                     <h1 style={{fontSize:30}}>Most Popular Courses</h1>
                     
                     <div style={{display:"flex",justifyContent:"center",alignItems:"center",columnGap:5}}>
-                        <div className="arrowLeft">
-                            <ArrowBackIosIcon onClick={slideLeft}></ArrowBackIosIcon>
+                        <div className="arrowLeft" onClick={slideLeft}>
+                            <ArrowBackIosIcon></ArrowBackIosIcon>
                         </div> 
 
                     <Grow in>
@@ -140,8 +140,8 @@ class homeLand extends Component {
                         </Container>
                     </Grow>
 
-                        <div className="arrowRight">
-                            <ArrowForwardIosIcon onClick={slideRight}></ArrowForwardIosIcon>
+                        <div className="arrowRight" onClick={slideRight}>
+                            <ArrowForwardIosIcon></ArrowForwardIosIcon>
                         </div>
                         
                     </div>
