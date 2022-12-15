@@ -146,12 +146,7 @@ class homeLand extends Component {
                         
                     </div>
 
-                    
-                    
-                   
                 </div>
-
-
 
                 {/*<div className='footer'>footer</div>*/}
 

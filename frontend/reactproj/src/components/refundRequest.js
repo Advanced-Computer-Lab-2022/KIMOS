@@ -74,7 +74,7 @@ export default function RefundRequest() {
         </label>
 
         <label style={{color:"var(--primary-color)"}}>
-          We will replay to you via email within 3 days from the moment you submit this form.
+          We will replay to you via email within 3 days from the moment you click 'REQUEST' below.
         </label>
         
         <h1>Reasons for Denial of Refund</h1>
