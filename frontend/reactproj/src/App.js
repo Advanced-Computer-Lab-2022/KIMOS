@@ -118,7 +118,7 @@ class App extends Component {
 
             <Route exact path="/exercise/solution" element={<TraineeSolution />}></Route>
             <Route exact path="/trainee" element={<Trainee />}></Route>
-            <Route exact path="myCourseTrainee" element={<TraineeViewMyCourse />}></Route>
+            <Route exact path="/myCourseTrainee" element={<TraineeViewMyCourse />}></Route>
             <Route
               exact
               path="myCourseTrainee/content"

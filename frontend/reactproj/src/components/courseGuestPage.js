@@ -8,6 +8,8 @@ import Accordion from './accordionExercise.js';
 import AccordionSubtitle from './accordionSubtitle.js';
 import { textAlign } from '@mui/system';
 import PrimaryBtn from './buttons/primaryBtn';
+import Button from '@mui/material/Button';
+
 
 
 export default function CourseGuestPage() {
@@ -107,9 +109,9 @@ export default function CourseGuestPage() {
             </div>
               
             <div style={{display:'flex',justifyContent:"center",marginTop:20}}>
-                    <div style={{marginLeft:'1vw'}}>
-                        <PrimaryBtn btnText="Register"/>
-                    </div>
+              <Button variant="outlined" style={{width:150,height:50,marginBottom:30}}>
+                Register
+              </Button>
           </div>
           </div>
         </>

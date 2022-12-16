@@ -20,12 +20,12 @@ class homeLand extends Component {
     render() {
         const slideLeft=()=>{
             var slider=document.getElementById('slider');
-            slider.scrollLeft-=260;
+            slider.scrollLeft-=265;
         }
 
         const slideRight=()=>{
             var slider=document.getElementById('slider');
-            slider.scrollLeft+=260;
+            slider.scrollLeft+=265;
         }
         return (
             <div className='homeland'>

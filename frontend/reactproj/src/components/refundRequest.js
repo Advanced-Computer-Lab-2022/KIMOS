@@ -35,10 +35,13 @@ export default function RefundRequest() {
 
         <label style={{lineHeight:1.5}}>
           If you are unhappy with an online course you have purchased from our website, 
-          you can request a refund within if you have attended less than 50% of the course.
-          Just fill in the form below, providing the following:
+          you can request a refund if you have attended less than 50% of the course.
         </label>
 
+        <label>PLease submit the reason of your inconvenience to this course below:</label>
+
+        <TextField multiline required style={{width:450}}></TextField>
+{/*
         <ul style={{marginLeft:30,listStyle:"inside",lineHeight:1.8}}>
           <div style={{display:"flex",columnGap:20}}>
             <li>Your name</li>
@@ -66,6 +69,7 @@ export default function RefundRequest() {
           </div>
           
         </ul>
+  */}
 
         <label style={{lineHeight:1.5}}>
           Most refunds are returned via the original payment method. If another person 
