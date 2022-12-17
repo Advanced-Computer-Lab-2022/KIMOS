@@ -25,6 +25,8 @@ import PaymentPolicy from './components/paymentPolicy';
 import MyEnrolledCourses from './components/myEnrolledCourses';
 import RefundRequest from './components/refundRequest';
 import CourseGuestPage from './components/courseGuestPage';
+import UserPurchases from './components/userPurchases';
+import PopUp from './components/popUp';
 
 import axios from 'axios';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -138,6 +140,8 @@ class App extends Component {
             <Route path="/myEnrolledCourses" element={<MyEnrolledCourses />}></Route>
             <Route path="/refundRequest" element={<RefundRequest />}></Route>
             <Route path="/courseGuestPage" element={<CourseGuestPage />}></Route>
+            <Route path="/userPurchases" element={<UserPurchases/>}></Route>
+            <Route path="/popUp" element={<PopUp/>}></Route>
             
           </Routes>
         </div>

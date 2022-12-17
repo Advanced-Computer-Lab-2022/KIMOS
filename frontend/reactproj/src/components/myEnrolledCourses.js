@@ -32,7 +32,7 @@ export default function myEnrolledCourses() {
       
 
         <Grow in>
-            <Container>
+            <Container style={{display:"flex",justifyContent:"center",alignItems:"center"}}>
                 <AppBar className="appBarCourses" position="static" color="inherit">
                     <div class="image" style={{display:"flex",columnGap:80,justifyContent:"flex-start",alignItems:"flex-start",marginTop:20,marginBottom:20,marginLeft:30}}>
                         <div>

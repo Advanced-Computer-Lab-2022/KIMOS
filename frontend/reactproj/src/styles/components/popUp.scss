@@ -1,0 +1,38 @@
+
+.main{
+    background-color: rgba(224, 233, 240, 0.1);
+    height: 200%;
+    width: 100%;
+    position:absolute;
+    top: 0;
+    left:0;
+}
+.popup{
+    padding-left:50px;
+    padding-right:35px;
+    padding-top:35px;
+    padding-bottom: 10px;
+    height: fit-content;
+    width: 60%;
+    background-color: white;
+    position: absolute;
+    top: 12%;
+    right: 20%;
+    border-radius: 10px;
+    display:flex;
+    flex-direction: column;
+}
+.popup-header{
+    display: flex;
+    justify-content:flex-end;
+    padding-right: 5px;
+   
+}
+
+.x{
+    width:40px;
+    height:40px;
+}
+.x:hover{
+    cursor:pointer;
+}

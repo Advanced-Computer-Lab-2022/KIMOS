@@ -20,12 +20,12 @@ class homeLand extends Component {
     render() {
         const slideLeft=()=>{
             var slider=document.getElementById('slider');
-            slider.scrollLeft-=265;
+            slider.scrollLeft-=230;
         }
 
         const slideRight=()=>{
             var slider=document.getElementById('slider');
-            slider.scrollLeft+=265;
+            slider.scrollLeft+=230;
         }
         return (
             <div className='homeland'>
@@ -76,7 +76,7 @@ class homeLand extends Component {
                                 
                                     <div className="homeland__section section_2__allPopular__popularDiv" >
                                         <div class="hovering">
-                                            <img className="homeland__section section_2__allPopular__popularDiv__image" src={reactCourse}/>
+                                            <img className="homeland__section section_2__allPopular__popularDiv__image" src={dataScienceCourse}/>
                                         </div>
                                         <label className="homeland__section section_2__allPopular__popularDiv__title">React The Complete Guide (incl Hooks, React Router, Redux)</label>
                                         <label className="homeland__section section_2__allPopular__popularDiv__instructor">Dr. Mervat Abo Elkeir</label>
@@ -87,27 +87,7 @@ class homeLand extends Component {
 
                                     <div className="homeland__section section_2__allPopular__popularDiv" >
                                         <div class="hovering">
-                                            <img className="homeland__section section_2__allPopular__popularDiv__image" src={dataScienceCourse}/>
-                                        </div>
-                                        <label className="homeland__section section_2__allPopular__popularDiv__title">React The Complete Guide (incl Hooks, React Router, Redux)</label>
-                                        <label className="homeland__section section_2__allPopular__popularDiv__instructor">Dr. Mervat Abo Elkeir</label>
-                                        <Rating style={{marginLeft:-5}} name="half-rating-read" defaultValue={2.5} precision={0.5} readOnly />
-                                        <label className="homeland__section section_2__allPopular__popularDiv__price">250 $</label>
-                                    </div>
-
-                                    <div className="homeland__section section_2__allPopular__popularDiv" >
-                                        <div class="hovering">
-                                            <img className="homeland__section section_2__allPopular__popularDiv__image" src={fullStackCourse}/>
-                                        </div>
-                                        <label className="homeland__section section_2__allPopular__popularDiv__title">React The Complete Guide (incl Hooks, React Router, Redux)</label>
-                                        <label className="homeland__section section_2__allPopular__popularDiv__instructor">Dr. Mervat Abo Elkeir</label>
-                                        <Rating style={{marginLeft:-5}} name="half-rating-read" defaultValue={2.5} precision={0.5} readOnly />
-                                        <label className="homeland__section section_2__allPopular__popularDiv__price">250 $</label>
-                                    </div>
-
-                                    <div className="homeland__section section_2__allPopular__popularDiv" >
-                                        <div class="hovering">
-                                            <img className="homeland__section section_2__allPopular__popularDiv__image" src={pythonCourse}/>
+                                            <img className="homeland__section section_2__allPopular__popularDiv__image" src={javaCourse}/>
                                         </div>
                                         <label className="homeland__section section_2__allPopular__popularDiv__title">React The Complete Guide (incl Hooks, React Router, Redux)</label>
                                         <label className="homeland__section section_2__allPopular__popularDiv__instructor">Dr. Mervat Abo Elkeir</label>
@@ -127,7 +107,27 @@ class homeLand extends Component {
 
                                     <div className="homeland__section section_2__allPopular__popularDiv" >
                                         <div class="hovering">
-                                            <img className="homeland__section section_2__allPopular__popularDiv__image" src={javaCourse}/>
+                                            <img className="homeland__section section_2__allPopular__popularDiv__image" src={pythonCourse}/>
+                                        </div>
+                                        <label className="homeland__section section_2__allPopular__popularDiv__title">React The Complete Guide (incl Hooks, React Router, Redux)</label>
+                                        <label className="homeland__section section_2__allPopular__popularDiv__instructor">Dr. Mervat Abo Elkeir</label>
+                                        <Rating style={{marginLeft:-5}} name="half-rating-read" defaultValue={2.5} precision={0.5} readOnly />
+                                        <label className="homeland__section section_2__allPopular__popularDiv__price">250 $</label>
+                                    </div>
+
+                                    <div className="homeland__section section_2__allPopular__popularDiv" >
+                                        <div class="hovering">
+                                            <img className="homeland__section section_2__allPopular__popularDiv__image" src={fullStackCourse}/>
+                                        </div>
+                                        <label className="homeland__section section_2__allPopular__popularDiv__title">React The Complete Guide (incl Hooks, React Router, Redux)</label>
+                                        <label className="homeland__section section_2__allPopular__popularDiv__instructor">Dr. Mervat Abo Elkeir</label>
+                                        <Rating style={{marginLeft:-5}} name="half-rating-read" defaultValue={2.5} precision={0.5} readOnly />
+                                        <label className="homeland__section section_2__allPopular__popularDiv__price">250 $</label>
+                                    </div>
+
+                                    <div className="homeland__section section_2__allPopular__popularDiv" >
+                                        <div class="hovering">
+                                            <img className="homeland__section section_2__allPopular__popularDiv__image" src={reactCourse}/>
                                         </div>
                                         <label className="homeland__section section_2__allPopular__popularDiv__title">React The Complete Guide (incl Hooks, React Router, Redux)</label>
                                         <label className="homeland__section section_2__allPopular__popularDiv__instructor">Dr. Mervat Abo Elkeir</label>

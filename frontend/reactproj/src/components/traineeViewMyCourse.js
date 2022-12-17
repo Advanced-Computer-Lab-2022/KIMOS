@@ -64,7 +64,7 @@ export default function TraineeViewMyCourse() {
     console.log(myCourse.averageRating);
   }, []);
   const goToProfile =()=>{
-    var url = 'http://localhost:5000/viewInstructorProfile/'+myCourse.instructor['_id'];
+    var url = 'http://localhost:3000/viewInstructorProfile/'+myCourse.instructor['_id'];
     window.open(
       url,
       '_blank' // <- This is what makes it open in a new window.

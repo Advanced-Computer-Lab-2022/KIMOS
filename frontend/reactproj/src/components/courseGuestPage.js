@@ -107,6 +107,36 @@ export default function CourseGuestPage() {
                 </div>
               </div>
             </div>
+
+            <div className="user-course__content">
+              <div className="user-course__content__section">
+                <div className="user-course__content__section__title">Subtitle(s)</div>
+                <div className="user-course__content__section__content">
+                  <div className="user-course__content__section__content__accordions">
+                    {myCourse.subtitles.map((subtitle, index) => {
+                      return (
+                        <div
+                          style={{
+
+                            marginBottom: '5px',
+                            background: 'rgb(220, 226, 228)',
+                            paddingLeft:'20px',
+                            paddingRight:'20px',
+                            paddingTop:'15px',
+                            paddingBottom:'15px',
+                            borderRadius:'10px',
+                            width:'100%',
+                            display:'flex',
+                            alignItems:'center',
+                            justifyContent:'space-between'
+
+                          }}><div style={{fontWeight:'bolder'}}>{index+1}. {subtitle.title}</div> <div> {subtitle.hours} Hour(s)</div></div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            </div>
               
             <div style={{display:'flex',justifyContent:"center",marginTop:20}}>
               <Button variant="outlined" style={{width:150,height:50,marginBottom:30}}>

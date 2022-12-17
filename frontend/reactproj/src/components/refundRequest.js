@@ -29,18 +29,18 @@ export default function RefundRequest() {
   };
 
   return (
-    <div style={{display:"flex",justifyContent:"center",marginTop:30}}>
+    <div style={{display:"flex",justifyContent:"center",marginTop:0}}>
       <div style={{display:"flex",flexDirection:"column",maxWidth:800,rowGap:20}}>
         <h1>Requesting a Course Refund</h1>
 
-        <label style={{lineHeight:1.5}}>
+        {/*<label style={{lineHeight:1.5}}>
           If you are unhappy with an online course you have purchased from our website, 
           you can request a refund if you have attended less than 50% of the course.
-        </label>
+  </label>*/}
 
         <label>PLease submit the reason of your inconvenience to this course below:</label>
 
-        <TextField multiline required style={{width:450}}></TextField>
+        <TextField multiline required style={{width:380}}></TextField>
 {/*
         <ul style={{marginLeft:30,listStyle:"inside",lineHeight:1.8}}>
           <div style={{display:"flex",columnGap:20}}>
@@ -94,7 +94,7 @@ export default function RefundRequest() {
         </ul>
 
         <Stack style={{display:"flex",justifyContent:"center",alignItems:"center"}}>
-          <Button variant="contained" style={{width:150,marginBottom:30}} onClick={handleClick}>
+          <Button variant="contained" style={{width:130,marginBottom:30}} onClick={handleClick}>
             Request
           </Button>
           <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>

@@ -11,7 +11,7 @@ export default function paymentPolicy() {
     <>
     <div style={{display:"flex",columnGap:70,justifyContent:"center",alignItems:"center"}}>
       <div >
-        <img src={payPic} width="400px" height="350px"/>
+        <img src={payPic} width="350px" height="350px"/>
       </div>
       <div style={{maxWidth:600,display:"flex",flexDirection:"column",rowGap:20}}>
         <h1 style={{color:"var(--primary-color)"}}>Course Payments by Credit Cards or Paypal</h1>
@@ -83,7 +83,7 @@ export default function paymentPolicy() {
         </div>
 
         <div>
-            <img src={refund} width="400px" height="400px"/>
+            <img src={refund} width="350px" height="350px"/>
         </div>
     </div>
     </>
