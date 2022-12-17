@@ -32,8 +32,8 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }));
 
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
+function createData(title, date, price) {
+  return { title, date, price};
 }
 
 const rows = [
@@ -69,9 +69,9 @@ export default function UserPurchases() {
           <TableBody>
             {rows.map((row) => (
               <StyledTableRow key={row.name}>
-                <StyledTableCell align="center">{row.name}</StyledTableCell>
-                <StyledTableCell align="left">{row.calories}</StyledTableCell>
-                <StyledTableCell align="left">{row.fat}</StyledTableCell>
+                <StyledTableCell align="center">{row.title}</StyledTableCell>
+                <StyledTableCell align="left">{row.date}</StyledTableCell>
+                <StyledTableCell align="left">{row.price}</StyledTableCell>
                 <StyledTableCell align="left" style={{paddingLeft:"45px"}}>
                 <div>
                   <Button variant="outlined" style={{width:90,fontSize:"12px"}} onClick={handleClickOpen}>Request</Button>

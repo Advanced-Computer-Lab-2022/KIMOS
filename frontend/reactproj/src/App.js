@@ -27,6 +27,8 @@ import RefundRequest from './components/refundRequest';
 import CourseGuestPage from './components/courseGuestPage';
 import UserPurchases from './components/userPurchases';
 import PopUp from './components/popUp';
+import MoneyOwedPerMonth from './components/moneyOwedPerMonth';
+
 
 import axios from 'axios';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -142,6 +144,8 @@ class App extends Component {
             <Route path="/courseGuestPage" element={<CourseGuestPage />}></Route>
             <Route path="/userPurchases" element={<UserPurchases/>}></Route>
             <Route path="/popUp" element={<PopUp/>}></Route>
+            <Route path="/moneyOwedPerMonth" element={<MoneyOwedPerMonth/>}></Route>
+            
             
           </Routes>
         </div>
