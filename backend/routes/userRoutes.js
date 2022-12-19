@@ -27,16 +27,13 @@ const {
 const { isLoggedIn } = require('../middleware/helper');
 
 router.route('/').post(loggedIn, adminAuth, addUser).put(loggedIn, editUser).get(loggedIn, getMe); //all good
-router.get('/viewInstructorDetails', loggedIn, isRegisteredWithInstructor, viewInstructorDetails);
-router.post('/rateInstructor', loggedIn, isRegisteredWithInstructor, rateInstructor);
+router.get('/viewInstructorDetails', loggedIn, isRegisteredWithInstructor, viewInstructorDetails); //all good
+router.post('/rateInstructor', loggedIn, isRegisteredWithInstructor, rateInstructor); //all good
 router.route('/country').get(isLoggedIn, getCountry).put(isLoggedIn, changeCountry); //all good
 router.get('/rate', getRate); //all good
 router.put('/changePassword', loggedIn, changePassword); //all good
 router.post('/passwordResetEmail', resetPasswordSendEmail); //all good
 router.post('/passwordReset', resetPasswordAuth, resetPassword); //all good
 router.put('/changePassword', loggedIn, changePassword); //all good
-router
-  .route('/certificate', loggedIn, registeredCourseAuth)
-  .get(getCertificate)
-  .post(sendCertificateEmail);
+router.get('/certificate', loggedIn, registeredCourseAuth, getCertificate); //all good
 module.exports = router;

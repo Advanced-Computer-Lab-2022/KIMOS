@@ -170,7 +170,7 @@ const getMe = asyncHandler(async (req, res) => {
 });
 
 const viewInstructorDetails = asyncHandler(async (req, res) => {
-  const user = await User.findById(instructorId);
+  const user = await User.findById(req.query.instructorId);
   res.status(200).json({
     success: true,
     message: 'User Successfully retrieved',
@@ -360,8 +360,7 @@ const getCertificate = asyncHandler(async (req, res) => {
   doc.end();
 });
 
-const sendCertificateEmail = asyncHandler(async (req, res) => {
-  const userId = res.locals.userId;
+const sendCertificateEmail = asyncHandler(async (userId, courseId) => {
   const transporter = nodemailer.createTransport({
     service: process.env.EMAIL_SERVICE,
     auth: {
@@ -369,7 +368,6 @@ const sendCertificateEmail = asyncHandler(async (req, res) => {
       pass: process.env.EMAIL_PASSWORD
     }
   });
-  const { courseId } = req.query;
   const { title, instructor } = await getCourseInfo(courseId);
   const instructorName = instructor.firstName + ' ' + instructor.lastName;
   const userInfo = await User.findById(userId);
@@ -404,7 +402,7 @@ const sendCertificateEmail = asyncHandler(async (req, res) => {
     return transporter
       .sendMail(mailOptions)
       .then(() => {
-        console.log('email sent:');
+        console.log('Email sent');
       })
       .catch((error) => {
         console.error('There was an error while sending the email:', error.message);

@@ -18,6 +18,10 @@ const { createSolution, getSolution } = require('./userSolutionController');
 const { getExercise } = require('./exerciseController');
 const asyncHandler = require('express-async-handler');
 
+const getCourseInfo = async (courseId) => {
+  return await Course.findById(courseId);
+};
+
 const removeExam = asyncHandler(async (req, res) => {
   const { courseId, examId } = req.query;
   await deleteExam(examId).catch((err) => {
@@ -292,19 +296,42 @@ const addDiscount = async (courseId, discount) => {
   console.log(new Date(startDate));
   if (todayDate >= new Date(startDate)) {
     if (todayDate < new Date(endDate)) {
-      console.log('here');
       returnDiscount = discount;
       schedule.scheduleJob(courseId + 'end', endDate, async function () {
-        await Course.findByIdAndUpdate(courseId, { discount: {} }, { new: true });
+        try {
+          console.log(
+            `Background function run to remove discount of value: ${discount.amount} for course ${courseId}`
+          );
+          await Course.findByIdAndUpdate(courseId, { discount: {} }, { new: true });
+          console.log(`discount removed`);
+        } catch (err) {
+          console.log(err);
+        }
       });
     }
   } else {
     if (todayDate.getDate() < new Date(endDate)) {
       schedule.scheduleJob(courseId + 'start', startDate, async function () {
-        await Course.findByIdAndUpdate(courseId, { discount: discount });
+        try {
+          console.log(
+            `Background function run to insert discount of value: ${discount.amount} for course ${courseId}`
+          );
+          await Course.findByIdAndUpdate(courseId, { discount: discount });
+          console.log(`discount inserted`);
+        } catch (err) {
+          console.log(err);
+        }
       });
       schedule.scheduleJob(courseId + 'end', endDate, async function () {
-        await Course.findByIdAndUpdate(courseId, { discount: {} }, { new: true });
+        try {
+          console.log(
+            `Background function run to remove discount of value: ${discount.amount} for course ${courseId}`
+          );
+          await Course.findByIdAndUpdate(courseId, { discount: {} }, { new: true });
+          console.log(`discount removed`);
+        } catch (err) {
+          console.log(err);
+        }
       });
     }
   }
@@ -622,6 +649,7 @@ const getExamSolution = asyncHandler(async (req, res) => {
 });
 
 module.exports = {
+  getCourseInfo,
   getAllSubjects,
   addNewSubject,
   findCourses,

@@ -45,16 +45,22 @@ const adminAuth = asyncHandler(async (req, res, next) => {
 
 const isRegisteredWithInstructor = asyncHandler(async (req, res, next) => {
   const registeredCourses = await RegisteredCourse.find({ userId: res.locals.userId });
-  var flag = false;
   const instructorId = req.query.instructorId.toString();
-  registeredCourses.map(async (registeredCourse, index) => {
-    const course = await registeredCourse.populate('courseId');
-    if (instructorId === course.courseId.instructor.toString()) {
-      flag = true;
-      next();
-    }
-  });
+  const check = await Promise.all(
+    registeredCourses.map(async (registeredCourse, index) => {
+      const course = await registeredCourse.populate('courseId');
+      if (instructorId === course.courseId.instructor.toString()) {
+        return false;
+      } else {
+        return true;
+      }
+    })
+  );
+  const flag = check.reduce((a, b) => a && b, true);
   if (!flag) {
+    next();
+  }
+  if (flag) {
     res.status(401).json({ statusCode: 401, success: false, message: 'Unauthorized access' });
   }
 });
@@ -77,8 +83,6 @@ const resetPasswordAuth = asyncHandler(async (req, res, next) => {
 });
 
 const registeredCourseAuth = asyncHandler(async (req, res, next) => {
-  // console.log(req.query.courseId);
-  // console.log(res.locals.userId);
   const registration = await RegisteredCourse.findOne({
     userId: res.locals.userId,
     courseId: req.query.courseId

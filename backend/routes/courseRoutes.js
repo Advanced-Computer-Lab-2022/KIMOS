@@ -1,6 +1,9 @@
 const express = require('express');
 const router = express.Router();
-// const { registerUser } = require('../controllers/registeredCoursesController');
+const {
+  registerUser,
+  getAllRegisteredCourses
+} = require('../controllers/registeredCoursesController');
 const {
   getAllSubjects,
   addNewSubject,
@@ -47,5 +50,5 @@ router
   .route('/exam/solution')
   .post(loggedIn, registeredCourseAuth, submitSolution) //all good
   .get(loggedIn, getExamSolution); //all good
-// router.post('/register', registerUser);
+router.route('/register').post(loggedIn, registerUser);
 module.exports = router;
