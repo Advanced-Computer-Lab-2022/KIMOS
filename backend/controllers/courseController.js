@@ -129,7 +129,6 @@ const findCourses = asyncHandler(async (req, res) => {
               registered = true;
             }
           }
-          result.registered = registered;
           if (result.subtitles.length) {
             if (!registered) {
               result = await result
@@ -215,6 +214,7 @@ const findCourses = asyncHandler(async (req, res) => {
               result = { ...result, exams: exams };
             }
           }
+          result = { registered, ...result };
         }
         return result;
       })
@@ -276,9 +276,12 @@ const findCourses = asyncHandler(async (req, res) => {
 
 const getAllSubjects = asyncHandler(async (req, res) => {
   const subjects = await Subject.find();
-  res
-    .status(200)
-    .json({ success: true, message: 'Successfully retrieved', statusCode: 200, payload: subjects });
+  res.status(200).json({
+    success: true,
+    message: 'Successfully retrieved',
+    statusCode: 200,
+    payload: subjects
+  });
 });
 const addNewSubject = asyncHandler(async (req, res) => {
   const subject = await Subject.create({ name: req.body.subject });

@@ -29,9 +29,9 @@ const {
 } = require('../middleware/auth');
 
 router.route('/subjects').get(getAllSubjects).post(loggedIn, adminAuth, addNewSubject); //all good
-router.get('/findCourses', isLoggedIn, isCorporateTrainee, findCourses); //all good
 router
   .route('/')
+  .get(isLoggedIn, isCorporateTrainee, findCourses) //all good
   .post(loggedIn, instructorAuth, createCourse) //all good
   .put(loggedIn, editCourseAuth, editCourse); //all good
 router.route('/rate').post(loggedIn, registeredCourseAuth, rateCourse); //all good

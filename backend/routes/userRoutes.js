@@ -34,6 +34,5 @@ router.get('/rate', getRate); //all good
 router.put('/changePassword', loggedIn, changePassword); //all good
 router.post('/passwordResetEmail', resetPasswordSendEmail); //all good
 router.post('/passwordReset', resetPasswordAuth, resetPassword); //all good
-router.put('/changePassword', loggedIn, changePassword); //all good
 router.get('/certificate', loggedIn, registeredCourseAuth, getCertificate); //all good
 module.exports = router;
