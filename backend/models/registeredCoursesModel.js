@@ -21,6 +21,27 @@ var registeredCoursesSchema = new mongoose.Schema({
   emailSent: {
     type: String,
     default: 'false'
+  },
+  videosNotes: {
+    type: [
+      {
+        video: {
+          type: mongoose.Types.ObjectId,
+          ref: 'Video',
+          required: true
+        },
+        notes: {
+          type: [
+            {
+              type: mongoose.Types.ObjectId,
+              ref: 'Note'
+            }
+          ],
+          default: []
+        }
+      }
+    ],
+    default: []
   }
 });
 

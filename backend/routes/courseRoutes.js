@@ -2,7 +2,9 @@ const express = require('express');
 const router = express.Router();
 const {
   registerUser,
-  getAllRegisteredCourses
+  getAllRegisteredCourses,
+  getAllNotes,
+  updateNotes
 } = require('../controllers/registeredCoursesController');
 const {
   getAllSubjects,
@@ -51,4 +53,9 @@ router
   .post(loggedIn, registeredCourseAuth, submitSolution) //all good
   .get(loggedIn, getExamSolution); //all good
 router.route('/register').post(loggedIn, registerUser).get(loggedIn, getAllRegisteredCourses); //all good
+
+router
+  .route('/notes')
+  .get(loggedIn, registeredCourseAuth, getAllNotes)
+  .post(loggedIn, registeredCourseAuth, updateNotes);
 module.exports = router;

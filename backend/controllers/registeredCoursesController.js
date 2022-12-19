@@ -1,7 +1,8 @@
 const RegisteredCourses = require('../models/registeredCoursesModel');
 const Course = require('../models/courseModel');
-const { getSolution } = require('../controllers/userSolutionController');
-const { getExam } = require('../controllers/examController');
+const { getSolution } = require('./userSolutionController');
+const { getExam } = require('./examController');
+const { createNote, updateNote, deleteNote } = require('./noteController');
 
 const { sendCertificateEmail } = require('../controllers/userController');
 const asyncHandler = require('express-async-handler');
@@ -9,7 +10,6 @@ const schedule = require('node-schedule');
 
 const getAllRegisteredCourses = asyncHandler(async (req, res) => {
   const userId = res.locals.userId;
-  console.log(userId);
   const reg = await RegisteredCourses.find({ userId: userId }).populate('courseId');
   const results = reg.map((course, index) => {
     return course.courseId;
@@ -111,8 +111,7 @@ const registerUser = asyncHandler(async (req, res) => {
   const { courseId } = req.query;
   await RegisteredCourses.create({
     userId: userId,
-    courseId: courseId,
-    progress: 100
+    courseId: courseId
   }).then((result) => {
     var rule = new schedule.RecurrenceRule();
     rule.minute = new schedule.Range(0, 59, 1);
@@ -159,7 +158,106 @@ const registerUser = asyncHandler(async (req, res) => {
       }
     });
   });
+
   res.status(200).json({ statusCode: 200, success: true, message: 'User registered successfully' });
+});
+
+const getAllNotes = asyncHandler(async (req, res) => {
+  const userId = res.locals.userId;
+  const { courseId, videoId } = req.query;
+  const reg = await RegisteredCourses.findOne({
+    userId: userId,
+    courseId: courseId,
+    videosNotes: { video: videoId }
+  });
+  var notes = [];
+  if (!reg) {
+    await RegisteredCourses.findOneAndUpdate(
+      { userId: userId, courseId: courseId },
+      { $push: { videosNotes: { video: videoId } } }
+    );
+  } else {
+    const returnObj = reg.videosNotes.find(
+      (videoNotes) => videoNotes.video.toString() === videoId.toString()
+    );
+    const populatedObj = await returnObj.populate('notes');
+    notes = populatedObj.notes;
+  }
+  res.status(200).json({
+    message: 'Successfully retrieved notes',
+    statusCode: 200,
+    success: true,
+    payload: { notes }
+  });
+});
+
+const updateNotes = asyncHandler(async (req, res) => {
+  const { courseId, videoId } = req.query;
+  const userId = res.locals.userId;
+  const { notes } = req.body;
+  const reg = await RegisteredCourses.findOne({
+    courseId: courseId,
+    userId: userId
+  });
+
+  console.log(reg);
+  const newNotesIds = notes.map((note, index) => {
+    if (note._id) {
+      return note._id.toString();
+    } else {
+      return '-1';
+    }
+  });
+  const newNotes = await Promise.all(
+    notes.map(async (note, index) => {
+      var returnNote;
+      if (note._id) {
+        returnNote = await updateNote(note._id, note);
+      } else {
+        returnNote = await createNote(note);
+      }
+      return returnNote;
+    })
+  );
+  const found = reg.videosNotes.find(
+    (videoNotes) => videoNotes.video.toString() === videoId.toString()
+  );
+
+  if (found) {
+    const oldNotesIds = found.notes;
+    console.log(oldNotesIds);
+    console.log(newNotesIds);
+    oldNotesIds.map((note, index) => {
+      if (!newNotesIds.includes(note.toString())) {
+        deleteNote(note);
+      }
+    });
+    await RegisteredCourses.findOneAndUpdate(
+      { userId: userId, courseId: courseId },
+      { $pull: { videosNotes: { video: videoId } } }
+    );
+    await RegisteredCourses.findOneAndUpdate(
+      { userId: userId, courseId: courseId },
+      {
+        $push: {
+          videosNotes: {
+            video: videoId,
+            notes: newNotes
+          }
+        }
+      }
+    );
+  } else {
+    const obj = {
+      video: videoId,
+      notes: newNotes
+    };
+    await RegisteredCourses.findOneAndUpdate(
+      { userId: userId, courseId: courseId },
+      { $push: { videosNotes: obj } }
+    );
+  }
+  res.status(200).json({ message: 'Notes updated successfully', statusCode: 200, success: true });
 });
 
 // const editExercise = async (exerciseId, newExercise) => {
@@ -178,5 +276,7 @@ const registerUser = asyncHandler(async (req, res) => {
 
 module.exports = {
   registerUser,
-  getAllRegisteredCourses
+  getAllRegisteredCourses,
+  getAllNotes,
+  updateNotes
 };
