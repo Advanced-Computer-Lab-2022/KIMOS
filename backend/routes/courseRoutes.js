@@ -50,5 +50,5 @@ router
   .route('/exam/solution')
   .post(loggedIn, registeredCourseAuth, submitSolution) //all good
   .get(loggedIn, getExamSolution); //all good
-router.route('/register').post(loggedIn, registerUser);
+router.route('/register').post(loggedIn, registerUser).get(loggedIn, getAllRegisteredCourses); //all good
 module.exports = router;
