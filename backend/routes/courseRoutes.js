@@ -56,6 +56,6 @@ router.route('/register').post(loggedIn, registerUser).get(loggedIn, getAllRegis
 
 router
   .route('/notes')
-  .get(loggedIn, registeredCourseAuth, getAllNotes)
-  .post(loggedIn, registeredCourseAuth, updateNotes);
+  .get(loggedIn, registeredCourseAuth, getAllNotes) //all good
+  .post(loggedIn, registeredCourseAuth, updateNotes); //all good
 module.exports = router;

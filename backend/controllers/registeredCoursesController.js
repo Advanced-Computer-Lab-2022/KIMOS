@@ -167,21 +167,19 @@ const getAllNotes = asyncHandler(async (req, res) => {
   const { courseId, videoId } = req.query;
   const reg = await RegisteredCourses.findOne({
     userId: userId,
-    courseId: courseId,
-    videosNotes: { video: videoId }
-  });
+    courseId: courseId
+  }).populate('videosNotes.notes');
   var notes = [];
-  if (!reg) {
+  const found = reg.videosNotes.find(
+    (videoNotes) => videoNotes.video.toString() === videoId.toString()
+  );
+  if (!found) {
     await RegisteredCourses.findOneAndUpdate(
       { userId: userId, courseId: courseId },
       { $push: { videosNotes: { video: videoId } } }
     );
   } else {
-    const returnObj = reg.videosNotes.find(
-      (videoNotes) => videoNotes.video.toString() === videoId.toString()
-    );
-    const populatedObj = await returnObj.populate('notes');
-    notes = populatedObj.notes;
+    notes = found.notes;
   }
   res.status(200).json({
     message: 'Successfully retrieved notes',
