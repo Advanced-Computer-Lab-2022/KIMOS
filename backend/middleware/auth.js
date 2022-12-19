@@ -1,8 +1,8 @@
-const { next } = require('cli');
 const jwt = require('jsonwebtoken');
 const User = require('../models/userModel');
-const registerUser = require('../models/registeredCoursesModel');
-const schedule = require('node-schedule');
+const RegisteredCourse = require('../models/registeredCoursesModel');
+const Course = require('../models/courseModel');
+const asyncHandler = require('express-async-handler');
 
 const loggedIn = (req, res, next) => {
   const token = req.cookies.jwt;
@@ -16,7 +16,7 @@ const loggedIn = (req, res, next) => {
           stack: err.stack
         });
       } else {
-        res.locals({ userId: decodedToken.id });
+        res.locals.userId = decodedToken.id;
         next();
       }
     });
@@ -25,51 +25,31 @@ const loggedIn = (req, res, next) => {
   }
 };
 
-const isRegisteredToCourse = async (req, res) => {
-  const registration = await registerUser.findOne({
-    userId: res.locals('userId'),
-    courseId: req.query.courseId
-  });
-  if (registration) {
+const instructorAuth = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(res.locals.userId);
+  if (user.userType === 'instructor') {
     next();
   } else {
     res.status(401).json({ statusCode: 401, success: false, message: 'Unauthorized access' });
   }
-};
+});
 
-const isInstructor = async (req, res) => {
-  const userType = await User.findById(res.locals('userId')).userType;
-  if (userType === 'instructor') {
+const adminAuth = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(res.locals.userId);
+  if (user.userType === 'administrator') {
     next();
   } else {
     res.status(401).json({ statusCode: 401, success: false, message: 'Unauthorized access' });
   }
-};
+});
 
-const isAdmin = async (req, res) => {
-  const userType = await User.findById(res.locals('userId')).userType;
-  if (userType === 'administrator') {
-    next();
-  } else {
-    res.status(401).json({ statusCode: 401, success: false, message: 'Unauthorized access' });
-  }
-};
-
-const isCorporateTrainee = async (req, res) => {
-  const userType = await User.findById(res.locals('userId')).userType;
-  if (userType === 'corporate trainee') {
-    next();
-  } else {
-    res.status(401).json({ statusCode: 401, success: false, message: 'Unauthorized access' });
-  }
-};
-
-const isRegisteredWithInstructor = async (req, res) => {
-  const registeredCourses = await registerUser.find({ userId: res.locals('userId') });
+const isRegisteredWithInstructor = asyncHandler(async (req, res, next) => {
+  const registeredCourses = await RegisteredCourse.find({ userId: res.locals.userId });
   var flag = false;
+  const instructorId = req.query.instructorId.toString();
   registeredCourses.map(async (registeredCourse, index) => {
     const course = await registeredCourse.populate('courseId');
-    if (course.courseId.instructor.equals(req.query.instructorId)) {
+    if (instructorId === course.courseId.instructor.toString()) {
       flag = true;
       next();
     }
@@ -77,27 +57,61 @@ const isRegisteredWithInstructor = async (req, res) => {
   if (!flag) {
     res.status(401).json({ statusCode: 401, success: false, message: 'Unauthorized access' });
   }
-};
+});
 
-const resetPasswordAuth = async (req, res) => {
-  const { token, email } = req.query;
-  const checkToken = User.findOne({ email: email, reset: { initiated: true, token: token } });
-  if (checkToken) {
-    await User.findOneAndUpdate({ email: email }, { reset: { initiated: 'false', token: '' } });
-    const job = schedule.scheduledJobs(email + 'reset');
-    if (job) job.cancel();
+const resetPasswordAuth = asyncHandler(async (req, res, next) => {
+  const { token } = req.query;
+  jwt.verify(token, process.env.RESET_SECRET, (err, decodedToken) => {
+    if (err) {
+      res.status(401).json({
+        statusCode: 401,
+        success: false,
+        message: 'Unauthorized access',
+        stack: err.stack
+      });
+    } else {
+      res.locals.email = decodedToken.email;
+      next();
+    }
+  });
+});
+
+const registeredCourseAuth = asyncHandler(async (req, res, next) => {
+  // console.log(req.query.courseId);
+  // console.log(res.locals.userId);
+  const registration = await RegisteredCourse.findOne({
+    userId: res.locals.userId,
+    courseId: req.query.courseId
+  });
+  if (registration) {
     next();
   } else {
     res.status(401).json({ statusCode: 401, success: false, message: 'Unauthorized access' });
   }
-};
+});
+
+const editCourseAuth = asyncHandler(async (req, res, next) => {
+  const userId = res.locals.userId.toString();
+  const courseInfo = await Course.findById(req.query.courseId);
+  if (courseInfo.visibility !== 'private') {
+    res
+      .status(401)
+      .json({ statusCode: 401, success: false, message: 'Cannot edit public courses' });
+  } else {
+    if (userId === courseInfo.instructor.toString()) {
+      next();
+    } else {
+      res.status(401).json({ statusCode: 401, success: false, message: 'Unauthorized access' });
+    }
+  }
+});
 
 module.exports = {
   loggedIn,
-  isAdmin,
-  isCorporateTrainee,
-  isInstructor,
-  isRegisteredToCourse,
+  adminAuth,
+  instructorAuth,
   resetPasswordAuth,
-  isRegisteredWithInstructor
+  isRegisteredWithInstructor,
+  registeredCourseAuth,
+  editCourseAuth
 };

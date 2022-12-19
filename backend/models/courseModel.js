@@ -5,9 +5,8 @@ const courseSchema = mongoose.Schema(
   {
     visibility: {
       type: String,
-      enum: ['public', 'private'],
+      enum: ['public', 'private', 'closed'],
       lowercase: true,
-      required: true,
       default: 'private'
     },
     title: {
@@ -89,7 +88,8 @@ const courseSchema = mongoose.Schema(
           type: mongoose.Schema.Types.ObjectId,
           ref: 'Subtitle'
         }
-      ]
+      ],
+      default: []
     },
     exams: {
       type: [
@@ -97,7 +97,8 @@ const courseSchema = mongoose.Schema(
           type: mongoose.Schema.Types.ObjectId,
           ref: 'Exam'
         }
-      ]
+      ],
+      default: []
     }
   },
   {

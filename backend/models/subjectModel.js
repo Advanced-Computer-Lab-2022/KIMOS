@@ -4,7 +4,8 @@ const mongoose = require('mongoose'); // Erase if already required
 var subjectSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: true
+    required: true,
+    unique: true
   }
 });
 

@@ -1,23 +1,51 @@
 const express = require('express');
 const router = express.Router();
+// const { registerUser } = require('../controllers/registeredCoursesController');
 const {
-  findSubjects,
+  getAllSubjects,
+  addNewSubject,
   findCourses,
-  viewCourse,
   createCourse,
   editCourse,
   findExam,
-  getGradeAndSolution,
+  getExamSolution,
   submitSolution,
   rateCourse,
   addExam,
+  removeExam,
   modifyExam
 } = require('../controllers/courseController');
+const { addQuiz, editQuiz, deleteQuiz } = require('../controllers/subtitleController');
+const { isRegisteredToCourse, isCorporateTrainee, isLoggedIn } = require('../middleware/helper');
+const {
+  editCourseAuth,
+  instructorAuth,
+  registeredCourseAuth,
+  adminAuth,
+  loggedIn
+} = require('../middleware/auth');
 
-router.get('/subjects', findSubjects);
-router.get('/findCourses', findCourses);
-router.route('/').get(viewCourse).post(createCourse).put(editCourse);
-router.route('/rate').post(rateCourse);
-router.route('/exam').get(findExam).post(addExam).put(modifyExam);
-router.route('/exam/solution').post(submitSolution).get(getGradeAndSolution);
+router.route('/subjects').get(getAllSubjects).post(loggedIn, adminAuth, addNewSubject); //all good
+router.get('/findCourses', isLoggedIn, isCorporateTrainee, findCourses); //all good
+router
+  .route('/')
+  .post(loggedIn, instructorAuth, createCourse) //all good
+  .put(loggedIn, editCourseAuth, editCourse); //all good
+router.route('/rate').post(loggedIn, registeredCourseAuth, rateCourse); //all good
+router
+  .route('/exam')
+  .get(loggedIn, findExam) //all good
+  .post(loggedIn, editCourseAuth, addExam) //all good
+  .put(loggedIn, editCourseAuth, modifyExam) //all good
+  .delete(loggedIn, editCourseAuth, removeExam); //all good
+router
+  .route('/subtitle/quiz')
+  .post(loggedIn, editCourseAuth, addQuiz) //all good
+  .put(loggedIn, editCourseAuth, editQuiz) //all good
+  .delete(loggedIn, editCourseAuth, deleteQuiz); //all good
+router
+  .route('/exam/solution')
+  .post(loggedIn, registeredCourseAuth, submitSolution) //all good
+  .get(loggedIn, getExamSolution); //all good
+// router.post('/register', registerUser);
 module.exports = router;

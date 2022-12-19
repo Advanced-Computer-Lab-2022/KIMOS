@@ -7,7 +7,8 @@ const {
   getCountry,
   changeCountry,
   getRate,
-  getUser,
+  getMe,
+  viewInstructorDetails,
   resetPasswordSendEmail,
   resetPassword,
   rateInstructor,
@@ -16,25 +17,26 @@ const {
 } = require('../controllers/userController');
 
 const {
-  isAdmin,
+  adminAuth,
   loggedIn,
   isRegisteredWithInstructor,
   resetPasswordAuth,
-  isRegisteredToCourse,
-  isInstructor,
-  isCorporateTrainee
+  registeredCourseAuth
 } = require('../middleware/auth');
 
-router.route('/', loggedIn).post(isAdmin, addUser).put(editUser).get(getUser);
+const { isLoggedIn } = require('../middleware/helper');
+
+router.route('/').post(loggedIn, adminAuth, addUser).put(loggedIn, editUser).get(loggedIn, getMe); //all good
+router.get('/viewInstructorDetails', loggedIn, isRegisteredWithInstructor, viewInstructorDetails);
 router.post('/rateInstructor', loggedIn, isRegisteredWithInstructor, rateInstructor);
-router.route('/country').get(getCountry).put(changeCountry);
-router.get('/rate', getRate);
-router.put('/changePassword', loggedIn, changePassword);
-router.post('/passwordResetEmail', resetPasswordSendEmail);
-router.post('/passwordReset', resetPasswordAuth, resetPassword);
-router.put('/changePassword', loggedIn, changePassword);
+router.route('/country').get(isLoggedIn, getCountry).put(isLoggedIn, changeCountry); //all good
+router.get('/rate', getRate); //all good
+router.put('/changePassword', loggedIn, changePassword); //all good
+router.post('/passwordResetEmail', resetPasswordSendEmail); //all good
+router.post('/passwordReset', resetPasswordAuth, resetPassword); //all good
+router.put('/changePassword', loggedIn, changePassword); //all good
 router
-  .route('/certificate', loggedIn, isRegisteredToCourse)
+  .route('/certificate', loggedIn, registeredCourseAuth)
   .get(getCertificate)
   .post(sendCertificateEmail);
 module.exports = router;

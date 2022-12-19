@@ -9,27 +9,38 @@ const { updateRating, viewRating, createRating } = require('./ratingController')
 const { getCourseInfo } = require('./courseController');
 const PDFDocument = require('pdfkit');
 const asyncHandler = require('express-async-handler');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 
 //All user
-
 const signUp = asyncHandler(async (req, res) => {
-  const { firstName, lastName, email, password, username } = req.body;
+  const { firstName, lastName, email, password, username, gender, country } = req.body;
   const salt = await bcrypt.genSalt();
   const hashedPassword = await bcrypt.hash(password, salt);
-  const user = await User.create({
-    firstName: firstName,
-    lastName: lastName,
-    username: username,
-    email: email,
-    userType: 'individual trainee',
-    password: hashedPassword
-  });
-  const id = user._id;
-  const token = jwt.sign({ id }, process.env.PASSWORD_SECRET, {
-    expiresIn: '1h'
-  });
-  res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });
-  res.status(200).json({ success: true, statusCode: 200, message: 'Sign Up Successful!' });
+  if (firstName && lastName && email && password && username && gender) {
+    const user = await User.create({
+      firstName: firstName,
+      lastName: lastName,
+      username: username,
+      email: email,
+      userType: 'individual trainee',
+      password: hashedPassword,
+      gender: gender,
+      wallet: 0,
+      country: country || { name: 'Egypt', code: 'EG' },
+      reset: 'false',
+      firstLogIn: 'false'
+    });
+    const id = user._id;
+    const token = jwt.sign({ id }, process.env.JWT_SECRET, {
+      expiresIn: '1h'
+    });
+    res.cookie('jwt', token, { httpOnly: true, maxAge: 1 * 60 * 60 * 1000 });
+    res.status(200).json({ success: true, statusCode: 200, message: 'Sign Up Successful!' });
+  } else {
+    res.status(500);
+    throw new Error('All fields must be defined');
+  }
 });
 
 const login = asyncHandler(async (req, res) => {
@@ -45,9 +56,26 @@ const login = asyncHandler(async (req, res) => {
   if (user) {
     const flag = await bcrypt.compare(password, user.password);
     if (flag) {
-      const token = createToken(user.email);
-      res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });
-      res.status(200).json({ success: true, statusCode: 200, message: 'Logged in Successfully' });
+      const id = user._id;
+      const token = jwt.sign({ id }, process.env.JWT_SECRET, {
+        expiresIn: '1h'
+      });
+      res.cookie('jwt', token, { httpOnly: true, maxAge: 1 * 60 * 60 * 1000 });
+      if (user.userType !== 'administrator') {
+        res.status(200).json({
+          success: true,
+          statusCode: 200,
+          message: 'Logged in Successfully',
+          payload: { userType: user.userType, firstLogIn: user.firstLogIn }
+        });
+      } else {
+        res.status(200).json({
+          success: true,
+          statusCode: 200,
+          message: 'Logged in Successfully',
+          payload: { userType: user.userType }
+        });
+      }
     } else {
       res.status(401);
       throw new Error('Incorrect password');
@@ -84,26 +112,26 @@ const getCountry = asyncHandler(async (req, res) => {
 });
 
 const changeCountry = asyncHandler(async (req, res) => {
-  var userId = res.locals.userId;
-  const { newCountry } = req.body;
-  await User.findByIdAndUpdate(userId, { country: newCountry });
-  res.status(200).json({ success: true, message: 'Country successfully updated', statusCode: 200 });
+  if (res.locals.userId) {
+    var userId = res.locals.userId;
+    const { newCountry } = req.body;
+    const user = await User.findByIdAndUpdate(userId, { country: newCountry });
+    res
+      .status(200)
+      .json({ success: true, message: 'Country successfully updated', statusCode: 200 });
+  } else {
+    res.status(404);
+    throw new Error('User not in database');
+  }
 });
 
-const getRate = asyncHandler(async (req, res) => {
+const getRate = async (req, res) => {
   const { countryCode } = req.query;
+  console.log(countryCode);
   var countryDetails = {};
   try {
     countryDetails = getAllInfoByISO(countryCode);
-  } catch (err) {
-    res.status(200).json({
-      success: true,
-      message: 'rate successfully retrieved',
-      statusCode: 200,
-      payload: { symbol: '$', rate: 1 }
-    });
-  }
-  try {
+    console.log(countryDetails);
     let currencyConverter = new CC({ from: 'USD', to: countryDetails.currency, amount: 1 });
     await currencyConverter.convert().then((response) => {
       res.status(200).json({
@@ -116,15 +144,15 @@ const getRate = asyncHandler(async (req, res) => {
   } catch (err) {
     res.status(200).json({
       success: true,
-      message: 'rate successfully retrieved',
+      message: 'rate retrieved as default value',
       statusCode: 200,
       payload: { symbol: '$', rate: 1 }
     });
   }
-});
+};
 
-const getUser = asyncHandler(async (req, res) => {
-  const { userId } = req.query;
+const getMe = asyncHandler(async (req, res) => {
+  const userId = res.locals.userId;
   const user = await User.findById(userId);
   res.status(200).json({
     success: true,
@@ -135,23 +163,50 @@ const getUser = asyncHandler(async (req, res) => {
       firstName: user.firstName,
       lastName: user.lastName,
       rating: user.rating,
-      //username:user.username,
       biography: user.biography,
-      //password:user.password,
       email: user.email
+    }
+  });
+});
+
+const viewInstructorDetails = asyncHandler(async (req, res) => {
+  const user = await User.findById(instructorId);
+  res.status(200).json({
+    success: true,
+    message: 'User Successfully retrieved',
+    statusCode: 200,
+    payload: {
+      _id: user._id,
+      firstName: user.firstName,
+      lastName: user.lastName,
+      rating: user.rating,
+      biography: user.biography
     }
   });
 });
 
 const editUser = asyncHandler(async (req, res) => {
   const userId = res.locals.userId;
-  const { email, biography, password, username } = req.body;
+  const { firstName, lastName, email, biography, password, username } = req.body;
+  const userInfo = await User.findById(userId);
   var hashedPassword = null;
   if (password) {
     const salt = await bcrypt.genSalt();
     hashedPassword = await bcrypt.hash(password, salt);
   }
-  const userInfo = await User.findById(userId);
+  if (userInfo.firstLogIn === 'true') {
+    if (firstName && lastName && username && password && email) {
+      userInfo.firstName = firstName;
+      userInfo.lastName = lastName;
+      userInfo.username = username;
+      userInfo.password = hashedPassword;
+      userInfo.email = email;
+      userInfo.firstLogIn = 'false';
+    } else {
+      res.status(500);
+      throw new Error('All fields must be filled upon first login');
+    }
+  }
   if (userInfo.userType == 'instructor') {
     userInfo.email = email || userInfo.email;
     userInfo.biography = biography || userInfo.biography;
@@ -163,7 +218,7 @@ const editUser = asyncHandler(async (req, res) => {
 });
 
 const changePassword = asyncHandler(async (req, res) => {
-  const { userId } = req.query;
+  const { userId } = res.locals;
   const { oldPassword, newPassword } = req.body;
   const userInfo = await User.findById(userId);
   if (bcrypt.compare(userInfo.password, oldPassword)) {
@@ -171,7 +226,7 @@ const changePassword = asyncHandler(async (req, res) => {
     const hashedPassword = await bcrypt.hash(newPassword, salt);
     await User.findByIdAndUpdate(userId, { password: hashedPassword });
   } else {
-    res.status(404);
+    res.status(401);
     throw new Error('Old password does not match');
   }
   res
@@ -180,16 +235,25 @@ const changePassword = asyncHandler(async (req, res) => {
 });
 
 const addUser = asyncHandler(async (req, res) => {
-  const user = await User.create({
+  const salt = await bcrypt.genSalt();
+  const hashedPassword = await bcrypt.hash(req.body.password, salt);
+  await User.create({
     username: req.body.username,
-    password: req.body.password,
-    userType: req.body.type
+    password: hashedPassword,
+    userType: req.body.type,
+    firstLogIn: req.body.type === 'administrator' ? undefined : 'true',
+    biography: req.body.type === 'instructor' ? '' : undefined,
+    rating: req.body.type === 'instructor' ? { value: 0.0, numberOfRatings: 0 } : undefined,
+    country: req.body.type !== 'administrator' ? { name: 'Egypt', code: 'EG' } : undefined,
+    reset: req.body.type !== 'administrator' ? 'false' : undefined,
+    wallet:
+      req.body.type !== 'administrator' && req.body.type !== 'corporate trainee' ? 0 : undefined
   });
   res.status(200).json({ success: true, statusCode: 200, message: 'User added successfully' });
 });
 
 const rateInstructor = asyncHandler(async (req, res) => {
-  const userId = res.locals('userId');
+  const userId = res.locals.userId;
   const { instructorId } = req.query;
   const { rating } = req.body;
   var newRating = 0;
@@ -219,7 +283,7 @@ const rateInstructor = asyncHandler(async (req, res) => {
 
 const resetPasswordSendEmail = asyncHandler(async (req, res) => {
   const { email } = req.body;
-  const userInfo = await User.findOne({ email: email });
+  const userInfo = await User.findOneAndUpdate({ email: email }, { reset: 'true' });
   const transporter = nodemailer.createTransport({
     service: process.env.EMAIL_SERVICE,
     auth: {
@@ -230,14 +294,7 @@ const resetPasswordSendEmail = asyncHandler(async (req, res) => {
   const token = jwt.sign({ email }, process.env.RESET_SECRET, {
     expiresIn: '20m'
   });
-  await User.findOneAndUpdate({ email: email }, { reset: { initiated: 'true', token: token } });
-  const job = schedule.scheduleJob(
-    email + 'reset',
-    new Date(new Date().getTime() + 20 * 60000),
-    async function () {
-      await User.findOneAndUpdate({ email: email }, { reset: { initiated: 'false', token: '' } });
-    }
-  );
+  await User.findOneAndUpdate({ email: email }, { reset: 'true' });
   const mailOptions = {
     from: process.env.EMAIL_USER,
     to: email,
@@ -253,8 +310,6 @@ const resetPasswordSendEmail = asyncHandler(async (req, res) => {
   transporter.sendMail(mailOptions, async function (err, data) {
     if (err) {
       await User.findOneAndUpdate({ email: email }, { reset: { initiated: 'false', token: '' } });
-      const job = schedule.scheduledJobs(email + 'reset');
-      if (job) job.cancel();
       console.log(err.message);
     } else {
       console.log('Email sent successfully');
@@ -264,9 +319,26 @@ const resetPasswordSendEmail = asyncHandler(async (req, res) => {
 });
 
 const resetPassword = asyncHandler(async (req, res) => {
-  const { email, password } = req.body;
-  await User.findOneAndUpdate({ email: email }, { password: password });
-  res.status(200).json({ statusCode: 200, success: true, message: 'Successfully reset password!' });
+  const { email } = res.locals;
+  const { password } = req.body;
+  const salt = await bcrypt.genSalt();
+  const hashedPassword = await bcrypt.hash(password, salt);
+  const user = await User.findOne({ email: email });
+  if (user && user.reset === 'true') {
+    await User.findOneAndUpdate({ email: email }, { password: hashedPassword, reset: 'false' });
+    console.log(user);
+  } else {
+    res.status(401);
+    throw new Error('Token timed out!');
+  }
+  if (user) {
+    res
+      .status(200)
+      .json({ statusCode: 200, success: true, message: 'Successfully reset password!' });
+  } else {
+    res.status(404);
+    throw new Error('User was not found');
+  }
 });
 
 const getCertificate = asyncHandler(async (req, res) => {
@@ -289,8 +361,7 @@ const getCertificate = asyncHandler(async (req, res) => {
 });
 
 const sendCertificateEmail = asyncHandler(async (req, res) => {
-  const userId = res.local('userId');
-  //const userId = '63811848d00e598aac52a58c';
+  const userId = res.locals.userId;
   const transporter = nodemailer.createTransport({
     service: process.env.EMAIL_SERVICE,
     auth: {
@@ -356,7 +427,8 @@ module.exports = {
   rateInstructor,
   resetPasswordSendEmail,
   resetPassword,
-  getUser,
+  getMe,
+  viewInstructorDetails,
   getCertificate,
   sendCertificateEmail
 };

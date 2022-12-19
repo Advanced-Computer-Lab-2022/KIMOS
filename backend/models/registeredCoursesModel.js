@@ -13,6 +13,10 @@ var registeredCoursesSchema = new mongoose.Schema({
   progress: {
     type: Number,
     default: 0.0
+  },
+  emailSent: {
+    type: String,
+    default: 'false'
   }
 });
 

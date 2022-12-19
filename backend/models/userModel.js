@@ -20,7 +20,7 @@ const userSchema = mongoose.Schema(
     username: {
       type: String,
       required: [true, 'Please enter a username'],
-      unique: true
+      unique: [true, 'That username is taken']
     },
     password: {
       type: String,
@@ -38,10 +38,6 @@ const userSchema = mongoose.Schema(
           type: Number,
           default: 0
         }
-      },
-      default: {
-        value: 0.0,
-        numberOfRatings: 0
       }
     },
     userType: {
@@ -59,29 +55,22 @@ const userSchema = mongoose.Schema(
         code: {
           type: String
         }
-      },
-      default: {
-        name: 'Egypt',
-        code: 'EG'
       }
     },
     biography: {
-      type: String,
-      default: ''
+      type: String
+    },
+    wallet: {
+      type: Number
+    },
+    gender: {
+      type: String
+    },
+    firstLogIn: {
+      type: String
     },
     reset: {
-      type: {
-        initiated: {
-          type: String
-        },
-        token: {
-          type: String
-        }
-      },
-      default: {
-        initiated: 'false',
-        token: ''
-      }
+      type: String
     }
   },
   {

@@ -1,7 +1,10 @@
 const { faker } = require('@faker-js/faker');
 const connectDB = require('./config/db');
+const { adminAuth } = require('./middleware/auth');
 const Course = require('./models/courseModel');
 const exerciseModel = require('./models/exerciseModel');
+const userModel = require('./models/userModel');
+const bcrypt = require('bcrypt');
 
 const instructorId = '638117c243cba3f0babcc3a9';
 
@@ -31,6 +34,18 @@ generateCourse = () => {
 main = async () => {
   try {
     await connectDB();
+    try {
+      const salt = await bcrypt.genSalt();
+      const hashedPassword = await bcrypt.hash('admin123', salt);
+      await userModel.create({
+        username: 'admin',
+        password: hashedPassword,
+        userType: 'administrator'
+      });
+    } catch (err) {
+      console.log(err.message);
+    }
+    console.log('success');
     // for(let i = 0; i < 15 ; i++){
     //     try{
     //         await Course.create(generateCourse())
