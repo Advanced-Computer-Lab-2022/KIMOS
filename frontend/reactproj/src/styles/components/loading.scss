@@ -5,6 +5,7 @@
     height: 100%;
     z-index: 1100;
     background-color: rgba(0, 0, 0, 0);
+    background-color: white;
     backdrop-filter: blur(15px);
     border-radius: 10px;
     @include flex-center-all;

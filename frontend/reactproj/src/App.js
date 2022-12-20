@@ -28,6 +28,8 @@ import RequestCourseAccess from './components/requestCourseAccess';
 import AdminCourseReqs from './components/adminCourseReqs';
 import UserProfile from './components/userProfile';
 import Loading from './components/loadingPage';
+import NewCreateCourse from './components/newCreateCourse';
+import SignUpPage from './components/signUp';
 
 import axios from 'axios';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
@@ -106,6 +108,8 @@ class App extends Component {
           
             <Route exact path="/" element={<HomeLand />}></Route>
             <Route exact path="/login" element={<LoginPage />}></Route>
+            <Route exact path="/signUp" element={<SignUpPage />}></Route>
+
             <Route exact path="/milestone1" element={<TmpRoutes />}></Route>
             <Route exact path="/forgotPassword" element={<ForgotPassword />}></Route>
             <Route exact path="/changePassword" element={<ChangePassword />}></Route>
@@ -116,16 +120,20 @@ class App extends Component {
             <Route exact path="/admin/promotions" element={<AddPromotions />}></Route>
             <Route exact path="/admin" element={<AdminDB />}></Route>
             <Route exact path="/admin/courseRequests" element={<AdminCourseReqs />}></Route>
+            
+
 
             
             
+            <Route exact path="/instructor/createCourseOld" element={<Instructor />}></Route>
 
 
             <Route exact path="/instructor" element={<InstructorDB />}></Route>
             <Route exact path="/instructor/courses" element={<InstructorCourses />}></Route>
             <Route path="/instructor/createQuiz" element={<CreateQuiz />}></Route>
             <Route exact path="/instructor/profile" element={<InstructorProfile />}></Route>
-            <Route exact path="/instructor/createCourse" element={<Instructor />}></Route>
+            <Route exact path="/instructor/createCourse" element={<NewCreateCourse />}></Route>
+
             
             <Route exact path="/user/profile" element={<UserProfile />}></Route>
             <Route exact path="/user/reports" element={<UserReports />}></Route>
@@ -170,3 +178,5 @@ const mapStateToProps = (state) =>{
 
 
 export default connect(mapStateToProps)(App)
+
+// <Route exact path="/instructor/createCourse" element={<Instructor />}></Route>

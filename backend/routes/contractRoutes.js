@@ -12,4 +12,10 @@ const {
 router.route('/').get(tmpGetContract).post(createContract).put(editContract);
 router.route('/instructor').post(addInstructor).delete(removeInstructor);
 
+
+
+
+router.get("/khalid",  (req, res, next) =>{
+  console.log('hi hi hi ');
+});
 module.exports = router;

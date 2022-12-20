@@ -12,6 +12,7 @@ import SpeedDialAction from '@mui/material/SpeedDialAction';
 import SaveIcon from '@mui/icons-material/Save';
 import Person2Icon from '@mui/icons-material/Person2';
 import LogoutIcon from '@mui/icons-material/Logout';
+import cccLogo from '../assets/cccLogo.png';
 // const axios = require('axios');
 
 // var Navigation = require('react-router').Navigation;
@@ -67,8 +68,8 @@ class navbar extends Component {
     render() {
         return (
             <div className="navbar">
-                <div className="title" onClick={this.goHome}>
-                    KIMOS
+                <div className="title" onClick={this.goHome} style={{display:'flex', alignItems:'center'}}>
+                    <img src={cccLogo} alt="KIMOS" width="200" height="80"/>
                 </div>
 
                 <div className="options">
