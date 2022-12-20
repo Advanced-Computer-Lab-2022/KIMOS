@@ -1,9 +1,10 @@
 const Note = require('../models/noteModel');
 
 const createNote = async (note) => {
-  const { text, createdAt, lastEdit } = note;
+  const { title, body, createdAt, lastEdit } = note;
   const n = await Note.create({
-    text: text,
+    title: title,
+    body: body,
     createdAt: createdAt,
     lastEdit: lastEdit
   });
