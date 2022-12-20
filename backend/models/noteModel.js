@@ -2,7 +2,11 @@ const mongoose = require('mongoose'); // Erase if already required
 
 // Declare the Schema of the Mongo model
 var noteSchema = new mongoose.Schema({
-  text: {
+  title: {
+    type: String,
+    required: true
+  },
+  body: {
     type: String,
     required: true
   },
