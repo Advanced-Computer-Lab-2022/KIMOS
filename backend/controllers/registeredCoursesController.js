@@ -130,9 +130,7 @@ const registerUser = asyncHandler(async (req, res) => {
               });
               if (s) {
                 const elements = s.grade.split('/');
-                console.log(elements);
                 const percentage = (parseInt(elements[0]) / parseInt(elements[1])) * 100;
-                console.log(percentage);
                 if (percentage >= 50) {
                   return true;
                 }
@@ -143,7 +141,6 @@ const registerUser = asyncHandler(async (req, res) => {
           );
           const output = results.reduce((a, b) => a && b, true);
           if (output) {
-            console.log('here');
             sendCertificateEmail(userId, courseId).catch((err) => {
               console.log(err);
             });
@@ -197,8 +194,6 @@ const updateNotes = asyncHandler(async (req, res) => {
     courseId: courseId,
     userId: userId
   });
-
-  console.log(reg);
   const newNotesIds = notes.map((note, index) => {
     if (note._id) {
       return note._id.toString();
@@ -223,8 +218,6 @@ const updateNotes = asyncHandler(async (req, res) => {
 
   if (found) {
     const oldNotesIds = found.notes;
-    console.log(oldNotesIds);
-    console.log(newNotesIds);
     oldNotesIds.map((note, index) => {
       if (!newNotesIds.includes(note.toString())) {
         deleteNote(note);
