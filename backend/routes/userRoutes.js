@@ -7,18 +7,44 @@ const {
   getCountry,
   changeCountry,
   getRate,
-  getUser,
+  getMe,
+  viewInstructorDetails,
   resetPasswordSendEmail,
   resetPassword,
-  rateInstructor
+  rateInstructor,
+  getCertificate,
+  sendCertificateEmail
 } = require('../controllers/userController');
 
-router.route('/').post(addUser).put(editUser).get(getUser);
-router.post('/rateInstructor', rateInstructor);
-router.route('/country').get(getCountry).put(changeCountry);
-router.get('/rate', getRate);
-router.put('/changePassword', changePassword);
-router.post('/passwordResetEmail', resetPasswordSendEmail);
-router.post('/passwordReset', resetPassword);
-router.put('/changePassword', changePassword);
+const {
+  adminAuth,
+  loggedIn,
+  isRegisteredWithInstructor,
+  resetPasswordAuth,
+  registeredCourseAuth
+} = require('../middleware/auth');
+
+const {
+  createReport,
+  addMessages,
+  changeStatus,
+  getReports
+} = require('../controllers/reportController');
+const { isLoggedIn } = require('../middleware/helper');
+
+router.route('/').post(loggedIn, adminAuth, addUser).put(loggedIn, editUser).get(loggedIn, getMe); //all good
+router.get('/viewInstructorDetails', loggedIn, isRegisteredWithInstructor, viewInstructorDetails); //all good
+router.post('/rateInstructor', loggedIn, isRegisteredWithInstructor, rateInstructor); //all good
+router.route('/country').get(isLoggedIn, getCountry).put(isLoggedIn, changeCountry); //all good
+router.get('/rate', getRate); //all good
+router.put('/changePassword', loggedIn, changePassword); //all good
+router.post('/passwordResetEmail', resetPasswordSendEmail); //all good
+router.post('/passwordReset', resetPasswordAuth, resetPassword); //all good
+router.get('/certificate', loggedIn, registeredCourseAuth, getCertificate); //all good
+router
+  .route('/report')
+  .post(loggedIn, registeredCourseAuth, createReport) //all good
+  .get(loggedIn, getReports) //all good
+  .put(loggedIn, adminAuth, changeStatus) //all good
+  .patch(loggedIn, adminAuth, addMessages); //all good
 module.exports = router;
