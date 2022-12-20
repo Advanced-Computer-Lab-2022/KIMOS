@@ -31,6 +31,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import TraineeExercise from './components/TraineeExercise';
 import TraineeSolution from './components/TraineeSolution';
 import TraineeViewCourseDetails from './components/traineeViewCourseDetails';
+import SignUp from './components/signup';
+import TakeNotes from './components/takeNotes2';
 
 
 class App extends Component {
@@ -98,6 +100,9 @@ class App extends Component {
           
             <Route exact path="/" element={<HomeLand />}></Route>
             <Route exact path="/login" element={<LoginPage />}></Route>
+            <Route exact path="/signup" element={<SignUp />}></Route>
+            <Route exact path="/takeNotes" element={<TakeNotes />}></Route>
+
             <Route exact path="/milestone1" element={<TmpRoutes />}></Route>
             <Route exact path="/forgotPassword" element={<ForgotPassword />}></Route>
             <Route exact path="/changePassword" element={<ChangePassword />}></Route>

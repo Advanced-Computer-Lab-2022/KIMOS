@@ -6,7 +6,7 @@ const WatchVideo = (props) => {
         style={{borderRadius:'10px'}}
         width="853"
         height="480"
-        src={props.link}
+        src={"https://www.youtube.com/embed/NP1d22FflCk"}
         frameBorder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowFullScreen
