@@ -1,6 +1,4 @@
 import { useEffect, useState,useRef } from "react";
-//import uuid from "react-uuid";
-//import "./App.css";
 import MainNote from "./mainNote";
 import Sidebar from "./sideBarNotes";
 import ReactMarkdown from "react-markdown";
@@ -14,7 +12,7 @@ import axios from "axios";
 import * as React from 'react';
 
 
-function takeNotes2() {
+function takeNotes2({videoId,courseId}) {
     const [notes, setNotes] = useState(
     localStorage.notes ? JSON.parse(localStorage.notes) : []
     );
@@ -28,7 +26,7 @@ function takeNotes2() {
     }, [notes]);
 
     useEffect(()=>{
-        axios.get(`https://localhost:5000/users/getNotes`) // notes related to this student and this video
+        axios.get(`https://localhost:5000/courses/notes?videoId=${videoId}&courseId=${courseId}`) // notes related to this student and this video
         .then(res=>{
             if(res.ok){
                 setNotes(res.data.notes)
@@ -40,7 +38,7 @@ function takeNotes2() {
     });
 
     const handleSave=()=>{
-        axios.post(`https://localhost:5000/users/saveNotes`,notes)   // notes related to this student and this video
+        axios.post(`https://localhost:5000/courses/notes?videoId=${videoId}&courseId=${courseId}`,notes)   // notes related to this student and this video
         .then(()=>{
             if(res.ok){
                 if(res.ok){
