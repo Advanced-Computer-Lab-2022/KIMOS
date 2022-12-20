@@ -23,7 +23,7 @@ const Sidebar = ({
     downloadPdf,
     handleSave
   }) => {
-    const sortedNotes = notes.sort((a, b) => b.created - a.created);
+    const sortedNotes = notes.sort((a, b) => b.createdAt - a.createdAt);
   
     return (
       <div className="notes-sidebar">
@@ -42,7 +42,7 @@ const Sidebar = ({
             </div>
         </div>
         <div className="notes-sidebar-notes">
-          {sortedNotes.map(({ id, title, body, lastModified }, i) => (
+          {sortedNotes.map(({ _id, title, body, lastEdit }, i) => (
             <div className='note-sidebar-notes' key={i}>
             <div
               className={`notes-sidebar-note ${i === activeNote && "active"}`}
@@ -58,7 +58,7 @@ const Sidebar = ({
               <p>{body && body.substr(0, 40) + "..."}</p>
               <small className="note-meta">
                 Last Modified{" "}
-                {new Date(lastModified).toLocaleDateString("en-GB", {
+                {new Date(lastEdit).toLocaleDateString("en-GB", {
                   hour: "2-digit",
                   minute: "2-digit",
                 })}

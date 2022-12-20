@@ -5,7 +5,7 @@ const mainNote = ({ activeNote, onUpdateNote }) => {
     onUpdateNote({
       ...activeNote,
       [field]: value,
-      lastModified: Date.now(),
+      lastEdit: Date.now(),
     });
   };
 
@@ -29,7 +29,7 @@ const mainNote = ({ activeNote, onUpdateNote }) => {
           onChange={(e) => onEditField("body", e.target.value)}
         />
       </div>
-      <p style={{fontFamily: "Open Sans", WebkitFontSmoothing:"antialiased",textRendering:"optimizeLegibility"}}>Markdown preview</p>
+      <p>Markdown preview</p>
       <div className="main-note-preview">
         
         <h1 className="preview-title">{activeNote.title}</h1>

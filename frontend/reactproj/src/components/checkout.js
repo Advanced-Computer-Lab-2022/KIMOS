@@ -1,12 +1,10 @@
-import secondaryBtn from "./buttons/secondaryBtn";
+import SecondaryBtn from "./buttons/secondaryBtn";
 import axios from 'axios';
 
-const checkout = (props) => {
-
-    const courseId = props.courseId;
+const checkout = ({courseId}) => {
 
     const onclick = ()=>{
-        axios.post(`https://localhost:5000/checkout`,{userId,courseId})
+        axios.post(`https://localhost:5000/checkout`,{items:[{courseId}]})
         .then(res=>{
             if(res.ok)  return res.json();
             return res.json().then(json=>Promise.reject(json));
@@ -22,7 +20,7 @@ const checkout = (props) => {
 
     return (  
         <div>
-            <secondaryBtn function={onclick} btnText={"Checkout"}/>
+            <SecondaryBtn function={onclick} btnText={"Checkout"}/>
         </div>
     );
 }

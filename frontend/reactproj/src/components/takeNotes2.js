@@ -13,32 +13,34 @@ import * as React from 'react';
 
 
 function takeNotes2({videoId,courseId}) {
-    const [notes, setNotes] = useState(
-    localStorage.notes ? JSON.parse(localStorage.notes) : []
-    );
+    const [notes, setNotes] = useState([]);
     const [activeNote, setActiveNote] = useState(-1);
     const [, updateState] = useState();
     const [visibility,setVisibility] = useState('hidden');
     const notesRef = useRef(null);
 
-    useEffect(() => {
-    localStorage.setItem("notes", JSON.stringify(notes));
-    }, [notes]);
+    // useEffect(() => {
+    // localStorage.setItem("notes", JSON.stringify(notes));
+    // }, [notes]);
 
     useEffect(()=>{
-        axios.get(`https://localhost:5000/courses/notes?videoId=${videoId}&courseId=${courseId}`) // notes related to this student and this video
-        .then(res=>{
-            if(res.ok){
-                setNotes(res.data.notes)
-            }
-        }).catch(e=>{
-            console.log(e.error);
-        })
+        axios.post(`http://localhost:5000/login`,{username:"individual",password:"individual123"}).then((res)=>{
+            console.log(res);
+            axios.get(`http://localhost:5000/courses/notes?videoId=${"639f58b4ce28934b354c6dc0"}&courseId=${"639f58b5ce28934b354c6dce"}`) // notes related to this student and this video
+            .then(res=>{
+                if(res.ok){
+                    setNotes(res.data.notes)
+                }
+            }).catch(e=>{
+                console.log(e);
+            })
+    });
 
     });
 
     const handleSave=()=>{
-        axios.post(`https://localhost:5000/courses/notes?videoId=${videoId}&courseId=${courseId}`,notes)   // notes related to this student and this video
+        //axios.post(`http://localhost:5000/login`,{username:"individual",password:"individual123"});
+        axios.post(`http://localhost:5000/courses/notes?videoId=${"639f58b4ce28934b354c6dc0"}&courseId=${"639f58b5ce28934b354c6dce"}`,notes)   // notes related to this student and this video
         .then(()=>{
             if(res.ok){
                 if(res.ok){
@@ -78,8 +80,8 @@ function takeNotes2({videoId,courseId}) {
                                 // removed id as it will be added in the database
         title: "Untitled Note",
         body: "",
-        lastModified: Date.now(),
-        created: Date.now()
+        lastEdit: Date.now(),
+        createdAt: Date.now()
         };
 
         setNotes([newNote, ...notes]);

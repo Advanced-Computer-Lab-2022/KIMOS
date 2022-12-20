@@ -61,6 +61,7 @@ const login = asyncHandler(async (req, res) => {
         expiresIn: '1h'
       });
       res.cookie('jwt', token, { httpOnly: true, maxAge: 1 * 60 * 60 * 1000 });
+      console.log(token);
       if (user.userType !== 'administrator') {
         res.status(200).json({
           success: true,

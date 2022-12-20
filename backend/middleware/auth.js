@@ -6,6 +6,8 @@ const asyncHandler = require('express-async-handler');
 
 const loggedIn = (req, res, next) => {
   const token = req.cookies.jwt;
+  console.log(token);
+
   if (token) {
     jwt.verify(token, process.env.JWT_SECRET, (err, decodedToken) => {
       if (err) {
