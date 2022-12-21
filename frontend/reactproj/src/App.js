@@ -22,6 +22,8 @@ import ViewInstructorProfile from './components/viewInstructorProfile';
 import HomeLand from './components/homeLand';
 
 import axios from 'axios';
+axios.defaults.withCredentials = true;
+axios.defaults.headers = 'Access-Control-Allow-Origin: http://localhost:3000/';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import { connect } from 'react-redux';

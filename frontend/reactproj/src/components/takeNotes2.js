@@ -24,34 +24,36 @@ function takeNotes2({videoId,courseId}) {
     // }, [notes]);
 
     useEffect(()=>{
-        axios.post(`http://localhost:5000/login`,{username:"individual",password:"individual123"}).then((res)=>{
+        console.log(res);
+        axios.get(`http://localhost:5000/courses/notes?videoId=${videoId}&courseId=${courseId}`) // notes related to this student and this video
+        .then(res=>{
             console.log(res);
-            axios.get(`http://localhost:5000/courses/notes?videoId=${"639f58b4ce28934b354c6dc0"}&courseId=${"639f58b5ce28934b354c6dce"}`) // notes related to this student and this video
-            .then(res=>{
-                if(res.ok){
-                    setNotes(res.data.notes)
-                }
-            }).catch(e=>{
-                console.log(e);
-            })
-    });
-
-    });
+            if(res.data.success){
+                console.log("here");
+                setNotes(res.data.payload.notes);
+            }
+        }).catch(e=>{
+            console.log(e);
+        })
+    },[]);
 
     const handleSave=()=>{
-        //axios.post(`http://localhost:5000/login`,{username:"individual",password:"individual123"});
-        axios.post(`http://localhost:5000/courses/notes?videoId=${"639f58b4ce28934b354c6dc0"}&courseId=${"639f58b5ce28934b354c6dce"}`,notes)   // notes related to this student and this video
-        .then(()=>{
-            if(res.ok){
-                if(res.ok){
-                    setFeedbackMsg("Notes Saved.");
-                    setSeverity('success');
-                }else{
-                    setFeedbackMsg("Couldn't save your notes, please try again.");
-                    setSeverity('error');
-                }
+        axios.post(`http://localhost:5000/courses/notes?videoId=${videoId}&courseId=${courseId}`,{notes})   // notes related to this student and this video
+        .then((res)=>{
+            if(res.data.success){
+                setFeedbackMsg("Notes Saved.");
+                setSeverity('success');
+                setOpen(true);
+            }else{
+                setFeedbackMsg("Couldn't save your notes, please try again.");
+                setSeverity('error');
                 setOpen(true);
             }
+        })
+        .catch((e)=>{
+            setFeedbackMsg("Couldn't save your notes, please try again.");
+            setSeverity('error');
+            setOpen(true);
         })
     }
 
