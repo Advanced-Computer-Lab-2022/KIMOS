@@ -22,7 +22,7 @@ export default function paymentPolicy() {
             <img src={visa} width="30px" height="17px"/>
         </div>
 
-        <label style={{fontSize:14,lineHeight:1.5}}>We also accept payments by major credit cards and PayPal. Please follow the instructions
+        <label style={{lineHeight:1.5}}>We also accept payments by major credit cards and PayPal. Please follow the instructions
              to submit your payment by credit card. Net fees received (amount you pay less charges) will be 
              appearing on your student account, and not the actual amount you pay. Proceeding with your payment 
              confirms that you are accepting these terms. To pay kindly click the: "Pay" button from the course page
@@ -30,7 +30,7 @@ export default function paymentPolicy() {
              The link will take you to Checkout whereby you can login to your Paypal account or to 
              "PayPal Guest Checkout" if you do not have a Paypal Account. </label>
 
-        <label style={{fontSize:14}}>Should you require any further assistance, please do not hesitate to contact us.  </label>
+        <label>Should you require any further assistance, please do not hesitate to contact us.  </label>
       </div>
     </div>
 
@@ -66,10 +66,9 @@ export default function paymentPolicy() {
             <label style={{lineHeight:1.5}}>Students who have paid tuition fees for our courses may avail of the following refund policy:</label>
 
             <ul style={{lineHeight:1.5,listStyle:"inside",marginLeft:20}} >
-                <li>3 weeks prior to the start of the course - 100% of fees paid</li>
-                <li>2 weeks prior to the start of the course - 50% of fees paid only</li>
-                <li>1 week prior to the start of the course - 25% of fees paid only</li>
-                <li>Once course started –  0% of fees paid i.e. No Refund.</li>
+                <li>Full refund only if less than 50% of the course is finished</li>
+                <li>You have to submit a reason for the refund</li>
+                <li>If more than 50% of the course is finished, no refund will be allowed.</li>
             </ul>
 
             <label style={{lineHeight:1.5}}>Refund at the above rates are normally paid 14 weeks from Refund application date

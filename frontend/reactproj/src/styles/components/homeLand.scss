@@ -137,15 +137,15 @@
         &__allPopular{
             display: flex;
             flex-direction: row;
-            column-gap: 25px;
+            column-gap: 23px;
             justify-content: flex-start;
             align-items:center;
-            padding-left:7px;
-            padding-right:13px;
-            padding-top:10px;
-            padding-bottom:10px;
+            padding-left:3px;
+            padding-right:0px;
+            padding-top:6px;
+            padding-bottom:6px;
             height: fit-content;
-            width:940px;
+            width:76.7vw;
             background-color: white;
             overflow-x: hidden;
             scroll-behavior: smooth;
@@ -154,7 +154,7 @@
             &__popularDiv{
                 display:flex;
                 flex-direction:column;
-                min-width:210px;
+                min-width:190px;
                 row-gap:7px;
                 background-color: #F8F8FF;
                 padding: 7px;
@@ -163,14 +163,14 @@
                 &__image{
                     margin-bottom: 10px;
                     //width:222px;
-                    height:130px;
+                    height:125px;
                     border:solid;
                     border-color:#F8F8FF;
                     border-width:thin;
                     background-color: #F8F8FF;
                     border-radius: 15px;
                     aspect-ratio: 1/1;
-                    margin-left:30px;
+                    margin-left:24px;
                 }
                 
                 &__title{

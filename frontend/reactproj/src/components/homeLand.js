@@ -20,12 +20,12 @@ class homeLand extends Component {
     render() {
         const slideLeft=()=>{
             var slider=document.getElementById('slider');
-            slider.scrollLeft-=230;
+            slider.scrollLeft-=210;
         }
 
         const slideRight=()=>{
             var slider=document.getElementById('slider');
-            slider.scrollLeft+=230;
+            slider.scrollLeft+=210;
         }
         return (
             <div className='homeland'>
@@ -134,6 +134,7 @@ class homeLand extends Component {
                                         <Rating style={{marginLeft:-5}} name="half-rating-read" defaultValue={2.5} precision={0.5} readOnly />
                                         <label className="homeland__section section_2__allPopular__popularDiv__price">250 $</label>
                                     </div>
+
                                 </div>
 
                             </AppBar>

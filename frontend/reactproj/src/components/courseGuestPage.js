@@ -35,8 +35,8 @@ export default function CourseGuestPage() {
     await axios
       .get('http://localhost:5000/courses', {
         params: {
-          courseId: '638281a7b05c30a726283c28',
-          userId: '63811834d00e598aac52a58a'
+          courseId: '639f58b5ce28934b354c6dce',
+          userId: '639c90973befdc0358013194'
         }
       })
       .then((course) => {

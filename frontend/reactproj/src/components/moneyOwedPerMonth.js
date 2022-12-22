@@ -66,7 +66,7 @@ function createData(month) {
           </TableCell>
           <TableCell component="th" scope="row" style={{paddingLeft:150}}>{row.month}</TableCell>
         </StyledTableRow>
-        <StyledTableRow>
+        <TableRow>
           <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
             <Collapse in={open} timeout="auto" unmountOnExit>
               <Box sx={{ margin: 1 }}>
@@ -109,7 +109,7 @@ function createData(month) {
               </Box>
             </Collapse>
           </TableCell>
-        </StyledTableRow>
+        </TableRow>
       </React.Fragment>
     );
   }
@@ -128,7 +128,7 @@ function createData(month) {
 export default function moneyOwedPerMonth() {
   return (
     <div>
-    <h1 style={{marginLeft:520,marginTop:30,marginBottom:30}}>My Profit</h1>
+    <h1 style={{marginLeft:590,marginTop:30,marginBottom:30}}>My Profit</h1>
     <TableContainer component={Paper} style={{width:700,margin:"auto"}}>
       <Table aria-label="collapsible table">
         <TableHead style={{backgroundColor:"black"}}>

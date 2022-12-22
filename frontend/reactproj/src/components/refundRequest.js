@@ -15,16 +15,20 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 
 export default function RefundRequest() {
   const [open, setOpen] = React.useState(false);
+  const [input,setInput]=useState('');
 
   const handleClick = () => {
-    setOpen(true);
+    
+      setOpen(true);
+   
+   
+
   };
 
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
       return;
     }
-
     setOpen(false);
   };
 
@@ -40,7 +44,12 @@ export default function RefundRequest() {
 
         <label>PLease submit the reason of your inconvenience to this course below:</label>
 
-        <TextField multiline required style={{width:380}}></TextField>
+        <TextField multiline
+          required
+          value={input}
+          onChange={(event)=>{setOpen(false);setInput(event.target.value)}}
+          style={{width:380}} 
+          ></TextField>
 {/*
         <ul style={{marginLeft:30,listStyle:"inside",lineHeight:1.8}}>
           <div style={{display:"flex",columnGap:20}}>
@@ -97,11 +106,18 @@ export default function RefundRequest() {
           <Button variant="contained" style={{width:130,marginBottom:30}} onClick={handleClick}>
             Request
           </Button>
+          {input !== '' ? 
           <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
             <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
-              Your request is sent successfully!!
+              Your request is sent successfully!
             </Alert>
-          </Snackbar>
+          </Snackbar>:
+          <Snackbar  open={open} autoHideDuration={6000} onClose={handleClose}>
+          <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
+            Please enter a reason for your inconvenience!
+          </Alert>
+        </Snackbar>
+          }
         </Stack>
       </div>
     </div>
