@@ -8,17 +8,20 @@ import {
   MenuItem,
   FormControl
 } from '@mui/material';
+import PrimaryButton from './buttons/primaryBtn';
+
 import React from 'react';
 
 function adminCard(props) {
   return (
     <Box
       sx={{
-        width: 400,
-        height: 380,
+        width: '30%',
+        height: '50%',
+        
         bgcolor: 'background.paper',
-        boxShadow: 8,
-        borderRadius: 4,
+        border:'1px solid var(--primary-color)',
+        borderRadius: 5,
         p: 2,
         position: 'relative'
       }}>
@@ -26,15 +29,14 @@ function adminCard(props) {
         style={{
           display: 'flex',
           justifyContent: 'center',
-          fontFamily: 'arial,sans-sarif',
-          color: '#1976d2',
+          color: 'var(--primary-color)',
           fontSize: '22px'
         }}>
         {props.header}
       </h2>
       <Toolbar
-        sx={{ display: 'flex', marginTop: '5%', flexDirection: 'column', position: 'abolute' }}>
-        <FormControl sx={{ width: 225 }}>
+        sx={{height:'100%' ,display: 'flex', marginTop: '2%', flexDirection: 'column', position: 'abolute', justifyContent:'center' }}>
+        <FormControl sx={{ width: 225,}}>
           <InputLabel id="demo-simple-select-label">User Type</InputLabel>
           <Select
             labelId="demo-simple-select-label"
@@ -49,7 +51,7 @@ function adminCard(props) {
           </Select>
         </FormControl>
         <TextField
-          sx={{ display: 'flex', justifyContent: 'center', marginTop: '8%' }}
+          sx={{ display: 'flex', justifyContent: 'center', marginTop: '15px' }}
           required
           id="Username"
           label="Username"
@@ -59,7 +61,7 @@ function adminCard(props) {
         />
 
         <TextField
-          sx={{ display: 'flex', justifyContent: 'center', marginTop: '10%' }}
+          sx={{ display: 'flex', justifyContent: 'center', marginTop: '15px' , marginBottom: '15px' }}
           required
           id="Password"
           label="Password"
@@ -67,13 +69,8 @@ function adminCard(props) {
           variant="outlined"
           onChange={props.functionOnChange}
         />
-        <Button
-          size="medium"
-          sx={{ width: 170, height: 50, marginTop: '22%', marginLeft: '65%' }}
-          variant="contained"
-          onClick={props.functionOnClick}>
-          {props.buttonName}
-        </Button>
+
+        <PrimaryButton function={props.functionOnClick} btnSize="medium" btnText={props.buttonName}/>
         {/* <PrimaryButton function={props.addAdmin} btnSize="medium" btnText="Add Admin"/>
                             <PrimaryButton function={props.addInstructor} btnSize="small" btnText="Add Instructor"/>
                             <PrimaryButton function={props.addCorporateTrainee} btnSize="400 px" btnText="Add Corporate Trainee"/> */}

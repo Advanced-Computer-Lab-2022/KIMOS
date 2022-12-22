@@ -23,7 +23,16 @@ import PrimaryBtn from './buttons/primaryBtn';
 import SecondaryBtn from './buttons/secondaryBtn';
 import TextField from '@mui/material/TextField';
 
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 
+import axios from 'axios';
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+    return <MuiAlert  ref={ref} variant="filled" {...props} />;
+  });
+
+  
 const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
   [`&.${stepConnectorClasses.alternativeLabel}`]: {
     top: 22,
@@ -91,7 +100,18 @@ function ColorlibStepIcon(props) {
 }
 
 export default class NewCreateCourse extends Component {
+    createCourse = async () => {
 
+       const res = await axios.post('http://localhost:5000/courses',
+            {
+              user: { userType: 'instructor' },
+              course: this.state.course
+            }
+          )
+          
+        console.log(res);
+      };
+    
     state = {
         pageName:'Course Info',
         currentStep: 0,
@@ -103,7 +123,8 @@ export default class NewCreateCourse extends Component {
             preview:'',
             videos:[{
                 link:'',
-                description:''
+                description:'',
+                hours:0.1
             }]
         },
         course :{
@@ -115,7 +136,8 @@ export default class NewCreateCourse extends Component {
                     preview:'',
                     videos:[{
                         link:'',
-                        description:''
+                        description:'',
+                        hours:0.1
                     }]
 
             }],
@@ -124,7 +146,7 @@ export default class NewCreateCourse extends Component {
             rating: 0,
             totalHours: '',
             discount: '',
-            subject: '',
+            subject: 'Computer',
             instructor: 'instructor_id',
             exercises: []
         }
@@ -139,10 +161,27 @@ export default class NewCreateCourse extends Component {
         this.setState({currentStep: this.state.currentStep - 1 < 0 ? 0 : this.state.currentStep - 1 })
     }
     handleNext = ()=>{
-        this.setState({currentStep: this.state.currentStep + 1 >2 ? 2 : this.state.currentStep + 1 })
+        if(this.state.currentStep === 2){
+            console.log(this.state.course);
+            this.createCourse();
+        }
+        else{
+            this.setState({currentStep: this.state.currentStep + 1 >2 ? 2 : this.state.currentStep + 1 })
+
+        }
     }
 
+    handleChange = (e)=>{
+        var currCourse = {...this.state.course};
+        if(e.target.id){
+            currCourse[e.target.id] = e.target.value;
+        }
+        else if(e.target.name){
+            currCourse[e.target.name] = e.target.value;
 
+        }
+        this.setState({course:currCourse})
+    }
     getContent = ()=>{
         if(this.state.currentStep === 0){
             return this.courseInfo();
@@ -158,19 +197,20 @@ export default class NewCreateCourse extends Component {
         return <div className="addCourse__content__page-1">
             <div className='page-name'>Course Info</div>
 
-            <TextField sx={{width:'50%'}} id="outlined-basic" label="Course Name" variant="outlined" />
+            <TextField  onChange={this.handleChange} sx={{width:'50%'}} id="title" label="Course Name" variant="outlined" />
             <FormControl sx={{width:'30%', marginLeft:'20px'}}>
                 <InputLabel id="demo-simple-select-label">Subject</InputLabel>
                 <Select
                 labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                value={20}
+                id="subject"
+                value={this.state.course.subject}
                 label="Subject"
+                name='subject'
                 onChange={this.handleChange}
                 >
-                <MenuItem value={10}>Computer</MenuItem>
-                <MenuItem value={20}>Math</MenuItem>
-                <MenuItem value={30}>IDK</MenuItem>
+                <MenuItem value={'Computer'}>Computer</MenuItem>
+                <MenuItem value={'Math'}>Math</MenuItem>
+                <MenuItem value={'Operating Systems'}>OS</MenuItem>
                 </Select>
             </FormControl>
         </div>
@@ -180,9 +220,9 @@ export default class NewCreateCourse extends Component {
         return <div className="addCourse__content__page-2">
             <div className='page-name'>Course Summary & Price</div>
 
-            <TextField sx={{width:'50%'}} id="outlined-basic" label="Course Summary" variant="outlined" multiline rows={6}/>
+            <TextField onChange={this.handleChange}  sx={{width:'50%'}} id="summary" label="Course Summary" variant="outlined" multiline rows={6}/>
             <div style={{width:'50%'}}>
-                <TextField type="number" sx={{width:'30%', marginTop:'10px'}} id="outlined-basic" label="Price" variant="outlined" />
+                <TextField onChange={this.handleChange}  type="number" sx={{width:'30%', marginTop:'10px'}} id="price" label="Price" variant="outlined" />
             
             </div>
 
@@ -191,7 +231,7 @@ export default class NewCreateCourse extends Component {
     }
     addVideo = ()=>{
         var newVideosIndex = (this.state.course.subtitles[this.state.currentSubtitleIndex].videos).length;
-        var newVideo = {link:'',description:''};
+        var newVideo = {link:'',description:'', hours:0.1};
         var currentVids = [...this.state.course.subtitles[this.state.currentSubtitleIndex].videos];
         currentVids.push(newVideo);
         var newSubtitle = {...this.state.course.subtitles[this.state.currentSubtitleIndex]};
@@ -212,7 +252,8 @@ export default class NewCreateCourse extends Component {
             preview:'',
             videos:[{
                 link:'',
-                description:''
+                description:'',
+                hours:0.1
             }]
         }
         var currentSubs = [...this.state.course.subtitles];
@@ -348,6 +389,8 @@ export default class NewCreateCourse extends Component {
             </div>
         )
     }
+    // <Alert severity="success">This is a success message!</Alert>
+
   render() {
     return (
       <div className='addCourse'>

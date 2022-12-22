@@ -42,6 +42,10 @@ import TraineeExercise from './components/TraineeExercise';
 import TraineeSolution from './components/TraineeSolution';
 import TraineeViewCourseDetails from './components/traineeViewCourseDetails';
 
+axios.defaults.withCredentials = true;
+axios.defaults.headers = 'Access-Control-Allow-Origin: http://localhost:3000';
+axios.defaults.headers = 'Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS';
+axios.defaults.headers = 'Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token'
 
 class App extends Component {
 
@@ -118,7 +122,7 @@ class App extends Component {
             <Route exact path="/guest" element={<Guest />}></Route>
             <Route exact path="/admin/addUsers" element={<Admin />}></Route>
             <Route exact path="/admin/promotions" element={<AddPromotions />}></Route>
-            <Route exact path="/admin" element={<AdminDB />}></Route>
+            <Route exact path="/administrator" element={<AdminDB />}></Route>
             <Route exact path="/admin/courseRequests" element={<AdminCourseReqs />}></Route>
             
 
@@ -135,7 +139,7 @@ class App extends Component {
             <Route exact path="/instructor/createCourse" element={<NewCreateCourse />}></Route>
 
             
-            <Route exact path="/user/profile" element={<UserProfile />}></Route>
+            <Route exact path="/user" element={<UserProfile />}></Route>
             <Route exact path="/user/reports" element={<UserReports />}></Route>
             <Route exact path="/user/requestCourseAccess" element={<RequestCourseAccess />}></Route>
             <Route exact path="/admin/reports" element={<AdminReports />}></Route>

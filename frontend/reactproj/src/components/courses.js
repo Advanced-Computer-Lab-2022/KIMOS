@@ -48,11 +48,14 @@ class courses extends Component {
         headers: { 'Access-Control-Allow-Origin': '*' }
       });
 
-      this.setState({ subjects: res.data.subjects }, () => {
-        this.state.subjects.forEach((subject) => {
-          this.state.subjectsFilter[subject] = false;
+      if(res.data.success){
+        this.setState({ subjects: res.data.payload }, () => {
+          this.state.subjects.forEach((subject) => {
+            this.state.subjectsFilter[subject] = false;
+          });
         });
-      });
+      }
+
     } catch (e) {}
   };
   getQueryVariable() {
@@ -70,11 +73,11 @@ class courses extends Component {
     const body = keywordObj;
     console.log(body);
     try {
-      const res = await axios.get('http://localhost:5000/courses/findCourses', {
-        headers: { 'Access-Control-Allow-Origin': '*' }
+      const res = await axios.get('http://localhost:5000/courses', {
+        headers: {  }
       });
 
-      this.setState({ courses: res.data, mainCourses: res.data }, () => {
+      this.setState({ courses: res.data.payload, mainCourses: res.data.payload }, () => {
         this.updateCourses();
       });
     } catch (e) {}

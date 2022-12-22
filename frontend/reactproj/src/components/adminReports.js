@@ -21,10 +21,21 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import StarIcon from '@mui/icons-material/Star';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import ReportGmailerrorredIcon from '@mui/icons-material/ReportGmailerrorred';
-
+import axios from 'axios';
+import erenSmiling from '../assets/eren-smiliing.png';
+import andrew from '../assets/andrewpp2.png';
+import {connect} from 'react-redux';
+import Loading from './loadingPage';
 
 class adminReports extends Component {
-
+    getReports = async ()=>{
+        const res = await axios.get("http://localhost:5000/users/report");
+        console.log(res.data.payload.reports)
+        this.setState({reports:res.data.payload.reports, loading:false});
+    }
+    componentDidMount(){
+        this.getReports();
+    }
     rows = [{
         id:'1',
         issue:'issue number one',
@@ -40,14 +51,8 @@ class adminReports extends Component {
         seen:1
     }]
     columns = [
-        { 
-          field: 'id', headerName: 'ID',
-          flex: 0.05,
-          minWidth: 40,
-          align:'center',
-          headerAlign:'center'
-        },
-        { field: 'issue', headerName: 'Issue',
+
+        { field: 'title', headerName: 'Issue',
           flex: 1,
           minWidth: 40,
           align:'center',
@@ -55,7 +60,7 @@ class adminReports extends Component {
       
           },
         {
-          field: 'issueType',
+          field: 'type',
           headerName: 'Issue Type',
           flex: 1,
           minWidth: 40,
@@ -63,17 +68,17 @@ class adminReports extends Component {
           headerAlign:'center'
         },
         {
-          field: 'issueStatus',
+          field: 'status',
           headerName: 'Issue Status',
           flex: 0.35,
           minWidth: 40,
           align:'center',
           headerAlign:'center',
           renderCell: rowData => {
-
+             var status = rowData.row.status === 'resolved' ? 'Resolved':'Pending' 
              return (      <Stack direction="row" spacing={1} alignItems="center">
-                                <Switch defaultChecked inputProps={{ 'aria-label': 'ant design' }} />
-                                <p>Resolved</p>
+                                <Switch onChange={(e)=>{this.handleSwitchChange(e, rowData.row['_id'])}} defaultChecked={rowData.row.status === 'resolved'} inputProps={{ 'aria-label': 'ant design' }} />
+                                <p>{status}</p>
                             </Stack>)
         }
         }
@@ -87,8 +92,8 @@ class adminReports extends Component {
           headerAlign:'center',
           renderCell: rowData => {
 
-             return (rowData.row.issueStatus === 'pending'&& <div style={{ width:'100%', height:'100%', display:'flex', alignItems:'center', justifyContent:'space-around'}}>
-                                <ChatIcon style={{cursor:'pointer'}} onClick={()=>{this.setState({chatModal:true})}}/>
+             return (true&& <div style={{ width:'100%', height:'100%', display:'flex', alignItems:'center', justifyContent:'space-around'}}>
+                                <ChatIcon style={{cursor:'pointer'}} onClick={()=>{this.setState({chatModal:true, currentReport:rowData.row})}}/>
                                 </div>)
         }
         },
@@ -101,7 +106,7 @@ class adminReports extends Component {
             headerAlign:'center',
             renderCell: rowData => {
   
-               return (rowData.row.issueStatus === 'pending'? <AttachMoneyIcon style={{cursor:'pointer', color:'green'}} onClick={()=>{this.setState({refundModal:true})}}/> : (<div></div>))
+               return (rowData.row.status === 'pending'? <AttachMoneyIcon style={{cursor:'pointer', color:'green'}} onClick={()=>{this.setState({refundModal:true})}}/> : (<div></div>))
           }
           },
           {
@@ -110,10 +115,11 @@ class adminReports extends Component {
             flex: 0.3,
             minWidth: 40,
             align:'center',
+            valueFormatter: ({ value }) => {return 0},
             headerAlign:'center',
             renderCell: rowData => {
   
-               return (rowData.row.issueStatus === 'pending'? <VisibilityIcon/> : <VisibilityOffIcon />)
+               return (rowData.row.status !== 'unseen'? <VisibilityIcon /> : <VisibilityOffIcon />)
           }
           },
           
@@ -122,6 +128,7 @@ class adminReports extends Component {
       ];
 
     state = {
+        loading: true,
         chatModal:false,
         refundModal:false,
         showReports:true,
@@ -130,28 +137,71 @@ class adminReports extends Component {
             {user:'admin', mssg:'We are checking your issue'},
             {user:'admin', mssg:'Whats wrong with your issue?'},
             {user:'user', mssg:'I want to refund a course'},
-        ]
+        ],
+        reports:[],
+        currentReport:{messages:[]}
     }
     handleMssgChange = (e)=>{
         this.setState({textInput:e.target.value})
     }
-    sendMssg = ()=>{
-        var nMssgs = [...this.state.mssgs];
-        nMssgs.push({user:'user',mssg:this.state.textInput})
-        this.setState({mssgs:nMssgs}, ()=>{
-            this.setState({textInput:''})
+    keyPress = (e)=>{
+        if(e.keyCode === 13){
+            this.sendMssg();
+         }
+    }
+
+    updateReportStatus = (id, status)=>{
+        var currReport = {};
+        this.state.reports.forEach((report)=>{
+            if(report["_id"] === id){
+                currReport = report; 
+            }
         })
+        currReport.status = status;
+    }
+    handleSwitchChange = async (e, id) =>{
+        this.setState({loading:true});
+        var status = e.target.checked ? "resolved":"pending";
+        const res = await axios.put("http://localhost:5000/users/report?reportId="+id,{
+                newStatus:status
+        })
+        this.getReports();
+
+    }
+    sendMssg = ()=>{
+        var nMssgs = [...this.state.currentReport.messages];
+
+        var newMssg = {userType:this.props.user.userType, message:this.state.textInput};
+        nMssgs.push(newMssg);
+        var currRep = {...this.state.currentReport};
+        currRep.messages = nMssgs;
+        this.setState({currentReport:currRep, textInput:''}, ()=>{
+            this.sendMssgAPI(newMssg);
+        })
+
+        
+        // nMssgs.push({user:'user',mssg:this.state.textInput})
+        // this.setState({mssgs:nMssgs}, ()=>{
+        //     this.setState({textInput:''})
+        // })
+    }
+
+    sendMssgAPI = async (message)=>{
+        var data = {messages:[]}
+        data.messages.push(message);
+        const res = await axios.patch("http://localhost:5000/users/report?reportId="+this.state.currentReport["_id"],data)
+
     }
     getMessages = ()=>{
 
-        return this.state.mssgs.map((mssg)=>{
-            var classNameType = mssg.user==='admin'?'mssg user-mssg':'mssg admin-mssg';
-            var classFloat = mssg.user==='admin'?'mssg__content-user':'mssg__content-admin';
+        return this.state.currentReport.messages.map((mssg)=>{
+            var classNameType = mssg.userType==='administrator'?'mssg user-mssg':'mssg admin-mssg';
+            var classFloat = mssg.userType==='administrator'?'mssg__content-user':'mssg__content-admin';
         
         
-        var avatar = mssg.user === 'admin' ? (<Avatar sx={{ marginRight:'10px',bgcolor: deepOrange[500] }}>A</Avatar>):(<Avatar sx={{ marginRight:'10px', bgcolor: deepPurple[500] }}>OP</Avatar>);
+        var avatar = mssg.userType === "administrator" ? (<Avatar sx={{ width: 30, height: 30 , marginRight:'10px',bgcolor: deepOrange[500] }} src={erenSmiling}/>):(<Avatar sx={{width: 30, height: 30, marginRight:'10px', bgcolor: deepPurple[500] }} src={andrew}/>);
             return ( 
-                <div className={classNameType}><div className={classFloat}>{avatar}{mssg.mssg}</div></div>
+                <div className={classNameType}><div className={classFloat}>{avatar}{mssg.message}</div></div>
             )
         })
     }
@@ -168,16 +218,17 @@ class adminReports extends Component {
     render() {
         return (
             <div  style={{display:'flex', flexDirection:'column'}}>
+                {this.state.loading && <Loading />}
                 {this.state.showReports &&(
                 <div  style={{height:'100%', display:'flex', flexDirection:'column'}}><div className='instructor-courses__title' style={{margin:'10px'}}>Reported Problems</div>
                 <div className='instructor-courses__table'>
                     <DataGrid
-                        rows={this.rows}
+                        rows={this.state.reports}
                         columns={this.columns}
                         pageSize={20}
                         rowsPerPageOptions={[20]}
-
-                       
+                        getRowId={(row) => row['_id']}
+                        disableSelectionOnClick
                     />
                 </div>
                 <Modal
@@ -191,12 +242,12 @@ class adminReports extends Component {
                         <div className='chat-container__chat'>
                             {this.getMessages()}
                         </div>
-                        <div className='chat-container__bottom'>
+                        {this.state.currentReport.status !=='resolved' && <div className='chat-container__bottom'>
                             <div className='chat-container__bottom__text'>
-                                <TextField value= {this.state.textInput} onChange={this.handleMssgChange} style={{width:'100%'}} label="Message" variant="outlined" />
+                                <TextField onKeyDown={this.keyPress}  value= {this.state.textInput} onChange={this.handleMssgChange} style={{width:'100%'}} label="Message" variant="outlined" />
                             </div>
                             <PrimaryBtn function={this.sendMssg} btnText="Send"/>
-                        </div>
+                        </div>}
 
 
                         
@@ -283,5 +334,10 @@ class adminReports extends Component {
         );
     }
 }
-
-export default adminReports;
+const mapStateToProps = (state) => {
+    return {
+      user: state.user
+    };
+  };
+  
+export default connect(mapStateToProps)(adminReports);

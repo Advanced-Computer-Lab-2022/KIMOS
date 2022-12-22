@@ -287,3 +287,27 @@
     }
   }
   
+
+
+.profile__options{
+  transition: all 0.3s;
+  display:flex;
+  align-items:center;
+  font-weight:bolder;
+  font-size:20px;
+  margin:5px;
+  cursor:pointer;
+  width: fit-content;
+  padding-left: 30px;
+  padding-right: 30px;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-radius: 10px;
+
+}
+
+.profile__options:hover{
+  color: var(--primary-color);
+  background-color: var(--cool-grey);
+  transform: scale(1.1);
+}

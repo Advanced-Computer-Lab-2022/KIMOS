@@ -68,15 +68,14 @@
     &__content-admin{
 
         height: 100%;
-        padding-left: 20px;
-        padding-right: 20px;
-        padding-top: 10px;
-        padding-bottom: 10px;
+        padding-left: 5px;
+        padding-right: 15px;
+        padding-top: 5px;
+        padding-bottom: 5px;
         width: fit-content;
-        border-radius: 10px;
+        border-radius: 15px;
         background-color: var(--cool-grey);
         color:black;
-        display: flex;
         display: flex;
         align-items: center;
 
@@ -84,13 +83,13 @@
     &__content-user{
 
         height: 100%;
-        padding-left: 20px;
-        padding-right: 20px;
-        padding-top: 10px;
-        padding-bottom: 10px;
+        padding-left: 5px;
+        padding-right: 15px;
+        padding-top: 5px;
+        padding-bottom: 5px;
 
         width: fit-content;
-        border-radius: 10px;
+        border-radius: 15px;
         background: linear-gradient(45deg, $primary-color-linear, $primary-color);
         color:white;
         display: flex;
