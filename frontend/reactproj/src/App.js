@@ -20,6 +20,8 @@ import WatchVideo from './components/watchVideo';
 import PasswordReset from './components/passwordReset';
 import ViewInstructorProfile from './components/viewInstructorProfile';
 import HomeLand from './components/homeLand';
+import PaymentLoading from './components/paymentLoading';
+import PaymentCancelled from './components/paymentCancelled';
 
 import axios from 'axios';
 axios.defaults.withCredentials = true;
@@ -101,6 +103,8 @@ class App extends Component {
           <Routes>
           
             <Route exact path="/" element={<HomeLand />}></Route>
+            <Route exact path="/paymentLoading" element={<PaymentLoading />}></Route>
+            <Route exact path="/paymentCancelled" element={<PaymentCancelled />}></Route>
             <Route exact path="/login" element={<LoginPage />}></Route>
             <Route exact path="/signup" element={<SignUp />}></Route>
             <Route exact path="/takeNotes" element={<TakeNotes />}></Route>

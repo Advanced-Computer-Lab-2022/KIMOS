@@ -4,7 +4,7 @@ import axios from 'axios';
 const checkout = ({courseId}) => {
 
     const onclick = ()=>{
-        axios.post(`https://localhost:5000/checkout`,{items:[{courseId}]})
+        axios.post(`https://localhost:5000/checkout`,{items:courseId})
         .then(res=>{
             if(res.ok)  return res.json();
             return res.json().then(json=>Promise.reject(json));
