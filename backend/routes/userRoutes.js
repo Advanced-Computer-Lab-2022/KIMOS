@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const {checkout} = require("../controllers/paymentController");
 const {
   addUser,
   editUser,
@@ -12,7 +13,14 @@ const {
   resetPassword,
   rateInstructor,
   getCertificate,
-  sendCertificateEmail
+  sendCertificateEmail,
+  viewMostPopularCourses,
+  requestRefund,
+  requestCourseAccess,
+  viewWallet,
+  viewCourseRequests,
+  grantCourseAccess,
+  setCoursePromotion
 } = require('../controllers/userController');
 
 const {
@@ -33,6 +41,7 @@ router.put('/changePassword', loggedIn, changePassword);
 router.post('/passwordResetEmail', resetPasswordSendEmail);
 router.post('/passwordReset', resetPasswordAuth, resetPassword);
 router.put('/changePassword', loggedIn, changePassword);
+router.post("/createCheckoutSession", checkout)
 router
   .route('/certificate', loggedIn, isRegisteredToCourse)
   .get(getCertificate)

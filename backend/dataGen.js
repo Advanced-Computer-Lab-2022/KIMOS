@@ -2,6 +2,7 @@ const { faker } = require('@faker-js/faker');
 const connectDB = require('./config/db');
 const Course = require('./models/courseModel');
 const exerciseModel = require('./models/exerciseModel');
+const RegisteredCourses = require('./models/registeredCoursesModel');
 
 const instructorId = '638117c243cba3f0babcc3a9';
 
@@ -31,6 +32,12 @@ generateCourse = () => {
 main = async () => {
   try {
     await connectDB();
+    const sortedByCountCourses = await RegisteredCourses.find().aggregate([{$sortByCount: "$courseId"}]);
+    console.log(sortedByCountCourses);
+    const mostPopularCourses = new Array();
+    sortedByCountCourses.forEach((p)=>{
+    mostPopularCourses.push(p["_id"]);
+    });
     // for(let i = 0; i < 15 ; i++){
     //     try{
     //         await Course.create(generateCourse())

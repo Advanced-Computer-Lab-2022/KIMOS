@@ -8,7 +8,9 @@ var registeredCoursesSchema = new mongoose.Schema({
   },
   courseId: {
     type: String,
-    required: true
+    ref: 'Course',
+    required: true,
+    
   },
   progress: {
     type: Number,

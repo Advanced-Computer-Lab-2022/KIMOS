@@ -9,6 +9,11 @@ const { updateRating, viewRating, createRating } = require('./ratingController')
 const { getCourseInfo } = require('./courseController');
 const PDFDocument = require('pdfkit');
 const asyncHandler = require('express-async-handler');
+const RegisteredCourses = require('../models/registeredCoursesModel');
+const AccessRequests = require('../models/accessRequestsModel');
+const RefundRequests = require('../models/refundRequestsModel');
+const Course = require('../models/courseModel');
+
 
 //All user
 
@@ -89,6 +94,17 @@ const changeCountry = asyncHandler(async (req, res) => {
   await User.findByIdAndUpdate(userId, { country: newCountry });
   res.status(200).json({ success: true, message: 'Country successfully updated', statusCode: 200 });
 });
+
+const getCountryIso = (countryCode)=>{
+    var countryDetails = {};
+    try {
+      countryDetails = getAllInfoByISO(countryCode);
+      return countryDetails.currency;
+    } catch (err) {
+      return 'USD';
+    }
+    
+}
 
 const getRate = asyncHandler(async (req, res) => {
   const { countryCode } = req.query;
@@ -343,6 +359,62 @@ const sendCertificateEmail = asyncHandler(async (req, res) => {
   doc.end();
 });
 
+const viewMostPopularCourses = async (req, res)=>{
+  const sortedByCountCourses = await RegisteredCourses.find({}, {courseId}).aggregate([{$sortByCount: "$courseId"}]).populate('courseId').toArray();
+  const mostPopularCourses = new Set(sortedByCountCourses);
+  const mostPopularCoursesArr = Array.from(mostPopularCourses);
+  res.status(200).json(mostPopularCoursesArr);
+}
+
+const requestRefund = async (req,res)=>{
+  const {userId, courseId} = req.query;
+  const record = await RegisteredCourses.findOne({userId:userId,courseId:courseId}).populate();
+  if(record[progress] < 50){
+    await RefundRequests.create({userId:userId, courseId:courseId});
+    res.status(200).json({ success: true, statusCode: 200, message: 'Request Recieved Successfully!' });
+  }
+  else{
+    res.status(500).json({ success: false, statusCode: 500, message: 'Student Attended More than 50% of Course!' });
+  }
+}
+
+const requestCourseAccess = async (req, res)=>{
+  const{userId, courseId} = req.query;
+  await AccessRequests.create({userId:userId, courseId:courseId});
+  res.status(200).json({ success: true, statusCode: 200, message: 'Request Recieved Successfully!' });
+}
+
+const viewWallet = (req, res)=>{
+  const {userId} = req.query;
+  const wallet = User.findById(userId).wallet;
+  res.status(200).json(wallet);
+}
+
+const viewCourseRequests = async (req, res)=>{
+  const courseRequests = await AccessRequests.find().populate();
+  res.status(200).json(courseRequests);
+}
+
+const grantCourseAccess = async(req,res)=>{
+  const {userId, courseId} = req.query;
+  await AccessRequests.findByIdAndDelete({userId:userId, courseId:courseId});
+  await RegisteredCourses.create({userId:userId, courseId:courseId, progress:0.0});
+  res.status(200).json({ success: true, statusCode: 200, message: 'Course Access Granted Successfully!' });
+}
+
+const setCoursePromotion = async (req,res)=>{
+  const {courseIdList, discount, startDate, endDate} = req.body;
+  for (var i = 0; i < courseIdList.length; i++) { 
+    await Course.findByIdAndUpdate(courseIdList[i], {$set:{'discount.type.amount':discount, 'discount.duration.startDate':startDate,'discount.duration.endDate':endDate}});
+  }
+}
+
+
+
+const refundToWallet = async (req, res)=>{
+
+}
+
 module.exports = {
   signUp,
   login,
@@ -358,5 +430,13 @@ module.exports = {
   resetPassword,
   getUser,
   getCertificate,
-  sendCertificateEmail
+  sendCertificateEmail,
+  viewMostPopularCourses,
+  requestRefund,
+  requestCourseAccess,
+  viewWallet,
+  viewCourseRequests,
+  grantCourseAccess,
+  setCoursePromotion,
+  getCountryIso
 };
