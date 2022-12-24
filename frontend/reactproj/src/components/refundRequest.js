@@ -13,23 +13,36 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 });
 
 
-export default function RefundRequest() {
-  const [open, setOpen] = React.useState(false);
+export default function RefundRequest(props) {
+  const [openSuccess, setOpenSuccess] = React.useState(false);
+  const [openFailure, setOpenFailure] = React.useState(false);
   const [input,setInput]=useState('');
 
   const handleClick = () => {
+     if(input!=''){
+      setOpenSuccess(true);
+      props.close();
+      props.feedback(true);
+     }
+     else{
+      setOpenFailure(true);
+     }
     
-      setOpen(true);
-   
-   
-
+      
   };
 
   const handleClose = (event, reason) => {
     if (reason === 'clickaway') {
       return;
     }
-    setOpen(false);
+    setOpenSuccess(false);
+  };
+
+  const handleCloseNoReason = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+    setOpenFailure(false);
   };
 
   return (
@@ -37,48 +50,14 @@ export default function RefundRequest() {
       <div style={{display:"flex",flexDirection:"column",maxWidth:800,rowGap:20}}>
         <h1>Requesting a Course Refund</h1>
 
-        {/*<label style={{lineHeight:1.5}}>
-          If you are unhappy with an online course you have purchased from our website, 
-          you can request a refund if you have attended less than 50% of the course.
-  </label>*/}
-
         <label>PLease submit the reason of your inconvenience to this course below:</label>
 
         <TextField multiline
           required
           value={input}
-          onChange={(event)=>{setOpen(false);setInput(event.target.value)}}
+          onChange={(event)=>{setOpenSuccess(false);setOpenFailure(false);setInput(event.target.value)}}
           style={{width:380}} 
           ></TextField>
-{/*
-        <ul style={{marginLeft:30,listStyle:"inside",lineHeight:1.8}}>
-          <div style={{display:"flex",columnGap:20}}>
-            <li>Your name</li>
-            <input style={{width:200,height:27,outline:"none",color:"var(--primary-color)"}}/>
-          </div>
-
-          <div style={{display:"flex",columnGap:20}}>
-            <li>Your email address</li>
-            <input style={{width:200,height:27,outline:"none",color:"var(--primary-color)"}}/>
-          </div>
-
-          <div style={{display:"flex",columnGap:20}}>
-            <li>Your course title</li>
-            <input style={{width:200,height:27,outline:"none",color:"var(--primary-color)"}}/>
-          </div>
-
-          <div style={{display:"flex",columnGap:20}}>
-            <li>Your course subject</li>
-            <input style={{width:200,height:27,outline:"none",color:"var(--primary-color)"}}/>
-          </div>
-
-          <div style={{display:"flex",columnGap:20}}>
-            <li>The method of payment you used for the initial purchase</li>
-            <input style={{width:200,height:27,outline:"none",color:"var(--primary-color)"}}/>
-          </div>
-          
-        </ul>
-  */}
 
         <label style={{lineHeight:1.5}}>
           Most refunds are returned via the original payment method. If another person 
@@ -107,13 +86,13 @@ export default function RefundRequest() {
             Request
           </Button>
           {input !== '' ? 
-          <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
+          <Snackbar open={openSuccess} autoHideDuration={6000} onClose={handleClose}>
             <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
               Your request is sent successfully!
             </Alert>
           </Snackbar>:
-          <Snackbar  open={open} autoHideDuration={6000} onClose={handleClose}>
-          <Alert onClose={handleClose} severity="error" sx={{ width: '100%' }}>
+          <Snackbar  open={openFailure} autoHideDuration={6000} onClose={handleCloseNoReason}>
+          <Alert onClose={handleCloseNoReason} severity="error" sx={{ width: '100%' }}>
             Please enter a reason for your inconvenience!
           </Alert>
         </Snackbar>

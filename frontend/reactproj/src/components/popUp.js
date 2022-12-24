@@ -21,7 +21,7 @@ function PopUp(){
                                 <h1 class="x" onClick={closePopup}>X</h1>
                             </div>
                             
-                            <RefundRequest></RefundRequest>
+                            <RefundRequest close={closePopup} test={"his"}/>
                             
                         </div>
                     </div>:""

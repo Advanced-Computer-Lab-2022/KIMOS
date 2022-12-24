@@ -11,6 +11,12 @@ import { Button } from '@mui/material';
 import '../styles/components/popUp.scss';
 import RefundRequest from '../components/refundRequest';
 import DisabledByDefaultIcon from '@mui/icons-material/DisabledByDefault';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -45,13 +51,28 @@ const rows = [
 ];
 
 export default function UserPurchases() {
-  const [popup,setPop]=useState(false)
+  const [popup,setPop]=useState(false);
+  //
+  const [openSuccess, setOpenSuccess] = React.useState(false);
+
     const handleClickOpen=()=>{
         setPop(!popup)
     }
     const closePopup=()=>{
         setPop(false)
     }
+
+    const successRefundRequest=(isSuccess)=>{
+      setOpenSuccess(isSuccess);
+    }
+
+    //
+    const handleClose = (event, reason) => {
+      if (reason === 'clickaway') {
+        return;
+      }
+      setOpenSuccess(false);
+    };
 
   return (
     <div style={{display:"flex",flexDirection:"column",justifyContent:"center",alignItems:"center",marginTop:30}}>
@@ -61,43 +82,57 @@ export default function UserPurchases() {
           <TableHead>
             <TableRow>
               <StyledTableCell align="center">Course Name</StyledTableCell>
-              <StyledTableCell align="left">Date</StyledTableCell>
-              <StyledTableCell align="left">Price</StyledTableCell>
-              <StyledTableCell align="left" style={{paddingLeft:"45px"}}>Refund Request</StyledTableCell>
+              <StyledTableCell align="center">Date</StyledTableCell>
+              <StyledTableCell align="center">Price</StyledTableCell>
+              <StyledTableCell align="center">Refund Request</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {rows.map((row) => (
               <StyledTableRow key={row.name}>
                 <StyledTableCell align="center">{row.title}</StyledTableCell>
-                <StyledTableCell align="left">{row.date}</StyledTableCell>
-                <StyledTableCell align="left">{row.price}</StyledTableCell>
-                <StyledTableCell align="left" style={{paddingLeft:"45px"}}>
+                <StyledTableCell align="center">{row.date}</StyledTableCell>
+                <StyledTableCell align="center">{row.price}</StyledTableCell>
+                {false?
+                  <StyledTableCell align="center" style={{color:"var(--primary-color)"}}>Pending</StyledTableCell>
+                  :
+                
+                <StyledTableCell align="center" >
                 <div>
-                  <Button variant="outlined" style={{width:90,fontSize:"12px"}} onClick={handleClickOpen}>Request</Button>
+                  <Button variant="outlined" value={openSuccess} style={{width:90,fontSize:"12px"}} onClick={handleClickOpen}>Request</Button>
                   <div>
                   {
                     popup?
-                    <div className="main">
+                    <div className="main" style={{textAlign:"left"}}>
                         <div className="popup">
                             <div className="popup-header">
                                 <DisabledByDefaultIcon class="x" onClick={closePopup}></DisabledByDefaultIcon>
                             </div>
                             
-                            <RefundRequest></RefundRequest>
+                            <RefundRequest close={closePopup} feedback={successRefundRequest}></RefundRequest>
                             
                         </div>
                     </div>:""
                   }
-            </div>
+                  </div>
                 </div>
-                
                 </StyledTableCell>
-              </StyledTableRow>
+              
+              
+                }
+                </StyledTableRow>  
             ))}
           </TableBody>
         </Table>
       </TableContainer>
+
+      {openSuccess ? 
+          <Snackbar open={openSuccess} autoHideDuration={6000} onClose={handleClose}>
+            <Alert onClose={handleClose} severity="success" sx={{ width: '100%' }}>
+              Your request is sent successfully!
+            </Alert>
+          </Snackbar>:<div></div>
+        }
     </div>
   
   )
