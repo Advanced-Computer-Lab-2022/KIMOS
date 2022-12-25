@@ -17,6 +17,7 @@ const {
   submitSolution,
   rateCourse,
   addExam,
+  viewCourseTrainee,
   removeExam,
   modifyExam
 } = require('../controllers/courseController');
@@ -52,6 +53,10 @@ router
   .route('/exam/solution')
   .post(loggedIn, registeredCourseAuth, submitSolution) //all good
   .get(loggedIn, getExamSolution); //all good
+
+router
+  .route('/getMyCourse')
+  .get(loggedIn, isRegisteredToCourse, isCorporateTrainee, viewCourseTrainee);
 router.route('/register').post(loggedIn, registerUser).get(loggedIn, getAllRegisteredCourses); //all good
 
 router

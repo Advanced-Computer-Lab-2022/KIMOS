@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const { checkout } = require('../controllers/paymentController');
 const {
   addUser,
   editUser,
@@ -13,7 +14,14 @@ const {
   resetPassword,
   rateInstructor,
   getCertificate,
-  sendCertificateEmail
+  sendCertificateEmail,
+  viewMostPopularCourses,
+  requestRefund,
+  requestCourseAccess,
+  viewWallet,
+  viewCourseRequests,
+  grantCourseAccess,
+  setCoursePromotion
 } = require('../controllers/userController');
 
 const {
@@ -21,7 +29,8 @@ const {
   loggedIn,
   isRegisteredWithInstructor,
   resetPasswordAuth,
-  registeredCourseAuth
+  registeredCourseAuth,
+  registerCourseAuth
 } = require('../middleware/auth');
 
 const {
@@ -30,6 +39,8 @@ const {
   changeStatus,
   getReports
 } = require('../controllers/reportController');
+
+const { createInvoice } = require('../controllers/invoiceController');
 const { isLoggedIn } = require('../middleware/helper');
 
 router.route('/').post(loggedIn, adminAuth, addUser).put(loggedIn, editUser).get(loggedIn, getMe); //all good
@@ -47,4 +58,7 @@ router
   .get(loggedIn, getReports) //all good
   .put(loggedIn, adminAuth, changeStatus) //all good
   .patch(loggedIn, adminAuth, addMessages); //all good
+
+router.post('/createCheckoutSession', loggedIn, checkout); //all good
+router.post('/invoice', loggedIn, registerCourseAuth, createInvoice);
 module.exports = router;
