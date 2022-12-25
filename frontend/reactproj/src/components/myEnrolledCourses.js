@@ -27,7 +27,7 @@ export default function myEnrolledCourses() {
   return (
     <div>
         <div style={{display:"flex",justifyContent:"center",marginTop:20}}>
-            <h1>MY COURSES</h1>
+            <h1 style={{color:"var(--primary-color)"}}>MY COURSES</h1>
         </div>
       
 

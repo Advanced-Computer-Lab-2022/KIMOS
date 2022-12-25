@@ -128,7 +128,7 @@ function createData(month) {
 export default function moneyOwedPerMonth() {
   return (
     <div>
-    <h1 style={{marginLeft:590,marginTop:30,marginBottom:30}}>My Profit</h1>
+    <h1 style={{marginLeft:590,marginTop:30,marginBottom:30,color:"var(--primary-color)"}}>My Profit</h1>
     <TableContainer component={Paper} style={{width:700,margin:"auto"}}>
       <Table aria-label="collapsible table">
         <TableHead style={{backgroundColor:"black"}}>

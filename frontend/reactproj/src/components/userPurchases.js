@@ -76,7 +76,7 @@ export default function UserPurchases() {
 
   return (
     <div style={{display:"flex",flexDirection:"column",justifyContent:"center",alignItems:"center",marginTop:30}}>
-      <h1>My Purchases</h1>
+      <h1 style={{color:"var(--primary-color)"}}>My Purchases</h1>
       <TableContainer component={Paper} style={{margin:"auto",width:"75%"}}>
         <Table aria-label="customized table">
           <TableHead>
