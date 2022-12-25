@@ -21,6 +21,7 @@ const {
   removeExam,
   modifyExam
 } = require('../controllers/courseController');
+const {getAllRatings} = require('../controllers/ratingController');
 const { addQuiz, editQuiz, deleteQuiz } = require('../controllers/subtitleController');
 const { isRegisteredToCourse, isCorporateTrainee, isLoggedIn } = require('../middleware/helper');
 const {
@@ -37,7 +38,8 @@ router
   .get(isLoggedIn, isCorporateTrainee, findCourses) //all good
   .post(loggedIn, instructorAuth, createCourse) //all good
   .put(loggedIn, editCourseAuth, editCourse); //all good
-router.route('/rate').post(loggedIn, registeredCourseAuth, rateCourse); //all good
+router.route('/rate').post(loggedIn, registeredCourseAuth, rateCourse)  //all good
+  .get(loggedIn,getAllRatings);
 router
   .route('/exam')
   .get(loggedIn, findExam) //all good

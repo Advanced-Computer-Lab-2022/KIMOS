@@ -13,6 +13,10 @@ const ratingSchema = mongoose.Schema({
   rating: {
     type: Number,
     required: [true, 'Please Specify the rating']
+  },
+  review:{
+    type: String,
+    default:""
   }
 });
 

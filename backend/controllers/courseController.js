@@ -541,13 +541,13 @@ const editCourse = asyncHandler(async (req, res) => {
 const rateCourse = asyncHandler(async (req, res) => {
   const userId = res.locals.userId;
   const { courseId } = req.query;
-  const { rating } = req.body;
+  const { rating,review } = req.body;
   var newRating = 0;
   const courseInfo = await Course.findById(courseId);
   const check = await viewRating(userId, courseId);
   const currRating = courseInfo.rating;
   if (check) {
-    await updateRating(userId, courseId, rating).catch((err) => {
+    await updateRating(userId, courseId, rating,review).catch((err) => {
       throw err;
     });
     newRating =
@@ -557,7 +557,7 @@ const rateCourse = asyncHandler(async (req, res) => {
       rating: { value: newRating, numberOfRatings: currRating.numberOfRatings }
     });
   } else {
-    await createRating(userId, courseId, rating).catch((err) => {
+    await createRating(userId, courseId, rating,review).catch((err) => {
       throw err;
     });
     newRating =

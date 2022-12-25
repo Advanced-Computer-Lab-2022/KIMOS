@@ -24,6 +24,8 @@ const {
   setCoursePromotion
 } = require('../controllers/userController');
 
+const {getAllRatings} = require('../controllers/ratingController');
+
 const {
   adminAuth,
   loggedIn,

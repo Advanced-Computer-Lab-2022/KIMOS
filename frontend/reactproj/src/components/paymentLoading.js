@@ -9,7 +9,7 @@ const paymentLoading = () => {
 
     useEffect(()=>{
         //console.log(new URLSearchParams(window.location.search).get("token"));
-        axios.post(`http://localhost:5000/users/invoice?token=${new URLSearchParams(window.location.search).get("token")}`)
+        axios.post(`http://localhost:5000/users/register?token=${new URLSearchParams(window.location.search).get("token")}`)
         .then(()=>{
             window.location.href = 'http://localhost:3000';
         })
