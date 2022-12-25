@@ -8,12 +8,13 @@ const { fillCertificate } = require('../pdfProducer/pdfFiller');
 const { updateRating, viewRating, createRating } = require('./ratingController');
 const { getCourseInfo } = require('./courseController');
 const PDFDocument = require('pdfkit');
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
 const asyncHandler = require('express-async-handler');
 const RegisteredCourses = require('../models/registeredCoursesModel');
 const AccessRequests = require('../models/accessRequestsModel');
 const RefundRequests = require('../models/refundRequestsModel');
 const Course = require('../models/courseModel');
-
 
 //All user
 const signUp = asyncHandler(async (req, res) => {
@@ -128,18 +129,22 @@ const changeCountry = asyncHandler(async (req, res) => {
   }
 });
 
-const getCountryIso = (countryCode)=>{
-    var countryDetails = {};
-    try {
-      countryDetails = getAllInfoByISO(countryCode);
-      return countryDetails.currency;
-    } catch (err) {
-      return 'USD';
-    }
-    
-}
+const getCountryIso = (countryCode) => {
+  var countryDetails = {};
+  try {
+    countryDetails = getAllInfoByISO(countryCode);
+    return countryDetails.currency;
+  } catch (err) {
+    return 'USD';
+  }
+};
 
-const getRate = asyncHandler(async (req, res) => {
+const getCorrectPrice = async (countryIso) => {
+  let currencyConverter = new CC({ from: 'USD', to: countryIso, amount: 1 });
+  return await currencyConverter.convert();
+};
+
+const getRate = async (req, res) => {
   const { countryCode } = req.query;
   console.log(countryCode);
   var countryDetails = {};
@@ -426,61 +431,75 @@ const sendCertificateEmail = asyncHandler(async (userId, courseId) => {
   doc.end();
 });
 
-const viewMostPopularCourses = async (req, res)=>{
-  const sortedByCountCourses = await RegisteredCourses.find({}, {courseId}).aggregate([{$sortByCount: "$courseId"}]).populate('courseId').toArray();
+const viewMostPopularCourses = async (req, res) => {
+  const sortedByCountCourses = await RegisteredCourses.find({}, { courseId })
+    .aggregate([{ $sortByCount: '$courseId' }])
+    .populate('courseId')
+    .toArray();
   const mostPopularCourses = new Set(sortedByCountCourses);
   const mostPopularCoursesArr = Array.from(mostPopularCourses);
   res.status(200).json(mostPopularCoursesArr);
-}
+};
 
-const requestRefund = async (req,res)=>{
-  const {userId, courseId} = req.query;
-  const record = await RegisteredCourses.findOne({userId:userId,courseId:courseId}).populate();
-  if(record[progress] < 50){
-    await RefundRequests.create({userId:userId, courseId:courseId});
-    res.status(200).json({ success: true, statusCode: 200, message: 'Request Recieved Successfully!' });
+const requestRefund = async (req, res) => {
+  const { userId, courseId } = req.query;
+  const record = await RegisteredCourses.findOne({ userId: userId, courseId: courseId }).populate();
+  if (record[progress] < 50) {
+    await RefundRequests.create({ userId: userId, courseId: courseId });
+    res
+      .status(200)
+      .json({ success: true, statusCode: 200, message: 'Request Recieved Successfully!' });
+  } else {
+    res.status(500).json({
+      success: false,
+      statusCode: 500,
+      message: 'Student Attended More than 50% of Course!'
+    });
   }
-  else{
-    res.status(500).json({ success: false, statusCode: 500, message: 'Student Attended More than 50% of Course!' });
-  }
-}
+};
 
-const requestCourseAccess = async (req, res)=>{
-  const{userId, courseId} = req.query;
-  await AccessRequests.create({userId:userId, courseId:courseId});
-  res.status(200).json({ success: true, statusCode: 200, message: 'Request Recieved Successfully!' });
-}
+const requestCourseAccess = async (req, res) => {
+  const { userId, courseId } = req.query;
+  await AccessRequests.create({ userId: userId, courseId: courseId });
+  res
+    .status(200)
+    .json({ success: true, statusCode: 200, message: 'Request Recieved Successfully!' });
+};
 
-const viewWallet = (req, res)=>{
-  const {userId} = req.query;
+const viewWallet = (req, res) => {
+  const { userId } = req.query;
   const wallet = User.findById(userId).wallet;
   res.status(200).json(wallet);
-}
+};
 
-const viewCourseRequests = async (req, res)=>{
+const viewCourseRequests = async (req, res) => {
   const courseRequests = await AccessRequests.find().populate();
   res.status(200).json(courseRequests);
-}
+};
 
-const grantCourseAccess = async(req,res)=>{
-  const {userId, courseId} = req.query;
-  await AccessRequests.findByIdAndDelete({userId:userId, courseId:courseId});
-  await RegisteredCourses.create({userId:userId, courseId:courseId, progress:0.0});
-  res.status(200).json({ success: true, statusCode: 200, message: 'Course Access Granted Successfully!' });
-}
+const grantCourseAccess = async (req, res) => {
+  const { userId, courseId } = req.query;
+  await AccessRequests.findByIdAndDelete({ userId: userId, courseId: courseId });
+  await RegisteredCourses.create({ userId: userId, courseId: courseId, progress: 0.0 });
+  res
+    .status(200)
+    .json({ success: true, statusCode: 200, message: 'Course Access Granted Successfully!' });
+};
 
-const setCoursePromotion = async (req,res)=>{
-  const {courseIdList, discount, startDate, endDate} = req.body;
-  for (var i = 0; i < courseIdList.length; i++) { 
-    await Course.findByIdAndUpdate(courseIdList[i], {$set:{'discount.type.amount':discount, 'discount.duration.startDate':startDate,'discount.duration.endDate':endDate}});
+const setCoursePromotion = async (req, res) => {
+  const { courseIdList, discount, startDate, endDate } = req.body;
+  for (var i = 0; i < courseIdList.length; i++) {
+    await Course.findByIdAndUpdate(courseIdList[i], {
+      $set: {
+        'discount.type.amount': discount,
+        'discount.duration.startDate': startDate,
+        'discount.duration.endDate': endDate
+      }
+    });
   }
-}
+};
 
-
-
-const refundToWallet = async (req, res)=>{
-
-}
+const refundToWallet = async (req, res) => {};
 
 module.exports = {
   signUp,
@@ -506,5 +525,6 @@ module.exports = {
   viewCourseRequests,
   grantCourseAccess,
   setCoursePromotion,
-  getCountryIso
+  getCountryIso,
+  getCorrectPrice
 };

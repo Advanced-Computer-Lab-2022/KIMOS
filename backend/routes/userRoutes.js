@@ -29,7 +29,8 @@ const {
   loggedIn,
   isRegisteredWithInstructor,
   resetPasswordAuth,
-  registeredCourseAuth
+  registeredCourseAuth,
+  registerCourseAuth
 } = require('../middleware/auth');
 
 const {
@@ -38,6 +39,8 @@ const {
   changeStatus,
   getReports
 } = require('../controllers/reportController');
+
+const { createInvoice } = require('../controllers/invoiceController');
 const { isLoggedIn } = require('../middleware/helper');
 
 router.route('/').post(loggedIn, adminAuth, addUser).put(loggedIn, editUser).get(loggedIn, getMe); //all good
@@ -56,5 +59,6 @@ router
   .put(loggedIn, adminAuth, changeStatus) //all good
   .patch(loggedIn, adminAuth, addMessages); //all good
 
-router.post('/createCheckoutSession', checkout);
+router.post('/createCheckoutSession', loggedIn, checkout); //all good
+router.post('/invoice', loggedIn, registerCourseAuth, createInvoice);
 module.exports = router;

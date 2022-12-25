@@ -82,6 +82,31 @@ const resetPasswordAuth = asyncHandler(async (req, res, next) => {
   });
 });
 
+const registerCourseAuth = asyncHandler(async (req, res, next) => {
+  const { token } = req.query;
+  jwt.verify(token, process.env.PAYMENT_SECRET, (err, decodedToken) => {
+    if (err) {
+      res.status(401).json({
+        statusCode: 401,
+        success: false,
+        message: 'Unauthorized access',
+        stack: err.stack
+      });
+    } else {
+      if (res.locals.userId.toString() === decodedToken.userId.toString()) {
+        res.locals.courseId = decodedToken.courseId;
+        next();
+      } else {
+        res.status(401).json({
+          statusCode: 401,
+          success: false,
+          message: 'Unauthorized access'
+        });
+      }
+    }
+  });
+});
+
 const registeredCourseAuth = asyncHandler(async (req, res, next) => {
   const registration = await RegisteredCourse.findOne({
     userId: res.locals.userId,
@@ -114,6 +139,7 @@ module.exports = {
   loggedIn,
   adminAuth,
   instructorAuth,
+  registerCourseAuth,
   resetPasswordAuth,
   isRegisteredWithInstructor,
   registeredCourseAuth,

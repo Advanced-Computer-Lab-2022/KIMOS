@@ -168,7 +168,9 @@ const findCourses = asyncHandler(async (req, res) => {
                       })
                     );
                     return {
-                      ...subtitle.toObject(),
+                      title: subtitle.title,
+                      hours: subtitle.hours,
+                      videos: subtitle.videos,
                       quizzes: newQuizzes
                     };
                   }
@@ -180,7 +182,10 @@ const findCourses = asyncHandler(async (req, res) => {
                   };
                 })
               );
-              result = { ...result.toObject(), subtitles: newSubtitles };
+              const resSpread = { ...result };
+              console.log(resSpread);
+              if (resSpread._doc) result = { ...result.toObject(), subtitles: newSubtitles };
+              else result = { ...result, subtitles: newSubtitles };
             }
           }
           if (result.exams.length) {
@@ -211,10 +216,14 @@ const findCourses = asyncHandler(async (req, res) => {
                   }
                 })
               );
-              result = { ...result, exams: exams };
+              const resSpread = { ...result };
+              if (resSpread._doc) result = { ...result.toObject(), exams: exams };
+              else result = { ...result, exams: exams };
             }
           }
-          result = { registered, ...result };
+          const resSpread = { ...result };
+          if (resSpread._doc) result = { ...result.toObject(), registered };
+          else result = { ...result, registered };
         }
         return result;
       })
@@ -341,76 +350,76 @@ const addDiscount = async (courseId, discount) => {
   return returnDiscount;
 };
 
-// const viewCourseTrainee = asyncHandler(async (req, res) => {
-//   const userId = res.locals('userId');
-//   const { courseId } = req.query;
-//   var courseInfo = await Course.findById(courseId);
-//   var examsArray = [];
-//   var subtitlesArray = [];
-//   var course = await Course.findById(courseId);
-//   if (res.locals.registered) {
-//     if (courseInfo.subtitles.length) {
-//       const courseSubtitles = await course.populate('subtitles');
-//       subtitlesArray = courseSubtitles.subtitles;
-//       courseInfo.subtitles.quizzes.map(async (quiz, index) => {
-//         const s = await getSolution(userId, quiz);
-//         if (s) {
-//           return {
-//             _id: ex._id,
-//             title: ex.title,
-//             solved: true,
-//             grade: s.grade
-//           };
-//         } else {
-//           const ex = await getExam(quiz, false);
-//           return {
-//             _id: ex._id,
-//             title: ex.title,
-//             solved: false
-//           };
-//         }
-//       });
-//     }
-//     if (courseInfo.exams.length) {
-//       examsArray = await Promise.all(
-//         courseInfo.exams.map(async (exam, index) => {
-//           const s = await getSolution(userId, exam);
-//           const ex = await getExam(exam, false);
-//           if (s) {
-//             return {
-//               _id: ex._id,
-//               title: ex.title,
-//               solved: true,
-//               grade: s.grade
-//             };
-//           } else {
-//             return {
-//               _id: ex._id,
-//               title: ex.title,
-//               solved: false
-//             };
-//           }
-//         })
-//       );
-//     }
-//   }
-//   courseInfo = await courseInfo.populate('instructor', 'firstName lastName');
-//   res.status(200).json({
-//     _id: courseInfo._id,
-//     registered: res.locals.registered,
-//     discount: res.locals.corporate ? -1 : courseInfo.discount,
-//     title: courseInfo.title,
-//     price: res.locals.corporate ? -1 : courseInfo.price,
-//     totalHours: courseInfo.totalHours,
-//     subject: courseInfo.subject,
-//     instructor: courseInfo.instructor,
-//     preview: courseInfo.preview,
-//     subtitles: subtitles.array.length ? subtitles.array : courseInfo.subtitles,
-//     summary: courseInfo.summary,
-//     averageRating: courseInfo.rating,
-//     exams: examsArray.length ? examsArray : courseInfo.exams
-//   });
-// });
+const viewCourseTrainee = asyncHandler(async (req, res) => {
+  const userId = res.locals('userId');
+  const { courseId } = req.query;
+  var courseInfo = await Course.findById(courseId);
+  var examsArray = [];
+  var subtitlesArray = [];
+  var course = await Course.findById(courseId);
+  if (res.locals.registered) {
+    if (courseInfo.subtitles.length) {
+      const courseSubtitles = await course.populate('subtitles');
+      subtitlesArray = courseSubtitles.subtitles;
+      courseInfo.subtitles.quizzes.map(async (quiz, index) => {
+        const s = await getSolution(userId, quiz);
+        if (s) {
+          return {
+            _id: ex._id,
+            title: ex.title,
+            solved: true,
+            grade: s.grade
+          };
+        } else {
+          const ex = await getExam(quiz, false);
+          return {
+            _id: ex._id,
+            title: ex.title,
+            solved: false
+          };
+        }
+      });
+    }
+    if (courseInfo.exams.length) {
+      examsArray = await Promise.all(
+        courseInfo.exams.map(async (exam, index) => {
+          const s = await getSolution(userId, exam);
+          const ex = await getExam(exam, false);
+          if (s) {
+            return {
+              _id: ex._id,
+              title: ex.title,
+              solved: true,
+              grade: s.grade
+            };
+          } else {
+            return {
+              _id: ex._id,
+              title: ex.title,
+              solved: false
+            };
+          }
+        })
+      );
+    }
+  }
+  courseInfo = await courseInfo.populate('instructor', 'firstName lastName');
+  res.status(200).json({
+    _id: courseInfo._id,
+    registered: res.locals.registered,
+    discount: res.locals.corporate ? -1 : courseInfo.discount,
+    title: courseInfo.title,
+    price: res.locals.corporate ? -1 : courseInfo.price,
+    totalHours: courseInfo.totalHours,
+    subject: courseInfo.subject,
+    instructor: courseInfo.instructor,
+    preview: courseInfo.preview,
+    subtitles: subtitles.array.length ? subtitles.array : courseInfo.subtitles,
+    summary: courseInfo.summary,
+    averageRating: courseInfo.rating,
+    exams: examsArray.length ? examsArray : courseInfo.exams
+  });
+});
 
 const addExam = asyncHandler(async (req, res) => {
   const { courseId } = req.query;
@@ -664,5 +673,6 @@ module.exports = {
   rateCourse,
   removeExam,
   submitSolution,
-  getExamSolution
+  getExamSolution,
+  viewCourseTrainee
 };

@@ -41,6 +41,7 @@
     "iso-country-currency": "^0.6.0",
     "joi": "^17.7.0",
     "jsonwebtoken": "^8.5.1",
+    "luxon": "^3.1.1",
     "moment": "^2.29.4",
     "mongoose": "^6.6.5",
     "node-schedule": "^2.1.0",
