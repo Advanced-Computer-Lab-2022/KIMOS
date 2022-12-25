@@ -2,12 +2,14 @@ import * as React from 'react';
 import CircularProgress from '@mui/material/CircularProgress';
 import {Stack} from '@mui/material';
 import { useEffect } from 'react';
+import axios from 'axios';
 
 const paymentLoading = () => {
 
 
     useEffect(()=>{
-        axios.post('http://localhost:5000/users/invoice',{courseId:URLSearchParams(window.location.search).get("courseId")})
+        //console.log(new URLSearchParams(window.location.search).get("token"));
+        axios.post(`http://localhost:5000/users/invoice?token=${new URLSearchParams(window.location.search).get("token")}`)
         .then(()=>{
             window.location.href = 'http://localhost:3000';
         })

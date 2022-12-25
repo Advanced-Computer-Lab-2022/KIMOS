@@ -7,9 +7,10 @@ const createInvoice = asyncHandler(async (req, res) => {
   const userId = res.locals.userId;
   const courseId = res.locals.courseId;
   const courseInfo = await Course.findById(courseId);
+  console.log(courseInfo);
   await Invoice.create({
     userId: userId,
-    instructorId: courseInfo.instructorId,
+    instructorId: courseInfo.instructor,
     courseId: courseId,
     payment: courseInfo.price - courseInfo.price * (courseInfo.discount.amount / 100)
   });

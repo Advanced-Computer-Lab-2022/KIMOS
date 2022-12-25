@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
 import TextField from '@mui/material/TextField';
 import PrimaryButton from './buttons/primaryBtn';
-import { Link } from 'react-router-dom';
+import { Link, redirect } from 'react-router-dom';
 import { setUser } from '../redux/actions/index';
 import { connect } from 'react-redux';
+import axios from 'axios';
+//import LoadingPage from './loadingPage';
 
 class loginPage extends Component {
 
@@ -14,6 +16,37 @@ class loginPage extends Component {
 
 
   }
+  redirect = (userType) =>{
+    var type = userType;
+    if(userType === 'corporate trainee' || userType === 'individual trainee' )
+      type = 'user'
+    window.location.href = type;
+  }
+  signIn = async () => {
+    try {
+      const res = await axios.post('http://localhost:5000/login',{
+        username: this.state.username,
+        password: this.state.password
+      }, {
+        headers: { 
+          'Access-Control-Allow-Origin': 'http://localhost:3000/'
+        }
+      });
+
+      //update the user if payload is success
+      if(res.data.success === true){
+        this.props.setUser(res.data.payload)
+        alert('logged in correctly')
+        this.redirect(res.data.payload.userType)
+      }
+
+
+      // this.setState({ instructor: info, new_instructor: info });
+    } catch (e) {
+
+    }
+  };
+
   handleChange = (e)=>{
   
     this.setState({[e.target.id]:e.target.value})
@@ -50,6 +83,7 @@ class loginPage extends Component {
   }
   render() {
     return (
+      
       <div className="login-page">
         <div className='login-page__form'>
             <div className="login-page__form__left">
@@ -62,7 +96,7 @@ class loginPage extends Component {
                     <TextField style={{margin:'5px', width:'250px'}} id="password" label="Password" type="password" variant="outlined"  onChange={this.handleChange}/>
                     <Link to="/forgotPassword" style={{textDecoration:'none' , margin:'auto',color:"#00308F"}}><small>Forgot your password?</small></Link>
                     <div className="login-page__form__input__btn">
-                        <PrimaryButton function={this.logIn} btnText="Log In"/>
+                        <PrimaryButton function={this.signIn} btnText="Log In"/>
 
                     </div>
                 </div>
@@ -82,5 +116,7 @@ const mapStateToProps = (state) => {
       user: state.user
     };
   };
+  
+
   
 export default connect(mapStateToProps, { setUser: setUser })(loginPage);
