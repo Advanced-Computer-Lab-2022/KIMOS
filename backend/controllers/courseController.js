@@ -10,6 +10,7 @@ const {
   deleteQuiz,
   editQuiz
 } = require('./subtitleController');
+const { addNotification } = require('./notificationController');
 const { createExam, getExam, editExam, deleteExam } = require('./examController');
 const { viewRating, createRating, updateRating } = require('./ratingController');
 const mongoose = require('mongoose');
@@ -296,24 +297,24 @@ const addNewSubject = asyncHandler(async (req, res) => {
   res.status(200).json({ success: true, message: 'Successfully inserted', statusCode: 200 });
 });
 
-const addDiscount = async (courseId, discount) => {
+const addDiscount = asyncHandler(async (req, res) => {
+  const { courseId } = req.query;
+  const { discount } = req.body;
   const { startDate, endDate } = discount.duration;
   const startJob = schedule.scheduledJobs[courseId + 'start'];
   const endJob = schedule.scheduledJobs[courseId + 'end'];
   if (startJob) startJob.cancel();
   if (endJob) endJob.cancel();
-  var returnDiscount = {};
   var todayDate = new Date();
-  console.log(new Date(startDate));
+  await Course.findByIdAndUpdate(courseId, { discount: discount });
   if (todayDate >= new Date(startDate)) {
     if (todayDate < new Date(endDate)) {
-      returnDiscount = discount;
       schedule.scheduleJob(courseId + 'end', endDate, async function () {
         try {
           console.log(
             `Background function run to remove discount of value: ${discount.amount} for course ${courseId}`
           );
-          await Course.findByIdAndUpdate(courseId, { discount: {} }, { new: true });
+          await Course.findByIdAndUpdate(courseId, { discount: {}, valid: false }, { new: true });
           console.log(`discount removed`);
         } catch (err) {
           console.log(err);
@@ -325,10 +326,14 @@ const addDiscount = async (courseId, discount) => {
       schedule.scheduleJob(courseId + 'start', startDate, async function () {
         try {
           console.log(
-            `Background function run to insert discount of value: ${discount.amount} for course ${courseId}`
+            `Background function run to validate discount of value: ${discount.amount} for course ${courseId}`
           );
-          await Course.findByIdAndUpdate(courseId, { discount: discount });
-          console.log(`discount inserted`);
+          const course = await Course.findByIdAndUpdate(courseId, { valid: true });
+          await addNotification(
+            course.instructor,
+            `Discount of value ${discount.amount} is now valid on course ${course.title} until ${discount.duration.endDate}`
+          );
+          console.log(`discount validated`);
         } catch (err) {
           console.log(err);
         }
@@ -338,7 +343,11 @@ const addDiscount = async (courseId, discount) => {
           console.log(
             `Background function run to remove discount of value: ${discount.amount} for course ${courseId}`
           );
-          await Course.findByIdAndUpdate(courseId, { discount: {} }, { new: true });
+          const course = await Course.findByIdAndUpdate(courseId, { discount: {} }, { new: true });
+          await addNotification(
+            course.instructor,
+            `Discount of value ${discount.amount} has been removed from course ${course.title}`
+          );
           console.log(`discount removed`);
         } catch (err) {
           console.log(err);
@@ -346,15 +355,76 @@ const addDiscount = async (courseId, discount) => {
       });
     }
   }
-  return returnDiscount;
-};
+  res.status(200).json({ message: 'Discount added successfully,success:true,statusCode:200' });
+});
 
 const setCoursePromotion = async (req, res) => {
   const { courseIdList, discount } = req.body;
   for (var i = 0; i < courseIdList.length; i++) {
-    addDiscount(courseIdList[i], discount);
+    coursePromotionHelper(courseIdList[i], discount);
   }
+  res.status(200).json({ message: 'Discounts added successfully', statusCode: 200, success: true });
 };
+
+const coursePromotionHelper = asyncHandler(async (courseId, discount) => {
+  const { startDate, endDate } = discount.duration;
+  const startJob = schedule.scheduledJobs[courseId + 'start'];
+  const endJob = schedule.scheduledJobs[courseId + 'end'];
+  if (startJob) startJob.cancel();
+  if (endJob) endJob.cancel();
+  var todayDate = new Date();
+  await Course.findByIdAndUpdate(courseId, { discount: discount });
+  if (todayDate >= new Date(startDate)) {
+    if (todayDate < new Date(endDate)) {
+      schedule.scheduleJob(courseId + 'end', endDate, async function () {
+        try {
+          console.log(
+            `Background function run to remove discount of value: ${discount.amount} for course ${courseId}`
+          );
+          await Course.findByIdAndUpdate(courseId, { discount: {}, valid: false }, { new: true });
+          console.log(`discount removed`);
+        } catch (err) {
+          console.log(err);
+        }
+      });
+    }
+  } else {
+    if (todayDate.getDate() < new Date(endDate)) {
+      schedule.scheduleJob(courseId + 'start', startDate, async function () {
+        try {
+          console.log(
+            `Background function run to validate discount of value: ${discount.amount} for course ${courseId}`
+          );
+          const course = await Course.findByIdAndUpdate(courseId, { valid: true });
+          await addNotification(
+            course.instructor,
+            `Discount of value ${discount.amount} is now valid on course ${course.title} until ${discount.duration.endDate}`
+          );
+          console.log(`discount validated`);
+        } catch (err) {
+          console.log(err);
+        }
+      });
+      schedule.scheduleJob(courseId + 'end', endDate, async function () {
+        try {
+          console.log(
+            `Background function run to remove discount of value: ${discount.amount} for course ${courseId}`
+          );
+          const course = await Course.findByIdAndUpdate(courseId, { discount: {} }, { new: true });
+          await addNotification(
+            course.instructor,
+            `Discount of value ${discount.amount} has been removed from course ${course.title}`
+          );
+          console.log(`discount removed`);
+        } catch (err) {
+          console.log(err);
+        }
+      });
+    }
+  }
+  //res.status(200).json({ message: 'Discount added successfully,success:true,statusCode:200' });
+});
+
 const viewCourseTrainee = asyncHandler(async (req, res) => {
   const userId = res.locals('userId');
   const { courseId } = req.query;
@@ -478,12 +548,12 @@ const modifyExam = asyncHandler(async (req, res) => {
 
 const editCourse = asyncHandler(async (req, res) => {
   const { courseId } = req.query;
-  const { course, flagDiscount } = req.body;
+  const { course } = req.body;
   var subtitles;
-  var discount;
+  //var discount;
   var totalHours = 0;
   var subject;
-  console.log(new Date());
+  //console.log(new Date());
   subject = await Subject.findById(course.subject);
   if (!subject) {
     subject = await Subject.findOne({ name: course.subject });
@@ -492,11 +562,11 @@ const editCourse = asyncHandler(async (req, res) => {
       throw new Error('Subject not approved by admin');
     }
   }
-  if (flagDiscount === 'true') {
-    discount = await addDiscount(courseId, course.discount).catch((err) => {
-      throw err;
-    });
-  }
+  // if (flagDiscount === 'true') {
+  //   discount = await addDiscount(courseId, course.discount).catch((err) => {
+  //     throw err;
+  //   });
+  // }
   const oldCourse = await Course.findById(courseId);
   let subtitleIds = course.subtitles.map((subtitle) => {
     const subtitleId = subtitle._id;
@@ -536,11 +606,51 @@ const editCourse = asyncHandler(async (req, res) => {
     subject: subject.id,
     summary: course.summary,
     price: course.price,
-    discount: discount ? discount : oldCourse.discount,
+    // discount: discount ? discount : oldCourse.discount,
     totalHours: totalHours,
     preview: course.preview
   });
   res.status(200).json({ success: true, statusCode: 200, message: 'Edited course successfully' });
+});
+
+const makeCoursePublic = asyncHandler(async (req, res) => {
+  const { courseId } = req.query;
+  const courseInfo = await Course.findById(courseId);
+  if (courseInfo.exams.length > 0) {
+    if (courseInfo.preview) {
+      if (courseInfo.subtitles.length > 0) {
+        if (courseInfo.summary) {
+          await Course.findByIdAndUpdate(courseId, { visibility: 'public' });
+          res.status(200).json({ message: 'Course is now public', success: true, statusCode: 200 });
+        } else {
+          res.status(500);
+          throw new Error('Course summary must be defined');
+        }
+      } else {
+        res.status(500);
+        throw new Error('There must be at least one subtitle');
+      }
+    } else {
+      res.status(500);
+      throw new Error('Course preview video must be defined');
+    }
+  } else {
+    res.status(500);
+    throw new Error('There must be at least one exam');
+  }
+});
+
+const closeCourse = asyncHandler(async (req, res) => {
+  const { courseId } = req.query;
+  const courseInfo = await Course.findByIdAndUpdate(courseId, { visibility: 'Closed' });
+  registered = await RegisteredCourse.find({ courseId: courseId });
+  registered.map(async (registeredUser, index) => {
+    await addNotification(
+      registeredUser.userId,
+      `Course ${courseInfo.title} is now closed and can only be accessed through your registered courses`
+    );
+  });
+  res.status(200).json({ message: 'Course closed successfully', statusCode: 200, success: true });
 });
 
 const rateCourse = asyncHandler(async (req, res) => {
@@ -680,5 +790,8 @@ module.exports = {
   submitSolution,
   getExamSolution,
   viewCourseTrainee,
-  setCoursePromotion
+  setCoursePromotion,
+  makeCoursePublic,
+  closeCourse,
+  addDiscount
 };

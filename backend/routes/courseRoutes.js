@@ -3,10 +3,9 @@ const router = express.Router();
 const {
   registerUser,
   getAllRegisteredCourses,
-  getAllNotes,
+  getAllNotesAndUpdateProgress,
   updateNotes,
-  viewMostPopularCourses,
-  getAllRegisteredInvoices
+  viewMostPopularCourses
 } = require('../controllers/registeredCoursesController');
 const {
   getAllSubjects,
@@ -22,7 +21,10 @@ const {
   viewCourseTrainee,
   removeExam,
   modifyExam,
-  setCoursePromotion
+  setCoursePromotion,
+  makeCoursePublic,
+  closeCourse,
+  addDiscount
 } = require('../controllers/courseController');
 const { addQuiz, editQuiz, deleteQuiz } = require('../controllers/subtitleController');
 const { isRegisteredToCourse, isCorporateTrainee, isLoggedIn } = require('../middleware/helper');
@@ -33,7 +35,8 @@ const {
   adminAuth,
   loggedIn,
   corporateAuth,
-  individualAuth
+  individualAuth,
+  addDiscountAuth
 } = require('../middleware/auth');
 const { requestRefund, requestCourseAccess } = require('../controllers/userController');
 
@@ -42,7 +45,11 @@ router
   .route('/')
   .get(isLoggedIn, isCorporateTrainee, findCourses) //all good
   .post(loggedIn, instructorAuth, createCourse) //all good
-  .put(loggedIn, editCourseAuth, editCourse); //all good
+  .put(loggedIn, editCourseAuth, editCourse) //all good
+  .patch(loggedIn, editCourseAuth, makeCoursePublic);
+
+router.post('discount', loggedIn, addDiscountAuth, addDiscount);
+router.post('close', loggedIn, editCourseAuth, closeCourse);
 router.route('/rate').post(loggedIn, registeredCourseAuth, rateCourse); //all good
 router
   .route('/exam')
@@ -67,7 +74,7 @@ router.route('/register').post(loggedIn, registerUser).get(loggedIn, getAllRegis
 
 router
   .route('/notes')
-  .get(loggedIn, registeredCourseAuth, getAllNotes) //all good
+  .get(loggedIn, registeredCourseAuth, getAllNotesAndUpdateProgress)
   .post(loggedIn, registeredCourseAuth, updateNotes); //all good
 
 router.get('/popular', viewMostPopularCourses); //all good

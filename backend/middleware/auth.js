@@ -153,6 +153,15 @@ const editCourseAuth = asyncHandler(async (req, res, next) => {
   }
 });
 
+const addDiscountAuth = asyncHandler(async (req, res, next) => {
+  const userId = res.locals.userId.toString();
+  const courseInfo = await Course.findById(req.query.courseId);
+  if (userId === courseInfo.instructor.toString()) {
+    next();
+  } else {
+    res.status(401).json({ statusCode: 401, success: false, message: 'Unauthorized access' });
+  }
+});
 module.exports = {
   loggedIn,
   adminAuth,
@@ -161,6 +170,7 @@ module.exports = {
   resetPasswordAuth,
   isRegisteredWithInstructor,
   registeredCourseAuth,
+  addDiscountAuth,
   editCourseAuth,
   individualAuth,
   corporateAuth

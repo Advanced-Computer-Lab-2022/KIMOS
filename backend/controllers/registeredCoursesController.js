@@ -1,15 +1,17 @@
 const RegisteredCourses = require('../models/registeredCoursesModel');
 const Course = require('../models/courseModel');
+const User = require('../models/userModel');
 const Subtitle = require('../models/subtitleModel');
+const Video = require('../models/videoModel');
 const { getSolution } = require('./userSolutionController');
 const { getExam } = require('./examController');
 const { createNote, updateNote, deleteNote } = require('./noteController');
-const Report = require('../models/reportModel');
 
 const { sendCertificateEmail } = require('../controllers/userController');
 const asyncHandler = require('express-async-handler');
 const schedule = require('node-schedule');
 const { deleteSolution } = require('./userSolutionController');
+const { addNotification } = require('./notificationController');
 const getAllRegisteredCourses = asyncHandler(async (req, res) => {
   const userId = res.locals.userId;
   const reg = await RegisteredCourses.find({ userId: userId }).populate('courseId');
@@ -117,6 +119,14 @@ const getAllRegisteredCourses = asyncHandler(async (req, res) => {
 const registerUser = asyncHandler(async (req, res) => {
   const userId = res.locals.userId;
   const courseId = res.locals.courseId;
+  const courseInfo = await Course.findById(courseId);
+  const userInfo = await User.findById(userId);
+  if (userInfo.userType === 'corporate trainee') {
+    await addNotification(
+      userId,
+      `Your request to access course ${courseInfo.title} has been accepted and the course has been added to your registered courses.`
+    );
+  }
   await RegisteredCourses.create({
     userId: userId,
     courseId: courseId,
@@ -150,6 +160,10 @@ const registerUser = asyncHandler(async (req, res) => {
           );
           const output = results.reduce((a, b) => a && b, true);
           if (output) {
+            await addNotification(
+              userId,
+              `You have completed course ${courseInfo.title} and a certificate has been sent to your email.`
+            );
             sendCertificateEmail(userId, courseId).catch((err) => {
               console.log(err);
             });
@@ -185,7 +199,6 @@ const removeRegisteredUser = asyncHandler(async (req, res, next) => {
   });
   const course = await Course.populate(reg, 'courseId');
   const courseSubtitle = await Subtitle.populate(course, 'courseId.subtitles');
-  //console.log(courseSubtitle);
   courseSubtitle.courseId.subtitles.map(async (subtitle, index) => {
     subtitle.quizzes.map(async (quiz, index) => {
       await deleteSolution(refundedUserId, quiz);
@@ -238,21 +251,27 @@ const getAllRegisteredInvoices = asyncHandler(async (req, res) => {
   });
 });
 
-const getAllNotes = asyncHandler(async (req, res) => {
+const getAllNotesAndUpdateProgress = asyncHandler(async (req, res) => {
   const userId = res.locals.userId;
   const { courseId, videoId } = req.query;
   const reg = await RegisteredCourses.findOne({
     userId: userId,
     courseId: courseId
   }).populate('videosNotes.notes');
+  var newProgress = reg.progress;
   var notes = [];
   const found = reg.videosNotes.find(
     (videoNotes) => videoNotes.video.toString() === videoId.toString()
   );
   if (!found) {
+    const video = await Video.findById(videoId);
+    const course = await Course.findById(courseId);
+    const videoHours = video.hours;
+    const totalHours = course.totalHours;
+    newProgress += videoHours / totalHours;
     await RegisteredCourses.findOneAndUpdate(
       { userId: userId, courseId: courseId },
-      { $push: { videosNotes: { video: videoId } } }
+      { $push: { videosNotes: { video: videoId } }, progress: newProgress }
     );
   } else {
     notes = found.notes;
@@ -261,7 +280,7 @@ const getAllNotes = asyncHandler(async (req, res) => {
     message: 'Successfully retrieved notes',
     statusCode: 200,
     success: true,
-    payload: { notes }
+    payload: { notes: notes, progress: newProgress }
   });
 });
 
@@ -353,7 +372,7 @@ const viewMostPopularCourses = async (req, res) => {
 module.exports = {
   registerUser,
   getAllRegisteredCourses,
-  getAllNotes,
+  getAllNotesAndUpdateProgress,
   updateNotes,
   getAllRegisteredInvoices,
   viewMostPopularCourses,

@@ -14,6 +14,7 @@ const asyncHandler = require('express-async-handler');
 const RegisteredCourses = require('../models/registeredCoursesModel');
 const Request = require('../models/requestModel');
 const Course = require('../models/courseModel');
+const { addNotification } = require('./notificationController');
 
 //All user
 const signUp = asyncHandler(async (req, res) => {
@@ -461,11 +462,16 @@ const changeRefundStatus = async (req, res, next) => {
   const { requestId } = req.query;
   const { newStatus } = req.body;
   const request = await Request.findByIdAndDelete(requestId);
+  const courseInfo = await Course.findById(res.locals.courseId);
   if (newStatus === 'accepted') {
     res.locals.refundedUserId = request.userId;
     res.locals.courseId = request.courseId;
     next();
   } else {
+    await addNotification(
+      request.userId,
+      `Your request to refund course ${courseInfo.title} has been rejected. You can file a report and speak to an administrator if further assistance is needed.`
+    );
     res
       .status(200)
       .json({ message: 'Status Updated successfully', success: true, statusCode: 200 });
@@ -477,9 +483,14 @@ const changeAccessStatus = async (req, res, next) => {
   const { newStatus } = req.body;
   const request = await Request.findByIdAndDelete(requestId);
   res.locals.courseId = request.courseId;
+  const courseInfo = await Course.findById(res.locals.courseId);
   if (newStatus === 'accepted') {
     next();
   } else {
+    await addNotification(
+      request.userId,
+      `Your request to access course ${courseInfo.title} has been rejected. You can file a report and speak to an administrator if further assistance is needed.`
+    );
     res
       .status(200)
       .json({ message: 'Status Updated successfully', success: true, statusCode: 200 });

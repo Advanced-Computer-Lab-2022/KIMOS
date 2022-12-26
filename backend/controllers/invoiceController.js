@@ -22,6 +22,10 @@ const refundInvoice = asyncHandler(async (req, res) => {
   const courseId = res.locals.courseId;
   const courseInfo = await Course.findById(courseId);
   const oldInvoice = await Invoice.findById(res.locals.invoiceId);
+  await addNotification(
+    userId,
+    `Your request to refund course ${courseInfo.title} has been accepted and the amount has been added to your wallet.`
+  );
   await Invoice.create({
     userId: userId,
     courseId: courseId,
