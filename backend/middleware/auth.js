@@ -43,6 +43,24 @@ const adminAuth = asyncHandler(async (req, res, next) => {
   }
 });
 
+const individualAuth = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(res.locals.userId);
+  if (user.userType === 'individual trainee') {
+    next();
+  } else {
+    res.status(401).json({ statusCode: 401, success: false, message: 'Unauthorized access' });
+  }
+});
+
+const corporateAuth = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(res.locals.userId);
+  if (user.userType === 'corporate trainee') {
+    next();
+  } else {
+    res.status(401).json({ statusCode: 401, success: false, message: 'Unauthorized access' });
+  }
+});
+
 const isRegisteredWithInstructor = asyncHandler(async (req, res, next) => {
   const registeredCourses = await RegisteredCourse.find({ userId: res.locals.userId });
   const instructorId = req.query.instructorId.toString();
@@ -143,5 +161,7 @@ module.exports = {
   resetPasswordAuth,
   isRegisteredWithInstructor,
   registeredCourseAuth,
-  editCourseAuth
+  editCourseAuth,
+  individualAuth,
+  corporateAuth
 };

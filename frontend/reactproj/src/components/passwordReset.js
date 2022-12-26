@@ -20,7 +20,7 @@ const PasswordReset = () => {
   const handleSubmit = () => {
     //console.log(oldPass);
     axios
-      .post(`http://localhost:5000/users/passwordReset/token=${token}`, {
+      .post(`http://localhost:5000/users/passwordReset/?token=${token}`, {
         password: pass1
       })
       .then((res) => {

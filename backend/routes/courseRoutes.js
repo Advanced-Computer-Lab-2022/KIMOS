@@ -4,7 +4,9 @@ const {
   registerUser,
   getAllRegisteredCourses,
   getAllNotes,
-  updateNotes
+  updateNotes,
+  viewMostPopularCourses,
+  getAllRegisteredInvoices
 } = require('../controllers/registeredCoursesController');
 const {
   getAllSubjects,
@@ -19,7 +21,8 @@ const {
   addExam,
   viewCourseTrainee,
   removeExam,
-  modifyExam
+  modifyExam,
+  setCoursePromotion
 } = require('../controllers/courseController');
 const { addQuiz, editQuiz, deleteQuiz } = require('../controllers/subtitleController');
 const { isRegisteredToCourse, isCorporateTrainee, isLoggedIn } = require('../middleware/helper');
@@ -28,8 +31,11 @@ const {
   instructorAuth,
   registeredCourseAuth,
   adminAuth,
-  loggedIn
+  loggedIn,
+  corporateAuth,
+  individualAuth
 } = require('../middleware/auth');
+const { requestRefund, requestCourseAccess } = require('../controllers/userController');
 
 router.route('/subjects').get(getAllSubjects).post(loggedIn, adminAuth, addNewSubject); //all good
 router
@@ -63,4 +69,10 @@ router
   .route('/notes')
   .get(loggedIn, registeredCourseAuth, getAllNotes) //all good
   .post(loggedIn, registeredCourseAuth, updateNotes); //all good
+
+router.get('/popular', viewMostPopularCourses); //all good
+
+router.post('/refund', loggedIn, individualAuth, registeredCourseAuth, requestRefund); //all good
+router.post('/access', loggedIn, corporateAuth, requestCourseAccess); //all good
+router.post('/promotion', loggedIn, adminAuth, setCoursePromotion);
 module.exports = router;

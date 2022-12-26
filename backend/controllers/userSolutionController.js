@@ -19,6 +19,11 @@ const createSolution = async (userId, examId, solutions) => {
   return grade;
 };
 
+const deleteSolution = async (userId, examId) => {
+  const sol = UserSolution.findOneAndDelete({ userId: userId, examId: examId });
+  return sol;
+};
+
 const editSolution = async (userId, examId, solutions) => {
   const answer = await UserSolution.findOneAndUpdate(
     {
@@ -52,5 +57,6 @@ const calcGrade = async (solutions) => {
 module.exports = {
   createSolution,
   editSolution,
-  getSolution
+  getSolution,
+  deleteSolution
 };

@@ -1,13 +1,15 @@
 const RegisteredCourses = require('../models/registeredCoursesModel');
 const Course = require('../models/courseModel');
+const Subtitle = require('../models/subtitleModel');
 const { getSolution } = require('./userSolutionController');
 const { getExam } = require('./examController');
 const { createNote, updateNote, deleteNote } = require('./noteController');
+const Report = require('../models/reportModel');
 
 const { sendCertificateEmail } = require('../controllers/userController');
 const asyncHandler = require('express-async-handler');
 const schedule = require('node-schedule');
-
+const { deleteSolution } = require('./userSolutionController');
 const getAllRegisteredCourses = asyncHandler(async (req, res) => {
   const userId = res.locals.userId;
   const reg = await RegisteredCourses.find({ userId: userId }).populate('courseId');
@@ -50,7 +52,9 @@ const getAllRegisteredCourses = asyncHandler(async (req, res) => {
                   })
                 );
                 return {
-                  ...subtitle.toObject(),
+                  title: subtitle.title,
+                  hours: subtitle.hours,
+                  videos: subtitle.videos,
                   quizzes: newQuizzes
                 };
               } else {
@@ -63,7 +67,9 @@ const getAllRegisteredCourses = asyncHandler(async (req, res) => {
               }
             })
           );
-          result = { ...result.toObject(), subtitles: newSubtitles };
+          const resSpread = { ...result };
+          if (resSpread._doc) result = { ...result.toObject(), subtitles: newSubtitles };
+          else result = { ...result, subtitles: newSubtitles };
         }
         if (result.exams.length) {
           const exams = await Promise.all(
@@ -90,7 +96,9 @@ const getAllRegisteredCourses = asyncHandler(async (req, res) => {
               }
             })
           );
-          result = { ...result, exams: exams };
+          const resSpread = { ...result };
+          if (resSpread._doc) result = { ...result.toObject(), exams: exams };
+          else result = { ...result, exams: exams };
           return result;
         }
       })
@@ -108,10 +116,11 @@ const getAllRegisteredCourses = asyncHandler(async (req, res) => {
 
 const registerUser = asyncHandler(async (req, res) => {
   const userId = res.locals.userId;
-  const { courseId } = req.query;
+  const courseId = res.locals.courseId;
   await RegisteredCourses.create({
     userId: userId,
-    courseId: courseId
+    courseId: courseId,
+    invoice: res.locals.invoiceId
   }).then((result) => {
     var rule = new schedule.RecurrenceRule();
     rule.minute = new schedule.Range(0, 59, 1);
@@ -148,7 +157,11 @@ const registerUser = asyncHandler(async (req, res) => {
             console.log('User has completed course and email will be sent.');
             console.log('Background function terminating...');
             schedule.scheduledJobs[reg._id + 'email'].cancel();
+          } else {
+            console.log('Check done. No email sent');
           }
+        } else {
+          console.log('Check done. No email sent');
         }
       } catch (err) {
         console.log(err);
@@ -157,6 +170,72 @@ const registerUser = asyncHandler(async (req, res) => {
   });
 
   res.status(200).json({ statusCode: 200, success: true, message: 'User registered successfully' });
+});
+
+const removeRegisteredUser = asyncHandler(async (req, res, next) => {
+  const { refundedUserId, courseId } = res.locals;
+  const reg = await RegisteredCourses.findOneAndDelete({
+    userId: refundedUserId,
+    courseId: courseId
+  });
+  reg.videosNotes.map(async (videoNotes, index) => {
+    videoNotes.notes.map(async (note, index) => {
+      await deleteNote(note);
+    });
+  });
+  const course = await Course.populate(reg, 'courseId');
+  const courseSubtitle = await Subtitle.populate(course, 'courseId.subtitles');
+  //console.log(courseSubtitle);
+  courseSubtitle.courseId.subtitles.map(async (subtitle, index) => {
+    subtitle.quizzes.map(async (quiz, index) => {
+      await deleteSolution(refundedUserId, quiz);
+    });
+  });
+  course.courseId.exams.map(async (exam, index) => {
+    await deleteSolution(refundedUserId, exam);
+  });
+  res.locals.invoiceId = reg.invoice;
+  const job = schedule.scheduledJobs[reg._id + 'email'];
+  if (job) job.cancel();
+  next();
+});
+const getAllRegisteredInvoices = asyncHandler(async (req, res) => {
+  const userId = res.locals.userId;
+  const registered = await RegisteredCourses.find({
+    userId: userId
+  });
+  const invoices = await Promise.all(
+    registered.map(async (registeredCourse, index) => {
+      const registeredCourseInvoice = await registeredCourse.populate('invoice');
+      const registeredCourseInvoiceCourseInfo = await registeredCourseInvoice.populate('courseId');
+      var refundable = true;
+      if (registeredCourse.progress >= 50) {
+        refundable = false;
+      }
+      const refundRequest = await Request.findOne({
+        userId: userId,
+        courseId: registeredCourse.courseId,
+        type: 'refund'
+      });
+      var status;
+      if (refundRequest) {
+        status = refundRequest.status;
+      } else {
+        status = refundable ? 'refund' : 'noRefund';
+      }
+      return {
+        courseName: registeredCourseInvoiceCourseInfo.courseId.title,
+        date: registeredCourse.createdAt,
+        status: status
+      };
+    })
+  );
+  res.status(200).json({
+    message: 'Fetched all registered courses invoices successfully',
+    statusCode: 200,
+    success: true,
+    payload: { invoices }
+  });
 });
 
 const getAllNotes = asyncHandler(async (req, res) => {
@@ -251,23 +330,32 @@ const updateNotes = asyncHandler(async (req, res) => {
   res.status(200).json({ message: 'Notes updated successfully', statusCode: 200, success: true });
 });
 
-// const editExercise = async (exerciseId, newExercise) => {
-//   const exercise = await Exercise.findByIdAndUpdate(exerciseId, newExercise);
-//   return exercise;
-// };
-
-// const getExercise = async (exerciseId) => {
-//   const exercise = await Exercise.findById(exerciseId);
-//   return exercise;
-// };
-
-// const deleteExercise = async (exerciseId) => {
-//   await Exercise.findByIdAndDelete(exerciseId);
-// };
+const viewMostPopularCourses = async (req, res) => {
+  const sortedByCountCourses = await RegisteredCourses.aggregate([
+    { $sortByCount: '$courseId' },
+    { $limit: 10 }
+  ]);
+  const courses = await Course.populate(sortedByCountCourses, '_id');
+  const returnCourses = courses.map((course, index) => {
+    return {
+      _id: course._id._id,
+      title: course._id.title
+    };
+  });
+  res.status(200).json({
+    statusCode: 200,
+    success: true,
+    message: 'Fetched most popular courses successfully',
+    payload: { returnCourses }
+  });
+};
 
 module.exports = {
   registerUser,
   getAllRegisteredCourses,
   getAllNotes,
-  updateNotes
+  updateNotes,
+  getAllRegisteredInvoices,
+  viewMostPopularCourses,
+  removeRegisteredUser
 };

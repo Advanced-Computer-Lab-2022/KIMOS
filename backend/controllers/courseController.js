@@ -183,7 +183,6 @@ const findCourses = asyncHandler(async (req, res) => {
                 })
               );
               const resSpread = { ...result };
-              console.log(resSpread);
               if (resSpread._doc) result = { ...result.toObject(), subtitles: newSubtitles };
               else result = { ...result, subtitles: newSubtitles };
             }
@@ -350,6 +349,12 @@ const addDiscount = async (courseId, discount) => {
   return returnDiscount;
 };
 
+const setCoursePromotion = async (req, res) => {
+  const { courseIdList, discount } = req.body;
+  for (var i = 0; i < courseIdList.length; i++) {
+    addDiscount(courseIdList[i], discount);
+  }
+};
 const viewCourseTrainee = asyncHandler(async (req, res) => {
   const userId = res.locals('userId');
   const { courseId } = req.query;
@@ -674,5 +679,6 @@ module.exports = {
   removeExam,
   submitSolution,
   getExamSolution,
-  viewCourseTrainee
+  viewCourseTrainee,
+  setCoursePromotion
 };
