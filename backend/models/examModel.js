@@ -4,18 +4,24 @@ const examSchema = mongoose.Schema(
   {
     title: {
       type: String,
-      default: 'Exam Title'
+      required: [true, 'Please enter a title for the exam']
     },
-    exercises: [
-      {
-        type: mongoose.Types.ObjectId,
-        ref: 'Exercise'
-      }
-    ]
+    exercises: {
+      type: [
+        {
+          type: mongoose.Types.ObjectId,
+          ref: 'Exercise'
+        }
+      ],
+      validate: [exerciseSize, 'Must have at least one exercise']
+    }
   },
   {
     timestamps: true
   }
 );
+function exerciseSize(val) {
+  return val.length >= 1;
+}
 
 module.exports = mongoose.model('Exam', examSchema);

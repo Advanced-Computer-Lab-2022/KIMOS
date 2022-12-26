@@ -14,11 +14,15 @@ const PasswordReset = () => {
   const [failed, setFailed] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const navigate = useNavigate();
+  const params = new URLSearchParams(window.location.search);
+  const token = params.get('token');
 
   const handleSubmit = () => {
     //console.log(oldPass);
     axios
-      .post(`http://localhost:5000/users/passwordReset`, { email: email, password: pass1 })
+      .post(`http://localhost:5000/users/passwordReset/?token=${token}`, {
+        password: pass1
+      })
       .then((res) => {
         console.log(res.message);
         console.log(res.status);
@@ -34,13 +38,13 @@ const PasswordReset = () => {
   return (
     <div className="changePassword">
       <div className="changePassword__form" style={{ padding: 20 }}>
-        <TextField
+        {/* <TextField
           style={{ margin: '10px', width: '250px' }}
           required
           label="Email"
           variant="outlined"
           onChange={(e) => setEmail(e.target.value)}
-        />
+        /> */}
 
         <TextField
           style={{ margin: '10px', width: '250px' }}

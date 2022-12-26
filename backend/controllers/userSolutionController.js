@@ -9,13 +9,19 @@ const getSolution = async (userId, examId) => {
   return answer;
 };
 const createSolution = async (userId, examId, solutions) => {
+  const grade = await calcGrade(solutions);
   const answer = await UserSolution.create({
     userId: userId,
     examId: examId,
     solutions: solutions,
-    grade: await calcGrade(solutions)
+    grade: grade
   });
-  return answer;
+  return grade;
+};
+
+const deleteSolution = async (userId, examId) => {
+  const sol = UserSolution.findOneAndDelete({ userId: userId, examId: examId });
+  return sol;
 };
 
 const editSolution = async (userId, examId, solutions) => {
@@ -34,23 +40,23 @@ const editSolution = async (userId, examId, solutions) => {
 };
 
 const calcGrade = async (solutions) => {
-  var correctAnswers = 0;
   const promises = solutions.map(async (solution, index) => {
     const exercise = await getExercise(solution.exercise);
-    if (solution.choice === exercise.answer) {
+    if (parseInt(solution.choice) === parseInt(exercise.answer)) {
       return 1;
     } else {
       return 0;
     }
   });
   const answers = await Promise.all(promises);
-  //console.log(answers);
   const grade = answers.reduce((a, b) => a + b, 0) + '/' + solutions.length;
+  //console.log(grade);
   return grade;
 };
 
 module.exports = {
   createSolution,
   editSolution,
-  getSolution
+  getSolution,
+  deleteSolution
 };
