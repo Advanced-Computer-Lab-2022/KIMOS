@@ -22,6 +22,10 @@ var registeredCoursesSchema = new mongoose.Schema({
     type: String,
     default: 'false'
   },
+  invoice: {
+    type: mongoose.Types.ObjectId,
+    ref: 'Invoice'
+  },
   videosNotes: {
     type: [
       {

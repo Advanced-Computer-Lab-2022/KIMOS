@@ -14,14 +14,9 @@ const {
   resetPassword,
   rateInstructor,
   getCertificate,
-  sendCertificateEmail,
-  viewMostPopularCourses,
-  requestRefund,
-  requestCourseAccess,
-  viewWallet,
-  viewCourseRequests,
-  grantCourseAccess,
-  setCoursePromotion
+  changeRefundStatus,
+  changeAccessStatus,
+  getRequests
 } = require('../controllers/userController');
 
 const {getAllRatings} = require('../controllers/ratingController');
@@ -32,9 +27,12 @@ const {
   isRegisteredWithInstructor,
   resetPasswordAuth,
   registeredCourseAuth,
-  registerCourseAuth
+  registerCourseAuth,
+  instructorAuth,
+  individualAuth
 } = require('../middleware/auth');
 
+const { getAllRegisteredInvoices } = require('../controllers/registeredCoursesController');
 const {
   createReport,
   addMessages,
@@ -42,8 +40,16 @@ const {
   getReports
 } = require('../controllers/reportController');
 
-const { createInvoice } = require('../controllers/invoiceController');
+const {
+  createInvoice,
+  getAllInvoicesInstructor,
+  getAllInvoicesUser,
+  refundInvoice
+} = require('../controllers/invoiceController');
+
+const { removeRegisteredUser } = require('../controllers/registeredCoursesController');
 const { isLoggedIn } = require('../middleware/helper');
+const { registerUser } = require('../controllers/registeredCoursesController');
 
 router.route('/').post(loggedIn, adminAuth, addUser).put(loggedIn, editUser).get(loggedIn, getMe); //all good
 router.get('/viewInstructorDetails', loggedIn, isRegisteredWithInstructor, viewInstructorDetails); //all good
@@ -61,6 +67,20 @@ router
   .put(loggedIn, adminAuth, changeStatus) //all good
   .patch(loggedIn, adminAuth, addMessages); //all good
 
-router.post('/createCheckoutSession', loggedIn, checkout); //all good
-router.post('/invoice', loggedIn, registerCourseAuth, createInvoice);
+router.post('/createCheckoutSession', loggedIn, individualAuth, checkout); //all good
+router.post('/register', loggedIn, individualAuth, registerCourseAuth, createInvoice, registerUser); //all good
+router.get('/invoices/instructor', loggedIn, instructorAuth, getAllInvoicesInstructor); //all good
+router.get('/invoices/user', loggedIn, individualAuth, getAllInvoicesUser); //all good
+
+router.post(
+  '/refundStatus',
+  loggedIn,
+  adminAuth,
+  changeRefundStatus,
+  removeRegisteredUser,
+  refundInvoice
+); //all good
+router.post('/accessStatus', loggedIn, adminAuth, changeAccessStatus, registerUser); //all good
+router.get('/requests', loggedIn, adminAuth, getRequests); //all good
+router.get('/registeredInvoices', loggedIn, individualAuth, getAllRegisteredInvoices);
 module.exports = router;

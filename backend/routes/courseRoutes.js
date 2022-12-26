@@ -3,8 +3,9 @@ const router = express.Router();
 const {
   registerUser,
   getAllRegisteredCourses,
-  getAllNotes,
-  updateNotes
+  getAllNotesAndUpdateProgress,
+  updateNotes,
+  viewMostPopularCourses
 } = require('../controllers/registeredCoursesController');
 const {
   getAllSubjects,
@@ -19,7 +20,11 @@ const {
   addExam,
   viewCourseTrainee,
   removeExam,
-  modifyExam
+  modifyExam,
+  setCoursePromotion,
+  makeCoursePublic,
+  closeCourse,
+  addDiscount
 } = require('../controllers/courseController');
 const {getAllRatings} = require('../controllers/ratingController');
 const { addQuiz, editQuiz, deleteQuiz } = require('../controllers/subtitleController');
@@ -29,17 +34,24 @@ const {
   instructorAuth,
   registeredCourseAuth,
   adminAuth,
-  loggedIn
+  loggedIn,
+  corporateAuth,
+  individualAuth,
+  addDiscountAuth
 } = require('../middleware/auth');
+const { requestRefund, requestCourseAccess } = require('../controllers/userController');
 
 router.route('/subjects').get(getAllSubjects).post(loggedIn, adminAuth, addNewSubject); //all good
 router
   .route('/')
   .get(isLoggedIn, isCorporateTrainee, findCourses) //all good
   .post(loggedIn, instructorAuth, createCourse) //all good
-  .put(loggedIn, editCourseAuth, editCourse); //all good
-router.route('/rate').post(loggedIn, registeredCourseAuth, rateCourse)  //all good
-  .get(loggedIn,getAllRatings);
+  .put(loggedIn, editCourseAuth, editCourse) //all good
+  .patch(loggedIn, editCourseAuth, makeCoursePublic);
+
+router.post('discount', loggedIn, addDiscountAuth, addDiscount);
+router.post('close', loggedIn, editCourseAuth, closeCourse);
+router.route('/rate').post(loggedIn, registeredCourseAuth, rateCourse); //all good
 router
   .route('/exam')
   .get(loggedIn, findExam) //all good
@@ -63,6 +75,12 @@ router.route('/register').post(loggedIn, registerUser).get(loggedIn, getAllRegis
 
 router
   .route('/notes')
-  .get(loggedIn, registeredCourseAuth, getAllNotes) //all good
+  .get(loggedIn, registeredCourseAuth, getAllNotesAndUpdateProgress)
   .post(loggedIn, registeredCourseAuth, updateNotes); //all good
+
+router.get('/popular', viewMostPopularCourses); //all good
+
+router.post('/refund', loggedIn, individualAuth, registeredCourseAuth, requestRefund); //all good
+router.post('/access', loggedIn, corporateAuth, requestCourseAccess); //all good
+router.post('/promotion', loggedIn, adminAuth, setCoursePromotion);
 module.exports = router;

@@ -12,9 +12,9 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const asyncHandler = require('express-async-handler');
 const RegisteredCourses = require('../models/registeredCoursesModel');
-const AccessRequests = require('../models/accessRequestsModel');
-const RefundRequests = require('../models/refundRequestsModel');
+const Request = require('../models/requestModel');
 const Course = require('../models/courseModel');
+const { addNotification } = require('./notificationController');
 
 //All user
 const signUp = asyncHandler(async (req, res) => {
@@ -432,24 +432,15 @@ const sendCertificateEmail = asyncHandler(async (userId, courseId) => {
   doc.end();
 });
 
-const viewMostPopularCourses = async (req, res) => {
-  const sortedByCountCourses = await RegisteredCourses.find({}, { courseId })
-    .aggregate([{ $sortByCount: '$courseId' }])
-    .populate('courseId')
-    .toArray();
-  const mostPopularCourses = new Set(sortedByCountCourses);
-  const mostPopularCoursesArr = Array.from(mostPopularCourses);
-  res.status(200).json(mostPopularCoursesArr);
-};
-
 const requestRefund = async (req, res) => {
-  const { userId, courseId } = req.query;
+  const userId = res.locals.userId;
+  const { courseId } = req.query;
   const record = await RegisteredCourses.findOne({ userId: userId, courseId: courseId }).populate();
-  if (record[progress] < 50) {
-    await RefundRequests.create({ userId: userId, courseId: courseId });
+  if (record.progress < 50) {
+    await Request.create({ userId: userId, courseId: courseId, requestType: 'refund' });
     res
       .status(200)
-      .json({ success: true, statusCode: 200, message: 'Request Recieved Successfully!' });
+      .json({ success: true, statusCode: 200, message: 'Request received Successfully!' });
   } else {
     res.status(500).json({
       success: false,
@@ -460,47 +451,63 @@ const requestRefund = async (req, res) => {
 };
 
 const requestCourseAccess = async (req, res) => {
-  const { userId, courseId } = req.query;
-  await AccessRequests.create({ userId: userId, courseId: courseId });
+  const userId = res.locals.userId;
+  const { courseId } = req.query;
+  await Request.create({ userId: userId, courseId: courseId, requestType: 'access' });
   res
     .status(200)
-    .json({ success: true, statusCode: 200, message: 'Request Recieved Successfully!' });
+    .json({ success: true, statusCode: 200, message: 'Request Received Successfully!' });
 };
 
-const viewWallet = (req, res) => {
-  const { userId } = req.query;
-  const wallet = User.findById(userId).wallet;
-  res.status(200).json(wallet);
-};
-
-const viewCourseRequests = async (req, res) => {
-  const courseRequests = await AccessRequests.find().populate();
-  res.status(200).json(courseRequests);
-};
-
-const grantCourseAccess = async (req, res) => {
-  const { userId, courseId } = req.query;
-  await AccessRequests.findByIdAndDelete({ userId: userId, courseId: courseId });
-  await RegisteredCourses.create({ userId: userId, courseId: courseId, progress: 0.0 });
-  res
-    .status(200)
-    .json({ success: true, statusCode: 200, message: 'Course Access Granted Successfully!' });
-};
-
-const setCoursePromotion = async (req, res) => {
-  const { courseIdList, discount, startDate, endDate } = req.body;
-  for (var i = 0; i < courseIdList.length; i++) {
-    await Course.findByIdAndUpdate(courseIdList[i], {
-      $set: {
-        'discount.type.amount': discount,
-        'discount.duration.startDate': startDate,
-        'discount.duration.endDate': endDate
-      }
-    });
+const changeRefundStatus = async (req, res, next) => {
+  const { requestId } = req.query;
+  const { newStatus } = req.body;
+  const request = await Request.findByIdAndDelete(requestId);
+  const courseInfo = await Course.findById(res.locals.courseId);
+  if (newStatus === 'accepted') {
+    res.locals.refundedUserId = request.userId;
+    res.locals.courseId = request.courseId;
+    next();
+  } else {
+    await addNotification(
+      request.userId,
+      `Your request to refund course ${courseInfo.title} has been rejected. You can file a report and speak to an administrator if further assistance is needed.`
+    );
+    res
+      .status(200)
+      .json({ message: 'Status Updated successfully', success: true, statusCode: 200 });
   }
 };
 
-const refundToWallet = async (req, res) => {};
+const changeAccessStatus = async (req, res, next) => {
+  const { requestId } = req.query;
+  const { newStatus } = req.body;
+  const request = await Request.findByIdAndDelete(requestId);
+  res.locals.courseId = request.courseId;
+  const courseInfo = await Course.findById(res.locals.courseId);
+  if (newStatus === 'accepted') {
+    next();
+  } else {
+    await addNotification(
+      request.userId,
+      `Your request to access course ${courseInfo.title} has been rejected. You can file a report and speak to an administrator if further assistance is needed.`
+    );
+    res
+      .status(200)
+      .json({ message: 'Status Updated successfully', success: true, statusCode: 200 });
+  }
+};
+
+const getRequests = async (req, res) => {
+  const { requestType } = req.query;
+  const courseRequests = await Request.find({ requestType: requestType });
+  res.status(200).json({
+    message: 'Requests fetched successfully',
+    success: true,
+    payload: courseRequests,
+    statusCode: 200
+  });
+};
 
 module.exports = {
   signUp,
@@ -519,13 +526,11 @@ module.exports = {
   viewInstructorDetails,
   getCertificate,
   sendCertificateEmail,
-  viewMostPopularCourses,
   requestRefund,
   requestCourseAccess,
-  viewWallet,
-  viewCourseRequests,
-  grantCourseAccess,
-  setCoursePromotion,
+  changeRefundStatus,
+  changeAccessStatus,
   getCountryIso,
-  getCorrectPrice
+  getCorrectPrice,
+  getRequests
 };
