@@ -301,11 +301,16 @@ const addDiscount = asyncHandler(async (req, res) => {
   const { courseId } = req.query;
   const { discount } = req.body;
   const { startDate, endDate } = discount.duration;
+  var todayDate = new Date();
+  if (todayDate > new Date(endDate)) {
+    res.status(500);
+    throw new Error("end date is not valid");
+  }
   const startJob = schedule.scheduledJobs[courseId + 'start'];
   const endJob = schedule.scheduledJobs[courseId + 'end'];
   if (startJob) startJob.cancel();
   if (endJob) endJob.cancel();
-  var todayDate = new Date();
+  
   await Course.findByIdAndUpdate(courseId, { discount: discount });
   if (todayDate >= new Date(startDate)) {
     if (todayDate < new Date(endDate)) {
@@ -360,6 +365,11 @@ const addDiscount = asyncHandler(async (req, res) => {
 
 const setCoursePromotion = async (req, res) => {
   const { courseIdList, discount } = req.body;
+  var todayDate = new Date();
+  if (todayDate > new Date(discount.duration.endDate)) {
+    res.status(500);
+    throw new Error("end date is not valid");
+  }
   for (var i = 0; i < courseIdList.length; i++) {
     coursePromotionHelper(courseIdList[i], discount);
   }
@@ -426,7 +436,7 @@ const coursePromotionHelper = asyncHandler(async (courseId, discount) => {
 });
 
 const viewCourseTrainee = asyncHandler(async (req, res) => {
-  const userId = res.locals('userId');
+  const userId = res.locals.userId;
   const { courseId } = req.query;
   var courseInfo = await Course.findById(courseId);
   var examsArray = [];
@@ -435,26 +445,50 @@ const viewCourseTrainee = asyncHandler(async (req, res) => {
   if (res.locals.registered) {
     if (courseInfo.subtitles.length) {
       const courseSubtitles = await course.populate('subtitles');
-      subtitlesArray = courseSubtitles.subtitles;
-      courseInfo.subtitles.quizzes.map(async (quiz, index) => {
-        const s = await getSolution(userId, quiz);
-        if (s) {
+      subtitlesArray = await Promise.all(
+        courseSubtitles.subtitles.map(async (subtitle, index) => {
+          if (subtitle.quizzes.length) {
+            var newQuizzes = await Promise.all(
+              subtitle.quizzes.map(async (quiz, index) => {
+                const s = await getSolution(res.locals.userId, quiz).catch((err) => {
+                  throw err;
+                });
+                const ex = await getExam(quiz, false).catch((err) => {
+                  throw err;
+                });
+                if (s) {
+                  return {
+                    _id: ex._id,
+                    title: ex.title,
+                    solved: true,
+                    grade: s.grade
+                  };
+                } else {
+                  return {
+                    _id: ex._id,
+                    title: ex.title,
+                    solved: false
+                  };
+                }
+              })
+            );
+            return {
+              title: subtitle.title,
+              hours: subtitle.hours,
+              videos: subtitle.videos,
+              quizzes: newQuizzes
+            };
+          }
           return {
-            _id: ex._id,
-            title: ex.title,
-            solved: true,
-            grade: s.grade
+            title: subtitle.title,
+            hours: subtitle.hours,
+            videos: subtitle.videos,
+            quizzes: []
           };
-        } else {
-          const ex = await getExam(quiz, false);
-          return {
-            _id: ex._id,
-            title: ex.title,
-            solved: false
-          };
-        }
-      });
+        })
+      );
     }
+  
     if (courseInfo.exams.length) {
       examsArray = await Promise.all(
         courseInfo.exams.map(async (exam, index) => {
@@ -479,6 +513,9 @@ const viewCourseTrainee = asyncHandler(async (req, res) => {
     }
   }
   courseInfo = await courseInfo.populate('instructor', 'firstName lastName');
+  courseInfo = await courseInfo.populate('subtitles', 'title hours');
+  courseInfo = await courseInfo.populate('exams', 'title');
+  console.log(new Date());
   res.status(200).json({
     _id: courseInfo._id,
     registered: res.locals.registered,
@@ -489,7 +526,7 @@ const viewCourseTrainee = asyncHandler(async (req, res) => {
     subject: courseInfo.subject,
     instructor: courseInfo.instructor,
     preview: courseInfo.preview,
-    subtitles: subtitles.array.length ? subtitles.array : courseInfo.subtitles,
+    subtitles: subtitlesArray.length ? subtitlesArray : courseInfo.subtitles,
     summary: courseInfo.summary,
     averageRating: courseInfo.rating,
     exams: examsArray.length ? examsArray : courseInfo.exams

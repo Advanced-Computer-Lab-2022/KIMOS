@@ -161,7 +161,20 @@ const editCourseAuth = asyncHandler(async (req, res, next) => {
   }
 });
 
-const addDiscountAuth = asyncHandler(async (req, res, next) => {
+const seePublicCourseAuth = asyncHandler(async (req, res, next) => {
+  const userId = res.locals.userId.toString();
+  const courseInfo = await Course.findById(req.query.courseId);
+  if (courseInfo.visibility !== 'public') {
+    res
+      .status(401)
+      .json({ statusCode: 401, success: false, message: 'Cannot access courses that are not public' });
+  } else {
+    next();
+  }
+});
+
+
+const editPublicCourseAuth = asyncHandler(async (req, res, next) => {
   const userId = res.locals.userId.toString();
   const courseInfo = await Course.findById(req.query.courseId);
   if (userId === courseInfo.instructor.toString()) {
@@ -178,8 +191,9 @@ module.exports = {
   resetPasswordAuth,
   isRegisteredWithInstructor,
   registeredCourseAuth,
-  addDiscountAuth,
+  editPublicCourseAuth,
   editCourseAuth,
   individualAuth,
-  corporateAuth
+  corporateAuth,
+  seePublicCourseAuth
 };

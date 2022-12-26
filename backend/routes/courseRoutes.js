@@ -24,7 +24,7 @@ const {
   setCoursePromotion,
   makeCoursePublic,
   closeCourse,
-  addDiscount
+  addDiscount,
 } = require('../controllers/courseController');
 const {getAllRatings} = require('../controllers/ratingController');
 const { addQuiz, editQuiz, deleteQuiz } = require('../controllers/subtitleController');
@@ -37,7 +37,8 @@ const {
   loggedIn,
   corporateAuth,
   individualAuth,
-  addDiscountAuth
+  editPublicCourseAuth,
+  seePublicCourseAuth
 } = require('../middleware/auth');
 const { requestRefund, requestCourseAccess } = require('../controllers/userController');
 
@@ -47,10 +48,10 @@ router
   .get(isLoggedIn, isCorporateTrainee, findCourses) //all good
   .post(loggedIn, instructorAuth, createCourse) //all good
   .put(loggedIn, editCourseAuth, editCourse) //all good
-  .patch(loggedIn, editCourseAuth, makeCoursePublic);
+  .patch(loggedIn, editCourseAuth, makeCoursePublic); //// all good
 
-router.post('discount', loggedIn, addDiscountAuth, addDiscount);
-router.post('close', loggedIn, editCourseAuth, closeCourse);
+router.post('/discount', loggedIn, editPublicCourseAuth, addDiscount); //// all good
+router.post('/close', loggedIn, editPublicCourseAuth, closeCourse); //// all good
 router.route('/rate').post(loggedIn, registeredCourseAuth, rateCourse); //all good
 router
   .route('/exam')
@@ -70,17 +71,17 @@ router
 
 router
   .route('/getMyCourse')
-  .get(loggedIn, isRegisteredToCourse, isCorporateTrainee, viewCourseTrainee);
+  .get(loggedIn, seePublicCourseAuth, isRegisteredToCourse, isCorporateTrainee, viewCourseTrainee);  //// all good
 router.route('/register').post(loggedIn, registerUser).get(loggedIn, getAllRegisteredCourses); //all good
 
 router
   .route('/notes')
-  .get(loggedIn, registeredCourseAuth, getAllNotesAndUpdateProgress)
+  .get(loggedIn, registeredCourseAuth, getAllNotesAndUpdateProgress) //// all good
   .post(loggedIn, registeredCourseAuth, updateNotes); //all good
 
 router.get('/popular', viewMostPopularCourses); //all good
 
 router.post('/refund', loggedIn, individualAuth, registeredCourseAuth, requestRefund); //all good
 router.post('/access', loggedIn, corporateAuth, requestCourseAccess); //all good
-router.post('/promotion', loggedIn, adminAuth, setCoursePromotion);
+router.post('/promotion', loggedIn, adminAuth, setCoursePromotion); //// all good
 module.exports = router;
