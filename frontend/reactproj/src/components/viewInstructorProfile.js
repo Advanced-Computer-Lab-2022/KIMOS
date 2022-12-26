@@ -42,7 +42,7 @@ class InstructorProfile extends Component {
     this.toggleEditing();
   };
   save = async () => {
-    console.log(this.state.new_instructor);
+
     this.setState({ instructor: this.state.new_instructor });
     this.updateUserInfo();
     this.toggleEditing();
@@ -53,7 +53,7 @@ class InstructorProfile extends Component {
         headers: { 'Access-Control-Allow-Origin': '*' }
       });
 
-      console.log(res);
+
       var info = {
         id: res.data['_id'] || 0,
         username: res.data.username || '',
@@ -64,7 +64,7 @@ class InstructorProfile extends Component {
       };
       this.setState({ instructor: info, new_instructor: info });
     } catch (e) {
-      console.log(e);
+
     }
   };
 
@@ -80,7 +80,7 @@ class InstructorProfile extends Component {
         }
       }
     );
-    console.log(res);
+
     if (res.statusText === 'OK') {
       //setSubmitSuccess(true);
     }
@@ -101,9 +101,9 @@ class InstructorProfile extends Component {
           headers: { 'Access-Control-Allow-Origin': '*' }
         }
       );
-      console.log(res);
+
     } catch (e) {
-      console.log(e);
+
     }
   };
   getComments = () => {

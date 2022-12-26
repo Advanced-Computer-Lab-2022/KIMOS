@@ -9,8 +9,15 @@ import BottomNavigationAction from '@mui/material/BottomNavigationAction';
 import RestoreIcon from '@mui/icons-material/Restore';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import StarIcon from '@mui/icons-material/Star';
+import ReportGmailerrorredIcon from '@mui/icons-material/ReportGmailerrorred';
 import Modal from '@mui/material/Modal';
 import Rating from '@mui/material/Rating';
+import TextField from '@mui/material/TextField';
+import PrimaryBtn from './buttons/primaryBtn.js';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 import axios from 'axios';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
@@ -21,12 +28,14 @@ export default function TraineeViewMyCourse(props) {
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [value, setValue] = useState(0);
   const [openRating, setOpenRating] = useState(false);
+  const [openReport, setOpenReport] = useState(false);
+
   const [solveExam, setSolveExam] = useState(false);
   const [currentSubtitle, setCurrentSubtitle] = useState(-1);
   const [currentExam, setCurrentExam] = useState(-1);
   const [courseRatingValue, setCourseRatingValue] = useState(0);
   const onChangeExam = (newExamId) => {
-    console.log('the exam id ' + newExamId);
+
     setCurrentExam(newExamId);
     setCurrentSubtitle(-1);
   };
@@ -41,7 +50,7 @@ export default function TraineeViewMyCourse(props) {
   const onChangeSubtitle = (newSubtitleId) => {
     setCurrentSubtitle(newSubtitleId);
     setCurrentExam(-1);
-    console.log(props.course.subtitles[newSubtitleId]);
+
   };
 
   const postRating = async () => {
@@ -55,7 +64,7 @@ export default function TraineeViewMyCourse(props) {
         }
       }
     );
-    console.log(res);
+
     if (res.statusText === 'OK') {
       setSubmitSuccess(true);
     }
@@ -138,6 +147,50 @@ export default function TraineeViewMyCourse(props) {
       );
     });
   };
+  const [report, setReport] = useState({title:'',type:'technical',issue:''});
+
+  const handleReportChange = (e)=>{
+    var key = e.target.id? e.target.id : 'type';
+    var r = {...report};
+    r[key] = e.target.value;
+    setReport(r);
+
+  }
+  const submitReport = ()=>{
+
+  }
+  const getReport = ()=>{
+    return (<div className='submit-report'>
+              <div className='submit-report__form'>
+                <div className='submit-report__form__title'>Report A Course</div>
+
+
+                <div className='submit-report__form__input'>
+                  <TextField onChange={handleReportChange} style={{marginBottom:'10px', width:'50%'}} id="title" label="Title" variant="outlined" />
+
+                  <div style={{marginBottom:'10px', width:'20%'}}>
+                    <InputLabel >Type</InputLabel>
+                    <Select
+                        labelId="demo-simple-select-label"
+                        id="type"
+                        value={report.type}
+                        label="Type"
+                        onChange={handleReportChange}
+                      >
+                      <MenuItem value={'technical'}>Technical</MenuItem>
+                      <MenuItem value={'financial'}>Financial</MenuItem>
+                      <MenuItem value={'other'}>Other</MenuItem>
+                    </Select> 
+                  
+                  </div>
+                  <TextField onChange={handleReportChange} style={{marginBottom:'10px'}} id="issue" label="Issue" variant="outlined" multiline rows={6}/>
+                </div>
+
+                <div className='submit-report__form__submit'><PrimaryBtn function ={submitReport} btnText="Send"/></div>
+
+              </div>
+            </div>)
+  }
   const getExams = () => {
     return props.course.exams.map((exam, index) => {
       return (
@@ -154,6 +207,16 @@ export default function TraineeViewMyCourse(props) {
   };
   return (
     <div style={{ position: 'relative' }}>
+
+      <Modal
+        open={openReport}
+        onClose={() => {
+          setOpenReport(false);
+        }}>
+        {getReport()}
+      </Modal>
+
+
       <Modal
         open={openRating}
         onClose={() => {
@@ -212,6 +275,24 @@ export default function TraineeViewMyCourse(props) {
           Leave Rating <StarIcon />
         </div>
 
+        <div
+          onClick={() => {
+            setOpenReport(true);
+          }}
+          style={{
+            cursor: 'pointer',
+            position: 'absolute',
+            left: '100%',
+            top: '50%',
+            transform: 'translate(-100%,-50%)',
+            display: 'flex',
+            alignItems: 'center',
+            color: 'grey',
+            fontWeight: 'lighter',
+            width:'150px'
+          }}>
+          Report Problem <ReportGmailerrorredIcon/>
+        </div>
         <BottomNavigation
           showLabels
           value={0}

@@ -14,7 +14,8 @@ class courseItem extends Component {
 
     }
     coursePrice = () => {
-        console.log(this.props);
+        if(this.props.user.userType === 'corporate trainee') return <div></div>
+
         var discount = this.props.course.discount.amount;
         var oldPrice = Math.ceil(this.props.course.price*this.props.rateAndSymbol.rate)  ;
         var newPrice = -1;
@@ -75,6 +76,7 @@ const mapStateToProps = (state) =>{
    
     return {
         rateAndSymbol: state.rateAndSymbol,
+        user: state.user
     };
   }
   

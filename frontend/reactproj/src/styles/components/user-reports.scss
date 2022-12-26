@@ -1,0 +1,157 @@
+.issue-status-pending{
+
+    padding-left: 1vw;
+    padding-right: 1vw;
+    padding-top: 0.6vh;
+    padding-bottom: 0.6vh;
+    border-radius: 10px;
+    background:#f9c60cad;
+    color:black;
+
+
+}
+.issue-status-resolved{
+    padding-left: 1vw;
+    padding-right: 1vw;
+    padding-top: 0.6vh;
+    padding-bottom: 0.6vh;
+    border-radius: 10px;
+    background:#97dc21cf;
+    color:darkgreen;
+
+}
+
+.chat-container{
+    width: 50%;
+    height: 70%;
+    position: absolute;
+    left:50%;
+    top:50%;
+    transform: translate(-50%,-50%);
+    background-color: white;
+    border-radius: 10px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    &__title{
+        font-size: 30px;
+    }
+    &__chat{
+        overflow-y: auto;
+
+        height: 100%;
+        padding: 10px;
+        margin: 15px;
+        border-radius: 10px;
+    }
+    &__bottom{
+
+
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        &__text{
+            padding-right: 20px;
+            width: 100%;
+
+        }
+    }   
+}
+
+
+.mssg{
+
+    margin-bottom: 10px;
+    width: 100%;
+    &__content-admin{
+
+        height: 100%;
+        padding-left: 5px;
+        padding-right: 15px;
+        padding-top: 5px;
+        padding-bottom: 5px;
+        width: fit-content;
+        border-radius: 15px;
+        background-color: var(--cool-grey);
+        color:black;
+        display: flex;
+        align-items: center;
+
+    }
+    &__content-user{
+
+        height: 100%;
+        padding-left: 5px;
+        padding-right: 15px;
+        padding-top: 5px;
+        padding-bottom: 5px;
+
+        width: fit-content;
+        border-radius: 15px;
+        background: linear-gradient(45deg, $primary-color-linear, $primary-color);
+        color:white;
+        display: flex;
+        align-items: center;
+
+
+    }
+
+
+}
+.admin-mssg{
+    color: red;
+
+}
+.user-mssg{
+
+
+    display: flex;
+    justify-content: flex-end;
+}
+
+
+
+.submit-report{
+    border: 2px solid red;
+    height: 100%;
+    @include flex-center-all;
+    &__form{    
+        position: relative;
+
+        height: 70%;
+        width: 50%;
+        background: white;
+        border-radius: 10px;
+        display: flex;
+        flex-direction: column;
+
+        &__title{
+            color: var(--primary-color);
+            font-size: 40px;
+            font-weight: bolder;
+            padding: 20px;
+        }
+        &__submit{
+            position: absolute;
+            left:100%;
+            top:100%;
+            transform: translate(-100%,-100%);
+            margin: -10px;
+        }
+        &__input{
+            position: absolute;
+            left:50%;
+            top:50%;
+            transform: translate(-50%,-50%);
+
+            width: 100%;
+            padding: 2vw;
+            display: flex;
+            flex-direction: column;
+
+        }
+
+    }
+}

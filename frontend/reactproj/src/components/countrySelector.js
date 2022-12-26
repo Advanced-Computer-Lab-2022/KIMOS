@@ -479,7 +479,7 @@ function CountrySelect(props) {
         headers: { 'Access-Control-Allow-Origin': '*' }
       });
 
-      var ctrObj = getCountryObj(res.data.country.code);
+      var ctrObj = getCountryObj(res.data.payload.code);
 
       setDefaultCountry(ctrObj);
       getNewRate(ctrObj);
@@ -496,8 +496,8 @@ function CountrySelect(props) {
         headers: { 'Access-Control-Allow-Origin': '*' }
       });
 
-      console.log({rate: res.data.rate, symbol: res.data.symbol})
-      props.setRate({ rate: res.data.rate, symbol: res.data.symbol });
+      console.log({rate: res.data.payload.rate, symbol: res.data.payload.symbol})
+      props.setRate({ rate: res.data.payload.rate, symbol: res.data.payload.symbol });
     } catch (e) {
     console.log(e.message)
 
@@ -507,7 +507,7 @@ function CountrySelect(props) {
     const body = { newCountry: newCountry };
 
     try {
-      await axios.put('http://localhost:5000/users/country?userId=638117c243cba3f0babcc3a9', body, {
+      await axios.put('http://localhost:5000/users/country', body, {
         headers: { 'Access-Control-Allow-Origin': '*' }
       });
     } catch (e) {}

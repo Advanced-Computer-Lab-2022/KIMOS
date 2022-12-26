@@ -4,6 +4,8 @@ import Rating from '../components/rating';
 import ShowCourse from './showCourse/showCourse';
 import Drawer from '@mui/material/Drawer';
 import InstructorCourse from './instructorCourse';
+import Loading from './loadingPage';
+
 import axios from 'axios';
 const columns = [
   { 
@@ -54,6 +56,15 @@ const columns = [
     headerAlign:'center'
   },
 
+  {
+    field: 'visibility',
+    headerName: 'Visibility',
+    flex: 1,
+    minWidth: 40,
+    align:'center',
+    headerAlign:'center'
+  },
+
 ];
 
 
@@ -66,7 +77,7 @@ export default function InstructorCourses2() {
 const [rows, setRows] = React.useState([]);
 const [drawer, setDrawer] = React.useState(false);
 const [displayedCourse, setDisplayedCourse] = React.useState({});
-
+const [loading, setLoading] = React.useState(true);
 const toggleDrawer = (event) => {
 
     setDrawer(!drawer);
@@ -82,13 +93,12 @@ React.useEffect(() => {
   const getInstructorCourses = async () => {
     console.log('getting')
     try {
-      const res = await axios.get(`http://localhost:5000/courses/findCourses?user[userId]=638117c243cba3f0babcc3a9&instructorSearch=true`, {
+      const res = await axios.get(`http://localhost:5000/courses/?instructorSearch=true`, {
         headers: { 'Access-Control-Allow-Origin': '*' }
       });
-      console.log('res.data');
-
-      console.log(res.data);
-      setRows(res.data);
+      console.log(res)
+      setRows(res.data.payload);
+      setLoading(false);
     } catch (e) {
       console.log(e)
     }
@@ -108,7 +118,7 @@ React.useEffect(() => {
         setRows(tmp);
     }
   const showCourse = (rowData)=>{
-
+    console.log(rowData.row);
     setDisplayedCourse(rowData.row);
     toggleDrawer();
   }
@@ -116,14 +126,18 @@ React.useEffect(() => {
 
     <div className='instructor-courses'>
         <div className='instructor-courses__title'>My Courses</div>
-        <div className='instructor-courses__table'>
+        <div className='instructor-courses__table' style={{position:'relative'}}>
+        {loading && <Loading />}
+
             <DataGrid
                 rows={rows}
                 columns={columns}
-                pageSize={20}
-                rowsPerPageOptions={[20]}
+                pageSize={10}
+                rowsPerPageOptions={[10]}
                 onRowClick = {showCourse}
                 getRowId = {(row)=>{return row['_id']}}
+                disableSelectionOnClick
+                disableColumnSelector
             />
     </div>
     <Drawer

@@ -4,26 +4,32 @@ const userSolutionSchema = mongoose.Schema(
   {
     userId: {
       type: mongoose.Types.ObjectId,
-      ref: 'User'
+      ref: 'User',
+      required: [true, 'Please Specify student userId']
     },
     examId: {
       type: mongoose.Types.ObjectId,
-      ref: 'Exam'
+      ref: 'Exam',
+      required: [true, 'Please Specify examId']
     },
     grade: {
-      type: String
+      type: String,
+      required: [true, 'Please Specify grade']
     },
-    solutions: [
-      {
-        exercise: {
-          type: mongoose.Types.ObjectId,
-          ref: 'Exercise'
-        },
-        choice: {
-          type: Number
+    solutions: {
+      type: [
+        {
+          exercise: {
+            type: mongoose.Types.ObjectId,
+            ref: 'Exercise'
+          },
+          choice: {
+            type: Number
+          }
         }
-      }
-    ]
+      ],
+      required: [true, 'All Questions must be answered']
+    }
   },
   {
     timestamps: true

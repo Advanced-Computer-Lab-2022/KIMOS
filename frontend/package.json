@@ -1,5 +1,6 @@
 {
   "name": "kimos",
+  "proxy": "http://localhost:5000",
   "version": "1.0.0",
   "description": "Courses App For GUC",
   "main": "server.js",

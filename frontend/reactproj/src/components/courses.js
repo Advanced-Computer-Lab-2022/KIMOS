@@ -7,6 +7,7 @@ import Pagination from '@mui/material/Pagination';
 import Slider from '@mui/material/Slider';
 import Tooltip from '../components/courseToolTip';
 import { connect } from 'react-redux';
+import Loading from './loadingPage';
 
 
 import axios from 'axios';
@@ -14,6 +15,7 @@ import axios from 'axios';
 class courses extends Component {
   //main courses are the ones we got on the post response. Courses are them but after the filters
   state = {
+    loading:true,
     keyword: '',
     page: 1,
     mainCourses: [],
@@ -46,11 +48,18 @@ class courses extends Component {
         headers: { 'Access-Control-Allow-Origin': '*' }
       });
 
-      this.setState({ subjects: res.data.subjects }, () => {
-        this.state.subjects.forEach((subject) => {
-          this.state.subjectsFilter[subject] = false;
+      if(res.data.success){
+        var subjects = [];
+        res.data.payload.map((subject)=>{
+          subjects.push(subject.name);
+        })
+        this.setState({ subjects: subjects }, () => {
+          this.state.subjects.forEach((subject) => {
+            this.state.subjectsFilter[subject] = false;
+          });
         });
-      });
+      }
+
     } catch (e) {}
   };
   getQueryVariable() {
@@ -68,11 +77,11 @@ class courses extends Component {
     const body = keywordObj;
     console.log(body);
     try {
-      const res = await axios.get('http://localhost:5000/courses/findCourses', {
-        headers: { 'Access-Control-Allow-Origin': '*' }
+      const res = await axios.get('http://localhost:5000/courses', {
+        headers: {  }
       });
-
-      this.setState({ courses: res.data, mainCourses: res.data }, () => {
+      console.log(res.data.payload);
+      this.setState({ courses: res.data.payload, mainCourses: res.data.payload }, () => {
         this.updateCourses();
       });
     } catch (e) {}
@@ -175,7 +184,7 @@ class courses extends Component {
 
     if (this.state.filterFlag)
       this.state.mainCourses.forEach((course) => {
-        if (this.state.subjectsFilter[course.subject] === true) {
+        if (this.state.subjectsFilter[course.subject.name] === true) {
           newCourses.push(course);
         }
       });
@@ -194,7 +203,7 @@ class courses extends Component {
       }
     });
 
-    this.setState({ courses: newCourses });
+    this.setState({ courses: newCourses, loading:false });
   };
   getRatingSlider = () => {
     return (
@@ -241,11 +250,11 @@ class courses extends Component {
   render() {
     return (
       <div className="courses-container">
-
+        {this.state.loading && <Loading />}
         
         <div className="filters">
           {this.getFilterComp('Subjects', this.state.subjects)}
-          {this.getPriceSlider()}
+          {this.props.user.userType !== 'corporate trainee' &&this.getPriceSlider()}
           {this.props.type !== "instructor" && this.getRatingSlider()}
 
         </div>
@@ -287,7 +296,8 @@ class courses extends Component {
 // </div>
 const mapStateToProps = (state) => {
   return {
-    rate: state.rateAndSymbol
+    rate: state.rateAndSymbol,
+    user:state.user
   };
 };
 

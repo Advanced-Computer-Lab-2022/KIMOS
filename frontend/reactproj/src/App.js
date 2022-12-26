@@ -4,6 +4,8 @@ import LoginPage from './components/loginPage';
 import Navbar from './components/navbar';
 import Guest from './components/guest';
 import Admin from './components/admin';
+import AdminDB from './components/adminDB';
+import AddPromotions from './components/addPromotions';
 import Instructor from './components/instructor';
 import InstructorDB from './components/instructorDB';
 import InstructorProfile from './components/instructorProfile';
@@ -20,6 +22,14 @@ import WatchVideo from './components/watchVideo';
 import PasswordReset from './components/passwordReset';
 import ViewInstructorProfile from './components/viewInstructorProfile';
 import HomeLand from './components/homeLand';
+import UserReports from './components/userReports';
+import AdminReports from './components/adminReports';
+import RequestCourseAccess from './components/requestCourseAccess';
+import AdminCourseReqs from './components/adminCourseReqs';
+import UserProfile from './components/userProfile';
+import Loading from './components/loadingPage';
+import NewCreateCourse from './components/newCreateCourse';
+import SignUpPage from './components/signUp';
 
 import PaymentPolicy from './components/paymentPolicy';
 import MyEnrolledCourses from './components/myEnrolledCourses';
@@ -41,6 +51,10 @@ import TraineeExercise from './components/TraineeExercise';
 import TraineeSolution from './components/TraineeSolution';
 import TraineeViewCourseDetails from './components/traineeViewCourseDetails';
 
+axios.defaults.withCredentials = true;
+axios.defaults.headers = 'Access-Control-Allow-Origin: http://localhost:3000';
+axios.defaults.headers = 'Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS';
+axios.defaults.headers = 'Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token'
 
 class App extends Component {
 
@@ -107,18 +121,39 @@ class App extends Component {
           
             <Route exact path="/" element={<HomeLand />}></Route>
             <Route exact path="/login" element={<LoginPage />}></Route>
+            <Route exact path="/signUp" element={<SignUpPage />}></Route>
+
             <Route exact path="/milestone1" element={<TmpRoutes />}></Route>
             <Route exact path="/forgotPassword" element={<ForgotPassword />}></Route>
             <Route exact path="/changePassword" element={<ChangePassword />}></Route>
             <Route exact path="/passwordReset" element={<PasswordReset />}></Route>
             <Route exact path="/watchVideo" element={<WatchVideo />}></Route>
             <Route exact path="/guest" element={<Guest />}></Route>
-            <Route exact path="/admin" element={<Admin />}></Route>
+            <Route exact path="/admin/addUsers" element={<Admin />}></Route>
+            <Route exact path="/admin/promotions" element={<AddPromotions />}></Route>
+            <Route exact path="/administrator" element={<AdminDB />}></Route>
+            <Route exact path="/admin/courseRequests" element={<AdminCourseReqs />}></Route>
+            
+
+
+            
+            
+            <Route exact path="/instructor/createCourseOld" element={<Instructor />}></Route>
+
+
             <Route exact path="/instructor" element={<InstructorDB />}></Route>
             <Route exact path="/instructor/courses" element={<InstructorCourses />}></Route>
             <Route path="/instructor/createQuiz" element={<CreateQuiz />}></Route>
             <Route exact path="/instructor/profile" element={<InstructorProfile />}></Route>
-            <Route exact path="/instructor/createCourse" element={<Instructor />}></Route>
+            <Route exact path="/instructor/createCourse" element={<NewCreateCourse />}></Route>
+
+            
+            <Route exact path="/user" element={<UserProfile />}></Route>
+            <Route exact path="/user/myReports" element={<UserReports />}></Route>
+            <Route exact path="/user/requestCourseAccess" element={<RequestCourseAccess />}></Route>
+            <Route exact path="/admin/reports" element={<AdminReports />}></Route>
+
+
 
             <Route exact path="/exercise/solution" element={<TraineeSolution />}></Route>
             <Route exact path="/trainee" element={<Trainee />}></Route>
@@ -128,6 +163,8 @@ class App extends Component {
               path="myCourseTrainee/content"
               element={<TraineeViewCourseDetails />}></Route>
             <Route exact path="exercise" element={<TraineeExercise />}></Route>
+            <Route exact path="loading" element={<Loading />}></Route>
+
             <Route  path="viewInstructorProfile/:id" element={<ViewInstructorProfile />}></Route>
 
 
@@ -155,7 +192,7 @@ class App extends Component {
   }
 }
 const mapStateToProps = (state) =>{
-  console.log(state);
+
  return {
      lightTheme: state.lightTheme,
      primaryColor: state.primaryColor
@@ -164,3 +201,5 @@ const mapStateToProps = (state) =>{
 
 
 export default connect(mapStateToProps)(App)
+
+// <Route exact path="/instructor/createCourse" element={<Instructor />}></Route>

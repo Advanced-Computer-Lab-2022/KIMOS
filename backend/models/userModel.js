@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Joi = require('joi');
 
 const userSchema = mongoose.Schema(
   {
@@ -13,30 +14,32 @@ const userSchema = mongoose.Schema(
       trim: true,
       index: true,
       unique: true,
-      sparse: true
+      sparse: true,
+      validate: [validateEmail, 'Please enter a valid email address']
     },
     username: {
       type: String,
       required: [true, 'Please enter a username'],
-      unique: true
+      unique: [true, 'That username is taken']
     },
     password: {
       type: String,
       required: [true, 'Please enter a password']
     },
     rating: {
-      value:{
-        type: Number,
-        default: 0,
-        min: 0.0,
-        max: 5.0
-      },
-      numberOfRatings:{
-        type: Number,
-        default:0
+      type: {
+        value: {
+          type: Number,
+          default: 0,
+          min: 0.0,
+          max: 5.0
+        },
+        numberOfRatings: {
+          type: Number,
+          default: 0
+        }
       }
     },
-
     userType: {
       type: String,
       enum: ['administrator', 'corporate trainee', 'individual trainee', 'instructor'],
@@ -45,16 +48,28 @@ const userSchema = mongoose.Schema(
     },
 
     country: {
-      name: {
-        type: String,
-        default: 'Egypt'
-      },
-      code: {
-        type: String,
-        default: 'EG'
+      type: {
+        name: {
+          type: String
+        },
+        code: {
+          type: String
+        }
       }
     },
     biography: {
+      type: String
+    },
+    wallet: {
+      type: Number
+    },
+    gender: {
+      type: String
+    },
+    firstLogIn: {
+      type: String
+    },
+    reset: {
       type: String
     }
   },
@@ -62,5 +77,9 @@ const userSchema = mongoose.Schema(
     timestamps: true
   }
 );
+function validateEmail(email) {
+  var re = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/ || null;
+  return re.test(email);
+}
 
 module.exports = mongoose.model('User', userSchema);

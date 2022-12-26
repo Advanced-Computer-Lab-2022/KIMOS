@@ -130,9 +130,9 @@ function CustomizedSwitches(props) {
   var style = getComputedStyle(document.body)
 
   return (
-    <FormGroup>
+    <FormGroup style={{ display:'flex', justifyContent:'center', alignItems:'center'}}>
       <FormControlLabel
-        control={<MaterialUISwitch sx={{ m: 1 }} checked={!props.lightTheme} onChange={handleChange}/>}/>
+        control={<MaterialUISwitch sx={{ m: 0.1 }} checked={!props.lightTheme} onChange={handleChange}/>}/>
     </FormGroup>
   );
 }
