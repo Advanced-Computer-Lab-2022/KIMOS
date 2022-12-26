@@ -13,7 +13,7 @@ import SaveIcon from '@mui/icons-material/Save';
 import Person2Icon from '@mui/icons-material/Person2';
 import LogoutIcon from '@mui/icons-material/Logout';
 import cccLogo from '../assets/cccLogo.png';
-// const axios = require('axios');
+import axios from 'axios';
 
 // var Navigation = require('react-router').Navigation;
 
@@ -58,9 +58,29 @@ class navbar extends Component {
     logOut = ()=>{
         this.props.setUser({username:"",userType:""})
     }
+    handleLogout = async()=>{
+        console.log('logging out')
+        try{
+            const res = await axios.post("http://localhost:5000/logout");
+            console.log(res)
+
+            if(res.data.success){
+                this.props.setUser({username:"",userType:""});
+                window.location.href = '/login';
+            }
+            else{
+                alert("err occurred")
+            }
+
+        }catch(e){
+            console.log(e);
+        }
+
+        
+    }
     actions = [
-        { icon: <Person2Icon />, name: 'Profile', function: ()=>{ window.location.href = '/user/profile'} },
-        { icon: <LogoutIcon />, name: 'Logout',  function: ()=>{ window.location.href = '/login'} },
+        { icon: <Person2Icon />, name: 'Profile', function: ()=>{ window.location.href = '/user'} },
+        { icon: <LogoutIcon />, name: 'Logout',  function: ()=>{ this.handleLogout()} },
 
       ];
 
@@ -79,7 +99,7 @@ class navbar extends Component {
                 <div className="user-options">
 
                     {this.props.user.username ===''&&<PrimaryButton function={()=>{window.location.href = '/login'}} btnSize="medium" btnText="Log In"/>}
-                    {this.props.user.username ===''&&<SecondaryButton function={this.exampleFunction} btnSize="medium" btnText="Sign Up"/>}
+                    {this.props.user.username ===''&&<SecondaryButton function={()=>{window.location.href = '/signUp'}} btnSize="medium" btnText="Sign Up"/>}
                     <ThemeSwitcher />
 
                     <CountrySelector />

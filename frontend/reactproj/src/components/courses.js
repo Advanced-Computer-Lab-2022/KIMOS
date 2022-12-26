@@ -49,7 +49,11 @@ class courses extends Component {
       });
 
       if(res.data.success){
-        this.setState({ subjects: res.data.payload }, () => {
+        var subjects = [];
+        res.data.payload.map((subject)=>{
+          subjects.push(subject.name);
+        })
+        this.setState({ subjects: subjects }, () => {
           this.state.subjects.forEach((subject) => {
             this.state.subjectsFilter[subject] = false;
           });
@@ -76,7 +80,7 @@ class courses extends Component {
       const res = await axios.get('http://localhost:5000/courses', {
         headers: {  }
       });
-
+      console.log(res.data.payload);
       this.setState({ courses: res.data.payload, mainCourses: res.data.payload }, () => {
         this.updateCourses();
       });
@@ -180,7 +184,7 @@ class courses extends Component {
 
     if (this.state.filterFlag)
       this.state.mainCourses.forEach((course) => {
-        if (this.state.subjectsFilter[course.subject] === true) {
+        if (this.state.subjectsFilter[course.subject.name] === true) {
           newCourses.push(course);
         }
       });
@@ -250,7 +254,7 @@ class courses extends Component {
         
         <div className="filters">
           {this.getFilterComp('Subjects', this.state.subjects)}
-          {this.getPriceSlider()}
+          {this.props.user.userType !== 'corporate trainee' &&this.getPriceSlider()}
           {this.props.type !== "instructor" && this.getRatingSlider()}
 
         </div>
@@ -292,7 +296,8 @@ class courses extends Component {
 // </div>
 const mapStateToProps = (state) => {
   return {
-    rate: state.rateAndSymbol
+    rate: state.rateAndSymbol,
+    user:state.user
   };
 };
 

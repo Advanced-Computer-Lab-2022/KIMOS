@@ -140,7 +140,7 @@ class App extends Component {
 
             
             <Route exact path="/user" element={<UserProfile />}></Route>
-            <Route exact path="/user/reports" element={<UserReports />}></Route>
+            <Route exact path="/user/myReports" element={<UserReports />}></Route>
             <Route exact path="/user/requestCourseAccess" element={<RequestCourseAccess />}></Route>
             <Route exact path="/admin/reports" element={<AdminReports />}></Route>
 

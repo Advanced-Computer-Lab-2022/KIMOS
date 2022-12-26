@@ -101,7 +101,7 @@ class loginPage extends Component {
                     </div>
                 </div>
                 <div style={{position:'absolute',bottom:0, right:0, padding:'10px'}}>
-                    <small style={{cursor:'pointer'}}>Sign Up?</small>
+                    <small style={{cursor:'pointer'}} onClick={()=>{window.location.href = '/signUp'}}>Sign Up?</small>
                 </div>
             </div>
 

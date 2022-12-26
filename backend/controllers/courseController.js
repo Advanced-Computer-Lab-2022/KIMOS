@@ -212,10 +212,11 @@ const findCourses = asyncHandler(async (req, res) => {
                   }
                 })
               );
-              result = { ...result, exams: exams };
+              result = { ...result.toObject(), exams: exams };
+
             }
           }
-          result = { registered, ...result };
+          result = { registered, ...result.toObject() };
         }
         return result;
       })
@@ -276,7 +277,9 @@ const findCourses = asyncHandler(async (req, res) => {
 });
 
 const getAllSubjects = asyncHandler(async (req, res) => {
-  const subjects = await Subject.find();
+  const subjects = await Subject.find().select('name');
+
+  console.log(res);
   res.status(200).json({
     success: true,
     message: 'Successfully retrieved',

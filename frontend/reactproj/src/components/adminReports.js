@@ -94,7 +94,7 @@ class adminReports extends Component {
 
              return (true&& <div style={{ width:'100%', height:'100%', display:'flex', alignItems:'center', justifyContent:'space-around'}}>
                                 <ChatIcon style={{cursor:'pointer'}} onClick={()=>{this.setState({chatModal:true, currentReport:rowData.row})}}/>
-                                </div>)
+                            </div>)
         }
         },
           {

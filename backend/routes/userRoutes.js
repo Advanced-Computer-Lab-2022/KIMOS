@@ -46,5 +46,5 @@ router
   .post(loggedIn, registeredCourseAuth, createReport) //all good
   .get(loggedIn, getReports) //all good
   .put(loggedIn, adminAuth, changeStatus) //all good
-  .patch(loggedIn, adminAuth, addMessages); //all good
+  .patch(loggedIn, addMessages); //all good
 module.exports = router;

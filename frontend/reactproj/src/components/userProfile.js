@@ -103,8 +103,7 @@ class UserProfile extends Component {
   getOption = (icon, value, ref) =>{
 
     return (
-      <div className="profile__options"
-      >
+      <div className="profile__options" onClick={()=>{ window.location.href = 'user/'+ref}}>
         <div>{icon}</div>
         <div style={{marginLeft:'10px'}}>{value}</div>
       </div>
@@ -194,12 +193,12 @@ class UserProfile extends Component {
           <div className="instructor-profile__content__reviews" style={{width:'50%'}}>
           <div className="instructor-profile__content__reviews__header">My Menu</div>
           <div className="instructor-profile__content__reviews__comments"
-            style={{padding:'20px'}} >
+          >
 
               {this.getOption(<WhatshotIcon style={{fontSize:'30px', color:'red'}}/>, 'Top Courses', 'topCourses')}
               {this.getOption(<MenuBookIcon style={{fontSize:'30px', color:'var(--secondary-color)'}}/>, 'My Courses', 'myCourses')}
               {this.getOption(<ReportIcon style={{fontSize:'30px',  color:'var(--secondary-color)'}}/>, 'My Reports', 'myReports')}
-              {this.props.user.userType==='corporate trainee' && this.getOption(<SwitchAccessShortcutIcon style={{fontSize:'30px',  color:'var(--secondary-color)'}}/>, 'Grant Access', 'grantAccess')}
+              {this.props.user.userType==='corporate trainee' && this.getOption(<SwitchAccessShortcutIcon style={{fontSize:'30px',  color:'var(--secondary-color)'}}/>, 'Grant Access', 'requestCourseAccess')}
 
           </div>
 
@@ -213,7 +212,7 @@ class UserProfile extends Component {
                     {this.getStars()}
                     
 
-                    <div className="wallet__content__value">39$</div>
+                    <div className="wallet__content__value">319$</div>
                         <div className="wallet__content__icon wallet__content__icon-1"><AttachMoneyIcon sx={{fontSize:'150px'}}/></div>
                         <div className="wallet__content__icon wallet__content__icon-2"><PaidIcon sx={{fontSize:'150px'}}/></div>
                     </div>

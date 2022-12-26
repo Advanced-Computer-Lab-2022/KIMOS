@@ -41,7 +41,7 @@ class homeLand extends Component {
                         <div  className='homeland__section section_1__left__text t2'>Educational Academy</div>
                         <div  className='homeland__section section_1__left__text t3'>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis eget nisi sit amet sapien aliquam lacinia. Morbi tempor egestas lacus, ac facilisis eros posuere vitae. </div>
                         <div style={{marginTop:'1vh',display:'flex', justifyContent:'flex-end'}}>
-                            <PrimaryBtn btnText="Join Us"/>
+                            <PrimaryBtn btnText="Join Us" function={()=>{window.location.href = '/login'}}/>
                         </div>
 
                     
