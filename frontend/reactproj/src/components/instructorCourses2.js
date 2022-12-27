@@ -5,8 +5,19 @@ import ShowCourse from './showCourse/showCourse';
 import Drawer from '@mui/material/Drawer';
 import InstructorCourse from './instructorCourse';
 import Loading from './loadingPage';
+import Stack from '@mui/material/Stack';
+import Switch from '@mui/material/Switch';
 
 import axios from 'axios';
+
+
+
+export default function InstructorCourses2() {
+
+const [rows, setRows] = React.useState([]);
+const [drawer, setDrawer] = React.useState(false);
+const [displayedCourse, setDisplayedCourse] = React.useState({});
+const [loading, setLoading] = React.useState(true);
 const columns = [
   { 
     field: 'id', headerName: 'ID',
@@ -59,6 +70,13 @@ const columns = [
   {
     field: 'visibility',
     headerName: 'Visibility',
+    renderCell: rowData => {
+      var status = rowData.row.visibility === 'public' ? 'Public':'Private' 
+      return (      <Stack direction="row" spacing={1} alignItems="center">
+                         <Switch onChange={(e)=>{handleSwitchChange(e, rowData.row['_id'])}} defaultChecked={rowData.row.visibility === 'public'} inputProps={{ 'aria-label': 'ant design' }} />
+                         <p>{status}</p>
+                     </Stack>)
+ },
     flex: 1,
     minWidth: 40,
     align:'center',
@@ -68,16 +86,24 @@ const columns = [
 ];
 
 
+const handleSwitchChange = async (e, id) =>{
+  console.log('hi hi hi');
+  console.log(e.target.checked)
+
+  if(!e.target.checked){
+    const res = await axios.post("http://localhost:5000/courses/close?courseId="+id)
+    console.log(res);
+  }
+
+  else {
+    const res = await axios.patch("http://localhost:5000/courses?courseId="+id)
+    console.log(res);
+  }
+  getInstructorCourses();
+
+}
 
 
-
-
-export default function InstructorCourses2() {
-
-const [rows, setRows] = React.useState([]);
-const [drawer, setDrawer] = React.useState(false);
-const [displayedCourse, setDisplayedCourse] = React.useState({});
-const [loading, setLoading] = React.useState(true);
 const toggleDrawer = (event) => {
 
     setDrawer(!drawer);
@@ -134,7 +160,7 @@ React.useEffect(() => {
                 columns={columns}
                 pageSize={10}
                 rowsPerPageOptions={[10]}
-                onRowClick = {showCourse}
+                // onRowClick = {showCourse}
                 getRowId = {(row)=>{return row['_id']}}
                 disableSelectionOnClick
                 disableColumnSelector

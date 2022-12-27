@@ -109,13 +109,11 @@ React.useEffect(() => {
   }, []);
 
   const getInstructorCourses = async () => {
-    console.log('getting')
+
     try {
       const res = await axios.get(`http://localhost:5000/courses/`, {
         headers: { 'Access-Control-Allow-Origin': '*' }
       });
-
-
 
       setRows(res.data.payload);
       setLoading(false)
@@ -123,20 +121,32 @@ React.useEffect(() => {
       console.log(e)
     }
   };
-    const generateRows = ()=>{
 
-        var i = 0;
-        var tmp = [];
-        while(i<20){
-            var courseObjnew = {...courseObj};
-            courseObjnew.id = i+1;
-            courseObjnew.rating = (i+1)%5 + 1;
-
-            tmp.push(courseObjnew);
-            i++;
-        }
-        setRows(tmp);
+  const submitDiscount = async ()=>{
+    var ids = [];
+    selectedRows.forEach(row=>{
+      ids.push(row['_id'])
+    })
+    console.log(discount);
+    const data = {}
+    data.courseIdList = ids;
+    data.discount = {
+      amount: discount.amount,
+      duration:{
+        startDate: displayedStartDate,
+        endDate: displayedEndDate
+      }
     }
+
+    console.log(data);
+
+
+    const res = await axios.post("http://localhost:5000/courses/promotion", data);
+
+    console.log(res);
+
+  }
+
   const showCourse = (rowData)=>{
 
     setDisplayedCourse(rowData.row);
@@ -234,7 +244,7 @@ React.useEffect(() => {
             <div  style={{marginBottom:'10px',marginTop:'10px', height:'100%', padding:'20px', display:'flex', flexDirection:'column',justifyContent:'space-between'}}>
                 <div style={{display:'flex',flexDirection:'column',marginBottom:'30px'}}>
                     <div style={{display:'flex', alignItems:'center', marginBottom:'30px'}}>
-                        <TextField onChange={handleDiscount} value={discount ?discount.amount:0} label="Discount" variant="outlined" />
+                        <TextField type="number" onChange={handleDiscount} value={discount ?discount.amount:0} label="Discount" variant="outlined" />
                         <div style={{color:'grey', marginLeft:'5px'}}>%</div>        
                     </div>
 
@@ -242,7 +252,7 @@ React.useEffect(() => {
                 </div>
                     
                     <div style={{display:'flex', justifyContent:'flex-end'}}>
-                        {(discount.amount > 0) && <PrimaryBtn btnText="Submit Promotion"/>}
+                        {(discount.amount > 0) && <PrimaryBtn function={submitDiscount} btnText="Submit Promotion"/>}
                     </div>
                 </div>
             </div>

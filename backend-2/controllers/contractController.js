@@ -1,4 +1,5 @@
 const Contract = require('../models/contractModel');
+const mongoose = require('mongoose');
 
 //6383b1fa6b97907bd6a90ca6
 const tmpGetContract = async (req, res) => {
@@ -6,7 +7,7 @@ const tmpGetContract = async (req, res) => {
     try {
       const id = req.query.userId;
       const contract = await Contract.findById('6383b1fa6b97907bd6a90ca6');
-      if (contract !== null && contract.instructors.includes(id))
+      if (contract !== null && contract.instructors.includes(mongoose.Types.ObjectId(id)))
         res.status(200).json({ accepted: true });
       else res.status(200).json({ accepted: false });
     } catch (err) {

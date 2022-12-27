@@ -59,7 +59,7 @@ class UserProfile extends Component {
         headers: { 'Access-Control-Allow-Origin': '*' }
       });
 
- 
+      console.log(res);
       var info = {
         id: res.data.payload['_id'] || 0,
         username: res.data.payload.username || '',

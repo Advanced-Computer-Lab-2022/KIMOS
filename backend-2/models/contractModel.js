@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+var Joi = require('joi');
 const contractSchema = mongoose.Schema(
   {
     title: {

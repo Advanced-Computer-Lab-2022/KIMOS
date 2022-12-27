@@ -11,12 +11,27 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import TextField from '@mui/material/TextField';
 import Loading from './loadingPage';
 
+
+
+import {connect} from 'react-redux';
+
+
 import axios from 'axios';
+
+
+
+
+
+function ReqAccessPage(props) {
+
+
+
+
 const columns = [
   { 
     field: 'id', headerName: 'ID',
     renderCell: (rowData,index)=> {
-      return rowData.row['_id']
+      return index
     },
     flex: 0.05,
     minWidth: 40,
@@ -34,8 +49,8 @@ const columns = [
 
   {
     field: 'reqAcc',
-    renderCell: rowData => {
-        return <SecondaryBtn btnText="Request"/>;
+    renderCell: (rowData) => {
+        return <SecondaryBtn function={()=>{reqAccess(rowData.row)}} btnText="Request"/>;
     },
     headerName: 'Request Access',
     flex: 1,
@@ -48,10 +63,17 @@ const columns = [
 
 
 
+const reqAccess = async (course)=>{
+
+  const userId = props.user['userId'];
+  const courseId = { courseId :course['_id'] };
 
 
 
-export default function AddPromotions() {
+  const res =  await axios.post(("http://localhost:5000/courses/access"),courseId);
+
+  console.log(res);
+}
 
 const [rows, setRows] = React.useState([]);
 const [selectedRows, setSelectedRows] = React.useState([]);
@@ -65,6 +87,7 @@ const [displayedEndDate, setDisplayedEndDate] = React.useState(null);
 
 const [drawer, setDrawer] = React.useState(false);
 const [loading, setLoading] = React.useState(true);
+
 
 
 const toggleDrawer = (event) => {
@@ -82,7 +105,7 @@ React.useEffect(() => {
       const res = await axios.get(`http://localhost:5000/courses`, {
         headers: { 'Access-Control-Allow-Origin': '*' }
       });
-
+      console.log(res.data.payload)
       setRows(res.data.payload);
       setLoading(false);
     } catch (e) {
@@ -124,3 +147,15 @@ React.useEffect(() => {
 
   );
 }
+
+
+
+const mapStateToProps = (state) => {
+  return {
+    user: state.user
+  };
+};
+
+
+
+export default connect(mapStateToProps)(ReqAccessPage);

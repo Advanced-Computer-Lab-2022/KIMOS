@@ -562,7 +562,7 @@ function CountrySelect(props) {
       <div className="country-selector">
         <img
           loading="lazy"
-          width="40"
+          width="60"
           srcSet={`https://flagcdn.com/w40/${defaultCountry.code.toLowerCase()}.png 2x`}
           alt="current country"
           className="country"

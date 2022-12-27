@@ -43,6 +43,24 @@ const adminAuth = asyncHandler(async (req, res, next) => {
   }
 });
 
+const individualAuth = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(res.locals.userId);
+  if (user.userType === 'individual trainee') {
+    next();
+  } else {
+    res.status(401).json({ statusCode: 401, success: false, message: 'Unauthorized access' });
+  }
+});
+
+const corporateAuth = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(res.locals.userId);
+  if (user.userType === 'corporate trainee') {
+    next();
+  } else {
+    res.status(401).json({ statusCode: 401, success: false, message: 'Unauthorized access' });
+  }
+});
+
 const isRegisteredWithInstructor = asyncHandler(async (req, res, next) => {
   const registeredCourses = await RegisteredCourse.find({ userId: res.locals.userId });
   const instructorId = req.query.instructorId.toString();
@@ -82,6 +100,31 @@ const resetPasswordAuth = asyncHandler(async (req, res, next) => {
   });
 });
 
+const registerCourseAuth = asyncHandler(async (req, res, next) => {
+  const { token } = req.query;
+  jwt.verify(token, process.env.PAYMENT_SECRET, (err, decodedToken) => {
+    if (err) {
+      res.status(401).json({
+        statusCode: 401,
+        success: false,
+        message: 'Unauthorized access',
+        stack: err.stack
+      });
+    } else {
+      if (res.locals.userId.toString() === decodedToken.userId.toString()) {
+        res.locals.courseId = decodedToken.courseId;
+        next();
+      } else {
+        res.status(401).json({
+          statusCode: 401,
+          success: false,
+          message: 'Unauthorized access'
+        });
+      }
+    }
+  });
+});
+
 const registeredCourseAuth = asyncHandler(async (req, res, next) => {
   const registration = await RegisteredCourse.findOne({
     userId: res.locals.userId,
@@ -105,8 +148,29 @@ const editCourseAuth = asyncHandler(async (req, res, next) => {
     if (userId === courseInfo.instructor.toString()) {
       next();
     } else {
-      res.status(401).json({ statusCode: 401, success: false, message: 'Unauthorized access Wrong ID' });
+      res.status(401).json({ statusCode: 401, success: false, message: 'Unauthorized access' });
     }
+  }
+});
+
+const editPublicCourseAuth = asyncHandler(async (req, res, next) => {
+  const userId = res.locals.userId.toString();
+  const courseInfo = await Course.findById(req.query.courseId);
+  if (userId === courseInfo.instructor.toString()) {
+    next();
+  } else {
+    res.status(401).json({ statusCode: 401, success: false, message: 'Unauthorized access' });
+  }
+});
+const seePublicCourseAuth = asyncHandler(async (req, res, next) => {
+  const userId = res.locals.userId.toString();
+  const courseInfo = await Course.findById(req.query.courseId);
+  if (courseInfo.visibility !== 'public') {
+    res
+      .status(401)
+      .json({ statusCode: 401, success: false, message: 'Cannot access courses that are not public' });
+  } else {
+    next();
   }
 });
 
@@ -114,8 +178,13 @@ module.exports = {
   loggedIn,
   adminAuth,
   instructorAuth,
+  registerCourseAuth,
   resetPasswordAuth,
   isRegisteredWithInstructor,
   registeredCourseAuth,
-  editCourseAuth
+  editPublicCourseAuth,
+  editCourseAuth,
+  individualAuth,
+  corporateAuth,
+  seePublicCourseAuth
 };

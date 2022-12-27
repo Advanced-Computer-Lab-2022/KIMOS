@@ -8,9 +8,13 @@ const { fillCertificate } = require('../pdfProducer/pdfFiller');
 const { updateRating, viewRating, createRating } = require('./ratingController');
 const { getCourseInfo } = require('./courseController');
 const PDFDocument = require('pdfkit');
-const asyncHandler = require('express-async-handler');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
+const asyncHandler = require('express-async-handler');
+const RegisteredCourses = require('../models/registeredCoursesModel');
+const Request = require('../models/requestModel');
+const Course = require('../models/courseModel');
+const { addNotification } = require('./notificationController');
 
 //All user
 const signUp = asyncHandler(async (req, res) => {
@@ -66,14 +70,14 @@ const login = asyncHandler(async (req, res) => {
           success: true,
           statusCode: 200,
           message: 'Logged in Successfully',
-          payload: { userId:user['_id'],username:user.username, email:user.email ,userType: user.userType, firstLogIn: user.firstLogIn }
+          payload: {userId:user['_id'],username:user.username, email:user.email ,userType: user.userType, firstLogIn: user.firstLogIn }
         });
       } else {
         res.status(200).json({
           success: true,
           statusCode: 200,
           message: 'Logged in Successfully',
-          payload: { userId:user['_id'],username:user.username, email:user.email , userType: user.userType }
+          payload: { userType: user.userType }
         });
       }
     } else {
@@ -124,6 +128,21 @@ const changeCountry = asyncHandler(async (req, res) => {
     throw new Error('User not in database');
   }
 });
+
+const getCountryIso = (countryCode) => {
+  var countryDetails = {};
+  try {
+    countryDetails = getAllInfoByISO(countryCode);
+    return countryDetails.currency;
+  } catch (err) {
+    return 'USD';
+  }
+};
+
+const getCorrectPrice = async (countryIso) => {
+  let currencyConverter = new CC({ from: 'USD', to: countryIso, amount: 1 });
+  return await currencyConverter.convert();
+};
 
 const getRate = async (req, res) => {
   const { countryCode } = req.query;
@@ -209,12 +228,6 @@ const editUser = asyncHandler(async (req, res) => {
     }
   }
   if (userInfo.userType == 'instructor') {
-    userInfo.email = email || userInfo.email;
-    userInfo.biography = biography || userInfo.biography;
-    userInfo.password = password ? hashedPassword : userInfo.password;
-    userInfo.username = username || userInfo.username;
-  }
-  else{
     userInfo.email = email || userInfo.email;
     userInfo.biography = biography || userInfo.biography;
     userInfo.password = password ? hashedPassword : userInfo.password;
@@ -419,6 +432,83 @@ const sendCertificateEmail = asyncHandler(async (userId, courseId) => {
   doc.end();
 });
 
+const requestRefund = async (req, res) => {
+  const userId = res.locals.userId;
+  const { courseId } = req.query;
+  const record = await RegisteredCourses.findOne({ userId: userId, courseId: courseId }).populate();
+  if (record.progress < 50) {
+    await Request.create({ userId: userId, courseId: courseId, requestType: 'refund' });
+    res
+      .status(200)
+      .json({ success: true, statusCode: 200, message: 'Request received Successfully!' });
+  } else {
+    res.status(500).json({
+      success: false,
+      statusCode: 500,
+      message: 'Student Attended More than 50% of Course!'
+    });
+  }
+};
+
+const requestCourseAccess = async (req, res) => {
+  const userId = res.locals.userId;
+  const { courseId } = req.body;
+  await Request.create({ userId: userId, courseId: courseId, requestType: 'access' });
+  res
+    .status(200)
+    .json({ success: true, statusCode: 200, message: 'Request Received Successfully!' });
+};
+
+const changeRefundStatus = async (req, res, next) => {
+  const { requestId } = req.query;
+  const { newStatus } = req.body;
+  const request = await Request.findByIdAndDelete(requestId);
+  const courseInfo = await Course.findById(res.locals.courseId);
+  if (newStatus === 'accepted') {
+    res.locals.refundedUserId = request.userId;
+    res.locals.courseId = request.courseId;
+    next();
+  } else {
+    await addNotification(
+      request.userId,
+      `Your request to refund course ${courseInfo.title} has been rejected. You can file a report and speak to an administrator if further assistance is needed.`
+    );
+    res
+      .status(200)
+      .json({ message: 'Status Updated successfully', success: true, statusCode: 200 });
+  }
+};
+
+const changeAccessStatus = async (req, res, next) => {
+  const { requestId } = req.query;
+  const { newStatus } = req.body;
+  const request = await Request.findByIdAndDelete(requestId);
+  res.locals.courseId = request.courseId;
+  const courseInfo = await Course.findById(res.locals.courseId);
+  if (newStatus === 'accepted') {
+    next();
+  } else {
+    await addNotification(
+      request.userId,
+      `Your request to access course ${courseInfo.title} has been rejected. You can file a report and speak to an administrator if further assistance is needed.`
+    );
+    res
+      .status(200)
+      .json({ message: 'Status Updated successfully', success: true, statusCode: 200 });
+  }
+};
+
+const getRequests = async (req, res) => {
+  const { requestType } = req.query;
+  const courseRequests = await Request.find({ requestType: requestType })
+  res.status(200).json({
+    message: 'Requests fetched successfully',
+    success: true,
+    payload: courseRequests,
+    statusCode: 200
+  });
+};
+
 module.exports = {
   signUp,
   login,
@@ -435,5 +525,12 @@ module.exports = {
   getMe,
   viewInstructorDetails,
   getCertificate,
-  sendCertificateEmail
+  sendCertificateEmail,
+  requestRefund,
+  requestCourseAccess,
+  changeRefundStatus,
+  changeAccessStatus,
+  getCountryIso,
+  getCorrectPrice,
+  getRequests
 };

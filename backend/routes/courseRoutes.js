@@ -3,8 +3,9 @@ const router = express.Router();
 const {
   registerUser,
   getAllRegisteredCourses,
-  getAllNotes,
-  updateNotes
+  getAllNotesAndUpdateProgress,
+  updateNotes,
+  viewMostPopularCourses
 } = require('../controllers/registeredCoursesController');
 const {
   getAllSubjects,
@@ -17,8 +18,13 @@ const {
   submitSolution,
   rateCourse,
   addExam,
+  viewCourseTrainee,
   removeExam,
-  modifyExam
+  modifyExam,
+  setCoursePromotion,
+  makeCoursePublic,
+  closeCourse,
+  addDiscount
 } = require('../controllers/courseController');
 const { addQuiz, editQuiz, deleteQuiz } = require('../controllers/subtitleController');
 const { isRegisteredToCourse, isCorporateTrainee, isLoggedIn } = require('../middleware/helper');
@@ -27,15 +33,25 @@ const {
   instructorAuth,
   registeredCourseAuth,
   adminAuth,
-  loggedIn
+  loggedIn,
+  corporateAuth,
+  individualAuth,
+  addDiscountAuth,
+  editPublicCourseAuth,
+  seePublicCourseAuth
 } = require('../middleware/auth');
+const { requestRefund, requestCourseAccess } = require('../controllers/userController');
 
 router.route('/subjects').get(getAllSubjects).post(loggedIn, adminAuth, addNewSubject); //all good
 router
   .route('/')
   .get(isLoggedIn, isCorporateTrainee, findCourses) //all good
   .post(loggedIn, instructorAuth, createCourse) //all good
-  .put(loggedIn, editCourseAuth, editCourse); //all good
+  .put(loggedIn, editCourseAuth, editCourse) //all good
+  .patch(loggedIn, editPublicCourseAuth, makeCoursePublic);
+
+router.post('discount', loggedIn, editPublicCourseAuth, addDiscount);
+router.post('/close', loggedIn, editPublicCourseAuth, closeCourse); 
 router.route('/rate').post(loggedIn, registeredCourseAuth, rateCourse); //all good
 router
   .route('/exam')
@@ -52,10 +68,20 @@ router
   .route('/exam/solution')
   .post(loggedIn, registeredCourseAuth, submitSolution) //all good
   .get(loggedIn, getExamSolution); //all good
+
+router
+  .route('/getMyCourse')
+  .get(loggedIn, isRegisteredToCourse, isCorporateTrainee, viewCourseTrainee);
 router.route('/register').post(loggedIn, registerUser).get(loggedIn, getAllRegisteredCourses); //all good
 
 router
   .route('/notes')
-  .get(loggedIn, registeredCourseAuth, getAllNotes) //all good
+  .get(loggedIn, registeredCourseAuth, getAllNotesAndUpdateProgress)
   .post(loggedIn, registeredCourseAuth, updateNotes); //all good
+
+router.get('/popular', viewMostPopularCourses); //all good
+
+router.post('/refund', loggedIn, individualAuth, registeredCourseAuth, requestRefund); //all good
+router.post('/access', loggedIn, corporateAuth, requestCourseAccess); //all good
+router.post('/promotion', loggedIn, adminAuth, setCoursePromotion);
 module.exports = router;

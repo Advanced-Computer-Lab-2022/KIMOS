@@ -60,7 +60,7 @@ const courseDetails = (
       </Item>}
       {discount && discount.amount && (<Item>
         <strong>Discount : </strong>
-        {discount}
+        {discount.amount}
       </Item>)}
       <Item>
         <strong>Total Hours : </strong>

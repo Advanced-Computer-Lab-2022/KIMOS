@@ -34,12 +34,16 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+
     &__title{
         font-size: 30px;
+        color: var(--primary-color);
+
     }
     &__chat{
         overflow-y: auto;
 
+        overflow-anchor: auto;
         height: 100%;
         padding: 10px;
         margin: 15px;

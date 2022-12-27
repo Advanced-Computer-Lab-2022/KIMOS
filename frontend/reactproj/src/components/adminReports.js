@@ -26,15 +26,31 @@ import erenSmiling from '../assets/eren-smiliing.png';
 import andrew from '../assets/andrewpp2.png';
 import {connect} from 'react-redux';
 import Loading from './loadingPage';
+import CheckIcon from '@mui/icons-material/Check';
+import ClearIcon from '@mui/icons-material/Clear';
+
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import IconButton from '@mui/material/IconButton';
+
 
 class adminReports extends Component {
     getReports = async ()=>{
+        this.setState({loading: true})
         const res = await axios.get("http://localhost:5000/users/report");
         console.log(res.data.payload.reports)
         this.setState({reports:res.data.payload.reports, loading:false});
     }
+
+    getRefunds = async ()=>{
+        this.setState({loading: true})
+        const res = await axios.get("http://localhost:5000/users/requests?requestType=refund");
+        if(res.data.payload.reports)
+            this.setState({refunds:res.data.payload.reports, loading:false});
+        else console.log("no data")
+    }
     componentDidMount(){
-        this.getReports();
+
+        this.getReports();this.getRefunds();
     }
     rows = [{
         id:'1',
@@ -127,6 +143,89 @@ class adminReports extends Component {
       
       ];
 
+    refundcolumns = [
+
+        { field: 'title', headerName: 'Course Name',
+          flex: 1,
+          minWidth: 40,
+          align:'center',
+          headerAlign:'center',
+      
+          },
+          { 
+            field: 'id', headerName: 'Course ID',
+            renderCell: (rowData,index)=> {
+              return index
+            },
+            flex: 1,
+            minWidth: 40,
+            hide:true,
+            align:'center',
+            headerAlign:'center'
+          },
+          { 
+            field: 'courseId', headerName: 'Course ID',
+            flex: 1,
+            minWidth: 40,
+            align:'center',
+            headerAlign:'center'
+          },
+          
+        { field: 'username', headerName: 'User Name',
+        flex: 1,
+        minWidth: 40,
+        align:'center',
+        headerAlign:'center',
+      
+        },
+        {
+          field: 'userId',
+          headerName: 'User Id',
+          type: 'string',
+          flex: 1,
+          minWidth: 40,
+          align:'center',
+          headerAlign:'center'
+        },
+        {
+          field: 'actions',
+          headerName: 'Accept/Reject',
+          renderCell: (rowData)=>{
+            return <div>{this.CorrectActionBtn(rowData)} { this.rejectActionBtn(rowData)}</div>
+          },
+          flex: 1,
+          minWidth: 40,
+          align:'center',
+          headerAlign:'center'
+        },
+      ];
+    CorrectActionBtn = (rowData)=>{
+        return (
+          <IconButton
+            size="small"
+            sx ={{background:'#ACE1AF',color:'#006A4E'}}
+            onClick={()=>this.sendRes('accepted', rowData.row['_id'])}
+            >
+              <CheckIcon />
+        </IconButton>
+        )
+      }
+    rejectActionBtn = (rowData)=>{
+        return (
+          <IconButton
+            size="small"
+            sx ={{background:'#F08080',color:'#CC0000'}}
+            onClick={()=>this.sendRes('rejected', rowData.row['_id'])}
+      
+            >
+              <ClearIcon />
+        </IconButton>
+        )
+      }
+    sendRes = async (status, id)=>{
+        const res = await axios.post("http://localhost:5000/users/accessStatus?requestId="+id,{newState:status})
+        console.log(res);
+      }
     state = {
         loading: true,
         chatModal:false,
@@ -139,6 +238,7 @@ class adminReports extends Component {
             {user:'user', mssg:'I want to refund a course'},
         ],
         reports:[],
+        refunds:[],
         currentReport:{messages:[]}
     }
     handleMssgChange = (e)=>{
@@ -238,7 +338,7 @@ class adminReports extends Component {
                     aria-describedby="modal-modal-description"
                 >
                     <div className='chat-container'>
-                        <div className='chat-container__title'>Issue Number One</div>
+                        <div className='chat-container__title' style={{color:"var(--primary-color)"}}>{this.state.currentReport.title}</div>
                         <div className='chat-container__chat'>
                             {this.getMessages()}
                         </div>
@@ -283,37 +383,15 @@ class adminReports extends Component {
                     <div  style={{height:'100%', display:'flex', flexDirection:'column'}}><div className='instructor-courses__title' style={{margin:'10px'}}>Refunds</div>
                     <div className='instructor-courses__table'>
                         <DataGrid
-                            rows={this.rows}
-                            columns={this.columns}
+                            rows={this.state.refunds}
+                            columns={this.refundcolumns}
                             pageSize={20}
                             rowsPerPageOptions={[20]}
     
                            
                         />
                     </div>
-                    <Modal
-                        open={this.state.chatModal}
-                        onClose={()=>{this.setState({chatModal:false})}}
-                        aria-labelledby="modal-modal-title"
-                        aria-describedby="modal-modal-description"
-                    >
-                        <div className='chat-container'>
-                            <div className='chat-container__title'>Issue Number One</div>
-                            <div className='chat-container__chat'>
-                                {this.getMessages()}
-                            </div>
-                            <div className='chat-container__bottom'>
-                                <div className='chat-container__bottom__text'>
-                                    <TextField value= {this.state.textInput} onChange={this.handleMssgChange} style={{width:'100%'}} label="Message" variant="outlined" />
-                                </div>
-                                <PrimaryBtn function={this.sendMssg} btnText="Send"/>
-                            </div>
-    
-    
-                            
-                        
-                        </div>
-                    </Modal>   
+                
                     </div>
                     
                     )}
@@ -325,7 +403,8 @@ class adminReports extends Component {
             value={this.state.showReports? 0 : 1}
             style={{ background: 'var(--cool-grey)', borderTop: '0.5px solid grey' }}
             onChange={(event, newValue) => {
-                this.setState({showReports: (newValue ===0)});
+
+                this.setState({showReports: (newValue === 0)});
             }}>
             <BottomNavigationAction label="Reports" icon={<ReportGmailerrorredIcon />} />
             <BottomNavigationAction label="Refunds" icon={<AttachMoneyIcon />} />

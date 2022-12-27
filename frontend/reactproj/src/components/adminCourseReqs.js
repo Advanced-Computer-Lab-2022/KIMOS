@@ -8,86 +8,84 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import TextField from '@mui/material/TextField';
-
+import Loading from './loadingPage';
 import CheckIcon from '@mui/icons-material/Check';
 import ClearIcon from '@mui/icons-material/Clear';
+
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import IconButton from '@mui/material/IconButton';
+import Badge from '@mui/material/Badge';
 import axios from 'axios';
-const columns = [
-  { 
-    field: 'id', headerName: 'Course ID',
-    renderCell: (rowData,index)=> {
-      return rowData.row['_id']
-    },
-    flex: 1,
-    minWidth: 40,
-    align:'center',
-    headerAlign:'center'
-  },
-  { field: 'title', headerName: 'Course Name',
-    flex: 1,
-    minWidth: 40,
-    align:'center',
-    headerAlign:'center',
-
-    },
-  {
-    field: 'totalHours',
-    headerName: 'Total Hours',
-    type: 'number',
-    flex: 1,
-    minWidth: 40,
-    align:'center',
-    headerAlign:'center'
-  },
-  {
-    field: 'price',
-    headerName: 'Price',
-    type: 'number',
-    flex: 1,
-    minWidth: 40,
-    align:'center',
-    headerAlign:'center'
-  },
-  {
-    field: 'discount',
-    headerName: 'Discount',
-    type: 'number',
-    flex: 1,
-    minWidth: 40,
-    align:'center',
-    headerAlign:'center',
-    renderCell: (rowData)=>{
-        return rowData.row.discount.amount ?  rowData.row.discount.amount : 0
-    }
-  },
-  {
-    field: 'action',
-    renderCell: rowData => {
-        return (
-            <div style={{width:'100%', height:'100%', display:'flex',alignItems:'center', justifyContent:'center'}}>
-                <div style={{cursor:'pointer',display:'flex',alignItems:'center', justifyContent:'center', width:'30px',height:'30px',backgroundColor:'green', color:'white', borderRadius:'100%', marginRight:'5px'}}><CheckIcon /></div>
-                <div style={{cursor:'pointer',display:'flex',alignItems:'center', justifyContent:'center', width:'30px',height:'30px',backgroundColor:'red', color:'white', borderRadius:'100%'}}><ClearIcon /></div>
-            </div>
-        )
-    },
-    headerName: 'Actions',
-    flex: 1,
-    minWidth: 40,
-    align:'center',
-    headerAlign:'center'
-  },
-
-];
-
-
 
 
 
 
 export default function AdminCourseReqs() {
 
+  const columns = [
+
+    { field: 'title', headerName: 'Course Name',
+      flex: 1,
+      minWidth: 40,
+      align:'center',
+      headerAlign:'center',
+  
+      },
+      { 
+        field: 'id', headerName: 'Course ID',
+        renderCell: (rowData,index)=> {
+          return index
+        },
+        flex: 1,
+        minWidth: 40,
+        hide:true,
+        align:'center',
+        headerAlign:'center'
+      },
+      { 
+        field: 'courseId', headerName: 'Course ID',
+        flex: 1,
+        minWidth: 40,
+        align:'center',
+        headerAlign:'center'
+      },
+      
+    { field: 'username', headerName: 'User Name',
+    flex: 1,
+    minWidth: 40,
+    align:'center',
+    headerAlign:'center',
+  
+    },
+    {
+      field: 'userId',
+      headerName: 'User Id',
+      type: 'string',
+      flex: 1,
+      minWidth: 40,
+      align:'center',
+      headerAlign:'center'
+    },
+    {
+      field: 'actions',
+      headerName: 'Accept/Reject',
+      renderCell: (rowData)=>{
+        return <div>{CorrectActionBtn(rowData)} { rejectActionBtn(rowData)}</div>
+      },
+      flex: 1,
+      minWidth: 40,
+      align:'center',
+      headerAlign:'center'
+    },
+  ];
+  
+  
+
+  
 const [rows, setRows] = React.useState([]);
 const [selectedRows, setSelectedRows] = React.useState([]);
+const [loading, setLoading] = React.useState(true);
+
 const [discount, setDiscount] = React.useState({amount:0});
 
 const [displayedStartDate, setDisplayedStartDate] = React.useState(null);
@@ -98,6 +96,36 @@ const [displayedEndDate, setDisplayedEndDate] = React.useState(null);
 
 const [drawer, setDrawer] = React.useState(false);
 const [displayedCourse, setDisplayedCourse] = React.useState({});
+
+
+const sendRes = async (status, id)=>{
+  const res = await axios.post("http://localhost:5000/users/accessStatus?requestId="+id,{newState:status})
+  console.log(res);
+}
+
+const CorrectActionBtn = (rowData)=>{
+  return (
+    <IconButton
+      size="small"
+      sx ={{background:'#ACE1AF',color:'#006A4E'}}
+      onClick={()=>sendRes('accepted', rowData.row['_id'])}
+      >
+        <CheckIcon />
+  </IconButton>
+  )
+}
+const rejectActionBtn = (rowData)=>{
+  return (
+    <IconButton
+      size="small"
+      sx ={{background:'#F08080',color:'#CC0000'}}
+      onClick={()=>sendRes('rejected', rowData.row['_id'])}
+
+      >
+        <ClearIcon />
+  </IconButton>
+  )
+}
 
 const toggleDrawer = (event) => {
 
@@ -112,15 +140,18 @@ React.useEffect(() => {
   }, []);
 
   const getInstructorCourses = async () => {
-    console.log('getting')
+    setLoading(true);
+
     try {
-      const res = await axios.get(`http://localhost:5000/courses/findCourses?user[userId]=638117c243cba3f0babcc3a9&instructorSearch=true`, {
+      const res = await axios.get(`http://localhost:5000/users/requests?requestType=access`, {
         headers: { 'Access-Control-Allow-Origin': '*' }
       });
-      console.log('res.data');
 
-      console.log(res.data);
-      setRows(res.data);
+
+      if(res.data.payload){
+        setRows(res.data.payload);
+      }
+      setLoading(false);
     } catch (e) {
       console.log(e)
     }
@@ -198,6 +229,7 @@ React.useEffect(() => {
   return (
 
     <div className='instructor-courses'>
+        {loading && <Loading />}
         <div className='instructor-courses__title' style={{display:'flex', justifyContent:'space-between', width:'100%'}}><div>Courses Requests</div><div>{selectedRows.length !== 0 && <PrimaryBtn btnText={'Add Promotion'} function={handleSelected}/>}</div></div>
         <div className='instructor-courses__table'>
             <DataGrid
@@ -205,11 +237,10 @@ React.useEffect(() => {
                 columns={columns}
                 pageSize={20}
                 rowsPerPageOptions={[20]}
-                onRowClick = {showCourse}
                 getRowId = {(row)=>{return row['_id']}}
                 checkboxSelection
                 disableSelectionOnClick
-                onSelectionModelChange={(ids)=> {onRowsSelectionHandler(ids)}}
+
             />
     </div>
   

@@ -1,4 +1,3 @@
-const { random } = require('colors');
 const mongoose = require('mongoose');
 
 const courseSchema = mongoose.Schema(
@@ -61,11 +60,15 @@ const courseSchema = mongoose.Schema(
           endDate: {
             type: Date
           }
+        },
+        valid: {
+          type: String
         }
       },
       default: {
         amount: 0.0,
-        duration: {}
+        duration: {},
+        valid: 'false'
       }
     },
     subject: {
