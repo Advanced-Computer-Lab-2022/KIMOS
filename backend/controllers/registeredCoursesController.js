@@ -354,23 +354,20 @@ const updateNotes = asyncHandler(async (req, res) => {
   res.status(200).json({ message: 'Notes updated successfully', statusCode: 200, success: true });
 });
 
-const viewMostPopularCourses = async (req, res) => {
+const viewMostPopularCourses = asyncHandler(async (req, res) => {
   const sortedByCountCourses = await RegisteredCourses.aggregate([
     { $sortByCount: '$courseId' },
     { $limit: 10 }
   ]);
   const courses = await Course.populate(sortedByCountCourses, '_id');
   const instructor_details = await User.populate(courses, '_id.instructor');
-  const returnCourses = courses.map((course, index) => {
+  const returnCourses = instructor_details.map((course, index) => {
     return {
       _id: course._id._id,
       title: course._id.title,
       price: course._id.price,
       rating: course._id.rating,
-      instructor:
-        instructor_details._id.instructor.firstName +
-        ' ' +
-        instructor_details._id.instructor.lastName
+      instructor: course._id.instructor.firstName + ' ' + course._id.instructor.lastName
     };
   });
   res.status(200).json({
@@ -379,7 +376,7 @@ const viewMostPopularCourses = async (req, res) => {
     message: 'Fetched most popular courses successfully',
     payload: { returnCourses }
   });
-};
+});
 
 module.exports = {
   registerUser,
