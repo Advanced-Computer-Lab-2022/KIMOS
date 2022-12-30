@@ -65,6 +65,7 @@ const login = asyncHandler(async (req, res) => {
         expiresIn: '1h'
       });
       res.cookie('jwt', token, { httpOnly: true, maxAge: 1 * 60 * 60 * 1000 });
+      console.log(token);
       if (user.userType !== 'administrator') {
         res.status(200).json({
           success: true,
@@ -274,13 +275,13 @@ const addUser = asyncHandler(async (req, res) => {
 const rateInstructor = asyncHandler(async (req, res) => {
   const userId = res.locals.userId;
   const { instructorId } = req.query;
-  const { rating } = req.body;
+  const { rating , review} = req.body;
   var newRating = 0;
   const ratedInstructor = await User.findById(instructorId);
   const check = await viewRating(userId, instructorId);
   const currRating = ratedInstructor.rating;
   if (check) {
-    await updateRating(userId, instructorId, rating);
+    await updateRating(userId, instructorId, rating,review);
     newRating =
       (currRating.value * currRating.numberOfRatings - check.rating + rating) /
       currRating.numberOfRatings;
@@ -288,7 +289,7 @@ const rateInstructor = asyncHandler(async (req, res) => {
       rating: { value: newRating, numberOfRatings: currRating.numberOfRatings }
     });
   } else {
-    await createRating(userId, instructorId, rating);
+    await createRating(userId, instructorId, rating,review);
     newRating =
       (currRating.value * currRating.numberOfRatings + rating) / (currRating.numberOfRatings + 1);
     await User.findByIdAndUpdate(instructorId, {

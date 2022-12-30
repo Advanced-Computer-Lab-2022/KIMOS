@@ -28,11 +28,11 @@ export default function TraineeViewMyCourse() {
   const [viewContent, setViewContent] = useState(false);
 
   const getCourse = async () => {
+    await axios.post('http://localhost:5000/login',{username:"individual",password:"individual123"})
     await axios
-      .get('http://localhost:5000/courses', {
+      .get('http://localhost:5000/courses/getMyCourse', {
         params: {
           courseId: '639f58b5ce28934b354c6dce',
-          userId: '639c90973befdc0358013194'
         }
       })
       .then((course) => {
@@ -40,6 +40,18 @@ export default function TraineeViewMyCourse() {
         setMyCourse(course.data);
       });
   };
+
+  useEffect(() => {
+    getCourse();
+    console.log(myCourse.averageRating);
+  }, []);
+  const goToProfile =()=>{
+    var url = 'http://localhost:3000/viewInstructorProfile/'+myCourse.instructor['_id'];
+    window.open(
+      url,
+      '_blank' // <- This is what makes it open in a new window.
+    );
+  }
 
   // const postRating = async () => {
   //   await axios
@@ -59,17 +71,7 @@ export default function TraineeViewMyCourse() {
   //     });
   // };
 
-  useEffect(() => {
-    getCourse();
-    console.log(myCourse.averageRating);
-  }, []);
-  const goToProfile =()=>{
-    var url = 'http://localhost:3000/viewInstructorProfile/'+myCourse.instructor['_id'];
-    window.open(
-      url,
-      '_blank' // <- This is what makes it open in a new window.
-    );
-  }
+  
   return (
     <>
       {viewContent ? (

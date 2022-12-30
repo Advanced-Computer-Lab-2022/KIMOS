@@ -1,6 +1,7 @@
 const RegisteredCourses = require('../models/registeredCoursesModel');
 const Course = require('../models/courseModel');
 const User = require('../models/userModel');
+const Request = require('../models/requestModel');
 const Subtitle = require('../models/subtitleModel');
 const Video = require('../models/videoModel');
 const { getSolution } = require('./userSolutionController');
@@ -12,16 +13,16 @@ const asyncHandler = require('express-async-handler');
 const schedule = require('node-schedule');
 const { deleteSolution } = require('./userSolutionController');
 const { addNotification } = require('./notificationController');
+
 const getAllRegisteredCourses = asyncHandler(async (req, res) => {
   const userId = res.locals.userId;
   const reg = await RegisteredCourses.find({ userId: userId }).populate('courseId');
-  const results = reg.map((course, index) => {
-    return course.courseId;
-  });
   var returnResult;
   if (reg) {
     returnResult = await Promise.all(
-      results.map(async (result, index) => {
+      reg.map(async (course, index) => {
+        //console.log(result.progress);
+        var result = course.courseId;
         result = await result.populate('instructor', 'firstName lastName');
         result = await result.populate('subject');
         if (result.subtitles.length) {
@@ -99,8 +100,10 @@ const getAllRegisteredCourses = asyncHandler(async (req, res) => {
             })
           );
           const resSpread = { ...result };
-          if (resSpread._doc) result = { ...result.toObject(), exams: exams };
-          else result = { ...result, exams: exams };
+          console.log(result.progress);
+          if (resSpread._doc)
+            result = { ...result.toObject(), exams: exams, progress: course.progress };
+          else result = { ...result, exams: exams, progress: course.progress };
           return result;
         }
       })
@@ -232,14 +235,16 @@ const getAllRegisteredInvoices = asyncHandler(async (req, res) => {
       });
       var status;
       if (refundRequest) {
-        status = refundRequest.status;
+        status = 'pending';
       } else {
         status = refundable ? 'refund' : 'noRefund';
       }
       return {
+        _id: registeredCourse.courseId,
         courseName: registeredCourseInvoiceCourseInfo.courseId.title,
         date: registeredCourse.createdAt,
-        status: status
+        status: status,
+        price: registeredCourseInvoice.invoice.payment
       };
     })
   );
@@ -355,10 +360,17 @@ const viewMostPopularCourses = async (req, res) => {
     { $limit: 10 }
   ]);
   const courses = await Course.populate(sortedByCountCourses, '_id');
-  const returnCourses = courses.map((course, index) => {
+  const instructor_details = await User.populate(courses, '_id.instructor');
+  const returnCourses = instructor_details.map((course, index) => {
     return {
       _id: course._id._id,
-      title: course._id.title
+      title: course._id.title,
+      price: course._id.price,
+      rating: course._id.rating,
+      instructor:
+        course._id.instructor.firstName +
+        ' ' +
+        course._id.instructor.lastName
     };
   });
   res.status(200).json({

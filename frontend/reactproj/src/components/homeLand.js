@@ -15,6 +15,7 @@ import aiCourse from '../assets/ai.png';
 import javaCourse from '../assets/java.png';
 
 import {Container,AppBar,Grow,Grid} from '@mui/material';
+import PopularCourses from '../components/popularCourses';
 
 class homeLand extends Component {
     render() {
@@ -63,89 +64,7 @@ class homeLand extends Component {
                 <div className='homeland__section section_2'>
                     <h1 style={{fontSize:30}}>Most Popular Courses</h1>
                     
-                    <div style={{display:"flex",justifyContent:"center",alignItems:"center",columnGap:5}}>
-                        <div className="arrowLeft" onClick={slideLeft}>
-                            <ArrowBackIosIcon></ArrowBackIosIcon>
-                        </div> 
-
-                    <Grow in>
-                        <Container>
-                            <AppBar className="appBarX" position="static" color="inherit">
-
-                                <div id="slider" className="homeland__section section_2__allPopular">
-                                
-                                    <div className="homeland__section section_2__allPopular__popularDiv" >
-                                        <div class="hovering">
-                                            <img className="homeland__section section_2__allPopular__popularDiv__image" src={dataScienceCourse}/>
-                                        </div>
-                                        <label className="homeland__section section_2__allPopular__popularDiv__title">React The Complete Guide (incl Hooks, React Router, Redux)</label>
-                                        <label className="homeland__section section_2__allPopular__popularDiv__instructor">Dr. Mervat Abo Elkeir</label>
-                                        <Rating style={{marginLeft:-5}} name="half-rating-read" defaultValue={2.5} precision={0.5} readOnly />
-                                        <label className="homeland__section section_2__allPopular__popularDiv__price">250 $</label>
-                                    </div>
-                
-
-                                    <div className="homeland__section section_2__allPopular__popularDiv" >
-                                        <div class="hovering">
-                                            <img className="homeland__section section_2__allPopular__popularDiv__image" src={javaCourse}/>
-                                        </div>
-                                        <label className="homeland__section section_2__allPopular__popularDiv__title">React The Complete Guide (incl Hooks, React Router, Redux)</label>
-                                        <label className="homeland__section section_2__allPopular__popularDiv__instructor">Dr. Mervat Abo Elkeir</label>
-                                        <Rating style={{marginLeft:-5}} name="half-rating-read" defaultValue={2.5} precision={0.5} readOnly />
-                                        <label className="homeland__section section_2__allPopular__popularDiv__price">250 $</label>
-                                    </div>
-
-                                    <div className="homeland__section section_2__allPopular__popularDiv" >
-                                        <div class="hovering">
-                                            <img className="homeland__section section_2__allPopular__popularDiv__image" src={aiCourse}/>
-                                        </div>
-                                        <label className="homeland__section section_2__allPopular__popularDiv__title">React The Complete Guide (incl Hooks, React Router, Redux)</label>
-                                        <label className="homeland__section section_2__allPopular__popularDiv__instructor">Dr. Mervat Abo Elkeir</label>
-                                        <Rating style={{marginLeft:-5}} name="half-rating-read" defaultValue={2.5} precision={0.5} readOnly />
-                                        <label className="homeland__section section_2__allPopular__popularDiv__price">250 $</label>
-                                    </div>
-
-                                    <div className="homeland__section section_2__allPopular__popularDiv" >
-                                        <div class="hovering">
-                                            <img className="homeland__section section_2__allPopular__popularDiv__image" src={pythonCourse}/>
-                                        </div>
-                                        <label className="homeland__section section_2__allPopular__popularDiv__title">React The Complete Guide (incl Hooks, React Router, Redux)</label>
-                                        <label className="homeland__section section_2__allPopular__popularDiv__instructor">Dr. Mervat Abo Elkeir</label>
-                                        <Rating style={{marginLeft:-5}} name="half-rating-read" defaultValue={2.5} precision={0.5} readOnly />
-                                        <label className="homeland__section section_2__allPopular__popularDiv__price">250 $</label>
-                                    </div>
-
-                                    <div className="homeland__section section_2__allPopular__popularDiv" >
-                                        <div class="hovering">
-                                            <img className="homeland__section section_2__allPopular__popularDiv__image" src={fullStackCourse}/>
-                                        </div>
-                                        <label className="homeland__section section_2__allPopular__popularDiv__title">React The Complete Guide (incl Hooks, React Router, Redux)</label>
-                                        <label className="homeland__section section_2__allPopular__popularDiv__instructor">Dr. Mervat Abo Elkeir</label>
-                                        <Rating style={{marginLeft:-5}} name="half-rating-read" defaultValue={2.5} precision={0.5} readOnly />
-                                        <label className="homeland__section section_2__allPopular__popularDiv__price">250 $</label>
-                                    </div>
-
-                                    <div className="homeland__section section_2__allPopular__popularDiv" >
-                                        <div class="hovering">
-                                            <img className="homeland__section section_2__allPopular__popularDiv__image" src={reactCourse}/>
-                                        </div>
-                                        <label className="homeland__section section_2__allPopular__popularDiv__title">React The Complete Guide (incl Hooks, React Router, Redux)</label>
-                                        <label className="homeland__section section_2__allPopular__popularDiv__instructor">Dr. Mervat Abo Elkeir</label>
-                                        <Rating style={{marginLeft:-5}} name="half-rating-read" defaultValue={2.5} precision={0.5} readOnly />
-                                        <label className="homeland__section section_2__allPopular__popularDiv__price">250 $</label>
-                                    </div>
-
-                                </div>
-
-                            </AppBar>
-                        </Container>
-                    </Grow>
-
-                        <div className="arrowRight" onClick={slideRight}>
-                            <ArrowForwardIosIcon></ArrowForwardIosIcon>
-                        </div>
-                        
-                    </div>
+                    <PopularCourses></PopularCourses>
 
                 </div>
 

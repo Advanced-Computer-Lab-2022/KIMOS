@@ -41,6 +41,11 @@ import TraineeExercise from './components/TraineeExercise';
 import TraineeSolution from './components/TraineeSolution';
 import TraineeViewCourseDetails from './components/traineeViewCourseDetails';
 
+axios.defaults.withCredentials = true;
+axios.defaults.headers = 'Access-Control-Allow-Origin: http://localhost:3000';
+axios.defaults.headers = 'Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS';
+axios.defaults.headers = 'Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token'
+
 
 class App extends Component {
 

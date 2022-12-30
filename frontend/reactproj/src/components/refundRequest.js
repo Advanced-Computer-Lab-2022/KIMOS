@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React,{useState,useEffect} from 'react';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 
@@ -7,28 +7,40 @@ import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
 import MuiAlert from '@mui/material/Alert';
 import Stack from '@mui/material/Stack';
+import axios from 'axios';
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-
 export default function RefundRequest(props) {
   const [openSuccess, setOpenSuccess] = React.useState(false);
   const [openFailure, setOpenFailure] = React.useState(false);
   const [input,setInput]=useState('');
+  
+  const refundRequest = async () => {
+    await axios.post('http://localhost:5000/login',{username:"individual",password:"individual123"})
+  
+    await axios.post(`http://localhost:5000/courses/refund?courseId=${props.courseId}`)
+      .then((result) => {
+              
+      });
+    };
+  
+    // useEffect(() => {
+    //    refundRequest();
+    // }, []);
 
   const handleClick = () => {
      if(input!=''){
       setOpenSuccess(true);
       props.close();
       props.feedback(true);
+      refundRequest();
      }
      else{
       setOpenFailure(true);
      }
-    
-      
   };
 
   const handleClose = (event, reason) => {

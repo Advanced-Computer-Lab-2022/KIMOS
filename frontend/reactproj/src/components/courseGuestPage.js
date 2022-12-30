@@ -10,8 +10,6 @@ import { textAlign } from '@mui/system';
 import PrimaryBtn from './buttons/primaryBtn';
 import Button from '@mui/material/Button';
 
-
-
 export default function CourseGuestPage() {
   var subTitleCount = 1;
   var exerciseCount = 1;
@@ -32,11 +30,11 @@ export default function CourseGuestPage() {
   const [viewContent, setViewContent] = useState(false);
 
   const getCourse = async () => {
+    await axios.post('http://localhost:5000/login',{username:"individual",password:"individual123"})
     await axios
-      .get('http://localhost:5000/courses', {
+      .get('http://localhost:5000/courses/getMyCourse', {
         params: {
           courseId: '639f58b5ce28934b354c6dce',
-          userId: '639c90973befdc0358013194'
         }
       })
       .then((course) => {
@@ -79,6 +77,13 @@ export default function CourseGuestPage() {
                     <span style={{ fontWeight: 'bolder' }}>Total Hours</span> {myCourse.totalHours}{" "}
                     hr(s)
                   </div>
+
+                  {/* Price */}
+                  {myCourse.price!=-1 &&
+                    <div className="user-course__header__left__extras__hours">
+                      <span style={{ fontWeight: 'bolder' }}>Price</span> {myCourse.price}{" "}
+                    </div>
+                  }
 
                   {/* Instructor Name */}
                   <div className="user-course__header__left__extras__instructor" style={{display:'flex',width:'100%', alignItems:'center'}}>

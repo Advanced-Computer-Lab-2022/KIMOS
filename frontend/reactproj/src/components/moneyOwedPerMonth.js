@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState,useEffect} from 'react';
 import { styled } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
@@ -15,6 +15,8 @@ import Paper from '@mui/material/Paper';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { Visibility } from '@mui/icons-material/Visibility';
+import axios from 'axios';
+import { ListItem } from '@mui/material';
 
 var x=0;
 
@@ -27,30 +29,45 @@ var x=0;
       border: 0,
     },
   }));
-
-function createData(month) {
-    return {
-      month,
-      history: [
-        {
-          date: '2020-01-05',
-          course: '11091700',
-          amount: 3,
-          price:2500
-        },
-        {
-          date: '2020-01-02',
-          course: 'Anonymous',
-          amount: 1,
-          price:2500
-        },
-      ],
-    };
-  }
   
   function Row(props) {
     const { row } = props;
+    const {display}=props
     const [open, setOpen] = React.useState(false);
+
+    const [myInvoices, setMyInvoices] = useState([]);
+
+  const getInvoices = async () => {
+    await axios.post('http://localhost:5000/login',{username:"erenYeager",password:"instructor123"})
+
+    await axios
+      .get('http://localhost:5000/users/invoices/instructor')
+        .then((result) => {
+        console.log(result.data.payload);
+        setMyInvoices(result.data.payload);
+      });
+  };
+
+  useEffect(() => {
+    getInvoices();
+  }, []);
+
+    const convertDateToString=(date)=>{
+        switch(date){
+          case 1:return "January";break;
+          case 2:return "Febraury";break;
+          case 3:return "March";break;
+          case 4:return "April";break;
+          case 5:return "May";break;
+          case 6:return "June";break;
+          case 7:return "July";break;
+          case 8:return "August";break;
+          case 9:return "September";break;
+          case 10:return "October";break;
+          case 11:return "November";break;
+          case 12:return "December";break;
+        }
+    }
   
     return (
       <React.Fragment>
@@ -64,7 +81,7 @@ function createData(month) {
               {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
             </IconButton>
           </TableCell>
-          <TableCell component="th" scope="row" style={{paddingLeft:150}}>{row.month}</TableCell>
+          <TableCell component="th" scope="row" style={{paddingLeft:150}}>{convertDateToString(new Date(row.date).getMonth()+1)} {new Date(row.date).getFullYear()}</TableCell>
         </StyledTableRow>
         <TableRow>
           <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
@@ -84,18 +101,23 @@ function createData(month) {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {row.history.map((historyRow) => (
-                        <>
-                      <TableRow key={historyRow.date}>
-                        <TableCell align="center">{historyRow.date}</TableCell>
-                        <TableCell align="center">{historyRow.course}</TableCell>
-                        <TableCell align="center">{historyRow.amount}</TableCell>
-                        <TableCell align="center">{historyRow.price}</TableCell>
-                        <TableCell align="center">{Math.round(historyRow.price*historyRow.amount)}</TableCell>
+                    
+                  {myInvoices.length>0 && myInvoices.map((row,index) => (
+                    <>
+                      {(new Date(row.date).getMonth()+1)==display && 
+                      <>
+                      <TableRow key={row.date}>
+                        <TableCell align="center">{row.date}</TableCell>
+                        <TableCell align="center">{row.course}</TableCell>
+                        <TableCell align="center">{row.amount}</TableCell>
+                        <TableCell align="center">{row.itemPrice}</TableCell>
+                        <TableCell align="center">{Math.round(parseInt(row.itemPrice)*parseInt(row.amount))}</TableCell>
                       </TableRow>
-                      <div hidden="hidden">{x+=Math.round(historyRow.price*historyRow.amount)}</div>
-                      </>
-                    ))}
+                       <div hidden="hidden">{x+=Math.round(parseInt(row.itemPrice)*parseInt(row.amount))}</div>
+                       </>
+                    }
+                    </>))}
+                     
                     <TableRow>
                         <TableCell align="center"></TableCell>
                         <TableCell align="center"></TableCell>
@@ -114,18 +136,26 @@ function createData(month) {
     );
   }
   
-  const rows = [
-    createData('January 2021'),
-    createData('Febraury 2021'),
-    createData('March 2021'),
-    createData('April 2021'),
-    createData('May 2021'),
-    createData('June 2021'),
-    createData('July 2021')
-  ];
+export default function MoneyOwedPerMonth() {
+  const [myInvoices, setMyInvoices] = useState([]);
+  var oldKey=0;
+
+  const getInvoices = async () => {
+    await axios.post('http://localhost:5000/login',{username:"erenYeager",password:"instructor123"})
+
+    await axios
+      .get('http://localhost:5000/users/invoices/instructor')
+        .then((result) => {
+        console.log(result.data.payload);
+        setMyInvoices(result.data.payload);
+      });
+  };
+
+  useEffect(() => {
+    getInvoices();
+  }, []);
 
 
-export default function moneyOwedPerMonth() {
   return (
     <div>
     <h1 style={{marginLeft:590,marginTop:30,marginBottom:30,color:"var(--primary-color)"}}>My Profit</h1>
@@ -138,8 +168,11 @@ export default function moneyOwedPerMonth() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <Row key={row.name} row={row} />
+          {myInvoices.length>0 && myInvoices.map((row,index) => (
+              <>
+            {new Date(row.date).getMonth()+1!=oldKey && <Row display={new Date(row.date).getMonth()+1} key={new Date(row.date).getMonth()+1} row={row} />}
+            <div hidden="hidden">{oldKey=new Date(row.date).getMonth()+1}</div>
+            </>
           ))}
         </TableBody>
       </Table>
