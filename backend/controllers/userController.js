@@ -490,35 +490,35 @@ const changeRefundStatus = asyncHandler(async (req, res, next) => {
   }
 });
 
-const changeAccessStatus = asyncHandler(async (req, res, next) => {
-  const { requestId } = req.query;
-  const { newStatus } = req.body;
-  const request = await Request.findByIdAndDelete(requestId);
-  res.locals.courseId = request.courseId;
-  const courseInfo = await Course.findById(res.locals.courseId);
-  if (newStatus === 'accepted') {
-    next();
-  } else {
-    await addNotification(
-      request.userId,
-      `Your request to access course ${courseInfo.title} has been rejected. You can file a report and speak to an administrator if further assistance is needed.`
-    );
-    res
-      .status(200)
-      .json({ message: 'Status Updated successfully', success: true, statusCode: 200 });
-  }
-});
+// const changeAccessStatus = asyncHandler(async (req, res, next) => {
+//   const { requestId } = req.query;
+//   const { newStatus } = req.body;
+//   const request = await Request.findByIdAndDelete(requestId);
+//   res.locals.courseId = request.courseId;
+//   const courseInfo = await Course.findById(res.locals.courseId);
+//   if (newStatus === 'accepted') {
+//     next();
+//   } else {
+//     await addNotification(
+//       request.userId,
+//       `Your request to access course ${courseInfo.title} has been rejected. You can file a report and speak to an administrator if further assistance is needed.`
+//     );
+//     res
+//       .status(200)
+//       .json({ message: 'Status Updated successfully', success: true, statusCode: 200 });
+//   }
+// });
 
-const getRequests = asyncHandler(async (req, res) => {
-  const { requestType } = req.query;
-  const courseRequests = await Request.find({ requestType: requestType });
-  res.status(200).json({
-    message: 'Requests fetched successfully',
-    success: true,
-    payload: courseRequests,
-    statusCode: 200
-  });
-});
+// const getRequests = asyncHandler(async (req, res) => {
+//   const { requestType } = req.query;
+//   const courseRequests = await Request.find({ requestType: requestType });
+//   res.status(200).json({
+//     message: 'Requests fetched successfully',
+//     success: true,
+//     payload: courseRequests,
+//     statusCode: 200
+//   });
+// });
 
 const changeAccessStatus = async (req, res, next) => {
   const { requestId } = req.query;

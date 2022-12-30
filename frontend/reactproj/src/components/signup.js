@@ -1,190 +1,187 @@
-import * as React from 'react';
-import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
+import React, { Component } from 'react';
+import { styled } from '@mui/material/styles';
+import Stepper from '@mui/material/Stepper';
+import Step from '@mui/material/Step';
+import StepLabel from '@mui/material/StepLabel';
+import StepConnector, { stepConnectorClasses } from '@mui/material/StepConnector';
+import VideoCallIcon from '@mui/icons-material/VideoCall';
+import VideocamIcon from '@mui/icons-material/Videocam';
+import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
+import InfoIcon from '@mui/icons-material/Info';
+import AutoStoriesIcon from '@mui/icons-material/AutoStories';
+import SummarizeIcon from '@mui/icons-material/Summarize';
 import TextField from '@mui/material/TextField';
+import PrimaryBtn from './buttons/primaryBtn';
+import SecondaryBtn from './buttons/secondaryBtn';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Container from '@mui/material/Container';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { blue, red } from '@mui/material/colors';
-import Snackbar from '@mui/material/Snackbar';
-import MuiAlert from '@mui/material/Alert';
-import { useState } from 'react';
+import PaymentPolicy from './paymentPolicy';
 
-import axios from 'axios';
-
-function Copyright(props) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-        <Link color="inherit" href="/">
-            KIMOS
-        </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
-
-const Alert = React.forwardRef(function Alert(props, ref) {
-    return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
-  });
+const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
+    [`&.${stepConnectorClasses.alternativeLabel}`]: {
+      top: 22,
+    },
+    [`&.${stepConnectorClasses.active}`]: {
+      [`& .${stepConnectorClasses.line}`]: {
+        backgroundImage:
+        'linear-gradient( 95deg,rgb(216, 6, 33) 0%,rgb(225, 6, 33) 30%,rgb(70, 0, 10) 100%)',
   
+      },
+    },
+    [`&.${stepConnectorClasses.completed}`]: {
+      [`& .${stepConnectorClasses.line}`]: {
+        background:
+          'green'
+      },
+    },
+    [`& .${stepConnectorClasses.line}`]: {
+      height: 3,
+      border: 0,
+      backgroundColor:
+        theme.palette.mode === 'dark' ? theme.palette.grey[800] : '#eaeaf0',
+      borderRadius: 1,
+    },
+  }));
+  
+  const ColorlibStepIconRoot = styled('div')(({ theme, ownerState }) => ({
+    backgroundColor: theme.palette.mode === 'dark' ? theme.palette.grey[700] : '#ccc',
+    zIndex: 1,
+    color: '#fff',
+    width: 50,
+    height: 50,
+    display: 'flex',
+    borderRadius: '50%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    ...(ownerState.active && {
+      backgroundImage:
+      'linear-gradient( 95deg,rgb(216, 6, 33) 0%,rgb(225, 6, 33) 30%,rgb(70, 0, 10) 100%)',
+  
+      boxShadow: '0 4px 10px 0 rgba(0,0,0,.25)',
+    }),
+    ...(ownerState.completed && {
+      background:
+      'green'
+  
+  
+    }),
+  }));
+  
+  function ColorlibStepIcon(props) {
+    const { active, completed, className } = props;
+  
+    const icons = {
+      1: <InfoIcon />,
+      2: <AutoStoriesIcon />,
+      3: <SummarizeIcon />,
+    };
+  
+    return (
+      <ColorlibStepIconRoot ownerState={{ completed, active }} className={className}>
+        {icons[String(props.icon)]}
+      </ColorlibStepIconRoot>
+    );
+  }
 
-const theme = createTheme({
-    palette:{
-        primary:red,
-        secondary:blue
+  
+export default class SignUp extends Component {
+    steps = ['Your Info', 
+             'Terms And Conditions'];
+    state = {
+        currentStep : 0,
+        acceptedTerms:false
     }
-});
+    handleBack = ()=>{
+        this.setState({currentStep: this.state.currentStep - 1 < 0 ? 0 : this.state.currentStep - 1 })
+    }
+    handleNext = ()=>{
+        this.setState({currentStep: this.state.currentStep + 1 >2 ? 2 : this.state.currentStep + 1 })
+    }
+    getPolicy = (name, list)=>{
+        return (
+            <div>
+                <div className="signUp-container__content__policy__name">
+                    <div>{name}</div>
+                </div>
+                <div className="signUp-container__content__policy__list">
+                    <ul>
+                        {list.map((item)=>{return <li>{item}</li>})}
+                    </ul>
+                </div>
+            </div>
+        )
+    }
+    getContent= ()=>{
+        if(this.state.currentStep === 0){
+            return ( 
+                <div className="signUp-container__content">
+                        <div className='signUp-container__content__form'>
+                            <div className='signUp-container__content__form__title'>Sign Up</div>
+                            <div className='signUp-container__content__form__names'>
+                                <TextField style={{margin:'10px'}} id="outlined-basic" label="First Name" variant="outlined" />
+                                <TextField style={{margin:'10px'}} id="outlined-basic" label="Last Name" variant="outlined" />
+                            </div>
 
-export default function SignUp() {
+                            <div className='signUp-container__content__form__else'>
+                                <TextField style={{margin:'10px'}} id="outlined-basic" label="Email" variant="outlined" />
+                                <TextField style={{margin:'10px'}} id="outlined-basic" label="Username" variant="outlined" />
+                                <TextField style={{margin:'10px'}} id="outlined-basic" label="Password" variant="outlined" />   
+                            </div>
 
-    
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    const data = new FormData(event.currentTarget);
-    axios.post(`http://localhost:3000/users/signup`,{
-        firstName: data.get('firstName'),
-        lastName: data.get('lastName'),
-        email: data.get('email'),
-        password: data.get('password'),
-    })
-    .then(res=>{
-        if(res.ok){
-            setFeedbackMsg("Thanks for signing up.");
-            setSeverity('success');
-        }else{
-            setFeedbackMsg("Couldn't Signup please try again.");
-            setSeverity('error');
+                        </div>
+                </div>
+            )
         }
-        setOpen(true);
-    })
-    .catch(e=>{
-        console.log(e.error);
-    })
-  };
 
-  const [open, setOpen] = useState(false);
-  const [severity,setSeverity] = useState("");
-  const [feedbackMsg,setFeedbackMsg] = useState("");
-
-  
+        if(this.state.currentStep === 1){
+            return ( 
+                <div className="signUp-container__content" style={{position:'relative'}}>
+                    <div className="signUp-container__content__policy">
 
 
-
-  const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
+                        <PaymentPolicy />
+                    </div>
+                    <div style={{
+                        position:'absolute',
+                        right:0,
+                        bottom:0
+                    }}>
+                        <FormControlLabel control={<Checkbox  value={this.state.acceptedTerms} onChange={(v)=>{this.setState({acceptedTerms:!this.state.acceptedTerms})}}/>} label="Accept All Terms & Conditions" />
+                    </div>
+                </div>
+            )
+        }
     }
+  render() {
+    return (
+      <div className='signUp-container'>
+        <Stepper  alternativeLabel activeStep={this.state.currentStep} connector={<ColorlibConnector />}>
+            {this.steps.map((label) => (
+            <Step key={label}>
+                <StepLabel StepIconComponent={ColorlibStepIcon}>{label}</StepLabel>
+            </Step>
+            ))}
+        </Stepper>
 
-    setOpen(false);
-  };
+
+        {this.getContent()}
 
 
-  return (
-    
-    <ThemeProvider theme={theme}>
-      <Snackbar open={open} autoHideDuration={6000} onClose={handleClose} anchorOrigin={{ vertical:"top", horizontal:"center" }}>
-        <Alert onClose={handleClose} severity={severity} sx={{ width: '100%' }}>
-          {feedbackMsg}
-        </Alert>
-      </Snackbar>
-      <Container component="main" maxWidth="xs">
-        <CssBaseline />
-        <Box
-          sx={{
-            marginTop: 8,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          {/* <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
-            <LockOutlinedIcon />
-          </Avatar> */}
-          <Typography component="h1" variant="h5">
-            Sign up
-          </Typography>
-          { <Typography component="h1" align="center">
-             Learn without limits and at your own pace.
-          </Typography> }
-          <Box component="form" noValidate onSubmit={handleSubmit} sx={{ mt: 3 }}>
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  autoComplete="given-name"
-                  name="firstName"
-                  required
-                  fullWidth
-                  id="firstName"
-                  label="First Name"
-                  autoFocus
-                  className='signup__textField'
-                />
-              </Grid>
-              <Grid item xs={12} sm={6}>
-                <TextField
-                  required
-                  fullWidth
-                  id="lastName"
-                  label="Last Name"
-                  name="lastName"
-                  autoComplete="family-name"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  id="email"
-                  label="Email Address"
-                  name="email"
-                  autoComplete="email"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <TextField
-                  required
-                  fullWidth
-                  name="password"
-                  label="Password"
-                  type="password"
-                  id="password"
-                  autoComplete="new-password"
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <FormControlLabel
-                  control={<Checkbox value="allowExtraEmails" color="secondary" />}
-                  label="I want to receive inspiration, marketing promotions and updates via email."
-                />
-              </Grid>
-            </Grid>
-            <Button
-                className='signup__Btn'
-                type="submit"
-                fullWidth
-                variant="contained"
-                sx={{ mt: 3, mb: 2 }}
-            >
-              Sign Up
-            </Button>
-            <Grid container justifyContent="flex-centre">
-              <Grid item>
-                <Link href="/login" variant="body2" color="secondary">
-                  Already have an account? Sign in
-                </Link>
-              </Grid>
-            </Grid>
-          </Box>
-        </Box>
-        <Copyright sx={{ mt: 5 }} />
-      </Container>
-    </ThemeProvider>
-  );
+        <div className='addCourse__footer'>
+            <div className='addCourse__footer__btns'>
+                <SecondaryBtn function={this.handleBack} btnText="Back"/>
+                <PrimaryBtn disabled={this.state.currentStep === 1&& !this.state.acceptedTerms} function={this.handleNext} btnText={this.state.currentStep === 1? 'Sign Up':'Next'}/>
+            </div>
+        </div>
+
+      </div>
+    )
+  }
 }
+
+
+
+
+// {this.getPolicy("Website & Company Policy", [1,2,3,4])}
+// {this.getPolicy("Refund Policy", [1,2,3,4])}
+// {this.getPolicy("Payment Policy", [1,2,3,4])}

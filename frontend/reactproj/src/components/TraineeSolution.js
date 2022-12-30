@@ -12,8 +12,7 @@ function TraineeSolution(props) {
     await axios
       .get('http://localhost:5000/courses/exam/solution', {
         params: {
-          courseId: '638281a7b05c30a726283c28',
-          userId: '63811834d00e598aac52a58a',
+          courseId: props.courseId,
           examId: props.examId
         }
       })

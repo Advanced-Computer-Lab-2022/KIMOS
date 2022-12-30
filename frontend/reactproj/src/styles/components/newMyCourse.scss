@@ -1,0 +1,40 @@
+.my-course{
+    &__subtitles{
+        height: 100%;
+        display: grid;
+        grid-template-columns: 80% 20%;
+        &__content{
+            // background-color: var(--cool-grey);
+        }
+        &__subtitles{
+            border-left: 0.5px solid var(--primary-color);
+            &__videos-list{
+                background-color: var(--cool-grey);
+
+                &__video{
+                    margin-top: 5px;
+                    margin-bottom: 5px;
+                    padding:5px;
+                    background-color: var(--cool-grey);
+                    border-radius: 10px;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                }
+                &__video-active{
+                    margin-top: 5px;
+                    margin-bottom: 5px;
+                    padding:5px;
+                    background-color: var(--cool-grey);
+                    border-radius: 10px;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    background: linear-gradient(45deg, $primary-color-linear, $primary-color);
+                    color: white ;
+
+                }
+            }
+        }
+    }
+}

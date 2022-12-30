@@ -49,8 +49,7 @@ import MoneyOwedPerMonth from './components/moneyOwedPerMonth';
 
 
 import axios from 'axios';
-axios.defaults.withCredentials = true;
-axios.defaults.headers = 'Access-Control-Allow-Origin: http://localhost:3000/';
+
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import { connect } from 'react-redux';
@@ -60,18 +59,16 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import TraineeExercise from './components/TraineeExercise';
 import TraineeSolution from './components/TraineeSolution';
 import TraineeViewCourseDetails from './components/traineeViewCourseDetails';
-import SignUp from './components/signup';
+// import Signup from './components/signup';
 import TakeNotes from './components/takeNotes2';
 
-axios.defaults.withCredentials = true;
-axios.defaults.headers = 'Access-Control-Allow-Origin: http://localhost:3000';
-axios.defaults.headers = 'Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS';
-axios.defaults.headers = 'Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token'
-
 import NotFoundPage from './components/notFoundPage';
+import PopularCourses from './components/popularCourses';
+
 
 axios.defaults.withCredentials = true;
-axios.defaults.headers = 'Access-Control-Allow-Origin: http://localhost:3000';
+axios.defaults.headers = 'Access-Control-Allow-Origin: http://localhost:3000/';
+
 axios.defaults.headers = 'Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS';
 axios.defaults.headers = 'Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token'
 
@@ -185,6 +182,9 @@ class App extends Component {
               {this.routeTo('/instructor/createCourse', <NewCreateCourse />)}
               {this.routeTo('/instructor/myCourses', <InstructorCourses2 />)}
               {this.routeTo('/instructor/contracts', <Contracts />)}
+              {this.routeTo('/instructor/money', <MoneyOwedPerMonth />)}
+              
+
   
               
               
@@ -194,8 +194,20 @@ class App extends Component {
   
               {this.routeTo3('/user', <UserProfile />,'user')}
               {this.routeTo3('/user/profile', <UserProfile />,'user')}
+              {this.routeTo3('/user/profile', <UserProfile />,'user')}
+              {this.routeTo3('/user/courses', <MyEnrolledCourses />,'user')}
               {this.routeTo3('/user/myReports', <UserReports />,'user')}
               {this.routeTo3('/user/requestCourseAccess', <RequestCourseAccess />,'corporate trainee')}
+              {this.routeTo3('/user/topCourses', <PopularCourses />,'user')}
+              {this.routeTo3('/user/courses/:courseId', <TraineeViewMyCourse />,'user')}
+              {this.routeTo3('/user/instructor/:id', <ViewInstructorProfile />,'user')}
+
+
+
+
+
+
+
   
   
   
@@ -203,7 +215,6 @@ class App extends Component {
   
               <Route exact path="/exercise/solution" element={<TraineeSolution />}></Route>
               <Route exact path="/trainee" element={<Trainee />}></Route>
-              <Route exact path="myCourseTrainee" element={<TraineeViewMyCourse />}></Route>
               <Route
                 exact
                 path="myCourseTrainee/content"

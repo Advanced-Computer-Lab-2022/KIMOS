@@ -457,7 +457,8 @@ const viewCourseTrainee = asyncHandler(async (req, res) => {
   var course = await Course.findById(courseId);
   if (res.locals.registered) {
     if (courseInfo.subtitles.length) {
-      const courseSubtitles = await course.populate('subtitles');
+      var courseSubtitles = await course.populate('subtitles');
+      courseSubtitles = await course.populate('subtitles.videos');
 
       subtitlesArray = await Promise.all(
         courseSubtitles.subtitles.map(async (subtitle, index) => {
@@ -585,6 +586,10 @@ const findExam = asyncHandler(async (req, res) => {
     });
     if (registration) {
       const exam = await getExam(examId, false);
+      console.log(exam);
+      console.log(examId);
+
+
       res
         .status(200)
         .json({ success: true, statusCode: 200, message: 'Trainee exam fetched', payload: exam });

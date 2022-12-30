@@ -3,28 +3,31 @@ import axios from 'axios';
 import ClearIcon from '@mui/icons-material/Clear';
 import DoneIcon from '@mui/icons-material/Done';
 import PrimaryButton from './buttons/primaryBtn';
+import Loading from './loadingPage';
+
 function App(props) {
   // Properties
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [userSolution, setUserSolution] = useState([]);
   const [myExam, setMyExam] = useState({});
+  const [loading, setLoading] = useState({});
+
   const [submitSuccess, setSubmitSuccess] = useState(false);
 
   const getExam = async () => {
-    console.log('getting exam');
+
+    setLoading(true);
 
     await axios
       .get('http://localhost:5000/courses/exam', {
         params: {
-          courseId: '638281a7b05c30a726283c28',
-          userId: '63811834d00e598aac52a58a',
+          courseId: props.courseId,
           examId: props.examId
         }
       })
       .then((exam) => {
-      console.log('got exam 2');
-
-        setMyExam(exam.data.exam);
+        setLoading(false);
+        setMyExam(exam.data.payload);
       });
   };
 
@@ -35,8 +38,7 @@ function App(props) {
       { solutions: userSolution },
       {
         params: {
-          courseId: '638281a7b05c30a726283c28',
-          userId: '63811834d00e598aac52a58a',
+          courseId: props.courseId,
           examId: props.examId
         }
       }
@@ -84,8 +86,11 @@ function App(props) {
      })
  }
 
+ 
+
   return (
-    <div className="App" style={{height:'100%', display:'flex',flexDirection:'column'}}>
+    <div className="App" style={{height:'100%', display:'flex',flexDirection:'column', overflow:'hidden'}}>
+    {loading&&<Loading/>}
       {submitSuccess ? (
         <>
           <div className="final-results">

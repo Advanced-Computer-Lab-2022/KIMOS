@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import Accordion from './accordionExercise.js';
+// import Accordion from './accordionExercise.js';
+import Accordion from '@mui/material/Accordion';
 import AccordionSubtitle from './accordionSubtitle.js';
 import ExamSolution from './TraineeSolution.js';
 import WatchVideo from './watchVideo.js';
@@ -22,6 +23,14 @@ import axios from 'axios';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import {Typography} from '@mui/material';
+import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
+
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+
+import PlayCircleFilledWhiteIcon from '@mui/icons-material/PlayCircleFilledWhite';
 
 export default function TraineeViewMyCourse(props) {
   const [viewExam, setViewExam] = useState(false);
@@ -29,6 +38,8 @@ export default function TraineeViewMyCourse(props) {
   const [value, setValue] = useState(0);
   const [openRating, setOpenRating] = useState(false);
   const [openReport, setOpenReport] = useState(false);
+  const [video, setVideo] = useState({})
+  const [quiz, setQuiz] = useState({})
 
   const [solveExam, setSolveExam] = useState(false);
   const [currentSubtitle, setCurrentSubtitle] = useState(-1);
@@ -114,6 +125,12 @@ export default function TraineeViewMyCourse(props) {
     );
   };
   useEffect(() => {
+    if(props.course.subtitles[0].videos)
+      setVideo(props.course.subtitles[0].videos[0])
+    if(props.course.subtitles[0].quizzes) 
+      setQuiz(props.course.subtitles[0].quizzes[0])
+    else 
+      console.log(props.course);
     handleMenuChange(0);
   }, []);
 
@@ -205,8 +222,171 @@ export default function TraineeViewMyCourse(props) {
       );
     });
   };
+  const getProgress = ()=>{
+    return (
+      <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+        <CircularProgress variant="determinate" value={83}/>
+        <Box
+          sx={{
+            top: 0,
+            left: 0,
+            bottom: 0,
+            right: 0,
+            position: 'absolute',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <Typography variant="caption" component="div" >
+            {`${Math.round(83)}%`}
+          </Typography>
+        </Box>
+      </Box>
+    )
+  }
+
+  const accordion = (subtitle)=>{
+    return (
+      <Accordion>
+      
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1a-content"
+          id="panel1a-header"
+        >
+        <div style={{ width:'100%'}}>
+          <Typography style={{color:'var(--primary-color)', fontWeight:'bolder'}}>{subtitle.title}</Typography>
+          <Typography><small>{subtitle.hours} Hour(s)</small></Typography>
+        </div>
+        </AccordionSummary>
+        <AccordionDetails>
+            <div className="my-course__subtitles__subtitles__videos-list">
+              {subtitle.videos.map((lvideo,index)=>{
+                return <div className={video['_id']===lvideo['_id']? "my-course__subtitles__subtitles__videos-list__video-active":"my-course__subtitles__subtitles__videos-list__video"} onClick={()=>{console.log(lvideo);setVideo(lvideo)}} > 
+                        <div>
+                        <div>{'Section '+(index+1)}</div>
+                        </div>
+                        <div><PlayCircleFilledWhiteIcon style={{cursor:'pointer',color:video['_id']===lvideo['_id']? 'white':'var(--primary-color)'}}/></div>
+                      </div>
+              })}
+            </div>
+        </AccordionDetails>
+      </Accordion>
+    )
+  }
+  const accordionExam = (subtitle)=>{
+    return (
+      <Accordion>
+      
+        <AccordionSummary
+          expandIcon={<ExpandMoreIcon />}
+          aria-controls="panel1a-content"
+          id="panel1a-header"
+        >
+        <div style={{ width:'100%'}}>
+          <Typography style={{color:'var(--primary-color)', fontWeight:'bolder'}}>{subtitle.title}</Typography>
+          <Typography><small>{subtitle.quizzes.length} Quiz(zes)</small></Typography>
+        </div>
+        </AccordionSummary>
+        <AccordionDetails>
+            <div className="my-course__subtitles__subtitles__videos-list">
+              {subtitle.quizzes.map((lquiz,index)=>{
+                return <div className={quiz['_id']===lquiz['_id']? "my-course__subtitles__subtitles__videos-list__video-active":"my-course__subtitles__subtitles__videos-list__video"} onClick={()=>{console.log(lquiz);setQuiz(lquiz)}} > 
+                        <div>
+                        <div>{lquiz.title}</div>
+                        </div>
+                        <div><DriveFileRenameOutlineIcon style={{cursor:'pointer',color:quiz['_id']===lquiz['_id']? 'white':'var(--primary-color)'}}/></div>
+                      </div>
+              })}
+            </div>
+        </AccordionDetails>
+      </Accordion>
+    )
+  }
+  // <div style={{
+  //   fontWeight:'bolder',
+  //   fontSize:'30px',
+  //   color:'var(--primary-color)'
+  // }}>Subtitle Title</div>
+  const subtitles = ()=>{
+    return(
+      <div className="my-course__subtitles">
+        <div className="my-course__subtitles__content">
+
+        <WatchVideo video={video}/>
+        </div>
+        <div className="my-course__subtitles__subtitles">
+          <div style={{
+            display:'flex',
+            alignItems:'center',
+            justifyContent:'space-around',
+            padding:'10px'
+          }}>
+            <div
+            style={{
+              color:'var(--secondary-color)',
+              fontWeight:'bolder',
+              fontSize:'20px'
+            }}
+              >{props.course.title}</div>
+            <div>{getProgress()}</div>
+          </div>
+          {props.course.subtitles.map((subtitle)=>{
+            return accordion(subtitle)
+          })}
+
+        </div>
+
+      </div>
+    )
+  }
+  
+  const exams = ()=>{
+    return(
+      <div className="my-course__subtitles">
+        <div className="my-course__subtitles__content">
+
+
+        <ViewExam courseId={props.course['_id']} examId={quiz['_id']} showSolution={onChangeSolution} />
+
+        </div>
+        <div className="my-course__subtitles__subtitles">
+          <div style={{
+            display:'flex',
+            alignItems:'center',
+            justifyContent:'space-around',
+            padding:'10px'
+          }}>
+            <div
+            style={{
+              color:'var(--secondary-color)',
+              fontWeight:'bolder',
+              fontSize:'20px'
+            }}
+              >{props.course.title + ' Exam(s)'}</div>
+
+          </div>
+          {props.course.subtitles.map((subtitle)=>{
+            return accordionExam(subtitle)
+          })}
+
+        </div>
+
+      </div>
+    )
+  }
+  
+
+  const getContent = ()=>{
+    if(value === 0) return subtitles();
+    if(value === 1) return exams();
+    return (
+      <div>hi</div>
+    )
+  }
   return (
-    <div style={{ position: 'relative' }}>
+    <div style={{ position: 'relative', display:'flex', flexDirection:'column' }}>
 
       <Modal
         open={openReport}
@@ -251,11 +431,12 @@ export default function TraineeViewMyCourse(props) {
       </Modal>
       <div
         style={{
-          zIndex: '10',
+
           background: 'var(--cool-grey)',
           position: 'absolute',
           bottom: '0',
           width: '100%',
+          zIndex:'2000' 
         }}>
         <div
           onClick={() => {
@@ -295,107 +476,18 @@ export default function TraineeViewMyCourse(props) {
         </div>
         <BottomNavigation
           showLabels
-          value={0}
-          style={{ background: 'var(--cool-grey)', borderTop: '0.5px solid grey' }}
+          value={value}
+          style={{ background: 'var(--cool-grey)', borderTop: '0.5px solid grey'}}
           onChange={(event, newValue) => {
             handleMenuChange(newValue);
           }}>
           <BottomNavigationAction label="Subtitles" icon={<RestoreIcon />} />
           <BottomNavigationAction label="Exercises" icon={<FavoriteIcon />} />
         </BottomNavigation>
-
-        <div style={{marginLeft:"90%",marginTop:-48,marginBottom:3}}>
-        <Box sx={{ position: 'relative', display: 'inline-flex' }}>
-          <CircularProgress variant="determinate" value={70} size="6.5vh" />
-          <Box
-            sx={{
-              top: 0,
-              left: 0,
-              bottom: 0,
-              right: 0,
-              position: 'absolute',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-            }}
-          >
-            <Typography variant="caption" component="div" color="text.secondary">
-              70%
-            </Typography>
-          </Box>
-        </Box>
-        </div>
-        
-        
+   
       </div>
-
-      <div className="content" style={{ height: '100%', width: '100%' }}>
-        {value === 1 ? (
-          solveExam ? (
-            <div className="with-menu-container">
-              <div className="left-options">
-                {props.course.exams.map((exam) => {
-                  return (
-                    <Accordion
-                      examId={exam._id}
-                      title={exam.title}
-                      solved={exam.solved}
-                      changeCurrentExam={onChangeExam}
-                      changeSolveExam={onChangeSolution}
-                      changeViewExam={onChangeView}
-                      content={`Grade: ${exam.grade}`}
-                      style={{ background: 'red' }}
-                    />
-                  );
-                })}
-              </div>
-
-              <div className="right-exam">
-                <ExamSolution examId={currentExam} />
-              </div>
-            </div>
-          ) : viewExam ? (
-            <div className="with-menu-container">
-              <div className="left-options">
-                {props.course.exams.map((exam) => {
-                  return (
-                    <Accordion
-                      style={{ width: '100% !important' }}
-                      examId={exam._id}
-                      title={exam.title}
-                      solved={exam.solved}
-                      changeCurrentExam={onChangeExam}
-                      changeSolveExam={onChangeSolution}
-                      changeViewExam={onChangeView}
-                      content={`Grade: ${exam.grade}`}
-                    />
-                  );
-                })}
-              </div>
-
-              <div className="right-exam">
-                <ViewExam examId={currentExam} showSolution={onChangeSolution} />
-              </div>
-            </div>
-          ) : (
-            <></>
-          )
-        ) : value === 0 && props.course.subtitles[currentSubtitle] ? (
-          <div className="with-menu-container">
-            <div className="left-options">
-              <div className="questions-display">{getSubs()}</div>
-            </div>
-
-            <div className="right-video">
-              <WatchVideo
-                link={props.course.subtitles[currentSubtitle].video.link}
-                description={props.course.subtitles[currentSubtitle].video.description}
-              />
-            </div>
-          </div>
-        ) : (
-          <></>
-        )}
+      <div className="content" style={{position:'relative', height: '95%', width: '100%',overflow:'scroll' }}>
+        {getContent()}
       </div>
     </div>
   );

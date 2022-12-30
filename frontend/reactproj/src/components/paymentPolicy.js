@@ -75,14 +75,11 @@ export default function paymentPolicy() {
                  (by means of a written request by the withdrawing student).
             </label>
 
-            <div style={{display:"flex",columnGap:10,justifyContent:"center",alignItems:"center",marginTop:20,marginLeft:-70}}>
-                <KeyboardBackspaceIcon style={{color:"var(--primary-color)",cursor:"pointer"}}></KeyboardBackspaceIcon>
-                <label style={{color:"var(--primary-color)",cursor:"pointer"}}>Back to sign up</label>
-            </div>
+
         </div>
 
         <div>
-            <img src={refund} width="350px" height="350px"/>
+            <img src={refund} width="350px" height="350px" alt="payment"/>
         </div>
     </div>
     </>

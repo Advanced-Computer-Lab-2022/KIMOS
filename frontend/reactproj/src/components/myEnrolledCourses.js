@@ -4,6 +4,8 @@ import courseImage from '../assets/courseImage.png';
 import { styled } from '@mui/material/styles';
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
 import Box from '@mui/material/Box';
+import Loading from './loadingPage';
+
 import axios from 'axios';
 
 const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
@@ -26,14 +28,13 @@ const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
 
 export default function MyEnrolledCourses() {
     const [myCourses, setMyCourses] = useState([]);
-
+    const [loading, setLoading] = useState(true);
   const getCourses = async () => {
-    await axios.post('http://localhost:5000/login',{username:"individual",password:"individual123"})
-
+    setLoading(true)
     await axios
       .get('http://localhost:5000/courses/register')
         .then((result) => {
-        console.log(result.data.payload);
+          setLoading(false)
         setMyCourses(result.data.payload.courses);
       });
   };
@@ -42,8 +43,10 @@ export default function MyEnrolledCourses() {
     getCourses();
   }, []);
 
+
   return (
     <div>
+        {loading && <Loading/>}
         <div style={{display:"flex",justifyContent:"center",marginTop:20}}>
             <h1 style={{color:"var(--primary-color)"}}>MY COURSES</h1>
         </div>
@@ -56,9 +59,9 @@ export default function MyEnrolledCourses() {
                 {myCourses.length>0 && myCourses.map((course) => {
                     return(
                         <>
-                        <div class="image" style={{display:"flex",columnGap:80,justifyContent:"flex-start",alignItems:"flex-start",marginTop:20,marginBottom:20,marginLeft:30}}>
+                        <div onClick={()=>{window.location.href = 'courses/'+course['_id']}} class="image" style={{display:"flex",columnGap:80,justifyContent:"flex-start",alignItems:"flex-start",marginTop:20,marginBottom:20,marginLeft:30}}>
                             <div>
-                                <img  width="250" height="150" src={courseImage}/>
+                                <img  width="250" height="150" src={courseImage} alt="course img"/>
                             </div>
 
                             <div style={{display:"flex",flexDirection:"column",rowGap:20}}>
@@ -74,7 +77,7 @@ export default function MyEnrolledCourses() {
                         <hr style={{color:"#F5F5F5"}}></hr>
                     </>
                     )
-                })};
+                })}
 
                 </AppBar>
             </Container>

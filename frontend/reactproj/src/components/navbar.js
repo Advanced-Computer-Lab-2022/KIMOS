@@ -187,7 +187,7 @@ class navbar extends Component {
                     {this.props.user.username !=='' && <div className="notifications">
                         {this.getNotifications()}
                     </div>}
-
+                    {this.props.user.username !==''&& this.props.user.userType+'/'+this.props.user.username}
                     {this.props.user.username !==''&& <div style={{position:'relative', height:'100px',width:'80px' }}>
                         <SpeedDial
                         ariaLabel="User Options"

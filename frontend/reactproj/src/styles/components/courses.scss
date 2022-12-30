@@ -68,8 +68,9 @@
     align-items: center;
     padding: 20px;
     padding-right:30px;
-    border-right: 1px solid grey;
-
+    // border-right: 1px solid grey;
+    background-color: var(--cool-grey);
+    border-radius: 10px;
     &__filter-by{
 
         width: 100%;

@@ -8,6 +8,7 @@ import LibraryBooksIcon from '@mui/icons-material/LibraryBooks';
 import SwitchAccessShortcutIcon from '@mui/icons-material/SwitchAccessShortcut';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import Person2Icon from '@mui/icons-material/Person2';
+import PaidIcon from '@mui/icons-material/Paid';
 
 export default function Sidenav({userType}) {
 
@@ -53,6 +54,10 @@ export default function Sidenav({userType}) {
         {title:'My Courses',
         icon:<LibraryBooksIcon/>,
         href:'myCourses'},
+
+        {title:'My Money',
+        icon:<PaidIcon/>,
+        href:'money'},
     
         {title:'Add Course',
         icon:<MenuBookIcon/>,
@@ -72,7 +77,7 @@ export default function Sidenav({userType}) {
     
         {title:'My Courses',
         icon:<LibraryBooksIcon/>,
-        href:'myCourses'},
+        href:'courses'},
     
         {title:'My Reports',
         icon:<GavelIcon/>,
@@ -92,7 +97,7 @@ export default function Sidenav({userType}) {
     
         {title:'My Courses',
         icon:<LibraryBooksIcon/>,
-        href:'myCourses'},
+        href:'courses'},
     
         {title:'My Reports',
         icon:<GavelIcon/>,

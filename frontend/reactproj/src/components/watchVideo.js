@@ -1,18 +1,28 @@
 const WatchVideo = (props) => {
   console.log(props);
   return (
-    <div className="watchVideo" >
+    <div  style={{height:'100%', display:'flex',flexDirection:'column', alignItems:'center', }}>
       <iframe
-        style={{borderRadius:'10px'}}
-        width="853"
-        height="480"
-        src={"https://www.youtube.com/embed/NP1d22FflCk"}
+
+        width="100%"
+        height="70%"
+        src={props.video.link}
         frameBorder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
         allowFullScreen
         title="Embedded youtube"
       />
-      <h2>{props.description}</h2>
+      <div style={{marginTop:'10px'}}>
+        <div
+        style={{color:'var(--primary-color)',
+              fontWeight:'bolder',
+              fontSize:'20px'
+              }}
+        >Description</div>
+        <div>
+          <p>{props.video.description}</p>
+        </div>
+      </div>
     </div>
   );
 };

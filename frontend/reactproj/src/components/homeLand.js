@@ -90,12 +90,6 @@ class homeLand extends Component {
                     </div>
                 </div>
 
-                <div className='homeland__section section_2'>
-                    <h1 style={{fontSize:30}}>Most Popular Courses</h1>
-                    
-                    <PopularCourses></PopularCourses>
-
-                </div>
 
                 <div className='homeland__section section_2'>
                     <div className='bg-filter'></div>
@@ -115,6 +109,15 @@ class homeLand extends Component {
                     
                     </div>
                 </div>
+
+                <div className='homeland__section section_2' style={{border:'2px solid lime'}}>
+                    <div className='bg-filter'></div>
+                    <div className='header'>Explore Our Popular courses</div>
+                    <PopularCourses></PopularCourses>
+                </div>
+
+                
+
                 <div className='footer'>
                     <div style={{height:'100%',display:'flex', flexDirection:'column', justifyContent:'space-around'}}>
                         <div>Contact Us</div>

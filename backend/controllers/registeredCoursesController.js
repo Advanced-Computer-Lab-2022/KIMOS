@@ -28,6 +28,7 @@ const getAllRegisteredCourses = asyncHandler(async (req, res) => {
         result = await result.populate('subject');
         if (result.subtitles.length) {
           result = await result.populate('subtitles');
+
           var newSubtitles = await Promise.all(
             result.subtitles.map(async (subtitle, index) => {
               if (subtitle.quizzes.length) {
