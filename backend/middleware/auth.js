@@ -6,6 +6,7 @@ const asyncHandler = require('express-async-handler');
 
 const loggedIn = (req, res, next) => {
   const token = req.cookies.jwt;
+
   if (token) {
     jwt.verify(token, process.env.JWT_SECRET, (err, decodedToken) => {
       if (err) {
@@ -102,8 +103,10 @@ const resetPasswordAuth = asyncHandler(async (req, res, next) => {
 
 const registerCourseAuth = asyncHandler(async (req, res, next) => {
   const { token } = req.query;
+
   jwt.verify(token, process.env.PAYMENT_SECRET, (err, decodedToken) => {
     if (err) {
+
       res.status(401).json({
         statusCode: 401,
         success: false,
@@ -153,6 +156,26 @@ const editCourseAuth = asyncHandler(async (req, res, next) => {
   }
 });
 
+
+
+const seePublicCourseAuth = asyncHandler(async (req, res, next) => {
+  const userId = res.locals.userId.toString();
+  const courseInfo = await Course.findById(req.query.courseId);
+  if (courseInfo.visibility !== 'public') {
+    res
+      .status(401)
+      .json({
+        statusCode: 401,
+        success: false,
+        message: 'Cannot access courses that are not public'
+      });
+
+  } else {
+    next();
+  }
+});
+
+
 const editPublicCourseAuth = asyncHandler(async (req, res, next) => {
   const userId = res.locals.userId.toString();
   const courseInfo = await Course.findById(req.query.courseId);
@@ -160,17 +183,6 @@ const editPublicCourseAuth = asyncHandler(async (req, res, next) => {
     next();
   } else {
     res.status(401).json({ statusCode: 401, success: false, message: 'Unauthorized access' });
-  }
-});
-const seePublicCourseAuth = asyncHandler(async (req, res, next) => {
-  const userId = res.locals.userId.toString();
-  const courseInfo = await Course.findById(req.query.courseId);
-  if (courseInfo.visibility !== 'public') {
-    res
-      .status(401)
-      .json({ statusCode: 401, success: false, message: 'Cannot access courses that are not public' });
-  } else {
-    next();
   }
 });
 
@@ -187,4 +199,6 @@ module.exports = {
   individualAuth,
   corporateAuth,
   seePublicCourseAuth
+
 };
+

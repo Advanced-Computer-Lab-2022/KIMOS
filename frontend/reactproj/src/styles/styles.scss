@@ -35,4 +35,26 @@
 }
 
 
+.appBarCourses{
+    margin-top:30px;
+    border-radius:15px;
+    display:flex;
+    max-width:90%;
+    flex-direction:row;
+    row-gap:15px;
+    flex-wrap:wrap;
+    padding-top:20px;
+    padding-bottom:20px;
+}
+
+.image{
+    background-color:none;
+}
+.image:hover{
+    opacity: 0.5;
+    transition: all 0.2s ease-in;
+    padding-top:5px;
+    padding-bottom:5px;
+    cursor:pointer;
+}
 

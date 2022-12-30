@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React,{useState,useEffect} from 'react'
 import axios from 'axios';
 import Rating from '@mui/material/Rating';
 import PrimaryButton from './buttons/primaryBtn';
@@ -8,7 +8,9 @@ import Accordion from './accordionExercise.js';
 import AccordionSubtitle from './accordionSubtitle.js';
 import { textAlign } from '@mui/system';
 import PrimaryBtn from './buttons/primaryBtn';
-export default function TraineeViewMyCourse() {
+import Button from '@mui/material/Button';
+
+export default function CourseGuestPage() {
   var subTitleCount = 1;
   var exerciseCount = 1;
 
@@ -37,7 +39,7 @@ export default function TraineeViewMyCourse() {
       })
       .then((course) => {
         console.log(course.data);
-        setMyCourse(course.data.payload);
+        setMyCourse(course.data);
       });
   };
 
@@ -52,26 +54,6 @@ export default function TraineeViewMyCourse() {
       '_blank' // <- This is what makes it open in a new window.
     );
   }
-
-  // const postRating = async () => {
-  //   await axios
-  //     .post(
-  //       'http://localhost:5000/courses/rate',
-  //       { userRating },
-  //       {
-  //         params: {
-  //           courseId: '638281a7b05c30a726283c28',
-  //           userId: '63811834d00e598aac52a58a'
-  //         }
-  //       }
-  //     )
-  //     .then((rating) => {
-  //       setUserRating(rating.data.userRating);
-  //       setAverageRating(rating.data.averageRating);
-  //     });
-  // };
-
-  
   return (
     <>
       {viewContent ? (
@@ -89,19 +71,29 @@ export default function TraineeViewMyCourse() {
                   <p>{myCourse.summary}</p>
                 </div>
 
-                <div className="user-course__header__left__extras">
+                <div className="user-course__header__left__extras" style={{rowGap:12}}>
                   {/* Total Hours */}
                   <div className="user-course__header__left__extras__hours">
-                    {' '}
-                    <span style={{ fontWeight: 'bolder' }}>Total Hours</span> {myCourse.totalHours}{' '}
-                    hour(s)
+                    <span style={{ fontWeight: 'bolder' }}>Total Hours</span> {myCourse.totalHours}{" "}
+                    hr(s)
                   </div>
 
+                  {/* Price */}
+                  {myCourse.price!=-1 &&
+                    <div className="user-course__header__left__extras__hours">
+                      <span style={{ fontWeight: 'bolder' }}>Price</span> {myCourse.price}{" "}
+                    </div>
+                  }
+
                   {/* Instructor Name */}
-                  <div className="user-course__header__left__extras__instructor" style={{display:'flex', width:'100%', alignItems:'center', justifyContent:'space-between'}}>
-                    <span ><span style={{ fontWeight: 'bolder' }}>Instructor</span>
-                    {' '+myCourse.instructor.firstName} {myCourse.instructor.lastName}</span>
-                    <div style={{marginLeft:'1vw'}}><PrimaryBtn function={goToProfile} btnText="View Profile"/></div>
+                  <div className="user-course__header__left__extras__instructor" style={{display:'flex',width:'100%', alignItems:'center'}}>
+                    <span style={{ fontWeight: 'bolder' }}>Instructor</span>
+                    {myCourse.instructor.firstName} {myCourse.instructor.lastName}
+                   {/*} <div style={{marginLeft:'1vw'}}>
+                        <SecondaryBtn btnText="Register"/>
+                    
+                    </div>
+                    */}
                   </div>
 
                   {/* Rating */}
@@ -149,41 +141,12 @@ export default function TraineeViewMyCourse() {
                   </div>
                 </div>
               </div>
-              <div className="user-course__content__section">
-                <div className="user-course__content__section__content">
-                  <div className="user-course__content__section__title">Exercise(s)</div>
-                  <div className="user-course__content__section__content__accordions">
-                    {myCourse.exams.map((exam, index) => {
-                      return (
-                        <div
-                          style={{
-
-                            marginBottom: '5px',
-                            background: 'rgb(220, 226, 228)',
-                            paddingLeft:'20px',
-                            paddingRight:'20px',
-                            paddingTop:'15px',
-                            paddingBottom:'15px',
-                            borderRadius:'10px',
-                            width:'100%',
-                            display:'flex',
-                            alignItems:'center',
-                            justifyContent:'space-between'
-
-                          }}><div style={{fontWeight:'bolder'}}>{index+1}. {exam.title}</div> </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              </div>
             </div>
-            <div style={{display:'flex', justifyContent:'flex-end'}}>
-            <SecondaryBtn
-            btnText="Course Content"
-            function={() => {
-              setViewContent(true);
-            }}
-          />
+              
+            <div style={{display:'flex',justifyContent:"center",marginTop:20}}>
+              <Button variant="outlined" style={{width:150,height:50,marginBottom:30}}>
+                Register
+              </Button>
           </div>
           </div>
         </>
@@ -191,3 +154,4 @@ export default function TraineeViewMyCourse() {
     </>
   );
 }
+

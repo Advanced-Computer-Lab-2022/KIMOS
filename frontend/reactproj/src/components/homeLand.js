@@ -4,11 +4,27 @@ import student2 from '../assets/student2.png';
 import student3 from '../assets/student3.png';
 import features1 from '../assets/features-1.png';
 import PrimaryBtn from './buttons/primaryBtn';
+
 import SecondedButton from './buttons/secondaryBtn';
 
 import ImportContactsIcon from '@mui/icons-material/ImportContacts';
 import QuizIcon from '@mui/icons-material/Quiz';
 import CardMembershipIcon from '@mui/icons-material/CardMembership';
+
+import Rating from '@mui/material/Rating';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
+
+import reactCourse from '../assets/react.png';
+import dataScienceCourse from '../assets/dataScience.png';
+import fullStackCourse from '../assets/fullStack.png';
+import pythonCourse from '../assets/python.png';
+import aiCourse from '../assets/ai.png';
+import javaCourse from '../assets/java.png';
+
+import {Container,AppBar,Grow,Grid} from '@mui/material';
+import PopularCourses from '../components/popularCourses';
+
 
 class homeLand extends Component {
 
@@ -32,6 +48,15 @@ class homeLand extends Component {
         )
     }
     render() {
+        const slideLeft=()=>{
+            var slider=document.getElementById('slider');
+            slider.scrollLeft-=210;
+        }
+
+        const slideRight=()=>{
+            var slider=document.getElementById('slider');
+            slider.scrollLeft+=210;
+        }
         return (
             <div className='homeland'>
                 <div className='homeland__section section_1'>
@@ -63,9 +88,15 @@ class homeLand extends Component {
                             <img src={student2} alt="" className="image"/>   
                         </div>
                     </div>
-
-                
                 </div>
+
+                <div className='homeland__section section_2'>
+                    <h1 style={{fontSize:30}}>Most Popular Courses</h1>
+                    
+                    <PopularCourses></PopularCourses>
+
+                </div>
+
                 <div className='homeland__section section_2'>
                     <div className='bg-filter'></div>
                     <div className='header'>Explore Our Features</div>
@@ -103,6 +134,7 @@ class homeLand extends Component {
                         </div>
                     </div>
                 </div>
+
 
 
             </div>

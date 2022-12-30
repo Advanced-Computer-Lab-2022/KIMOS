@@ -19,6 +19,9 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import axios from 'axios';
+import CircularProgress from '@mui/material/CircularProgress';
+import Box from '@mui/material/Box';
+import {Typography} from '@mui/material';
 
 export default function TraineeViewMyCourse(props) {
   const [viewExam, setViewExam] = useState(false);
@@ -252,7 +255,7 @@ export default function TraineeViewMyCourse(props) {
           background: 'var(--cool-grey)',
           position: 'absolute',
           bottom: '0',
-          width: '100%'
+          width: '100%',
         }}>
         <div
           onClick={() => {
@@ -300,6 +303,30 @@ export default function TraineeViewMyCourse(props) {
           <BottomNavigationAction label="Subtitles" icon={<RestoreIcon />} />
           <BottomNavigationAction label="Exercises" icon={<FavoriteIcon />} />
         </BottomNavigation>
+
+        <div style={{marginLeft:"90%",marginTop:-48,marginBottom:3}}>
+        <Box sx={{ position: 'relative', display: 'inline-flex' }}>
+          <CircularProgress variant="determinate" value={70} size="6.5vh" />
+          <Box
+            sx={{
+              top: 0,
+              left: 0,
+              bottom: 0,
+              right: 0,
+              position: 'absolute',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <Typography variant="caption" component="div" color="text.secondary">
+              70%
+            </Typography>
+          </Box>
+        </Box>
+        </div>
+        
+        
       </div>
 
       <div className="content" style={{ height: '100%', width: '100%' }}>

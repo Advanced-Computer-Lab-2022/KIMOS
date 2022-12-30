@@ -23,6 +23,7 @@ import WatchVideo from './components/watchVideo';
 import PasswordReset from './components/passwordReset';
 import ViewInstructorProfile from './components/viewInstructorProfile';
 import HomeLand from './components/homeLand';
+
 import UserReports from './components/userReports';
 import AdminReports from './components/adminReports';
 import RequestCourseAccess from './components/requestCourseAccess';
@@ -34,8 +35,22 @@ import SignUpPage from './components/signUp';
 import Alert from './components/alert';
 import Auth from './components/auth';
 
+import PaymentLoading from './components/paymentLoading';
+import PaymentCancelled from './components/paymentCancelled';
+
+import PaymentPolicy from './components/paymentPolicy';
+import MyEnrolledCourses from './components/myEnrolledCourses';
+import RefundRequest from './components/refundRequest';
+import CourseGuestPage from './components/courseGuestPage';
+import UserPurchases from './components/userPurchases';
+import PopUp from './components/popUp';
+import MoneyOwedPerMonth from './components/moneyOwedPerMonth';
+
+
 
 import axios from 'axios';
+axios.defaults.withCredentials = true;
+axios.defaults.headers = 'Access-Control-Allow-Origin: http://localhost:3000/';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import { connect } from 'react-redux';
@@ -45,6 +60,13 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import TraineeExercise from './components/TraineeExercise';
 import TraineeSolution from './components/TraineeSolution';
 import TraineeViewCourseDetails from './components/traineeViewCourseDetails';
+import SignUp from './components/signup';
+import TakeNotes from './components/takeNotes2';
+
+axios.defaults.withCredentials = true;
+axios.defaults.headers = 'Access-Control-Allow-Origin: http://localhost:3000';
+axios.defaults.headers = 'Access-Control-Allow-Methods: GET, POST, PATCH, PUT, DELETE, OPTIONS';
+axios.defaults.headers = 'Access-Control-Allow-Headers: Origin, Content-Type, X-Auth-Token'
 
 import NotFoundPage from './components/notFoundPage';
 
@@ -130,6 +152,7 @@ class App extends Component {
               <Alert/>
               <Routes >
           
+
               <Route exact path="/" element={<HomeLand />}></Route>
               <Route exact path="/login" element={<LoginPage />}></Route>
               <Route exact path="/signUp" element={<SignUpPage />}></Route>

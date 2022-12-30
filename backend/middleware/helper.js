@@ -3,7 +3,9 @@ const User = require('../models/userModel');
 const registerUser = require('../models/registeredCoursesModel');
 const asyncHandler = require('express-async-handler');
 
-const isRegisteredToCourse = asyncHandler(async (req, res) => {
+
+const isRegisteredToCourse = asyncHandler(async (req, res,next) => {
+
   if (!res.locals.userId) {
     res.locals.registered = false;
     next();

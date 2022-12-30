@@ -2,10 +2,12 @@ import React, { Component } from 'react'
 import TextField from '@mui/material/TextField';
 import PrimaryButton from './buttons/primaryBtn';
 import { Link, redirect } from 'react-router-dom';
+
 import { setUser, showAlert } from '../redux/actions/index';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import LoadingPage from './loadingPage';
+
 
 class loginPage extends Component {
 
@@ -39,8 +41,10 @@ class loginPage extends Component {
       if(res.data.success === true){
         this.props.setUser(res.data.payload)
 
+
         this.redirect(res.data.payload.userType)
       }
+
 
       // this.setState({ instructor: info, new_instructor: info });
     } catch (e) {
@@ -121,4 +125,7 @@ const mapStateToProps = (state) => {
   
 
   
+
 export default connect(mapStateToProps, { setUser: setUser, showAlert:showAlert })(loginPage);
+
+

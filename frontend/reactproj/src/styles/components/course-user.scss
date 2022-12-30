@@ -94,6 +94,9 @@
             display: flex;
             flex-direction: column;
             justify-content: space-between;
+            margin-left:25px;
+            padding-top:10px;
+            padding-bottom:5px;
 
             &__title{
                 color: var(--primary-color);
@@ -104,7 +107,7 @@
                 //padding-left: 20px;
                 padding-right: 20px;
                 padding-top: 20px;
-
+                line-height: 1.5;
 
             }
             &__extras{
@@ -118,18 +121,24 @@
                 display: flex;
                 flex-direction: column;
                 align-items: flex-start;
+
                 &__hours{
                     margin-bottom: 3px;
+                    display:flex;
+                    column-gap:12px;
                 }
                 &__instructor{
                     margin-bottom: 3px;
+                    display:flex;
+                    column-gap:12px;
                 }
                 &__rating{
                     margin-bottom: 3px;
                     width: 100%;
-                    display: flex;
                     align-items: center;
                     font-weight: bold;
+                    display:flex;
+                    column-gap:12px;
 
                 }
 
