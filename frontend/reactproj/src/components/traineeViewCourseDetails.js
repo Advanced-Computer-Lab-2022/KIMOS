@@ -29,6 +29,7 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import TakeNotes from './takeNotes2';
 
 import PlayCircleFilledWhiteIcon from '@mui/icons-material/PlayCircleFilledWhite';
 
@@ -312,9 +313,17 @@ export default function TraineeViewMyCourse(props) {
   const subtitles = ()=>{
     return(
       <div className="my-course__subtitles">
-        <div className="my-course__subtitles__content">
-
+        <div className="my-course__subtitles__content" style={{ position:'relative'}}>
+        <div style={{
+          position:'absolute',
+          right:'20px',
+          top:'95%',
+          transform:'translate(0%,-100%)'
+          }}>
+          <TakeNotes videoId={video['_id']} courseId={props.course['_id']}/>
+        </div>
         <WatchVideo video={video}/>
+
         </div>
         <div className="my-course__subtitles__subtitles">
           <div style={{

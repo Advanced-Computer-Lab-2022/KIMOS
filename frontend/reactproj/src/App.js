@@ -197,6 +197,8 @@ class App extends Component {
               {this.routeTo3('/user/profile', <UserProfile />,'user')}
               {this.routeTo3('/user/courses', <MyEnrolledCourses />,'user')}
               {this.routeTo3('/user/myReports', <UserReports />,'user')}
+              {this.routeTo3('/user/purchases', <UserPurchases />,'user')}
+
               {this.routeTo3('/user/requestCourseAccess', <RequestCourseAccess />,'corporate trainee')}
               {this.routeTo3('/user/topCourses', <PopularCourses />,'user')}
               {this.routeTo3('/user/courses/:courseId', <TraineeViewMyCourse />,'user')}

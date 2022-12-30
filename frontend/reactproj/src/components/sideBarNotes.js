@@ -26,11 +26,10 @@ const Sidebar = ({
     const sortedNotes = notes.sort((a, b) => b.createdAt - a.createdAt);
   
     return (
-      <div className="notes-sidebar">
+      <div className="notes-sidebar" style={{width:'100%'}}>
         <div className="notes-sidebar-header">
             <div className="notes-sidebar-header-title">
             <h1>My notes</h1>
-            <PrimaryBtn btnText="Save" function={handleSave} ></PrimaryBtn>
             </div>
             <div>
             <IconButton className='sidebarBtn' onClick={downloadPdf} >

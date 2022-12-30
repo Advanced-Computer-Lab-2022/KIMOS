@@ -198,44 +198,32 @@ function TakeNotes2({videoId,courseId}) {
     const handleClickOpenNotes = ()=>{
         setNotesModal(true);
     }
-    const handleCloseNotes = (e, reason)=>{
-
-            // if (reason !== 'backdropClick') {
-                setNotesModal(false);
-
-
-            // }
+    const handleCloseNotes = ()=>{
+        setNotesModal(false);
 
     }
     return (
-        <div >
-            <SecondaryBtn btnText="Take notes"function={handleClickOpenNotes}/>
+        <div>
+            <Button variant="outlined" onClick={handleClickOpenNotes}>
+                Open draggable dialog
+            </Button>
             <Dialog
                 open={notesModal}
                 onClose={handleCloseNotes}
                 PaperComponent={PaperComponent}
                 aria-labelledby="draggable-dialog-title"
                 maxWidth='xs'
-                
-                sx={{
-                    maxHeight:'700px',
-                    backdropFilter: "none"
-                }}
-
             >
-                <DialogTitle style={{ color:'white',cursor: 'move', background:'var(--primary-color)' }} id="draggable-dialog-title">
+                <DialogTitle style={{ cursor: 'move' }} id="draggable-dialog-title">
                     Your Notes
                 </DialogTitle>
                 <DialogContent>
                     {modalContent()}
                 </DialogContent>
                 <DialogActions>
-
-
-                <SecondaryBtn btnText="Cancel" function={handleCloseNotes}/>
-
-                <PrimaryBtn btnText="Save" function={handleSave} ></PrimaryBtn>
-
+                <Button autoFocus onClick={handleCloseNotes}>
+                    Cancel
+                </Button>
                 </DialogActions>
             </Dialog>
 

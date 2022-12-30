@@ -79,9 +79,13 @@ export default function Sidenav({userType}) {
         icon:<LibraryBooksIcon/>,
         href:'courses'},
     
-        {title:'My Reports',
+        {title:'Reports',
         icon:<GavelIcon/>,
         href:'myReports'},
+
+        {title:'Purchases',
+        icon:<PaidIcon/>,
+        href:'purchases'},
     
         ]
 

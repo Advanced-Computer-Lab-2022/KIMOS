@@ -13,6 +13,8 @@ import RefundRequest from '../components/refundRequest';
 import DisabledByDefaultIcon from '@mui/icons-material/DisabledByDefault';
 import Snackbar from '@mui/material/Snackbar';
 import MuiAlert from '@mui/material/Alert';
+import Loading from './loadingPage';
+
 import axios from 'axios';
 
 const Alert = React.forwardRef(function Alert(props, ref) {
@@ -46,15 +48,15 @@ function createData(title, date, price) {
 
 export default function UserPurchases() {
   const [myPurchases, setMyPurchases] = useState([]);
-
+  const [loading, setLoading] = useState(true);
   const getPurchases = async () => {
-    await axios.post('http://localhost:5000/login',{username:"individual",password:"individual123"})
 
+    setLoading(true);
     await axios
       .get('http://localhost:5000/users/registeredInvoices')
         .then((result) => {
-        console.log(result.data.payload.invoices);
-        console.log("here");
+          setLoading(false);
+
         setMyPurchases(result.data.payload.invoices);
       });
   };
@@ -88,8 +90,9 @@ export default function UserPurchases() {
     };
 
   return (
-    <div style={{display:"flex",flexDirection:"column",justifyContent:"center",alignItems:"center",marginTop:30}}>
+    <div style={{position:'relative',display:"flex",flexDirection:"column",justifyContent:"center",alignItems:"center",marginTop:30}}>
       <h1 style={{color:"var(--primary-color)"}}>My Purchases</h1>
+      {loading && <Loading/>}
       <TableContainer component={Paper} style={{margin:"auto",width:"75%",marginTop:50}}>
         <Table aria-label="customized table">
           <TableHead>

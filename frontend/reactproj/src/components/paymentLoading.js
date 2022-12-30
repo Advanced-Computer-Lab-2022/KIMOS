@@ -4,7 +4,7 @@ import {Stack} from '@mui/material';
 import { useEffect } from 'react';
 import axios from 'axios';
 
-const paymentLoading = () => {
+const PaymentLoading = () => {
 
 
     useEffect(()=>{
@@ -16,7 +16,7 @@ const paymentLoading = () => {
         .catch((e)=>{
             console.log(e);
         })
-    })
+    },[])
 
     return (  
         <Stack sx={{display:"flex",justifyContent:"center",alignItems: "center"}} spacing={2}>
@@ -26,4 +26,4 @@ const paymentLoading = () => {
     );
 }
  
-export default paymentLoading;
+export default PaymentLoading;

@@ -38,3 +38,31 @@
         }
     }
 }
+
+
+.my-modal-custom-class{
+    overflow-y: auto !important;
+    border-radius: 10px;
+    border: none;
+    background: var(--cool-grey) !important;
+
+}
+.flexible-modal-mask{
+    background: none !important;
+    
+}
+.flexible-modal-drag-area{
+    background: var(--primary-color)!important;
+    height: 20px !important;
+}
+
+
+.override{
+    border: 10px solid red;
+    .css-yiavyu-MuiBackdrop-root-MuiDialog-backdrop{
+        background: none !important;
+    }
+}
+.css-yiavyu-MuiBackdrop-root-MuiDialog-backdrop{
+    background: none !important;
+}
