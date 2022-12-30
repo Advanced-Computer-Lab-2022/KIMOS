@@ -19,6 +19,8 @@ const {
   getRequests
 } = require('../controllers/userController');
 
+const {getAllRatings} = require('../controllers/ratingController');
+
 const {
   adminAuth,
   loggedIn,
@@ -80,5 +82,5 @@ router.post(
 ); //all good
 router.post('/accessStatus', loggedIn, adminAuth, changeAccessStatus, registerUser); //all good
 router.get('/requests', loggedIn, adminAuth, getRequests); //all good
-router.get('/registeredInvoices', loggedIn, individualAuth, getAllRegisteredInvoices);
+router.get('/registeredInvoices', loggedIn, individualAuth, getAllRegisteredInvoices); //// all good
 module.exports = router;
