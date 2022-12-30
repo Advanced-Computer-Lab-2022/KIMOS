@@ -74,9 +74,12 @@ const createCourse = asyncHandler(async (req, res) => {
 });
 
 const findCourses = asyncHandler(async (req, res) => {
-  const resultsPerPage = req.query.resultsPerPage || 10;
+  var resultsPerPage = req.query.resultsPerPage || 10;
   var courses = [];
   const instructorId = req.query.instructorSearch ? res.locals.userId : -1;
+  if(req.query.instructorSearch){
+    resultsPerPage = 100; // just to fix the issue for now.
+  }
   let page = req.query.page ? req.query.page : 1;
   const keyword = req.query.keyword || '';
   page = page >= 1 ? page - 1 : page;

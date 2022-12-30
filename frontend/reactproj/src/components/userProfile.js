@@ -11,7 +11,7 @@ import WhatshotIcon from '@mui/icons-material/Whatshot';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
 import ReportIcon from '@mui/icons-material/Report';
 import SwitchAccessShortcutIcon from '@mui/icons-material/SwitchAccessShortcut';
-
+import {showAlert} from '../redux/actions';
 import {connect} from 'react-redux';
 
 import axios from 'axios';
@@ -48,7 +48,7 @@ class UserProfile extends Component {
     this.toggleEditing();
   };
   save = async () => {
-    console.log(this.state.new_instructor);
+
     this.setState({ instructor: this.state.new_instructor });
     this.updateUserInfo();
     this.toggleEditing();
@@ -87,7 +87,12 @@ class UserProfile extends Component {
           headers: { 'Access-Control-Allow-Origin': '*' }
         }
       );
-      console.log(res);
+
+        if(res.data.success)
+          this.props.showAlert({shown:true, message:'Updated your Info',severity:'success'})
+        else
+          this.props.showAlert({shown:true, message:'Couldnt Update your Info',severity:'error'})
+
     } catch (e) {
       console.log(e);
     }
@@ -204,7 +209,7 @@ class UserProfile extends Component {
 
           
         </div>
-        <div className="instructor-profile__content__reviews" style={{ width:'50%'}}>
+        {this.props.user.userType!=='corporate trainee'&& <div className="instructor-profile__content__reviews" style={{ width:'50%'}}>
         <div className="instructor-profile__content__reviews__header">My Wallet</div>
         <div className="instructor-profile__content__reviews__comments" >
             <div className="wallet" style={{ width:'100%'}}>
@@ -219,7 +224,7 @@ class UserProfile extends Component {
             </div>
         </div>
 
-      </div>
+      </div>}
         </div>
       </div>
     );
@@ -236,4 +241,4 @@ const mapStateToProps = (state) => {
 
 
 
-export default connect(mapStateToProps)(UserProfile);
+export default connect(mapStateToProps, {showAlert})(UserProfile);

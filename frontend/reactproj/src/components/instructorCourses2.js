@@ -7,12 +7,15 @@ import InstructorCourse from './instructorCourse';
 import Loading from './loadingPage';
 import Stack from '@mui/material/Stack';
 import Switch from '@mui/material/Switch';
+import DisplaySettingsIcon from '@mui/icons-material/DisplaySettings';
+import {showAlert} from '../redux/actions';
+import {connect} from 'react-redux';
 
 import axios from 'axios';
 
 
 
-export default function InstructorCourses2() {
+function InstructorCourses2(props) {
 
 const [rows, setRows] = React.useState([]);
 const [drawer, setDrawer] = React.useState(false);
@@ -27,7 +30,8 @@ const columns = [
     flex: 0.05,
     minWidth: 40,
     align:'center',
-    headerAlign:'center'
+    headerAlign:'center',
+    hide:true
   },
   { field: 'title', headerName: 'Course Name',
     flex: 1,
@@ -82,6 +86,23 @@ const columns = [
     align:'center',
     headerAlign:'center'
   },
+  {
+    field: 'details',
+    headerName: 'Course Details',
+    renderCell: rowData => {
+
+      return ( <div style={{
+        cursor:'pointer',
+
+      }} onClick={()=>{showCourse(rowData)}}><DisplaySettingsIcon style={{color:'var(--primary-color)'}}/></div>)
+ },
+    flex: 0.5,
+    minWidth: 40,
+    align:'center',
+    headerAlign:'center'
+  },
+
+  //onRowClick = {showCourse}
 
 ];
 
@@ -89,16 +110,29 @@ const columns = [
 const handleSwitchChange = async (e, id) =>{
   console.log('hi hi hi');
   console.log(e.target.checked)
+  var res;
+  try{
+    if(!e.target.checked){
+      res = await axios.post("http://localhost:5000/courses/close?courseId="+id)
 
-  if(!e.target.checked){
-    const res = await axios.post("http://localhost:5000/courses/close?courseId="+id)
-    console.log(res);
+    }
+  
+    else {
+      res = await axios.patch("http://localhost:5000/courses?courseId="+id)
+    }
+    if(res.data.success)
+      props.showAlert({shown:true, message:'Updated your course Visibility',severity:'success'})
+    else
+      props.showAlert({shown:true, message:'Couldnt Update your course Visibility',severity:'error'})
+
+
+  }catch(e){
+
+    var mssg = e.response.data.message? e.response.data.message[Object.keys(e.response.data.message)[0]] :'Couldnt Update your course Visibility2'
+    props.showAlert({shown:true, message:mssg,severity:'error'})
+
   }
 
-  else {
-    const res = await axios.patch("http://localhost:5000/courses?courseId="+id)
-    console.log(res);
-  }
   getInstructorCourses();
 
 }
@@ -117,12 +151,16 @@ React.useEffect(() => {
   }, []);
 
   const getInstructorCourses = async () => {
-    console.log('getting')
+
+    setLoading(true);
+    setRows([]);
+
+
     try {
       const res = await axios.get(`http://localhost:5000/courses/?instructorSearch=true`, {
         headers: { 'Access-Control-Allow-Origin': '*' }
       });
-      console.log(res)
+
       setRows(res.data.payload);
       setLoading(false);
     } catch (e) {
@@ -158,9 +196,7 @@ React.useEffect(() => {
             <DataGrid
                 rows={rows}
                 columns={columns}
-                pageSize={10}
-                rowsPerPageOptions={[10]}
-                // onRowClick = {showCourse}
+                autoPageSize pagination 
                 getRowId = {(row)=>{return row['_id']}}
                 disableSelectionOnClick
                 disableColumnSelector
@@ -174,9 +210,14 @@ React.useEffect(() => {
             sx: { width: "80%" },
           }}
     >
-            <InstructorCourse course={displayedCourse}/>
+            <InstructorCourse onClose={toggleDrawer} course={displayedCourse}/>
     </Drawer>
     </div>
 
   );
 }
+
+
+
+export default connect(null, {showAlert})(InstructorCourses2);
+

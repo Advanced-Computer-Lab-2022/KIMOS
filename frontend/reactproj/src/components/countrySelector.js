@@ -5,7 +5,7 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import Modal from '@mui/material/Modal';
 import axios from 'axios';
-import { setRate } from '../redux/actions/index';
+import { setRate, showAlert } from '../redux/actions/index';
 import { connect } from 'react-redux';
 
 // From https://bitbucket.org/atlassian/atlaskit-mk-2/raw/4ad0e56649c3e6c973e226b7efaeb28cb240ccb0/packages/core/select/src/data/countries.js
@@ -451,6 +451,9 @@ function CountrySelect(props) {
   const [open, setOpen] = React.useState(false);
   const [firstRender, setFirstRender] = React.useState(true);
 
+
+
+
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
@@ -507,10 +510,20 @@ function CountrySelect(props) {
     const body = { newCountry: newCountry };
 
     try {
-      await axios.put('http://localhost:5000/users/country', body, {
+      const res = await axios.put('http://localhost:5000/users/country', body, {
         headers: { 'Access-Control-Allow-Origin': '*' }
       });
-    } catch (e) {}
+      if(res.data.success)
+        props.showAlert({shown:true, message:'Updated your country',severity:'success'})
+      else{
+        props.showAlert({shown:true, message:'Couldnt Update your country',severity:'error'})
+
+      }
+
+    } catch (e) {
+      props.showAlert({shown:true, message:'Couldnt Update your country',severity:'error'})
+
+    }
   };
 
   const changeCountry = (event, value) => {
@@ -571,6 +584,7 @@ function CountrySelect(props) {
           }}
         />
         {modal()}
+
       </div>
     );
 }
@@ -581,7 +595,7 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps, { setRate: setRate })(CountrySelect);
+export default connect(mapStateToProps, { setRate: setRate, showAlert })(CountrySelect);
 
 // <img
 // loading="lazy"

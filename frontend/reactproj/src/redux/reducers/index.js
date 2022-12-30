@@ -39,9 +39,11 @@ const userType = (type='Any', action) => {
     return type;
 }
 
-const user = (user={username:"",userType:"",userEmail:"", userId:""}, action) => {
+const user = (user={username:"emptyasf",userType:"",userEmail:"", userId:""}, action) => {
     if(action.type === 'LOG_IN'){
-        console.log(action.payload)
+        console.log('payload');
+
+        console.log(action.payload);
         return action.payload;
     }
     return user;
@@ -59,6 +61,18 @@ const primaryColor = (primaryColor="#D80621", action) => {
 
 
 
+const alert = (alert={shown:false, message:'', severity:'info'}, action) => {
+
+    if(action.type === 'SHOW_ALERT'){   
+        console.log(action.payload);
+        return action.payload;
+    }
+    if(action.type === 'CLOSE_ALERT')
+        return {shown:false, message:alert.message, severity:alert.severity}
+    return alert
+}
+
+
 
 
 
@@ -69,7 +83,8 @@ export default combineReducers({
     rateAndSymbol:rateAndSymbol,
     userType:userType,
     user:user,
-    primaryColor:primaryColor
+    primaryColor:primaryColor,
+    alert: alert
 
 
 });

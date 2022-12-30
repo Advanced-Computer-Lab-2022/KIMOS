@@ -73,18 +73,12 @@ class navbar extends Component {
             </div>
         )
     }
-    changeUserType = (e)=>{
 
-        this.props.setUserType(e.target.value);
-    }
-    logOut = ()=>{
-        this.props.setUser({username:"",userType:""})
-    }
     handleLogout = async()=>{
-        console.log('logging out')
+
         try{
             const res = await axios.post("http://localhost:5000/logout");
-            console.log(res)
+
 
             if(res.data.success){
                 this.props.setUser({username:"",userType:""});
@@ -101,7 +95,7 @@ class navbar extends Component {
         
     }
     actions = [
-        { icon: <Person2Icon />, name: 'Profile', function: ()=>{ window.location.href = '/user'} },
+        { icon: <Person2Icon />, name: 'Profile', function: ()=>{ window.location.href = '/'+this.props.user.userType+'/profile'} },
         { icon: <LogoutIcon />, name: 'Logout',  function: ()=>{ this.handleLogout()} },
 
       ];

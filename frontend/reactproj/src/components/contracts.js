@@ -3,7 +3,10 @@ import SecondaryBtn from './buttons/secondaryBtn';
 import PrimaryBtn from './buttons/primaryBtn';
 import Button from '@mui/material/Button';
 import axios from 'axios';
-export default class Contracts extends Component {
+import {showAlert} from '../redux/actions';
+import {connect} from 'react-redux';
+
+class Contracts extends Component {
     componentDidMount(){
         this.getContractStatus();
     }
@@ -22,6 +25,11 @@ export default class Contracts extends Component {
           });
           this.setState({status: false});
 
+          if(res.status === 200)
+            this.props.showAlert({shown:true, message:res.data.message,severity:'success'})
+          else
+            this.props.showAlert({shown:true, message:'Couldnt Update your Info',severity:'error'})
+
         } catch (e) {
 
 
@@ -37,6 +45,11 @@ export default class Contracts extends Component {
             headers: { 'Access-Control-Allow-Origin': '*' }
           });
           this.setState({status: true});
+          if(res.status === 200)
+            this.props.showAlert({shown:true, message:res.data.message,severity:'success'})
+          else
+            this.props.showAlert({shown:true, message:'Couldnt Update your Info',severity:'error'})
+
         } catch (e) {
 
 
@@ -114,3 +127,7 @@ export default class Contracts extends Component {
     )
   }
 }
+
+
+
+export default connect(null, {showAlert})(Contracts);

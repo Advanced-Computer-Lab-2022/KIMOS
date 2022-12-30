@@ -11,6 +11,8 @@ import VideoCallIcon from '@mui/icons-material/VideoCall';
 import VideocamIcon from '@mui/icons-material/Videocam';
 import AddToPhotosIcon from '@mui/icons-material/AddToPhotos';
 import PostAddIcon from '@mui/icons-material/PostAdd';
+import {showAlert} from '../redux/actions';
+import {connect} from 'react-redux';
 
 import axios from 'axios';
 
@@ -106,9 +108,9 @@ class instructorCourse extends Component {
                             Hour(s)
                         </div>
                     </div>
-                    <div style={{display:'flex', alignItems:'center', cursor:'pointer'}} onClick={this.createExam} >
+                    <div style={{display:'flex', alignItems:'center', cursor:'pointer'}} onClick={()=>{this.createExam('subtitle')}} >
                         <PostAddIcon style={{cursor:'pointer',fontSize:'40px', fontWeight:'bolder', color:'var(--primary-color)'}}/>
-                        <div style={{fontWeight:'lighter', fontSize:'20px'}}>Crate Quiz</div>
+                        <div style={{fontWeight:'lighter', fontSize:'20px'}}>Create Quiz</div>
                     </div>
                 </div>
 
@@ -245,11 +247,20 @@ class instructorCourse extends Component {
           const res = await axios.put('http://localhost:5000/courses?courseId='+ this.state.course['_id'],course, {
             headers: {  }
           });
-          
-            console.log(res);
-   
+          console.log(res);
+        if(res.data.success){
+            this.props.showAlert({shown:true, message:'Updated your Course',severity:'success'})
+
+            this.props.onClose()
+        }
+        else
+          this.props.showAlert({shown:true, message:'Couldnt Update your Course',severity:'error'})
+
+        
         } catch (e) {
-            console.log(e);
+
+          this.props.showAlert({shown:true, message:'Couldnt Update your Course',severity:'error'})
+
 
         }
       };
@@ -272,8 +283,18 @@ class instructorCourse extends Component {
         this.setState({updated:true, discountFlag:true, displayedEndDate:newValue});
 
     };
-    createExam = ()=>{
-        window.location.href = '/instructor/createQuiz?courseId='+this.props.course['_id'];
+    createExam = (type)=>{
+        if(type === 'course'){
+            const courseId = this.props.course['_id'];
+            window.location.href = '/instructor/createQuiz?courseId='+courseId;
+        }
+        else{
+            const courseId = this.props.course['_id'];
+            const subtitleId = this.state.currentSubtitle['_id'];
+            console.log(courseId);
+            console.log(subtitleId);
+            window.location.href = '/instructor/createQuiz?courseId='+courseId+'&subtitleId='+subtitleId;
+        }
     }
 
 
@@ -356,9 +377,9 @@ class instructorCourse extends Component {
                         </div>       
                         <div className='instructorCourse-drawer__options__option__sub-header' style={{marginBottom:'10px',marginTop:'10px'}}>
                             <TextField onChange={this.updatePreviewLink} value={course.preview} label="Videl URL" variant="outlined" />
-                            <div style={{display:'flex', alignItems:'center', cursor:'pointer'}} onClick={this.createExam} >
+                            <div style={{display:'flex', alignItems:'center', cursor:'pointer'}} onClick={()=>{this.createExam('course')}} >
                                 <PostAddIcon style={{cursor:'pointer',fontSize:'40px', fontWeight:'bolder', color:'var(--primary-color)'}}/>
-                                <div style={{fontWeight:'lighter', fontSize:'20px'}}>Crate Final Exam</div>
+                                <div style={{fontWeight:'lighter', fontSize:'20px'}}>Create Final Exam</div>
                             </div>
                         </div>   
                                     
@@ -443,4 +464,5 @@ class instructorCourse extends Component {
     }
 }
 
-export default instructorCourse;
+export default connect(null, {showAlert})(instructorCourse);
+

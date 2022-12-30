@@ -28,9 +28,8 @@ import MuiAlert from '@mui/material/Alert';
 
 import axios from 'axios';
 
-const Alert = React.forwardRef(function Alert(props, ref) {
-    return <MuiAlert  ref={ref} variant="filled" {...props} />;
-  });
+import {showAlert} from '../redux/actions';
+import {connect} from 'react-redux';
 
   
 const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
@@ -99,7 +98,44 @@ function ColorlibStepIcon(props) {
   );
 }
 
-export default class NewCreateCourse extends Component {
+class NewCreateCourse extends Component {
+    getSubjects = async ()=>{
+        const res = await axios.get('http://localhost:5000/courses/subjects');
+
+        if(res.data.success){
+            var subjects = [];
+            res.data.payload.forEach((subjectObj)=>{
+                subjects.push(subjectObj.name)
+            })
+
+            var course = this.state.course;
+            course.subject = subjects[0];
+            this.setState({subjects:subjects,course:course})
+            console.log(res);
+        }
+
+    }
+
+    validateCourse = ()=>{
+        //validate all essential info exists
+        //course name, course subject, summary and price
+        var flag = true;
+        if(this.state.course.title) flag = false;
+        if(this.state.course.subject) flag = false;
+        if(this.state.course.summary) flag = false;
+        if(this.state.course.price) flag = false;
+
+        return flag;
+
+    }
+    submitCourse = ()=>{
+        if(this.validateCourse()){
+            this.createCourse();
+        }
+        else{
+            this.props.showAlert({shown:true, message:'Missing essential info',severity:'error'})
+        }
+    }
     createCourse = async () => {
 
        const res = await axios.post('http://localhost:5000/courses',
@@ -109,10 +145,17 @@ export default class NewCreateCourse extends Component {
             }
           )
           
-        console.log(res);
+        if(res.data.success)
+          this.props.showAlert({shown:true, message:'Updated your Info',severity:'success'})
+        else
+          this.props.showAlert({shown:true, message:'Couldnt Update your Info',severity:'error'})
+
       };
-    
+    componentDidMount(){
+        this.getSubjects();
+    }
     state = {
+        subjects:[],
         pageName:'Course Info',
         currentStep: 0,
         currentSubtitleIndex:0,
@@ -146,15 +189,14 @@ export default class NewCreateCourse extends Component {
             rating: 0,
             totalHours: '',
             discount: '',
-            subject: 'Computer',
-            instructor: 'instructor_id',
+            subject: 'Math' ,
             exercises: []
         }
     }
     steps = [
         'Course Info',
         'Subtitles',
-        'Final Info',
+        'Summary & Price',
       ];
 
     handleBack = ()=>{
@@ -163,7 +205,7 @@ export default class NewCreateCourse extends Component {
     handleNext = ()=>{
         if(this.state.currentStep === 2){
             console.log(this.state.course);
-            this.createCourse();
+            this.submitCourse();
         }
         else{
             this.setState({currentStep: this.state.currentStep + 1 >2 ? 2 : this.state.currentStep + 1 })
@@ -204,13 +246,19 @@ export default class NewCreateCourse extends Component {
                 labelId="demo-simple-select-label"
                 id="subject"
                 value={this.state.course.subject}
+
+
                 label="Subject"
                 name='subject'
                 onChange={this.handleChange}
                 >
-                <MenuItem value={'Computer'}>Computer</MenuItem>
-                <MenuItem value={'Math'}>Math</MenuItem>
-                <MenuItem value={'Operating Systems'}>OS</MenuItem>
+                {this.state.subjects.map((subject)=>{
+
+                    return (
+                        <MenuItem value={subject}>{subject}</MenuItem>
+                    )
+                })}
+
                 </Select>
             </FormControl>
         </div>
@@ -416,3 +464,10 @@ export default class NewCreateCourse extends Component {
     )
   }
 }
+
+
+
+
+
+
+export default connect(null, {showAlert})(NewCreateCourse);

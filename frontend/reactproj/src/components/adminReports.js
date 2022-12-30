@@ -32,8 +32,11 @@ import ClearIcon from '@mui/icons-material/Clear';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import IconButton from '@mui/material/IconButton';
 
+import {showAlert} from '../redux/actions';
+
 
 class adminReports extends Component {
+    bottomRef = React.createRef();
     getReports = async ()=>{
         this.setState({loading: true})
         const res = await axios.get("http://localhost:5000/users/report");
@@ -119,6 +122,7 @@ class adminReports extends Component {
             flex: 0.15,
             minWidth: 40,
             align:'center',
+            hide:true,
             headerAlign:'center',
             renderCell: rowData => {
   
@@ -223,8 +227,17 @@ class adminReports extends Component {
         )
       }
     sendRes = async (status, id)=>{
-        const res = await axios.post("http://localhost:5000/users/accessStatus?requestId="+id,{newState:status})
-        console.log(res);
+        try{
+            const res = await axios.post("http://localhost:5000/users/accessStatus?requestId="+id,{newState:status})
+            if(res.data.success)
+                this.props.showAlert({shown:true, message:'Updated successfully',severity:'success'})
+            else
+                this.props.showAlert({shown:true, message:'Couldnt Update',severity:'error'})
+        }catch(e){
+            this.props.showAlert({shown:true, message:'Couldnt Update',severity:'error'})
+
+        }
+
       }
     state = {
         loading: true,
@@ -262,10 +275,23 @@ class adminReports extends Component {
     handleSwitchChange = async (e, id) =>{
         this.setState({loading:true});
         var status = e.target.checked ? "resolved":"pending";
+        try{
         const res = await axios.put("http://localhost:5000/users/report?reportId="+id,{
                 newStatus:status
         })
+        if(res.data.success)
+            this.props.showAlert({shown:true, message:'Updated successfully',severity:'success'})
+        else
+            this.props.showAlert({shown:true, message:'Couldnt Update',severity:'error'})
         this.getReports();
+        this.setState({loading:false});
+
+        }catch(e){
+            this.setState({loading:false});
+
+            this.props.showAlert({shown:true, message:'Couldnt Update',severity:'error'})
+        }
+
 
     }
     sendMssg = ()=>{
@@ -280,29 +306,53 @@ class adminReports extends Component {
         })
 
         
-        // nMssgs.push({user:'user',mssg:this.state.textInput})
-        // this.setState({mssgs:nMssgs}, ()=>{
-        //     this.setState({textInput:''})
-        // })
+     
     }
 
     sendMssgAPI = async (message)=>{
         var data = {messages:[]}
         data.messages.push(message);
-        const res = await axios.patch("http://localhost:5000/users/report?reportId="+this.state.currentReport["_id"],data)
+        try{
+            const res = await axios.patch("http://localhost:5000/users/report?reportId="+this.state.currentReport["_id"],data)
+            if(res.data.success)
+                this.props.showAlert({shown:true, message:'Sent',severity:'info'})
+            else
+                this.props.showAlert({shown:true, message:'Couldnt send',severity:'error'})
+
+            this.scrollToBottom();
+        }catch(e){
+            this.props.showAlert({shown:true, message:'Couldnt send',severity:'error'})
+
+        }
 
     }
+
+
+    scrollToBottom = ()=>{
+        console.log('scrolled');
+        console.log(this.bottomRef)
+        this.bottomRef.current?.scrollIntoView({ behavior: 'smooth' })
+                      
+    }
+
     getMessages = ()=>{
 
-        return this.state.currentReport.messages.map((mssg)=>{
+        return this.state.currentReport.messages.map((mssg,index)=>{
             var classNameType = mssg.userType==='administrator'?'mssg user-mssg':'mssg admin-mssg';
             var classFloat = mssg.userType==='administrator'?'mssg__content-user':'mssg__content-admin';
         
         
         var avatar = mssg.userType === "administrator" ? (<Avatar sx={{ width: 30, height: 30 , marginRight:'10px',bgcolor: deepOrange[500] }} src={erenSmiling}/>):(<Avatar sx={{width: 30, height: 30, marginRight:'10px', bgcolor: deepPurple[500] }} src={andrew}/>);
-            return ( 
-                <div className={classNameType}><div className={classFloat}>{avatar}{mssg.message}</div></div>
-            )
+            if(index+1 === this.state.currentReport.messages.length) return ( 
+                <div  className={classNameType}>
+                    <div className={classFloat}>{avatar}{mssg.message}</div>
+                    <div ref={this.bottomRef} />
+                    
+                </div>
+            )  
+            else{
+                return  <div className={classNameType}><div className={classFloat}>{avatar}{mssg.message}</div></div>
+            }
         })
     }
     getRefundContent = ()=>{
@@ -341,6 +391,7 @@ class adminReports extends Component {
                         <div className='chat-container__title' style={{color:"var(--primary-color)"}}>{this.state.currentReport.title}</div>
                         <div className='chat-container__chat'>
                             {this.getMessages()}
+                            
                         </div>
                         {this.state.currentReport.status !=='resolved' && <div className='chat-container__bottom'>
                             <div className='chat-container__bottom__text'>
@@ -419,4 +470,4 @@ const mapStateToProps = (state) => {
     };
   };
   
-export default connect(mapStateToProps)(adminReports);
+export default connect(mapStateToProps, {showAlert})(adminReports);

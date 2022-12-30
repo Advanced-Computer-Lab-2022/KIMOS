@@ -9,6 +9,8 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import TextField from '@mui/material/TextField';
 import Loading from './loadingPage';
+import {showAlert} from '../redux/actions';
+import {connect} from 'react-redux';
 
 
 import axios from 'axios';
@@ -80,7 +82,7 @@ const columns = [
 
 
 
-export default function AddPromotions() {
+function AddPromotions(props) {
 
 const [rows, setRows] = React.useState([]);
 const [selectedRows, setSelectedRows] = React.useState([]);
@@ -109,6 +111,7 @@ React.useEffect(() => {
   }, []);
 
   const getInstructorCourses = async () => {
+    setLoading(true)
 
     try {
       const res = await axios.get(`http://localhost:5000/courses/`, {
@@ -140,10 +143,25 @@ React.useEffect(() => {
 
     console.log(data);
 
+    try{
+      const res = await axios.post("http://localhost:5000/courses/promotion", data);
 
-    const res = await axios.post("http://localhost:5000/courses/promotion", data);
+      if(res.data.success){
+        props.showAlert({shown:true, message:'Added promotions successfully',severity:'success'})
+        setSelectedRows([])
+        getInstructorCourses()
+        setDrawer(false);
+      }
+      else
+        props.showAlert({shown:true, message:'Couldnt add promotions',severity:'error'})
 
-    console.log(res);
+    }catch(e){
+      props.showAlert({shown:true, message:'Couldnt add promotions',severity:'error'})
+
+
+    }
+
+
 
   }
 
@@ -264,3 +282,6 @@ React.useEffect(() => {
 
   );
 }
+
+
+export default connect(null, {showAlert})(AddPromotions);

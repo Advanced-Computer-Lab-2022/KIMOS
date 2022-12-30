@@ -15,12 +15,16 @@ import ClearIcon from '@mui/icons-material/Clear';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import IconButton from '@mui/material/IconButton';
 import Badge from '@mui/material/Badge';
+
+import {showAlert} from '../redux/actions';
+import {connect} from 'react-redux';
+
 import axios from 'axios';
 
 
 
 
-export default function AdminCourseReqs() {
+function AdminCourseReqs(props) {
 
   const columns = [
 
@@ -99,8 +103,21 @@ const [displayedCourse, setDisplayedCourse] = React.useState({});
 
 
 const sendRes = async (status, id)=>{
-  const res = await axios.post("http://localhost:5000/users/accessStatus?requestId="+id,{newState:status})
-  console.log(res);
+  try{
+    const res = await axios.post("http://localhost:5000/users/accessStatus?requestId="+id,{newState:status})
+
+    if(res.data.success){
+      props.showAlert({shown:true, message:'Submitted your action',severity:'success'})
+      getInstructorCourses();
+    }
+    else
+      props.showAlert({shown:true, message:'Couldnt submit your action',severity:'error'})
+
+  }catch(e){
+    props.showAlert({shown:true, message:'Couldnt submit your action',severity:'error'})
+
+  }
+
 }
 
 const CorrectActionBtn = (rowData)=>{
@@ -286,3 +303,5 @@ React.useEffect(() => {
 
   );
 }
+
+export default connect(null, {showAlert})(AdminCourseReqs);

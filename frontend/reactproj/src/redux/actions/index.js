@@ -49,3 +49,20 @@ export const changeColor = (color) =>{
         payload:{color}
     }
 }
+
+
+export const showAlert = (obj) =>{
+
+    return {
+        type:'SHOW_ALERT',
+        payload:obj
+    }
+}
+
+
+export const closeAlert = () =>{
+
+    return {
+        type:'CLOSE_ALERT',
+    }
+}

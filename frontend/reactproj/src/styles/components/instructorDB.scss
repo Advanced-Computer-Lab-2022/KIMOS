@@ -2,7 +2,7 @@
     position: relative;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content:center;
     &__container{
         display: flex;
         align-items: center;
@@ -57,3 +57,5 @@
 .instructorDB__container__option:active{
     transform: translate(0, 1vh);
 }
+
+

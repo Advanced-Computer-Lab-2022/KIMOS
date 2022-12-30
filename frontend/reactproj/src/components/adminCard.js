@@ -45,15 +45,15 @@ function adminCard(props) {
             value={props.selectedItem}
             label="User Type"
             onChange={props.handleItemChange}>
-            <MenuItem value={'Adminstrator'}>Adminstrator</MenuItem>
-            <MenuItem value={'Instructor'}>Instructor</MenuItem>
-            <MenuItem value={'Corporate Trainee'}>Corporate Trainee</MenuItem>
+            <MenuItem value={'administrator'}>Adminstrator</MenuItem>
+            <MenuItem value={'instructor'}>Instructor</MenuItem>
+            <MenuItem value={'corporate trainee'}>Corporate Trainee</MenuItem>
           </Select>
         </FormControl>
         <TextField
           sx={{ display: 'flex', justifyContent: 'center', marginTop: '15px' }}
           required
-          id="Username"
+          id="username"
           label="Username"
           size="medium"
           variant="outlined"
@@ -63,10 +63,11 @@ function adminCard(props) {
         <TextField
           sx={{ display: 'flex', justifyContent: 'center', marginTop: '15px' , marginBottom: '15px' }}
           required
-          id="Password"
+          id="password"
           label="Password"
           size="medium"
           variant="outlined"
+          type="password"
           onChange={props.functionOnChange}
         />
 

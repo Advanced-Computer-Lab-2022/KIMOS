@@ -9,6 +9,9 @@ import PrimaryBtn from './buttons/primaryBtn';
 import TextField from '@mui/material/TextField';
 import axios from 'axios';
 
+import {showAlert} from '../redux/actions';
+import {connect} from 'react-redux';
+
 class InstructorProfile extends Component {
   state = {
     editing: false,
@@ -89,6 +92,12 @@ class InstructorProfile extends Component {
         }
       );
       console.log(res);
+
+      if(res.data.success)
+        this.props.showAlert({shown:true, message:'Updated your Info',severity:'success'})
+      else
+        this.props.showAlert({shown:true, message:'Couldnt Update your Info',severity:'error'})
+
     } catch (e) {
       console.log(e);
     }
@@ -212,4 +221,12 @@ class InstructorProfile extends Component {
   }
 }
 
-export default InstructorProfile;
+
+
+
+
+
+export default connect(null, {showAlert})(InstructorProfile);
+
+
+

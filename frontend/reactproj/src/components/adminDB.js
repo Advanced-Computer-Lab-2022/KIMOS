@@ -1,9 +1,14 @@
 import React, { Component } from 'react'
 import GavelIcon from '@mui/icons-material/Gavel';
 import MenuBookIcon from '@mui/icons-material/MenuBook';
-import UploadIcon from '@mui/icons-material/Upload';
-import QuizIcon from '@mui/icons-material/Quiz';
 import PersonIcon from '@mui/icons-material/Person';
+
+import Linegraph from './charts/linechart';
+import Piegraph from './charts/piechart';
+import PiegraphS from './charts/piechartS';
+
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+
 
 export default class AdminDB extends Component {
   makeCard = (icon, text, url)=>{
@@ -15,26 +20,31 @@ export default class AdminDB extends Component {
     )
   }
 
+
+  makeGraphCard = (title, graph)=>{
+   return(
+    <div className='graph-card'>
+      <div className='graph-card__title'>{title}</div>
+      <div className='graph-card__chart'>{graph}</div>
+    </div>
+
+
+   )
+
+  }
   changeHref = (link) =>{
   
-    window.location.href = '/admin/'+link;
+    window.location.href = '/administrator/'+link;
   }
   // {this.makeCard(<QuizIcon className='instructorDB__container__option__icon'/>, 'Create A Quiz','createQuiz')}
 
   render() {
 
     return (
-      <div className='instructorDB'>
-
-        <div className='instructorDB__container'>
-            {this.makeCard(<PersonIcon className='instructorDB__container__option__icon'/>, 'Add Users','addUsers')}
-            {this.makeCard(<GavelIcon className='instructorDB__container__option__icon'/>, 'Check Reports', 'reports')}
-            {this.makeCard(<MenuBookIcon className='instructorDB__container__option__icon'/>, 'Check Courses Requests', 'courseRequests')}
-            {this.makeCard(<MenuBookIcon className='instructorDB__container__option__icon'/>, 'Add Promotions', 'promotions')}
-
-
-        </div>
-      
+      <div className='adminDB'>
+            {this.makeGraphCard('Total Users Types', <Piegraph/>)}
+            {this.makeGraphCard('Total Subjects ', <PiegraphS/>)}
+            {this.makeGraphCard('Last 7 Days Activities', <Linegraph/>)}
       </div>
     )
   }
