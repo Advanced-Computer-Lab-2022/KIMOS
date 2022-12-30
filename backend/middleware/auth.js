@@ -6,8 +6,6 @@ const asyncHandler = require('express-async-handler');
 
 const loggedIn = (req, res, next) => {
   const token = req.cookies.jwt;
-  console.log(token);
-  console.log(req.query);
 
   if (token) {
     jwt.verify(token, process.env.JWT_SECRET, (err, decodedToken) => {
@@ -105,13 +103,10 @@ const resetPasswordAuth = asyncHandler(async (req, res, next) => {
 
 const registerCourseAuth = asyncHandler(async (req, res, next) => {
   const { token } = req.query;
-  console.log(token);
-  console.log(req.query);
+
   jwt.verify(token, process.env.PAYMENT_SECRET, (err, decodedToken) => {
-    // console.log(decodedToken.userId);
-    // console.log(decodedToken.courseId);
     if (err) {
-      console.log(err);
+
       res.status(401).json({
         statusCode: 401,
         success: false,
@@ -161,6 +156,8 @@ const editCourseAuth = asyncHandler(async (req, res, next) => {
   }
 });
 
+
+
 const seePublicCourseAuth = asyncHandler(async (req, res, next) => {
   const userId = res.locals.userId.toString();
   const courseInfo = await Course.findById(req.query.courseId);
@@ -172,10 +169,12 @@ const seePublicCourseAuth = asyncHandler(async (req, res, next) => {
         success: false,
         message: 'Cannot access courses that are not public'
       });
+
   } else {
     next();
   }
 });
+
 
 const editPublicCourseAuth = asyncHandler(async (req, res, next) => {
   const userId = res.locals.userId.toString();
@@ -186,6 +185,7 @@ const editPublicCourseAuth = asyncHandler(async (req, res, next) => {
     res.status(401).json({ statusCode: 401, success: false, message: 'Unauthorized access' });
   }
 });
+
 module.exports = {
   loggedIn,
   adminAuth,
@@ -199,4 +199,6 @@ module.exports = {
   individualAuth,
   corporateAuth,
   seePublicCourseAuth
+
 };
+

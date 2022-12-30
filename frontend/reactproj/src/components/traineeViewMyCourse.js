@@ -37,7 +37,7 @@ export default function TraineeViewMyCourse() {
       })
       .then((course) => {
         console.log(course.data);
-        setMyCourse(course.data);
+        setMyCourse(course.data.payload);
       });
   };
 

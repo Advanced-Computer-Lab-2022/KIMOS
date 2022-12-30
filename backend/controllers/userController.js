@@ -65,13 +65,15 @@ const login = asyncHandler(async (req, res) => {
         expiresIn: '1h'
       });
       res.cookie('jwt', token, { httpOnly: true, maxAge: 1 * 60 * 60 * 1000 });
-      console.log(token);
+
       if (user.userType !== 'administrator') {
         res.status(200).json({
           success: true,
           statusCode: 200,
           message: 'Logged in Successfully',
-          payload: { userType: user.userType, firstLogIn: user.firstLogIn }
+
+          payload: {userId:user['_id'],username:user.username, email:user.email ,userType: user.userType, firstLogIn: user.firstLogIn }
+
         });
       } else {
         res.status(200).json({
@@ -180,6 +182,7 @@ const getMe = asyncHandler(async (req, res) => {
     statusCode: 200,
     payload: {
       _id: user._id,
+      username: user.username,
       firstName: user.firstName,
       lastName: user.lastName,
       rating: user.rating,
@@ -275,13 +278,17 @@ const addUser = asyncHandler(async (req, res) => {
 const rateInstructor = asyncHandler(async (req, res) => {
   const userId = res.locals.userId;
   const { instructorId } = req.query;
+
   const { rating , review} = req.body;
+
   var newRating = 0;
   const ratedInstructor = await User.findById(instructorId);
   const check = await viewRating(userId, instructorId);
   const currRating = ratedInstructor.rating;
   if (check) {
+
     await updateRating(userId, instructorId, rating,review);
+
     newRating =
       (currRating.value * currRating.numberOfRatings - check.rating + rating) /
       currRating.numberOfRatings;
@@ -289,7 +296,9 @@ const rateInstructor = asyncHandler(async (req, res) => {
       rating: { value: newRating, numberOfRatings: currRating.numberOfRatings }
     });
   } else {
+
     await createRating(userId, instructorId, rating,review);
+
     newRating =
       (currRating.value * currRating.numberOfRatings + rating) / (currRating.numberOfRatings + 1);
     await User.findByIdAndUpdate(instructorId, {
@@ -334,6 +343,7 @@ const resetPasswordSendEmail = asyncHandler(async (req, res) => {
     } else {
       console.log('Email sent successfully');
       res.status(200).json({ statusCode: 200, success: true, message: 'success' });
+
     }
   });
 });
@@ -350,6 +360,7 @@ const resetPassword = asyncHandler(async (req, res) => {
   } else {
     res.status(401);
     throw new Error('Token timed out!');
+
   }
   if (user) {
     res
@@ -508,6 +519,36 @@ const getRequests = asyncHandler(async (req, res) => {
     statusCode: 200
   });
 });
+
+const changeAccessStatus = async (req, res, next) => {
+  const { requestId } = req.query;
+  const { newStatus } = req.body;
+  const request = await Request.findByIdAndDelete(requestId);
+  res.locals.courseId = request.courseId;
+  const courseInfo = await Course.findById(res.locals.courseId);
+  if (newStatus === 'accepted') {
+    next();
+  } else {
+    await addNotification(
+      request.userId,
+      `Your request to access course ${courseInfo.title} has been rejected. You can file a report and speak to an administrator if further assistance is needed.`
+    );
+    res
+      .status(200)
+      .json({ message: 'Status Updated successfully', success: true, statusCode: 200 });
+  }
+};
+
+const getRequests = async (req, res) => {
+  const { requestType } = req.query;
+  const courseRequests = await Request.find({ requestType: requestType })
+  res.status(200).json({
+    message: 'Requests fetched successfully',
+    success: true,
+    payload: courseRequests,
+    statusCode: 200
+  });
+};
 
 module.exports = {
   signUp,

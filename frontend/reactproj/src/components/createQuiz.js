@@ -9,6 +9,8 @@ import InputAdornment from '@mui/material/InputAdornment';
 import FormControl from '@mui/material/FormControl';
 import Visibility from '@mui/icons-material/Visibility';
 import CheckIcon from '@mui/icons-material/Check';
+import {showAlert} from '../redux/actions';
+import {connect} from 'react-redux';
 import axios from 'axios';
 
 //array of objects
@@ -21,34 +23,86 @@ import axios from 'axios';
 // import Button from '@mui/material/Button';
 // import Typography from '@mui/material/Typography';
 
-export default class createQuiz extends Component {
+class createQuiz extends Component {
   // steps = ['Write Your Question', 'Create an ad group', 'Create an ad'];
   showQuiz = () => {
-    this.submitQuiz();
+    var validationResult = this.validateQuiz();
+    console.log(validationResult)
+    if(validationResult === -1){
+      this.props.showAlert({shown:true, message:'Make sure all questions are written',severity:'error'})
+
+    }
+    if(validationResult === -2){
+      this.props.showAlert({shown:true, message:'Make sure all questions have a correct answer',severity:'error'})
+    }
+
+    if(validationResult === 0){
+      this.submitQuiz();
+    }
   };
+  validateQuiz = ()=>{
+    var result = 0;
+    if(this.state.questions.length === 1 && this.state.questions[0].question===''){
+      result = -1;
+    } 
+
+    //check all questions not empty
+    this.state.questions.forEach((question)=>{
+      if(question.question === '')
+      result =  -1;
+    })
+
+    //check all questions got a correct answer
+    this.state.questions.forEach((question)=>{
+      if(question.answer === -1){
+        result =  -2;
+      }
+
+    })
+    return result;
+  }
   submitQuiz = async () => {
     const queryParams = new URLSearchParams(window.location.search);
     const courseId = queryParams.get('courseId');
+    var url = 'http://localhost:5000/courses/exam?courseId='+courseId;
+
+    var data = {
+      exam : { title: 'Final Exam',
+      exercises: this.state.questions}
+    }
+    if(queryParams.get('subtitleId')){
+      console.log("submitting a subtitel quiz")
+      data['subtitleId'] = queryParams.get('subtitleId');
+      url = 'http://localhost:5000/courses/subtitle/quiz?courseId='+courseId+'&subtitleId='+ queryParams.get('subtitleId');
+    }else{
+      console.log("subbm final exam")
+    }
+
 
     try {
       const res = await axios.post(
-        'http://localhost:5000/courses/exam?user[userId]=638117c243cba3f0babcc3a9',
-        {
-          courseId: courseId,
-          exercises: this.state.questions
-        },
+        url,
+        data,
         {
           headers: { 'Access-Control-Allow-Origin': '*' }
         }
       );
-
-      console.log(res);
+        if(res.data.success){
+          this.props.showAlert({shown:true, message:'Created your exam',severity:'success'})
+          window.location.href = '/instructor';
+        }
+        else{
+          this.props.showAlert({shown:true, message:'Couldnt create the exam',severity:'error'})
+        }
+      // console.log(res);
     } catch (e) {
-      console.log(e);
+
+      var mssg = e.response.data.message? e.response.data.message :'Couldnt Update your course Visibility2'
+      this.props.showAlert({shown:true, message:mssg,severity:'error'})
     }
   };
   state = {
-    questions: [{ id: 0, question: '', choices: [], answer: 1 }],
+    questions: [{ id: 0, question: '', choices: [], answer: -1 }],
     currentQ: 0,
     lastQ: 1
   };
@@ -68,7 +122,7 @@ export default class createQuiz extends Component {
       c2: '',
       c3: '',
       c4: '',
-      answer: 1
+      answer: -1
     });
     this.setState({ questions: tmp, currentQ: this.state.lastQ, lastQ: this.state.lastQ + 1 });
   };
@@ -109,8 +163,8 @@ export default class createQuiz extends Component {
           onChange={this.handleChange}
           endAdornment={
             <InputAdornment position="end">
-              <IconButton edge="end" onClick={() => this.correctChoice(index)}>
-                <CheckIcon style={{ color: correct ? 'green' : 'grey' }} />
+              <IconButton style={{ backgroundColor: correct ? '#339966' : 'var(--cool-grey)' }} edge="end" onClick={() => this.correctChoice(index)}>
+                <CheckIcon style={{ color: correct? 'white':'grey' }} />
               </IconButton>
             </InputAdornment>
           }
@@ -134,6 +188,7 @@ export default class createQuiz extends Component {
             multiline
             rows={4}
             fullWidth
+            required
           />
         </div>
         <div className="create-quiz__questions__question__choices">
@@ -158,3 +213,7 @@ export default class createQuiz extends Component {
     );
   }
 }
+
+
+
+export default connect(null, {showAlert})(createQuiz);

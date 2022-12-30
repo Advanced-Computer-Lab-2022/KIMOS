@@ -1,6 +1,7 @@
 const mongoose = require('mongoose'); // Erase if already required
 
 // Declare the Schema of the Mongo model
+
 var registeredCoursesSchema = new mongoose.Schema(
   {
     userId: {
@@ -53,6 +54,7 @@ var registeredCoursesSchema = new mongoose.Schema(
     timestamps: true
   }
 );
+
 
 //Export the model
 module.exports = mongoose.model('RegisteredCourses', registeredCoursesSchema);

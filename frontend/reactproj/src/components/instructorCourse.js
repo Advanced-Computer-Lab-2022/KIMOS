@@ -7,6 +7,13 @@ import SecondaryBtn from './buttons/secondaryBtn';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import VideoCallIcon from '@mui/icons-material/VideoCall';
+import VideocamIcon from '@mui/icons-material/Videocam';
+import AddToPhotosIcon from '@mui/icons-material/AddToPhotos';
+import PostAddIcon from '@mui/icons-material/PostAdd';
+import {showAlert} from '../redux/actions';
+import {connect} from 'react-redux';
+
 import axios from 'axios';
 
 
@@ -15,8 +22,9 @@ class instructorCourse extends Component {
 
     state = {
         course:{},
-        currentSubtitle:{video:{}},
+        currentSubtitle:{videos:[{}]},
         currentSIndex:0,
+        currentSubtitleVideo:0,
         displayedStartDate:new Date(),
         displayedEndDate:new Date(),
         discountFlag: false,
@@ -47,13 +55,13 @@ class instructorCourse extends Component {
 
     updateSubVideoDesc = (e)=>{
         var subtitle = {...this.state.currentSubtitle};
-        subtitle.video.description = e.target.value;
+        subtitle.videos[this.state.currentSubtitleVideo].description = e.target.value;
         this.updateAnySub(subtitle);
 
     }
     updateSubVideoLink = (e)=>{
         var subtitle = {...this.state.currentSubtitle};
-        subtitle.video.link = e.target.value;
+        subtitle.videos[this.state.currentSubtitleVideo].link = e.target.value;
         this.updateAnySub(subtitle);
         
     }
@@ -86,7 +94,7 @@ class instructorCourse extends Component {
         var subtitle = this.state.currentSubtitle;
 
         return(
-            <div className='subtitle'>
+            <div className='subtitle' style={{ width:'100%'}}>
                 <div className='subtitle__header'>
                     
                     <TextField id={subtitle.title + '1'} onChange={this.updateSubTitle} value={subtitle.title} label="Subtitle Title" variant="outlined" />
@@ -95,22 +103,33 @@ class instructorCourse extends Component {
 
                 <div className='subtitle__info'>
                     <div className='subtitle__info__value' style={{display:'flex',alignItems:'center'}}>
-                        <TextField id={this.state.course.title+'1'} onChange={this.updateSubHours} value={subtitle.hours} label="Subtitles Hour(s)" variant="outlined" />
+                        <TextField id={this.state.course.title+'1'} value={subtitle.hours} label="Subtitles Hour(s)" variant="outlined" readOnly/>
                         <div style={{color:'grey', marginLeft:'5px'}}>
                             Hour(s)
                         </div>
                     </div>
+                    <div style={{display:'flex', alignItems:'center', cursor:'pointer'}} onClick={()=>{this.createExam('subtitle')}} >
+                        <PostAddIcon style={{cursor:'pointer',fontSize:'40px', fontWeight:'bolder', color:'var(--primary-color)'}}/>
+                        <div style={{fontWeight:'lighter', fontSize:'20px'}}>Create Quiz</div>
+                    </div>
                 </div>
 
+
+
+                <div className='subtitles-display' style={{ width:'100%'}}>
+                    <VideoCallIcon onClick={this.addVideo} style={{cursor:'pointer',fontSize:'40px', fontWeight:'bolder', color:'var(--primary-color)'}}/> 
+
+                    {this.displayVideos()}
+                </div>
                 <div className='subtitle__info'>
                     <div className='subtitle__info__key'>
-                        <TextField id={this.state.course.title+'0'} onChange={this.updateSubVideoLink} value={subtitle.video.link} label="Video URL" variant="outlined" />
+                        <TextField id={this.state.course.title+'0'} onChange={this.updateSubVideoLink} value={subtitle.videos[this.state.currentSubtitleVideo].link} label="Video URL" variant="outlined" />
                     </div>
                 </div>
 
                 <div className='subtitle__info'>
-                    <div className='subtitle__info__key' style={{width:'100%'}}>
-                        <TextField id={this.state.course.title+'2'} onChange={this.updateSubVideoDesc} value={subtitle.video.description} label="Video Description" variant="outlined" multiline rows={3} fullWidth />
+                    <div className='subtitle__info__key' style={{width:'80%'}}>
+                        <TextField id={this.state.course.title+'2'} onChange={this.updateSubVideoDesc} value={subtitle.videos[this.state.currentSubtitleVideo].description} label="Video Description" variant="outlined" multiline rows={3} fullWidth />
                     </div>
                 </div>
             </div>
@@ -122,7 +141,20 @@ class instructorCourse extends Component {
     changeSubtitle = (index)=>{
         var newSubtitle = this.state.course.subtitles[index] ? this.state.course.subtitles[index]: this.props.course.subtitles[0];
         var currentSIndex = this.state.course.subtitles[index] ? index : 0;
-        this.setState({updated:false, currentSubtitle:newSubtitle,currentSIndex:currentSIndex});
+        this.setState({updated:false, currentSubtitle:newSubtitle,currentSIndex:currentSIndex, currentSubtitleVideo:0});
+    }
+    addVideo = ()=>{
+        var newVideosIndex = (this.state.course.subtitles[this.state.currentSIndex].videos).length;
+        var newVideo = {link:'',description:'', hours:0.9};
+        var currentVids = [...this.state.course.subtitles[this.state.currentSIndex].videos];
+        currentVids.push(newVideo);
+        var newSubtitle = {...this.state.course.subtitles[this.state.currentSIndex]};
+        newSubtitle.videos = currentVids;
+        var newCourse = {...this.state.course};
+        newCourse.subtitles[this.state.currentSIndex] = newSubtitle;
+        this.setState({course:newCourse,currentSubtitle:newSubtitle ,currentSubtitleVideo:newVideosIndex}, ()=>{
+            console.log(newCourse);
+        })
     }
     addSubtitle = ()=>{
 
@@ -131,18 +163,34 @@ class instructorCourse extends Component {
             title:'',
             hours:0,
             preview:'',
-            video:{
+            videos:[{
                 link:'',
-                description:''
-            }
+                description:'',
+                hours:0.9
+            }]
         }
         var currentSubs = [...this.state.course.subtitles];
         currentSubs.push(newSubtitle);
         var newCourse = {...this.state.course};
         newCourse.subtitles = currentSubs;
-        // this.changeSubtitle(newSubIndex);
-        this.setState({course:newCourse,currentSubtitle:newSubtitle ,currentSIndex:newSubIndex, updated:true})
+        this.setState({course:newCourse,currentSubtitle:newSubtitle ,currentSIndex:newSubIndex, updated:true,  currentSubtitleVideo:0})
     }
+
+    changeVideo = (index)=>{this.setState({currentSubtitleVideo: index})}
+    displayVideos = ()=>{
+        if(this.state.course && this.state.course.subtitles && this.state.course.subtitles[this.state.currentSIndex].videos ){
+
+            var vids = this.state.course && this.state.course.subtitles && this.state.course.subtitles[this.state.currentSIndex].videos 
+            return vids&&vids.map((video, index)=>{
+    
+                 return(
+                     <div id={index} className= {`subtitleD ${this.state.currentSubtitleVideo === index? 'selected-subtitle':''}`} onClick={() => {this.changeVideo(index)}}>
+                        <VideocamIcon />{'Video '+(index+1)}
+                     </div>
+                 )
+             })
+        }
+     }
     displaySubtitles = ()=>{
         return this.state.course.subtitles&&this.state.course.subtitles.map((subtitle, index)=>{
 
@@ -154,6 +202,8 @@ class instructorCourse extends Component {
          })
      }
     
+
+ 
     generateGraphData = ()=>{
 
 
@@ -166,17 +216,14 @@ class instructorCourse extends Component {
         // console.log(this.currentSubtitle);
         // console.log(this.state.course.discount);
         // console.log(this.state.course.preview);
+        console.log(this.state.course)
         var toBeSubmitted = {}
         toBeSubmitted.discountFlag = this.state.discountFlag;
         toBeSubmitted.courseId = this.state.course['_id'];
         toBeSubmitted.course = this.state.course;
         if(this.state.discountFlag){
-            console.log("discount flag working")
-            if(this.state.course.discount.amount > 0){
-            console.log("discount flag working for bigger than 0")
-            console.log(this.state.displayedStartDate);
-            console.log(this.state.displayedEndDate);
 
+            if(this.state.course.discount.amount > 0){
 
                 toBeSubmitted.course.discount.duration = {};
                 toBeSubmitted.course.discount.duration.startDate = this.state.displayedStartDate;
@@ -193,17 +240,27 @@ class instructorCourse extends Component {
 
     }
 
-     
+    
+
     submitNewCourse = async (course) => {
         try {
-          const res = await axios.put('http://localhost:5000/courses/?user[userId]=638117c243cba3f0babcc3a9',course, {
-            headers: { 'Access-Control-Allow-Origin': '*' }
+          const res = await axios.put('http://localhost:5000/courses?courseId='+ this.state.course['_id'],course, {
+            headers: {  }
           });
-          
-            console.log(res);
-   
+          console.log(res);
+        if(res.data.success){
+            this.props.showAlert({shown:true, message:'Updated your Course',severity:'success'})
+
+            this.props.onClose()
+        }
+        else
+          this.props.showAlert({shown:true, message:'Couldnt Update your Course',severity:'error'})
+
+        
         } catch (e) {
-            console.log(e);
+
+          this.props.showAlert({shown:true, message:'Couldnt Update your Course',severity:'error'})
+
 
         }
       };
@@ -226,9 +283,22 @@ class instructorCourse extends Component {
         this.setState({updated:true, discountFlag:true, displayedEndDate:newValue});
 
     };
-    createExam = ()=>{
-        window.location.href = '/instructor/createQuiz?courseId='+this.props.course['_id'];
+    createExam = (type)=>{
+        if(type === 'course'){
+            const courseId = this.props.course['_id'];
+            window.location.href = '/instructor/createQuiz?courseId='+courseId;
+        }
+        else{
+            const courseId = this.props.course['_id'];
+            const subtitleId = this.state.currentSubtitle['_id'];
+            console.log(courseId);
+            console.log(subtitleId);
+            window.location.href = '/instructor/createQuiz?courseId='+courseId+'&subtitleId='+subtitleId;
+        }
     }
+
+
+
     displayDate = ()=>{
 
 
@@ -301,12 +371,21 @@ class instructorCourse extends Component {
                 <div className='instructorCourse-drawer__options'>
 
                     <div className='instructorCourse-drawer__options__option'>
+                    <div>
                         <div className='instructorCourse-drawer__options__option__sub-header'>
                             Course Preview URL
                         </div>       
                         <div className='instructorCourse-drawer__options__option__sub-header' style={{marginBottom:'10px',marginTop:'10px'}}>
                             <TextField onChange={this.updatePreviewLink} value={course.preview} label="Videl URL" variant="outlined" />
-                        </div>
+                            <div style={{display:'flex', alignItems:'center', cursor:'pointer'}} onClick={()=>{this.createExam('course')}} >
+                                <PostAddIcon style={{cursor:'pointer',fontSize:'40px', fontWeight:'bolder', color:'var(--primary-color)'}}/>
+                                <div style={{fontWeight:'lighter', fontSize:'20px'}}>Create Final Exam</div>
+                            </div>
+                        </div>   
+                                    
+                    </div>
+
+
                     </div>
                     <div className='instructorCourse-drawer__options__option'>
                         <div className='instructorCourse-drawer__options__option__sub-header'>
@@ -327,13 +406,11 @@ class instructorCourse extends Component {
                             <div>
                                 Subtitle(s)
                             </div>
-                            <div style={{display:'flex'}}>
-                                <SecondaryBtn function={this.createExam} btnText="Create Exam"/>
-                                <div className='date-picker__sep'/>
-                                <SecondaryBtn btnText='Add Subtitle' function={this.addSubtitle}/>
-                            </div>
+
                         </div>      
                         <div className='subtitles-display'>
+                            <AddToPhotosIcon onClick={this.addSubtitle} style={{cursor:'pointer',fontSize:'40px', fontWeight:'bolder', color:'var(--primary-color)'}}/> 
+
                             {this.displaySubtitles()} 
                         </div>
  
@@ -387,4 +464,5 @@ class instructorCourse extends Component {
     }
 }
 
-export default instructorCourse;
+export default connect(null, {showAlert})(instructorCourse);
+

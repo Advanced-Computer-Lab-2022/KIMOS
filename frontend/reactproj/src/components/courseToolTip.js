@@ -52,16 +52,16 @@ const courseDetails = (
       </Item>
       <Item>
         <strong>Subject : </strong>
-        {subject}
+        {subject.name}
       </Item>
-      <Item>
+      {price && <Item>
         <strong>Price : </strong>
         {stringPrice}
-      </Item>
-      <Item>
+      </Item>}
+      {discount && discount.amount && (<Item>
         <strong>Discount : </strong>
-        {discount}
-      </Item>
+        {discount.amount}
+      </Item>)}
       <Item>
         <strong>Total Hours : </strong>
         {totalHours}
@@ -100,7 +100,7 @@ function CustomizedTooltips(props) {
                 props,
                 course.title,
                 course.price,
-                course.discount.amount,
+                course.discount,
                 course.totalHours,
                 course.subtitles,
                 course.subject,
@@ -117,7 +117,8 @@ function CustomizedTooltips(props) {
 
 const mapStateToProps = (state) => {
   return {
-    rateAndSymbol: state.rateAndSymbol
+    rateAndSymbol: state.rateAndSymbol,
+    user: state.user
   };
 };
 

@@ -23,6 +23,7 @@ const getAllRegisteredCourses = asyncHandler(async (req, res) => {
       reg.map(async (course, index) => {
         //console.log(result.progress);
         var result = course.courseId;
+
         result = await result.populate('instructor', 'firstName lastName');
         result = await result.populate('subject');
         if (result.subtitles.length) {
@@ -100,10 +101,12 @@ const getAllRegisteredCourses = asyncHandler(async (req, res) => {
             })
           );
           const resSpread = { ...result };
+
           console.log(result.progress);
           if (resSpread._doc)
             result = { ...result.toObject(), exams: exams, progress: course.progress };
           else result = { ...result, exams: exams, progress: course.progress };
+
           return result;
         }
       })
@@ -235,16 +238,20 @@ const getAllRegisteredInvoices = asyncHandler(async (req, res) => {
       });
       var status;
       if (refundRequest) {
+
         status = 'pending';
+
       } else {
         status = refundable ? 'refund' : 'noRefund';
       }
       return {
+
         _id: registeredCourse.courseId,
         courseName: registeredCourseInvoiceCourseInfo.courseId.title,
         date: registeredCourse.createdAt,
         status: status,
         price: registeredCourseInvoice.invoice.payment
+
       };
     })
   );
@@ -354,12 +361,15 @@ const updateNotes = asyncHandler(async (req, res) => {
   res.status(200).json({ message: 'Notes updated successfully', statusCode: 200, success: true });
 });
 
+
 const viewMostPopularCourses = asyncHandler(async (req, res) => {
+
   const sortedByCountCourses = await RegisteredCourses.aggregate([
     { $sortByCount: '$courseId' },
     { $limit: 10 }
   ]);
   const courses = await Course.populate(sortedByCountCourses, '_id');
+
   const instructor_details = await User.populate(courses, '_id.instructor');
   const returnCourses = instructor_details.map((course, index) => {
     return {
@@ -371,6 +381,7 @@ const viewMostPopularCourses = asyncHandler(async (req, res) => {
         course._id.instructor.firstName +
         ' ' +
         course._id.instructor.lastName
+
     };
   });
   res.status(200).json({
@@ -379,7 +390,9 @@ const viewMostPopularCourses = asyncHandler(async (req, res) => {
     message: 'Fetched most popular courses successfully',
     payload: { returnCourses }
   });
+
 });
+
 
 module.exports = {
   registerUser,

@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import AdminCard from './adminCard.js';
+import {showAlert} from '../redux/actions';
+import {connect} from 'react-redux';
 import axios from 'axios';
 
-function Admin() {
+function Admin(props) {
   function handleChange(event) {
     var temp = user;
     temp[event.target.id] = event.target.value;
@@ -15,9 +17,27 @@ function Admin() {
     setUser(temp);
     console.log(user);
   }
-  const [user, setUser] = useState({ type: 'Adminstrator' });
-  function addAdmin() {
-    axios.post('http://localhost:5000/users/admin/addUser', user).then(() => {});
+  const [user, setUser] = useState({ type: 'administrator' });
+  async function addAdmin() {
+    try{
+      const res = await axios.post('http://localhost:5000/users', user);
+      if(res.data.success){
+        props.showAlert({shown:true, message:'Added this user',severity:'success'})
+        user.username = ''
+        user.password = ''
+      }
+      else
+         props.showAlert({shown:true, message:'Couldnt add this user',severity:'error'})   
+    }catch(e){
+      props.showAlert({shown:true, message:'Couldnt add this user',severity:'error'})   
+    }
+
+  }
+  const validateForm = ()=>{
+    if(user.Username !== '' &user.Password !=='')
+      addAdmin();
+    else 
+      props.showAlert({shown:true, message:'Complete your info',severity:'error'})
   }
   return (
     <div className="tmp-content">
@@ -26,24 +46,17 @@ function Admin() {
         header={`Create ${user.type} Account`}
         buttonName={`Add ${user.type}`}
         selectedItem={user.type}
-        functionOnClick={addAdmin}
+        functionOnClick={validateForm}
         functionOnChange={handleChange}
         handleItemChange={(e) => handleMenu(e)}
       />
-      {/* <AdminCard
-        header={'Create Instructor Account'}
-        buttonName={'Add Instructor'}
-        functionOnClick={addInstructor}
-        functionOnChange={handleChange}
-      />
-      <AdminCard
-        header={'Create Trainee Account'}
-        buttonName={'Add Trainee'}
-        functionOnClick={addCorporateTrainee}
-        functionOnChange={handleChange}
-      /> */}
+
+
     </div>
   );
 }
 
-export default Admin;
+
+
+
+export default connect(null, {showAlert})(Admin);

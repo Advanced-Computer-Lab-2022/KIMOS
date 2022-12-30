@@ -2,10 +2,12 @@ import React, { Component } from 'react'
 import TextField from '@mui/material/TextField';
 import PrimaryButton from './buttons/primaryBtn';
 import { Link, redirect } from 'react-router-dom';
-import { setUser } from '../redux/actions/index';
+
+import { setUser, showAlert } from '../redux/actions/index';
 import { connect } from 'react-redux';
 import axios from 'axios';
-//import LoadingPage from './loadingPage';
+import LoadingPage from './loadingPage';
+
 
 class loginPage extends Component {
 
@@ -17,6 +19,8 @@ class loginPage extends Component {
 
   }
   redirect = (userType) =>{
+
+
     var type = userType;
     if(userType === 'corporate trainee' || userType === 'individual trainee' )
       type = 'user'
@@ -36,7 +40,8 @@ class loginPage extends Component {
       //update the user if payload is success
       if(res.data.success === true){
         this.props.setUser(res.data.payload)
-        alert('logged in correctly')
+
+
         this.redirect(res.data.payload.userType)
       }
 
@@ -85,6 +90,7 @@ class loginPage extends Component {
     return (
       
       <div className="login-page">
+
         <div className='login-page__form'>
             <div className="login-page__form__left">
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean ac nulla fringilla sem lacinia commodo.
@@ -101,7 +107,7 @@ class loginPage extends Component {
                     </div>
                 </div>
                 <div style={{position:'absolute',bottom:0, right:0, padding:'10px'}}>
-                    <small style={{cursor:'pointer'}}>Sign Up?</small>
+                    <small style={{cursor:'pointer'}} onClick={()=>{window.location.href = '/signUp'}}>Sign Up?</small>
                 </div>
             </div>
 
@@ -119,4 +125,7 @@ const mapStateToProps = (state) => {
   
 
   
-export default connect(mapStateToProps, { setUser: setUser })(loginPage);
+
+export default connect(mapStateToProps, { setUser: setUser, showAlert:showAlert })(loginPage);
+
+

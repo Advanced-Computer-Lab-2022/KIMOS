@@ -74,9 +74,14 @@ const createCourse = asyncHandler(async (req, res) => {
 });
 
 const findCourses = asyncHandler(async (req, res) => {
-  const resultsPerPage = req.query.resultsPerPage || 10;
+
+  var resultsPerPage = req.query.resultsPerPage || 10;
   var courses = [];
   const instructorId = req.query.instructorSearch ? res.locals.userId : -1;
+  if(req.query.instructorSearch){
+    resultsPerPage = 100; // just to fix the issue for now.
+  }
+
   let page = req.query.page ? req.query.page : 1;
   const keyword = req.query.keyword || '';
   page = page >= 1 ? page - 1 : page;
@@ -301,17 +306,20 @@ const addDiscount = asyncHandler(async (req, res) => {
   const { courseId } = req.query;
   const { discount } = req.body;
   const { startDate, endDate } = discount.duration;
+
   var todayDate = new Date();
   if (todayDate > new Date(endDate)) {
     res.status(500);
     throw new Error("end date is not valid");
   }
+
   const startJob = schedule.scheduledJobs[courseId + 'start'];
   const endJob = schedule.scheduledJobs[courseId + 'end'];
   if (startJob) startJob.cancel();
   if (endJob) endJob.cancel();
+
   
-  await Course.findByIdAndUpdate(courseId, { discount: discount });
+  await Course.findByIdAndUpdate(courseId, { discount: {duration:discount.duration ,amount: parseInt(discount.amount)} });
   if (todayDate >= new Date(startDate)) {
     if (todayDate < new Date(endDate)) {
       schedule.scheduleJob(courseId + 'end', endDate, async function () {
@@ -376,6 +384,7 @@ const setCoursePromotion = async (req, res) => {
   res.status(200).json({ message: 'Discounts added successfully', statusCode: 200, success: true });
 };
 
+
 const coursePromotionHelper = asyncHandler(async (courseId, discount) => {
   const { startDate, endDate } = discount.duration;
   const startJob = schedule.scheduledJobs[courseId + 'start'];
@@ -383,7 +392,9 @@ const coursePromotionHelper = asyncHandler(async (courseId, discount) => {
   if (startJob) startJob.cancel();
   if (endJob) endJob.cancel();
   var todayDate = new Date();
-  await Course.findByIdAndUpdate(courseId, { discount: discount });
+
+  await Course.findByIdAndUpdate(courseId, { discount: {duration:discount.duration ,amount: parseInt(discount.amount)} });
+
   if (todayDate >= new Date(startDate)) {
     if (todayDate < new Date(endDate)) {
       schedule.scheduleJob(courseId + 'end', endDate, async function () {
@@ -436,7 +447,9 @@ const coursePromotionHelper = asyncHandler(async (courseId, discount) => {
 });
 
 const viewCourseTrainee = asyncHandler(async (req, res) => {
+
   const userId = res.locals.userId;
+
   const { courseId } = req.query;
   var courseInfo = await Course.findById(courseId);
   var examsArray = [];
@@ -445,6 +458,7 @@ const viewCourseTrainee = asyncHandler(async (req, res) => {
   if (res.locals.registered) {
     if (courseInfo.subtitles.length) {
       const courseSubtitles = await course.populate('subtitles');
+
       subtitlesArray = await Promise.all(
         courseSubtitles.subtitles.map(async (subtitle, index) => {
           if (subtitle.quizzes.length) {
@@ -489,6 +503,7 @@ const viewCourseTrainee = asyncHandler(async (req, res) => {
       );
     }
   
+
     if (courseInfo.exams.length) {
       examsArray = await Promise.all(
         courseInfo.exams.map(async (exam, index) => {
@@ -513,9 +528,11 @@ const viewCourseTrainee = asyncHandler(async (req, res) => {
     }
   }
   courseInfo = await courseInfo.populate('instructor', 'firstName lastName');
+
   courseInfo = await courseInfo.populate('subtitles', 'title hours');
   courseInfo = await courseInfo.populate('exams', 'title');
   console.log(new Date());
+
   res.status(200).json({
     _id: courseInfo._id,
     registered: res.locals.registered,
@@ -526,12 +543,15 @@ const viewCourseTrainee = asyncHandler(async (req, res) => {
     subject: courseInfo.subject,
     instructor: courseInfo.instructor,
     preview: courseInfo.preview,
+
     subtitles: subtitlesArray.length ? subtitlesArray : courseInfo.subtitles,
+
     summary: courseInfo.summary,
     averageRating: courseInfo.rating,
     exams: examsArray.length ? examsArray : courseInfo.exams
   });
 });
+
 
 const addExam = asyncHandler(async (req, res) => {
   const { courseId } = req.query;
@@ -545,6 +565,7 @@ const addExam = asyncHandler(async (req, res) => {
   });
   res.status(200).json({ success: true, statusCode: 200, message: 'Exam added successfully' });
 });
+
 
 const findExam = asyncHandler(async (req, res) => {
   const userId = res.locals.userId.toString();
@@ -618,6 +639,7 @@ const editCourse = asyncHandler(async (req, res) => {
         throw err;
       });
     }
+
   });
   subtitles = await Promise.all(
     course.subtitles.map(async (subtitle, index) => {
@@ -679,7 +701,9 @@ const makeCoursePublic = asyncHandler(async (req, res) => {
 
 const closeCourse = asyncHandler(async (req, res) => {
   const { courseId } = req.query;
+
   const courseInfo = await Course.findByIdAndUpdate(courseId, { visibility: 'Closed' });
+
   registered = await RegisteredCourse.find({ courseId: courseId });
   registered.map(async (registeredUser, index) => {
     await addNotification(
@@ -693,13 +717,17 @@ const closeCourse = asyncHandler(async (req, res) => {
 const rateCourse = asyncHandler(async (req, res) => {
   const userId = res.locals.userId;
   const { courseId } = req.query;
+
   const { rating,review } = req.body;
+
   var newRating = 0;
   const courseInfo = await Course.findById(courseId);
   const check = await viewRating(userId, courseId);
   const currRating = courseInfo.rating;
   if (check) {
+
     await updateRating(userId, courseId, rating,review).catch((err) => {
+
       throw err;
     });
     newRating =
@@ -709,7 +737,9 @@ const rateCourse = asyncHandler(async (req, res) => {
       rating: { value: newRating, numberOfRatings: currRating.numberOfRatings }
     });
   } else {
+
     await createRating(userId, courseId, rating,review).catch((err) => {
+
       throw err;
     });
     newRating =

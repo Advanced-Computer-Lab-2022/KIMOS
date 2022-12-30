@@ -1,0 +1,73 @@
+.addCourse{
+    position: relative;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    &__content{
+        height: 100%;
+        @include flex-center-all;
+        &__page-1{
+            position: relative;
+            border: 1px solid var(--primary-color);
+
+            padding-left: 15vw;
+            padding-right: 15vw;
+
+
+            width: 80%;
+            height: 50%;
+
+            display: flex;
+            align-items: center;
+
+            border-radius: 10px ;
+        }
+        &__page-2{
+            position: relative;
+
+            border: 1px solid var(--primary-color);
+
+            padding-left: 15vw;
+            padding-right: 15vw;
+
+            
+            width: 90%;
+            height: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+        }
+    }
+
+    &__footer{
+
+        display: flex;
+        justify-content: flex-end;
+        &__btns{
+            display: flex;
+            button{
+                margin-left:10px;
+            }
+        }
+    }
+}
+
+.page-name{
+    color: var(--primary-color);
+    font-weight: bolder;
+    font-size: 30px;
+    position: absolute;
+    left:3%;
+    top:10%;
+}
+.page-name-subtitle{
+    color: var(--primary-color);
+    font-weight: bolder;
+    font-size: 30px;
+    position: absolute;
+    left:3%;
+    top:3%;
+}

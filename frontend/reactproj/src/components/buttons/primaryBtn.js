@@ -9,6 +9,7 @@ export default class primaryBtn extends Component {
         <Button onClick={this.props.function} 
                 variant="contained"
                 size={this.props.btnSize }
+                disabled={this.props.disabled}
                 className="primary-btn">
           {this.props.btnText || 'None'}
         </Button>

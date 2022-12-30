@@ -16,7 +16,9 @@
             width: 80%;
             // background: linear-gradient(45deg, var(--primary-color-lighter), var(--secondary-color-lighter));
             // background: linear-gradient( 90deg, #3F0D12, #A71D31);
-            background: linear-gradient( 90deg, var(--primary-color), var(--primary-color));
+            // background: linear-gradient( 90deg, var(--primary-color), var(--primary-color));
+            background: linear-gradient(45deg, $primary-color-linear, $primary-color);
+
 
 
             color:white;

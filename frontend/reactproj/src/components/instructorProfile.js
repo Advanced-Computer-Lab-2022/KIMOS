@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import eren from '../assets/eren-yeager.png';
 import erenSmiling from '../assets/eren-smiliing.png';
+import Loading from './loadingPage';
 
 import Rating from '../components/rating';
 import SecondaryBtn from './buttons/secondaryBtn';
@@ -8,19 +9,23 @@ import PrimaryBtn from './buttons/primaryBtn';
 import TextField from '@mui/material/TextField';
 import axios from 'axios';
 
+import {showAlert} from '../redux/actions';
+import {connect} from 'react-redux';
+
 class InstructorProfile extends Component {
   state = {
     editing: false,
+    loading:true,
     instructor: {
-      username: 'Eren',
-      email: 'eren@topE.com',
-      bio: 'Instructor',
+      username: '',
+      email: '',
+      biography: '',
       password: ''
     },
     new_instructor: {
-      username: 'Eren',
-      email: 'eren@topE.com',
-      bio: 'Instructor',
+      username: '',
+      email: '',
+      biography: '',
       password: ''
     }
   };
@@ -47,40 +52,52 @@ class InstructorProfile extends Component {
   };
   getUserInfo = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/users/?userId=638117c243cba3f0babcc3a9', {
-        headers: { 'Access-Control-Allow-Origin': '*' }
-      });
+      const res = await axios.get('http://localhost:5000/users');
 
-      console.log(res);
-      var info = {
-        id: res.data['_id'] || 0,
-        username: res.data.username || '',
-        email: res.data.email || '',
-        bio: res.data.biography || '',
-        password: res.data.password || '',
-        rating: res.data.rating.value || 1
-      };
-      this.setState({ instructor: info, new_instructor: info });
+      if(res.data.success === true){
+        var info = {
+          id: res.data.payload['_id'] || 0,
+          username: res.data.payload.username || 'not yet',
+          email: res.data.payload.email || '',
+          biography: res.data.payload.biography || '',
+          password: res.data.payload.password || '',
+          rating: res.data.payload.rating.value || 1
+        };
+        this.setState({ instructor: info, new_instructor: info }, ()=>{this.setState({loading:false})});
+      }
+
     } catch (e) {
       console.log(e);
     }
   };
   updateUserInfo = async () => {
     try {
+      var obj ={}
+      if(this.state.new_instructor.username !== ''){
+        obj['username'] = this.state.new_instructor.username;
+      }
+      if(this.state.new_instructor.email !== ''){
+        obj['email'] = this.state.new_instructor.email;
+      }
+      if(this.state.new_instructor.biography !== ''){
+        obj['biography'] = this.state.new_instructor.biography;
+      }
+      if(this.state.new_instructor.password !== ''){
+        obj['password'] = this.state.new_instructor.password;
+      }
       const res = await axios.put(
-        'http://localhost:5000/users',
-        {
-          userId: this.state.instructor['id'],
-          username: this.state.new_instructor.username,
-          email: this.state.new_instructor.email,
-          biography: this.state.new_instructor.bio,
-          password: this.state.new_instructor.password
-        },
+        'http://localhost:5000/users',obj,
         {
           headers: { 'Access-Control-Allow-Origin': '*' }
         }
       );
       console.log(res);
+
+      if(res.data.success)
+        this.props.showAlert({shown:true, message:'Updated your Info',severity:'success'})
+      else
+        this.props.showAlert({shown:true, message:'Couldnt Update your Info',severity:'error'})
+
     } catch (e) {
       console.log(e);
     }
@@ -110,6 +127,7 @@ class InstructorProfile extends Component {
   render() {
     return (
       <div className="instructor-profile">
+        {this.state.loading && <Loading/>}
         <div className="instructor-profile__header">
           <img src={eren} alt="profile" />
           <div className="instructor-profile__header__pp">
@@ -152,7 +170,7 @@ class InstructorProfile extends Component {
           </div>
           <div className="instructor-profile__data__footer">
             {!this.state.editing && (
-              <div className="instructor-profile__data__bio">{this.state.instructor.bio}</div>
+              <div className="instructor-profile__data__bio">{this.state.instructor.biography}</div>
             )}
 
             {this.state.editing && (
@@ -167,12 +185,12 @@ class InstructorProfile extends Component {
                 />
 
                 <TextField
-                  id="bio"
+                  id="biography"
                   style={{ width: '100%', marginTop: '20px' }}
                   multiline
                   rows={3}
                   onChange={this.handleChange}
-                  value={this.state.new_instructor.bio}
+                  value={this.state.new_instructor.biography}
                   label="Bio"
                   variant="outlined"
                 />
@@ -203,4 +221,12 @@ class InstructorProfile extends Component {
   }
 }
 
-export default InstructorProfile;
+
+
+
+
+
+export default connect(null, {showAlert})(InstructorProfile);
+
+
+

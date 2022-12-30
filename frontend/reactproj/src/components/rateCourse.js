@@ -8,9 +8,9 @@ const rate = ({id}) => {
     const [rating,setRating] = useState(null);
 
 
-    const handleChange = (event,newRating)=>{
+    const handleChange  = async (event,newRating)=>{
         
-        axios.post(`http://localhost:5000/courses/rate?id=${id}`,{rating:newRating}).then(()=>{
+        await axios.post(`http://localhost:5000/courses/rate?id=${id}`,{rating:newRating}).then(()=>{
             setRating(newRating);
         })
     }

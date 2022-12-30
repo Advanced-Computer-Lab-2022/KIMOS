@@ -4,6 +4,8 @@ import useStyles from '../styles/styles.scss';
 import {Link} from 'react-router-dom';
 import Courses from '../components/showCourse/showCourse.js';
 import CreateCourse from '../components/createCourse/createCourse.js';
+import {showAlert} from '../redux/actions';
+import {connect} from 'react-redux';
 
 class instructor extends Component {
     render() {
@@ -36,4 +38,4 @@ class instructor extends Component {
     }
 }
 
-export default instructor;
+export default connect(null, {showAlert})(instructor);
