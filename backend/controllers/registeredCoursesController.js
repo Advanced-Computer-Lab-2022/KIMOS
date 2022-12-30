@@ -1,7 +1,7 @@
 const RegisteredCourses = require('../models/registeredCoursesModel');
 const Course = require('../models/courseModel');
 const User = require('../models/userModel');
-const Request = require("../models/requestModel");
+const Request = require('../models/requestModel');
 const Subtitle = require('../models/subtitleModel');
 const Video = require('../models/videoModel');
 const { getSolution } = require('./userSolutionController');
@@ -255,8 +255,6 @@ const getAllRegisteredInvoices = asyncHandler(async (req, res) => {
   });
 });
 
-
-
 const getAllNotesAndUpdateProgress = asyncHandler(async (req, res) => {
   const userId = res.locals.userId;
   const { courseId, videoId } = req.query;
@@ -361,10 +359,17 @@ const viewMostPopularCourses = async (req, res) => {
     { $limit: 10 }
   ]);
   const courses = await Course.populate(sortedByCountCourses, '_id');
+  const instructor_details = await User.populate(courses, '_id.instructor');
   const returnCourses = courses.map((course, index) => {
     return {
       _id: course._id._id,
-      title: course._id.title
+      title: course._id.title,
+      price: course._id.price,
+      rating: course._id.rating,
+      instructor:
+        instructor_details._id.instructor.firstName +
+        ' ' +
+        instructor_details._id.instructor.lastName
     };
   });
   res.status(200).json({
