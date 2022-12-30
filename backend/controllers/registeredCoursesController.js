@@ -354,7 +354,7 @@ const updateNotes = asyncHandler(async (req, res) => {
   res.status(200).json({ message: 'Notes updated successfully', statusCode: 200, success: true });
 });
 
-const viewMostPopularCourses = async (req, res) => {
+const viewMostPopularCourses = asyncHandler(async (req, res) => {
   const sortedByCountCourses = await RegisteredCourses.aggregate([
     { $sortByCount: '$courseId' },
     { $limit: 10 }
@@ -379,7 +379,7 @@ const viewMostPopularCourses = async (req, res) => {
     message: 'Fetched most popular courses successfully',
     payload: { returnCourses }
   });
-};
+});
 
 module.exports = {
   registerUser,

@@ -20,6 +20,8 @@ import WatchVideo from './components/watchVideo';
 import PasswordReset from './components/passwordReset';
 import ViewInstructorProfile from './components/viewInstructorProfile';
 import HomeLand from './components/homeLand';
+import PaymentLoading from './components/paymentLoading';
+import PaymentCancelled from './components/paymentCancelled';
 
 import PaymentPolicy from './components/paymentPolicy';
 import MyEnrolledCourses from './components/myEnrolledCourses';
@@ -31,6 +33,8 @@ import MoneyOwedPerMonth from './components/moneyOwedPerMonth';
 
 
 import axios from 'axios';
+axios.defaults.withCredentials = true;
+axios.defaults.headers = 'Access-Control-Allow-Origin: http://localhost:3000/';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 import { connect } from 'react-redux';
@@ -40,6 +44,8 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import TraineeExercise from './components/TraineeExercise';
 import TraineeSolution from './components/TraineeSolution';
 import TraineeViewCourseDetails from './components/traineeViewCourseDetails';
+import SignUp from './components/signup';
+import TakeNotes from './components/takeNotes2';
 
 axios.defaults.withCredentials = true;
 axios.defaults.headers = 'Access-Control-Allow-Origin: http://localhost:3000';
@@ -111,7 +117,12 @@ class App extends Component {
           <Routes>
           
             <Route exact path="/" element={<HomeLand />}></Route>
+            <Route exact path="/paymentLoading" element={<PaymentLoading />}></Route>
+            <Route exact path="/paymentCancelled" element={<PaymentCancelled />}></Route>
             <Route exact path="/login" element={<LoginPage />}></Route>
+            <Route exact path="/signup" element={<SignUp />}></Route>
+            <Route exact path="/takeNotes" element={<TakeNotes />}></Route>
+
             <Route exact path="/milestone1" element={<TmpRoutes />}></Route>
             <Route exact path="/forgotPassword" element={<ForgotPassword />}></Route>
             <Route exact path="/changePassword" element={<ChangePassword />}></Route>

@@ -432,7 +432,7 @@ const sendCertificateEmail = asyncHandler(async (userId, courseId) => {
   doc.end();
 });
 
-const requestRefund = async (req, res) => {
+const requestRefund = asyncHandler(async (req, res) => {
   const userId = res.locals.userId;
   const { courseId } = req.query;
   const record = await RegisteredCourses.findOne({ userId: userId, courseId: courseId }).populate();
@@ -448,18 +448,18 @@ const requestRefund = async (req, res) => {
       message: 'Student Attended More than 50% of Course!'
     });
   }
-};
+});
 
-const requestCourseAccess = async (req, res) => {
+const requestCourseAccess = asyncHandler(async (req, res) => {
   const userId = res.locals.userId;
   const { courseId } = req.query;
   await Request.create({ userId: userId, courseId: courseId, requestType: 'access' });
   res
     .status(200)
     .json({ success: true, statusCode: 200, message: 'Request Received Successfully!' });
-};
+});
 
-const changeRefundStatus = async (req, res, next) => {
+const changeRefundStatus = asyncHandler(async (req, res, next) => {
   const { requestId } = req.query;
   const { newStatus } = req.body;
   const request = await Request.findByIdAndDelete(requestId);
@@ -477,9 +477,9 @@ const changeRefundStatus = async (req, res, next) => {
       .status(200)
       .json({ message: 'Status Updated successfully', success: true, statusCode: 200 });
   }
-};
+});
 
-const changeAccessStatus = async (req, res, next) => {
+const changeAccessStatus = asyncHandler(async (req, res, next) => {
   const { requestId } = req.query;
   const { newStatus } = req.body;
   const request = await Request.findByIdAndDelete(requestId);
@@ -496,9 +496,9 @@ const changeAccessStatus = async (req, res, next) => {
       .status(200)
       .json({ message: 'Status Updated successfully', success: true, statusCode: 200 });
   }
-};
+});
 
-const getRequests = async (req, res) => {
+const getRequests = asyncHandler(async (req, res) => {
   const { requestType } = req.query;
   const courseRequests = await Request.find({ requestType: requestType });
   res.status(200).json({
@@ -507,7 +507,7 @@ const getRequests = async (req, res) => {
     payload: courseRequests,
     statusCode: 200
   });
-};
+});
 
 module.exports = {
   signUp,
