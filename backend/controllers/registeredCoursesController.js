@@ -240,6 +240,7 @@ const getAllRegisteredInvoices = asyncHandler(async (req, res) => {
         status = refundable ? 'refund' : 'noRefund';
       }
       return {
+        _id: registeredCourse.courseId,
         courseName: registeredCourseInvoiceCourseInfo.courseId.title,
         date: registeredCourse.createdAt,
         status: status,
