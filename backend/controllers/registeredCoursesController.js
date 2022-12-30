@@ -12,16 +12,16 @@ const asyncHandler = require('express-async-handler');
 const schedule = require('node-schedule');
 const { deleteSolution } = require('./userSolutionController');
 const { addNotification } = require('./notificationController');
+
 const getAllRegisteredCourses = asyncHandler(async (req, res) => {
   const userId = res.locals.userId;
   const reg = await RegisteredCourses.find({ userId: userId }).populate('courseId');
-  const results = reg.map((course, index) => {
-    return course.courseId;
-  });
   var returnResult;
   if (reg) {
     returnResult = await Promise.all(
-      results.map(async (result, index) => {
+      reg.map(async (course, index) => {
+        //console.log(result.progress);
+        var result = course.courseId;
         result = await result.populate('instructor', 'firstName lastName');
         result = await result.populate('subject');
         if (result.subtitles.length) {
@@ -99,8 +99,10 @@ const getAllRegisteredCourses = asyncHandler(async (req, res) => {
             })
           );
           const resSpread = { ...result };
-          if (resSpread._doc) result = { ...result.toObject(), exams: exams };
-          else result = { ...result, exams: exams };
+          console.log(result.progress);
+          if (resSpread._doc)
+            result = { ...result.toObject(), exams: exams, progress: course.progress };
+          else result = { ...result, exams: exams, progress: course.progress };
           return result;
         }
       })
@@ -232,14 +234,15 @@ const getAllRegisteredInvoices = asyncHandler(async (req, res) => {
       });
       var status;
       if (refundRequest) {
-        status = refundRequest.status;
+        status = 'pending';
       } else {
         status = refundable ? 'refund' : 'noRefund';
       }
       return {
         courseName: registeredCourseInvoiceCourseInfo.courseId.title,
         date: registeredCourse.createdAt,
-        status: status
+        status: status,
+        price: registeredCourseInvoice.invoice.payment
       };
     })
   );

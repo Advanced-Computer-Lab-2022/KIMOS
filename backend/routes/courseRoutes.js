@@ -36,7 +36,8 @@ const {
   loggedIn,
   corporateAuth,
   individualAuth,
-  addDiscountAuth
+  addDiscountAuth,
+  editPublicCourseAuth
 } = require('../middleware/auth');
 const { requestRefund, requestCourseAccess } = require('../controllers/userController');
 
@@ -48,8 +49,8 @@ router
   .put(loggedIn, editCourseAuth, editCourse) //all good
   .patch(loggedIn, editCourseAuth, makeCoursePublic);
 
-router.post('discount', loggedIn, addDiscountAuth, addDiscount);
-router.post('close', loggedIn, editCourseAuth, closeCourse);
+router.post('discount', loggedIn, editPublicCourseAuth, addDiscount);
+router.post('close', loggedIn, editPublicCourseAuth, closeCourse);
 router.route('/rate').post(loggedIn, registeredCourseAuth, rateCourse); //all good
 router
   .route('/exam')

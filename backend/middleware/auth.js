@@ -153,7 +153,7 @@ const editCourseAuth = asyncHandler(async (req, res, next) => {
   }
 });
 
-const addDiscountAuth = asyncHandler(async (req, res, next) => {
+const editPublicCourseAuth = asyncHandler(async (req, res, next) => {
   const userId = res.locals.userId.toString();
   const courseInfo = await Course.findById(req.query.courseId);
   if (userId === courseInfo.instructor.toString()) {
@@ -170,7 +170,7 @@ module.exports = {
   resetPasswordAuth,
   isRegisteredWithInstructor,
   registeredCourseAuth,
-  addDiscountAuth,
+  editPublicCourseAuth,
   editCourseAuth,
   individualAuth,
   corporateAuth
