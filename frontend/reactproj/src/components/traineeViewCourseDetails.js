@@ -229,7 +229,7 @@ function TraineeViewMyCourse(props) {
   const getProgress = ()=>{
     return (
       <Box sx={{ position: 'relative', display: 'inline-flex' }}>
-        <CircularProgress variant="determinate" value={83}/>
+        <CircularProgress variant="determinate" value={props.course.progress?props.course.progress:12}/>
         <Box
           sx={{
             top: 0,
@@ -243,7 +243,7 @@ function TraineeViewMyCourse(props) {
           }}
         >
           <Typography variant="caption" component="div" >
-            {`${Math.round(83)}%`}
+            {`${Math.round(props.course.progress?props.course.progress:12)}%`}
           </Typography>
         </Box>
       </Box>
@@ -477,8 +477,8 @@ function TraineeViewMyCourse(props) {
           fontWeight:'bolder',
           fontSize:'30px',
           paddingBottom:'30px'
-        }}>Rate This Instructor</div>
-        <div style={{border:'2px solid red'}}>
+        }}>Rate This Course</div>
+        <div>
           <Rating
             name="rating-the-couse"
             value={courseRatingValue}
@@ -488,7 +488,7 @@ function TraineeViewMyCourse(props) {
             sx={{ width: '100%', height: '100%', fontSize: '1.5vw' }}
           />
           <TextField onChange={(e)=>{setReviewText(e.target.value)}} sx ={{width:'100%'}} id="outlined-basic" label="Outlined" variant="outlined" multiline rows={4}/>
-          <div>
+          <div style={{paddingTop:'30px'}}>
             <PrimaryBtn function={postRating} btnText="Send Review"/>
           </div>
         </div>

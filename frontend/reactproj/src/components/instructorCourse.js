@@ -21,6 +21,7 @@ import axios from 'axios';
 class instructorCourse extends Component {
 
     state = {
+        reviews:[],
         course:{},
         currentSubtitle:{videos:[{}]},
         currentSIndex:0,
@@ -30,8 +31,20 @@ class instructorCourse extends Component {
         discountFlag: false,
         updated:false
     }
+    getRatings = async () => {
+        const res = await axios.get(
+          'http://localhost:5000/courses/reviews/?courseId='+this.props.course['_id'],
+        );
+        console.log(res);
+        if (res.data.success) {
+          //setSubmitSuccess(true);
+          this.setState({reviews:res.data.payload},()=>{
+            console.log(this.state.reviews)
+          })
+        }
+      };
     componentDidMount(){
-
+        this.getRatings();
         this.setState({course:this.props.course, currentSubtitle:this.props.course.subtitles[0]})
         if(!this.props.course.video){
             var course = this.props.course;
@@ -459,19 +472,11 @@ class instructorCourse extends Component {
   
                     </div>
                     <div className='instructorCourse-drawer__ratingsAndReviews__reviews'>
-                        <ReviewComment username='Eren' rating={3} comment='Needs more exercises'/>
-                        <ReviewComment username='Eren' rating={5} comment='It Does not Needs more exercises. Very Cool.'/>
-                        <ReviewComment username='Eren' rating={5} comment='It Does not Needs more exercises. Very Cool.'/>
-                        <ReviewComment username='Eren' rating={3} comment='Needs more exercises'/>
-                        <ReviewComment username='Eren' rating={3} comment='Needs more exercises'/>
-                        <ReviewComment username='Eren' rating={3} comment='Needs more exercises'/>
-                        <ReviewComment username='Eren' rating={5} comment='It Does not Needs more exercises. Very Cool.'/>
-                        <ReviewComment username='Eren' rating={3} comment='Needs more exercises'/>
-                        <ReviewComment username='Eren' rating={3} comment='Needs more exercises'/>
-                        <ReviewComment username='Eren' rating={3} comment='Needs more exercises'/>
-                        <ReviewComment username='Eren' rating={3} comment='Needs more exercises'/>
-                        <ReviewComment username='Eren' rating={3} comment='Needs more exercises'/>
-                        <ReviewComment username='Eren' rating={5} comment='It Does not Needs more exercises. Very Cool.'/>
+                        {this.state.reviews.map((review)=>{
+                            return <ReviewComment username={review.name} rating={review.rating} comment={review.review}/>
+ 
+                        })}
+
                     </div>
                 </div>
                 

@@ -13,19 +13,22 @@ import fullStackCourse from '../assets/fullStack.png';
 import pythonCourse from '../assets/python.png';
 import aiCourse from '../assets/ai.png';
 import javaCourse from '../assets/java.png';
-
+import Loading from './loadingPage';
 import {Container,AppBar,Grow,Grid} from '@mui/material';
 import axios from 'axios';
 
 export default function PopularCourses() {
     const [popularCourses, setPopularCourses] = useState([]);
+    const [loading, setLoading] = useState(true);
+
 
   const getPopularCourses = async () => {
-
+    setLoading(true);
     await axios
       .get('http://localhost:5000/courses/popular')
         .then((result) => {
         console.log(result.data.payload.returnCourses);
+        setLoading(false);
         setPopularCourses(result.data.payload.returnCourses);
       });
   };
@@ -45,7 +48,8 @@ export default function PopularCourses() {
     }
 
   return (
-    <div style={{display:"flex",justifyContent:"center",alignItems:"center",columnGap:5, border:'2px solid lime', width:'100%'}}>
+    <div style={{position:'relative',display:"flex",justifyContent:"center",alignItems:"center",columnGap:5,  width:'100%'}}>
+        {loading && <Loading/>}
         <div className="arrowLeft" onClick={slideLeft}>
             <ArrowBackIosIcon></ArrowBackIosIcon>
         </div> 
@@ -53,10 +57,16 @@ export default function PopularCourses() {
         <Grow in>
             <Container>
                 <AppBar className="appBarX" position="static" color="inherit">
-
+                    Most Popular Courses
                     <div id="slider" className="homeland__section section_3__allPopular">
                         {popularCourses.length>0 && popularCourses.map((course) => (
-                            <div className="homeland__section section_3__allPopular__popularDiv" >
+                            <div className="homeland__section section_3__allPopular__popularDiv" onClick={()=>{
+                                const url = '/courses/'+course['_id']
+                                window.open(
+                                    url,
+                                    '_blank' // <- This is what makes it open in a new window.
+                                  );
+                            }}>
                                 <div class="hovering">
                                     <img className="homeland__section section_3__allPopular__popularDiv__image" src={dataScienceCourse} alt="course img"/>
                                 </div>

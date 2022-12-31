@@ -1,8 +1,12 @@
 import SecondaryBtn from "./buttons/secondaryBtn";
 import axios from 'axios';
+import {showAlert} from '../redux/actions';
+import {connect} from 'react-redux';
 
-const checkout = ({courseId}) => {
-    console.log(courseId)
+
+
+const checkout = ({courseId, showAlert}) => {
+
     const onclick = ()=>{
         
         axios.post(`http://localhost:5000/users/createCheckoutSession?courseId=`+courseId)
@@ -18,6 +22,8 @@ const checkout = ({courseId}) => {
         })
         .catch(e=>{
             console.log(e.error);
+            showAlert({shown:true, message:'Couldnt Check out this course',severity:'error'})
+
         })
     }
 
@@ -29,4 +35,5 @@ const checkout = ({courseId}) => {
     );
 }
  
-export default checkout;
+
+export default connect(null, {showAlert})(checkout);

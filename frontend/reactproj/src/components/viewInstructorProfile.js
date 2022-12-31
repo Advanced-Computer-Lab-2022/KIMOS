@@ -10,9 +10,13 @@ import AddIcon from '@mui/icons-material/Add';
 import Modal from '@mui/material/Modal';
 import Rating from '@mui/material/Rating';
 import TextField from '@mui/material/TextField';
+import {showAlert} from '../redux/actions';
+import {connect} from 'react-redux';
 
 class InstructorProfile extends Component {
   state = {
+
+    reviews:[],
     instructorId:-1,
     openRating: false,
     instructorRatingValue: 0,
@@ -83,16 +87,12 @@ class InstructorProfile extends Component {
 
   getRatings = async () => {
     const res = await axios.get(
-      'http://localhost:5000/users/viewInstructorDetails',
-      {
-        params: {
-          instructorId: this.state.instructorId
-        }
-      }
+      'http://localhost:5000/users/reviews/?instructorId='+this.state.instructorId,
     );
-      console.log(res);
-    if (res.statusText === 'OK') {
+
+    if (res.data.success) {
       //setSubmitSuccess(true);
+      this.setState({reviews:res.data.payload})
     }
   };
   postRating = async () => {
@@ -106,9 +106,13 @@ class InstructorProfile extends Component {
       }
     );
 
-    if (res.statusText === 'OK') {
-      //setSubmitSuccess(true);
+    if(res.data.success){
+      this.props.showAlert({shown:true, message:'Sent your review successfully',severity:'success'})
+      this.setState({ openRating: false });
     }
+    else
+      this.props.showAlert({shown:true, message:'Couldnt send your review',severity:'error'})
+
   };
 
   updateUserInfo = async () => {
@@ -132,23 +136,17 @@ class InstructorProfile extends Component {
     }
   };
   getComments = () => {
-    return [
-      'bad instructor',
-      'bad instructor bad instructor bad instructor',
-      'bad instructor',
-      'bad instructor',
-      'bad instructor bad instructor bad instructor bad instructor'
-    ].map((comment) => {
+    return this.state.reviews.map((review) => {
       return (
         <div className="comment">
           <div className="comment__header">
-            <div className="comment__header__name">Username</div>
+            <div className="comment__header__name">{review.name}</div>
             <div className="comment__header__rating">
-              <RatingComp value={3} />
+              <RatingComp value={review.rating} />
             </div>
           </div>
 
-          <div className="comment__comment">{comment}</div>
+          <div className="comment__comment">{review.review}</div>
         </div>
       );
     });
@@ -184,7 +182,7 @@ class InstructorProfile extends Component {
               fontSize:'30px',
               paddingBottom:'30px'
             }}>Rate This Instructor</div>
-            <div style={{border:'2px solid red'}}>
+            <div>
               <Rating
                 name="rating-the-couse"
                 value={this.state.instructorRatingValue}
@@ -194,7 +192,7 @@ class InstructorProfile extends Component {
                 sx={{ width: '100%', height: '100%', fontSize: '1.5vw' }}
               />
               <TextField onChange={(e)=>{this.setState({reviewText:e.target.value})}} sx ={{width:'100%'}} id="outlined-basic" label="Outlined" variant="outlined" multiline rows={4}/>
-              <div>
+              <div style={{paddingTop:'30px'}}>
                 <PrimaryBtn function={this.postRating} btnText="Send Review"/>
               </div>
             </div>
@@ -259,4 +257,8 @@ class InstructorProfile extends Component {
   }
 }
 
-export default InstructorProfile;
+
+
+
+
+export default connect(null, {showAlert})(InstructorProfile);

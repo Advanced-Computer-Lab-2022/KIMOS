@@ -19,6 +19,7 @@ const {
   getRequests
 } = require('../controllers/userController');
 
+const {getUnseenNotifications} = require('../controllers/notificationController')
 
 const {getAllRatings} = require('../controllers/ratingController');
 
@@ -52,7 +53,7 @@ const {
 const { removeRegisteredUser } = require('../controllers/registeredCoursesController');
 const { isLoggedIn } = require('../middleware/helper');
 const { registerUser } = require('../controllers/registeredCoursesController');
-
+router.get('/reviews', getAllRatings);
 router.route('/').post(loggedIn, adminAuth, addUser).put(loggedIn, editUser).get(loggedIn, getMe); //all good
 router.get('/viewInstructorDetails', loggedIn, isRegisteredWithInstructor, viewInstructorDetails); //all good
 router.post('/rateInstructor', loggedIn, isRegisteredWithInstructor, rateInstructor); //all good
@@ -73,6 +74,9 @@ router.post('/createCheckoutSession', loggedIn, individualAuth, checkout); //all
 router.post('/register', loggedIn, individualAuth, registerCourseAuth, createInvoice, registerUser); //all good
 router.get('/invoices/instructor', loggedIn, instructorAuth, getAllInvoicesInstructor); //all good
 router.get('/invoices/user', loggedIn, individualAuth, getAllInvoicesUser); //all good
+
+
+router.get('/notifications', loggedIn, getUnseenNotifications); //all good
 
 router.post(
   '/refundStatus',

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom'
 import axios from 'axios';
+import ReviewComment from './reviewComment';
 import Rating from '@mui/material/Rating';
 import PrimaryButton from './buttons/primaryBtn';
 import SecondaryBtn from './buttons/secondaryBtn';
@@ -11,10 +12,12 @@ import { textAlign } from '@mui/system';
 import PrimaryBtn from './buttons/primaryBtn';
 import Loading from './loadingPage';
 import {connect} from 'react-redux';
+import { showAlert } from '../redux/actions/index';
+
 
 import Checkout from './checkout'
 
-function TraineeViewMyCourse() {
+function TraineeViewMyCourse(props) {
   var subTitleCount = 1;
   var exerciseCount = 1;
 
@@ -33,6 +36,8 @@ function TraineeViewMyCourse() {
 
   const [viewContent, setViewContent] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [reviews, setReviews] = useState([]);
+
   const getCourse = async (courseId) => {
     // await axios.post('http://localhost:5000/login',{username:"individual",password:"individual123"})
     await axios
@@ -46,12 +51,34 @@ function TraineeViewMyCourse() {
         setMyCourse(course.data);
       });
   };
+  const getRatings = async (id) => {
+    const res = await axios.get(
+      'http://localhost:5000/courses/reviews/?courseId='+id,
+    );
+    console.log(res);
+    if (res.data.success) {
+      //setSubmitSuccess(true);
+      setReviews(res.data.payload);
+    }
+  };
   const { courseId } = useParams()
   useEffect(() => {
-
+    getRatings(courseId);
     getCourse(courseId);
 
   }, []);
+
+  const reqAccess = async (course)=>{  
+    const res =  await axios.post(("http://localhost:5000/courses/access?courseId="+courseId));
+    if(res.data.success)
+      props.showAlert({shown:true, message:'Sent Request Successfully',severity:'success'})
+  
+    else
+      props.showAlert({shown:true, message:'Couldnt Send Request ',severity:'error'})
+  
+    console.log(res);
+  }
+  
   const goToProfile =()=>{
     var url = 'http://localhost:3000/user/instructor/'+myCourse.instructor['_id'];
     window.open(
@@ -142,7 +169,7 @@ function TraineeViewMyCourse() {
                       style={{
 
                         marginBottom: '5px',
-                        background: 'rgb(220, 226, 228)',
+                        background: 'var(--cool-grey)',
                         paddingLeft:'20px',
                         paddingRight:'20px',
                         paddingTop:'15px',
@@ -163,13 +190,14 @@ function TraineeViewMyCourse() {
             <div className="user-course__content__section__content">
               <div className="user-course__content__section__title">Exercise(s)</div>
               <div className="user-course__content__section__content__accordions">
+
                 {myCourse.exams.map((exam, index) => {
                   return (
                     <div
                       style={{
 
                         marginBottom: '5px',
-                        background: 'rgb(220, 226, 228)',
+                        background: 'var(--cool-grey)',
                         paddingLeft:'20px',
                         paddingRight:'20px',
                         paddingTop:'15px',
@@ -187,8 +215,43 @@ function TraineeViewMyCourse() {
             </div>
           </div>
         </div>
+        <div className="user-course__content__section">
+        <div className="user-course__content__section__title">Review(s)</div>
+        <div className="user-course__content__section__content">
+          <div className="user-course__content__section__content__accordions">
+          {reviews.length === 0 && <div>No Reviews</div>}
+            
+          {reviews.map((review, index) => {
+              return (
+                <div
+                  style={{
+
+                    marginBottom: '5px',
+
+                    paddingLeft:'20px',
+                    paddingRight:'20px',
+                    paddingTop:'15px',
+                    paddingBottom:'15px',
+                    borderRadius:'10px',
+                    width:'100%',
+                    display:'flex',
+                    alignItems:'center',
+                    justifyContent:'space-between'
+
+                  }}>
+                  <ReviewComment username={review.name} rating={review.rating} comment={review.review}/>
+
+                  
+                  </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
         <div style={{display:'flex', justifyContent:'flex-end'}}>
-          <Checkout courseId={myCourse['_id']}/>
+          {props.user.userType!=='corporate trainee'&&<Checkout courseId={myCourse['_id']}/>}
+          {props.user.userType==='corporate trainee'&&<SecondaryBtn function={reqAccess} btnText="Request Access"/>}
+
         </div>
       </div>
   )
@@ -203,5 +266,5 @@ const mapStateToProps = (state) =>{
 }
 
 
-export default connect(mapStateToProps)(TraineeViewMyCourse)
+export default connect(mapStateToProps,{showAlert})(TraineeViewMyCourse)
 

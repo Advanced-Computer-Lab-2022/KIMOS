@@ -10,10 +10,11 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import TextField from '@mui/material/TextField';
 import Loading from './loadingPage';
+import { showAlert } from '../redux/actions/index';
+import { connect } from 'react-redux';
 
 
 
-import {connect} from 'react-redux';
 
 
 import axios from 'axios';
@@ -66,11 +67,16 @@ const columns = [
 const reqAccess = async (course)=>{
 
   const userId = props.user['userId'];
-  const courseId = { courseId :course['_id'] };
+  const courseId =course['_id'];
 
 
 
-  const res =  await axios.post(("http://localhost:5000/courses/access"),courseId);
+  const res =  await axios.post(("http://localhost:5000/courses/access?courseId="+courseId));
+  if(res.data.success)
+    props.showAlert({shown:true, message:'Sent Request Successfully',severity:'success'})
+
+  else
+    props.showAlert({shown:true, message:'Couldnt Send Request ',severity:'error'})
 
   console.log(res);
 }
@@ -158,4 +164,5 @@ const mapStateToProps = (state) => {
 
 
 
-export default connect(mapStateToProps)(ReqAccessPage);
+export default connect(mapStateToProps,{showAlert})(ReqAccessPage);
+

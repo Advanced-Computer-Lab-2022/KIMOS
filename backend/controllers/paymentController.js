@@ -4,8 +4,17 @@ const Course = require('../models/courseModel');
 const jwt = require('jsonwebtoken');
 const { getCountryIso, getCorrectPrice } = require('./userController');
 const asyncHandler = require('express-async-handler');
+const RegisteredCourse = require('../models/registeredCoursesModel');
 
 const checkout = asyncHandler(async (req, res) => {
+  const registration = await RegisteredCourse.find({
+    userId: res.locals.userId,
+    courseId: req.query.courseId
+  });
+  if (registration) {
+    res.status(500);
+    throw new Error('Course already registered');
+  }
   const userInfo = await User.findById(res.locals.userId);
   const currency = getCountryIso(userInfo.country.code);
   const courseInfo = await Course.findById(req.query.courseId);

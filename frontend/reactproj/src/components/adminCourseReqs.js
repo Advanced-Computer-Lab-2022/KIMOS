@@ -104,7 +104,9 @@ const [displayedCourse, setDisplayedCourse] = React.useState({});
 
 const sendRes = async (status, id)=>{
   try{
-    const res = await axios.post("http://localhost:5000/users/accessStatus?requestId="+id,{newState:status})
+    const res = await axios.post("http://localhost:5000/users/accessStatus?requestId="+id,{
+      newState:status
+    })
 
     if(res.data.success){
       props.showAlert({shown:true, message:'Submitted your action',severity:'success'})

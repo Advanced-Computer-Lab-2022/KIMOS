@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom'
 import axios from 'axios';
+import ReviewComment from './reviewComment';
 import Rating from '@mui/material/Rating';
 import PrimaryButton from './buttons/primaryBtn';
 import SecondaryBtn from './buttons/secondaryBtn';
@@ -30,6 +31,9 @@ export default function TraineeViewMyCourse() {
 
   const [viewContent, setViewContent] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [reviews, setReviews] = useState([]);
+
+
   const getCourse = async (courseId) => {
     // await axios.post('http://localhost:5000/login',{username:"individual",password:"individual123"})
     await axios
@@ -43,10 +47,21 @@ export default function TraineeViewMyCourse() {
         setMyCourse(course.data);
       });
   };
+  const getRatings = async (id) => {
+    const res = await axios.get(
+      'http://localhost:5000/courses/reviews/?courseId='+id,
+    );
+    console.log(res);
+    if (res.data.success) {
+      //setSubmitSuccess(true);
+      setReviews(res.data.payload);
+    }
+  };
   const { courseId } = useParams()
   useEffect(() => {
 
     getCourse(courseId);
+    getRatings(courseId);
 
   }, []);
   const goToProfile =()=>{
@@ -76,7 +91,7 @@ export default function TraineeViewMyCourse() {
   // };
 
   if(loading){
-    return <div><Loading/ ></div>
+    return <div style={{position:'relative'}}><Loading/ ></div>
   }
   if(viewContent){
     return (
@@ -129,6 +144,7 @@ export default function TraineeViewMyCourse() {
         </div>
 
         <div className="user-course__content">
+        
           <div className="user-course__content__section">
             <div className="user-course__content__section__title">Subtitle(s)</div>
             <div className="user-course__content__section__content">
@@ -139,7 +155,7 @@ export default function TraineeViewMyCourse() {
                       style={{
 
                         marginBottom: '5px',
-                        background: 'rgb(220, 226, 228)',
+                        background: 'var(--cool-grey)',
                         paddingLeft:'20px',
                         paddingRight:'20px',
                         paddingTop:'15px',
@@ -166,7 +182,7 @@ export default function TraineeViewMyCourse() {
                       style={{
 
                         marginBottom: '5px',
-                        background: 'rgb(220, 226, 228)',
+                        background: 'var(--cool-grey)',
                         paddingLeft:'20px',
                         paddingRight:'20px',
                         paddingTop:'15px',
@@ -184,6 +200,39 @@ export default function TraineeViewMyCourse() {
             </div>
           </div>
         </div>
+
+
+        <div className="user-course__content__section">
+        <div className="user-course__content__section__title">Review(s)</div>
+        <div className="user-course__content__section__content">
+          <div className="user-course__content__section__content__accordions">
+            {reviews.length === 0 && <div>No Reviews</div>}
+            {reviews.map((review, index) => {
+              return (
+                <div
+                  style={{
+
+                    marginBottom: '5px',
+                    paddingLeft:'20px',
+                    paddingRight:'20px',
+                    paddingTop:'15px',
+                    paddingBottom:'15px',
+                    borderRadius:'10px',
+                    width:'100%',
+                    display:'flex',
+                    alignItems:'center',
+                    justifyContent:'space-between'
+
+                  }}>
+                  <ReviewComment username={review.name} rating={review.rating} comment={review.review}/>
+
+                  
+                  </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
         <div style={{display:'flex', justifyContent:'flex-end'}}>
         <SecondaryBtn
         btnText="Course Content"
