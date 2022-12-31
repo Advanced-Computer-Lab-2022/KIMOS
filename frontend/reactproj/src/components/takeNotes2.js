@@ -39,27 +39,27 @@ function TakeNotes2({videoId,courseId}) {
     const [notes, setNotes] = useState([]);
     const [activeNote, setActiveNote] = useState(-1);
     const [, updateState] = useState();
-    const [visibility,setVisibility] = useState('hidden');
+    const [visibility,setVisibility] = useState('none');
     const notesRef = useRef(null);
 
     // useEffect(() => {
     // localStorage.setItem("notes", JSON.stringify(notes));
     // }, [notes]);
 
-    useEffect(()=>{
-
+    const getNotes=()=>{
         axios.get(`http://localhost:5000/courses/notes?videoId=${videoId}&courseId=${courseId}`) // notes related to this student and this video
         .then(res=>{
             console.log(res);
             if(res.data.success){
-                console.log("here");
                 setNotes(res.data.payload.notes);
+                setNotesModal(true);
             }
         }).catch(e=>{
             console.log(e);
         })
-    },[]);
-
+        
+    }
+    
     const handleSave=()=>{
         axios.post(`http://localhost:5000/courses/notes?videoId=${videoId}&courseId=${courseId}`,{notes})   // notes related to this student and this video
         .then((res)=>{
@@ -142,9 +142,9 @@ function TakeNotes2({videoId,courseId}) {
 
     const downloadPdf =()=>{
         var doc = new jsPDF();
-        setVisibility('visible');
+        setVisibility('block');
         doc.html(notesRef.current,{
-        callback: (doc)=> {doc.save("myNotes.pdf");setVisibility('hidden')},
+        callback: (doc)=> {doc.save("myNotes.pdf");setVisibility('none')},
         margin : [10,10,10,10],
         autoPaging :'text',
         x:0,
@@ -176,8 +176,8 @@ function TakeNotes2({videoId,courseId}) {
             />
             {/* <MainNote activeNote={getActiveNote()} onUpdateNote={onUpdateNoteli} /> */}
             {/* <PrimaryBtn btnText="Download notes" function={downloadPdf2}/> */}
-                <div style={{visibility:visibility,position: "absolute", top: 1000, left: 0}}>
-                    <div  ref={notesRef}>
+                <div style={{display:visibility,position: "absolute", top: 1000, left: 0}}>
+                    <div  ref={notesRef} style={{color:'black'}}>
                         {notes.map((note)=>(
                             <div>
                                 <h1 className="preview-title">{note.title}</h1>
@@ -196,7 +196,9 @@ function TakeNotes2({videoId,courseId}) {
 
     const [notesModal, setNotesModal] = useState(false);
     const handleClickOpenNotes = ()=>{
-        setNotesModal(true);
+        getNotes();
+      
+        
     }
     const handleCloseNotes = (e, reason)=>{
 
