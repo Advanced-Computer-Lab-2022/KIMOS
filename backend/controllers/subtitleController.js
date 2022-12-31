@@ -2,7 +2,12 @@ const Subtitle = require('../models/subtitleModel');
 const { createExam, editExam, deleteExam } = require('./examController');
 const { createVideo, editVideo, deleteVideo } = require('./videoController');
 const mongoose = require('mongoose');
+var url = require('url');
 const asyncHandler = require('express-async-handler');
+const importMJSModule = async () => {
+  const fetchInfo = await import('../youtubeInfoFetcher.mjs').default;
+  return fetchInfo;
+};
 
 const getSubtitle = async (id) => {
   const sub = await Subtitle.findById(id);
@@ -14,8 +19,26 @@ const createSubtitle = async (subtitle) => {
   var totalHours = 0;
   const vids = await Promise.all(
     videos.map(async (video, index) => {
-      totalHours += parseFloat(video.hours);
-      const v = await createVideo(video).catch((err) => {
+      const stringUrl = video.link;
+      var videoId;
+      var regExp = new RegExp(/^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/);
+      var match = stringUrl.match(regExp);
+      if (match && match[2].length == 11) {
+        videoId = match[2];
+      } else {
+        videoId = -1;
+      }
+      if (videoId === -1) {
+        throw new Error('Invalid link');
+      }
+      const ytInfo = await importMJSModule();
+      const result = await ytInfo(videoId);
+      totalHours += parseInt(result.hours);
+      const v = await createVideo({
+        hours: result.hours,
+        description: video.description,
+        link: video.link
+      }).catch((err) => {
         throw err;
       });
       return v._id;
@@ -51,13 +74,35 @@ const updateSubtitle = async (subtitleId, subtitle) => {
   const newVids = await Promise.all(
     videos.map(async (video, index) => {
       var res = {};
-      totalHours += parseFloat(video.hours);
+      var videoId;
+      var regExp = new RegExp(/^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/);
+      var match = stringUrl.match(regExp);
+      if (match && match[2].length == 11) {
+        videoId = match[2];
+      } else {
+        videoId = -1;
+      }
+      if (videoId === -1) {
+        throw new Error('Invalid link');
+      }
+      const ytInfo = await importMJSModule();
+      const result = await ytInfo(videoId);
+      totalHours += parseInt(result.hours);
+
       if (video._id) {
-        res = await editVideo(video._id, video).catch((err) => {
+        res = await editVideo(video._id, {
+          hours: result.hours,
+          description: video.description,
+          link: video.link
+        }).catch((err) => {
           throw err;
         });
       } else {
-        res = await createVideo(video).catch((err) => {
+        res = await createVideo({
+          hours: result.hours,
+          description: video.description,
+          link: video.link
+        }).catch((err) => {
           throw err;
         });
       }

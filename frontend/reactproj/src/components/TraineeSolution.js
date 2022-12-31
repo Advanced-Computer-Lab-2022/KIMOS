@@ -3,7 +3,9 @@ import axios from 'axios';
 import ClearIcon from '@mui/icons-material/Clear';
 import DoneIcon from '@mui/icons-material/Done';
 import PrimaryButton from './buttons/primaryBtn';
+import LoadingPage from './loadingPage';
 function TraineeSolution(props) {
+  const [loading, setLoading] = useState(true);
   const [displaySolution, setDisplaySolution] = useState({});
   const [currentQuestion, setCurrentQuestion] = useState(0);
   var counter = 0;
@@ -16,37 +18,47 @@ function TraineeSolution(props) {
           examId: props.examId
         }
       })
-      .then((solution) => {
-        console.log(solution.data.solutions);
-        setDisplaySolution(solution.data);
+      .then((res) => {
+        if (res.data.success) {
+          console.log(res.data.payload);
+          setDisplaySolution(res.data.payload);
+          setLoading(false);
+        }
       });
   };
 
   useEffect(() => {
-    //console.log(props);
     getSolution();
   }, []);
 
   const changeDisplayedQuestion = (index) => {
     setCurrentQuestion(index);
   };
-  const displayQuestions = ()=>{
-    return displaySolution.solutions&&displaySolution.solutions.map((question, index)=>{
-
-         return(
-             <div id={index} className= {`subtitleD ${currentQuestion === index? 'selected-subtitle':''}`} onClick={() => {changeDisplayedQuestion(index)}}>
-              {'Question ' + (index + 1)}
-             </div>
-         )
-     })
- }
+  const displayQuestions = () => {
+    return (
+      displaySolution.solutions &&
+      displaySolution.solutions.map((question, index) => {
+        return (
+          <div
+            id={index}
+            className={`subtitleD ${currentQuestion === index ? 'selected-subtitle' : ''}`}
+            onClick={() => {
+              changeDisplayedQuestion(index);
+            }}>
+            {'Question ' + (index + 1)}
+          </div>
+        );
+      })
+    );
+  };
   return (
-    <div className="App" style={{height:'100%', display:'flex',flexDirection:'column'}}>
-    <div className='subtitles-display' style={{ position:'absolute', top:'0'}}>
+    <div className="App" style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+      {loading && <LoadingPage />}
+      <div className="subtitles-display" style={{ position: 'absolute', top: '0' }}>
         {displayQuestions()}
-    </div>
+      </div>
 
-      <div className="final-results" style={{ position:'absolute',}}>
+      <div className="final-results" style={{ position: 'absolute' }}>
         <div
           style={{
             display: 'flex',

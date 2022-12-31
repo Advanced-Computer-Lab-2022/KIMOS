@@ -22,8 +22,9 @@ import Select from '@mui/material/Select';
 import axios from 'axios';
 import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
-import {Typography} from '@mui/material';
+import { Typography } from '@mui/material';
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
+import VisibilityTwoToneIcon from '@mui/icons-material/VisibilityTwoTone';
 
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
@@ -39,15 +40,14 @@ export default function TraineeViewMyCourse(props) {
   const [value, setValue] = useState(0);
   const [openRating, setOpenRating] = useState(false);
   const [openReport, setOpenReport] = useState(false);
-  const [video, setVideo] = useState({})
-  const [quiz, setQuiz] = useState({})
+  const [video, setVideo] = useState({});
+  const [quiz, setQuiz] = useState({});
 
   const [solveExam, setSolveExam] = useState(false);
   const [currentSubtitle, setCurrentSubtitle] = useState(-1);
   const [currentExam, setCurrentExam] = useState(-1);
   const [courseRatingValue, setCourseRatingValue] = useState(0);
   const onChangeExam = (newExamId) => {
-
     setCurrentExam(newExamId);
     setCurrentSubtitle(-1);
   };
@@ -62,7 +62,6 @@ export default function TraineeViewMyCourse(props) {
   const onChangeSubtitle = (newSubtitleId) => {
     setCurrentSubtitle(newSubtitleId);
     setCurrentExam(-1);
-
   };
 
   const postRating = async () => {
@@ -71,8 +70,7 @@ export default function TraineeViewMyCourse(props) {
       { rating: courseRatingValue },
       {
         params: {
-          courseId: '638281a7b05c30a726283c28',
-          userId: '63811834d00e598aac52a58a'
+          courseId: props.course['_id']
         }
       }
     );
@@ -126,12 +124,10 @@ export default function TraineeViewMyCourse(props) {
     );
   };
   useEffect(() => {
-    if(props.course.subtitles[0].videos)
-      setVideo(props.course.subtitles[0].videos[0])
-    if(props.course.subtitles[0].quizzes) 
-      setQuiz(props.course.subtitles[0].quizzes[0])
-    else 
-      console.log(props.course);
+    if (props.course.subtitles[0].videos) setVideo(props.course.subtitles[0].videos[0]);
+    if (props.course.subtitles[0].quizzes) {
+      setQuiz(props.course.subtitles[0].quizzes[0]);
+    } else console.log(props.course);
     handleMenuChange(0);
   }, []);
 
@@ -165,50 +161,61 @@ export default function TraineeViewMyCourse(props) {
       );
     });
   };
-  const [report, setReport] = useState({title:'',type:'technical',issue:''});
+  const [report, setReport] = useState({ title: '', type: 'technical', issue: '' });
 
-  const handleReportChange = (e)=>{
-    var key = e.target.id? e.target.id : 'type';
-    var r = {...report};
+  const handleReportChange = (e) => {
+    var key = e.target.id ? e.target.id : 'type';
+    var r = { ...report };
     r[key] = e.target.value;
     setReport(r);
+  };
+  const submitReport = () => {};
+  const getReport = () => {
+    return (
+      <div className="submit-report">
+        <div className="submit-report__form">
+          <div className="submit-report__form__title">Report A Course</div>
 
-  }
-  const submitReport = ()=>{
+          <div className="submit-report__form__input">
+            <TextField
+              onChange={handleReportChange}
+              style={{ marginBottom: '10px', width: '50%' }}
+              id="title"
+              label="Title"
+              variant="outlined"
+            />
 
-  }
-  const getReport = ()=>{
-    return (<div className='submit-report'>
-              <div className='submit-report__form'>
-                <div className='submit-report__form__title'>Report A Course</div>
+            <div style={{ marginBottom: '10px', width: '20%' }}>
+              <InputLabel>Type</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="type"
+                value={report.type}
+                label="Type"
+                onChange={handleReportChange}>
+                <MenuItem value={'technical'}>Technical</MenuItem>
+                <MenuItem value={'financial'}>Financial</MenuItem>
+                <MenuItem value={'other'}>Other</MenuItem>
+              </Select>
+            </div>
+            <TextField
+              onChange={handleReportChange}
+              style={{ marginBottom: '10px' }}
+              id="issue"
+              label="Issue"
+              variant="outlined"
+              multiline
+              rows={6}
+            />
+          </div>
 
-
-                <div className='submit-report__form__input'>
-                  <TextField onChange={handleReportChange} style={{marginBottom:'10px', width:'50%'}} id="title" label="Title" variant="outlined" />
-
-                  <div style={{marginBottom:'10px', width:'20%'}}>
-                    <InputLabel >Type</InputLabel>
-                    <Select
-                        labelId="demo-simple-select-label"
-                        id="type"
-                        value={report.type}
-                        label="Type"
-                        onChange={handleReportChange}
-                      >
-                      <MenuItem value={'technical'}>Technical</MenuItem>
-                      <MenuItem value={'financial'}>Financial</MenuItem>
-                      <MenuItem value={'other'}>Other</MenuItem>
-                    </Select> 
-                  
-                  </div>
-                  <TextField onChange={handleReportChange} style={{marginBottom:'10px'}} id="issue" label="Issue" variant="outlined" multiline rows={6}/>
-                </div>
-
-                <div className='submit-report__form__submit'><PrimaryBtn function ={submitReport} btnText="Send"/></div>
-
-              </div>
-            </div>)
-  }
+          <div className="submit-report__form__submit">
+            <PrimaryBtn function={submitReport} btnText="Send" />
+          </div>
+        </div>
+      </div>
+    );
+  };
   const getExams = () => {
     return props.course.exams.map((exam, index) => {
       return (
@@ -223,10 +230,10 @@ export default function TraineeViewMyCourse(props) {
       );
     });
   };
-  const getProgress = ()=>{
+  const getProgress = () => {
     return (
       <Box sx={{ position: 'relative', display: 'inline-flex' }}>
-        <CircularProgress variant="determinate" value={83}/>
+        <CircularProgress variant="determinate" value={83} />
         <Box
           sx={{
             top: 0,
@@ -236,167 +243,220 @@ export default function TraineeViewMyCourse(props) {
             position: 'absolute',
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <Typography variant="caption" component="div" >
+            justifyContent: 'center'
+          }}>
+          <Typography variant="caption" component="div">
             {`${Math.round(83)}%`}
           </Typography>
         </Box>
       </Box>
-    )
-  }
+    );
+  };
 
-  const accordion = (subtitle)=>{
+  const accordion = (subtitle) => {
     return (
       <Accordion>
-      
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
-          id="panel1a-header"
-        >
-        <div style={{ width:'100%'}}>
-          <Typography style={{color:'var(--primary-color)', fontWeight:'bolder'}}>{subtitle.title}</Typography>
-          <Typography><small>{subtitle.hours} Hour(s)</small></Typography>
-        </div>
+          id="panel1a-header">
+          <div style={{ width: '100%' }}>
+            <Typography style={{ color: 'var(--primary-color)', fontWeight: 'bolder' }}>
+              {subtitle.title}
+            </Typography>
+            <Typography>
+              <small>{subtitle.hours} Hour(s)</small>
+            </Typography>
+          </div>
         </AccordionSummary>
         <AccordionDetails>
-            <div className="my-course__subtitles__subtitles__videos-list">
-              {subtitle.videos.map((lvideo,index)=>{
-                return <div className={video['_id']===lvideo['_id']? "my-course__subtitles__subtitles__videos-list__video-active":"my-course__subtitles__subtitles__videos-list__video"} onClick={()=>{console.log(lvideo);setVideo(lvideo)}} > 
-                        <div>
-                        <div>{'Section '+(index+1)}</div>
-                        </div>
-                        <div><PlayCircleFilledWhiteIcon style={{cursor:'pointer',color:video['_id']===lvideo['_id']? 'white':'var(--primary-color)'}}/></div>
-                      </div>
-              })}
-            </div>
+          <div className="my-course__subtitles__subtitles__videos-list">
+            {subtitle.videos.map((lvideo, index) => {
+              return (
+                <div
+                  className={
+                    video['_id'] === lvideo['_id']
+                      ? 'my-course__subtitles__subtitles__videos-list__video-active'
+                      : 'my-course__subtitles__subtitles__videos-list__video'
+                  }
+                  onClick={() => {
+                    console.log(lvideo);
+                    setVideo(lvideo);
+                  }}>
+                  <div>
+                    <div>{'Section ' + (index + 1)}</div>
+                  </div>
+                  <div>
+                    <PlayCircleFilledWhiteIcon
+                      style={{
+                        cursor: 'pointer',
+                        color: video['_id'] === lvideo['_id'] ? 'white' : 'var(--primary-color)'
+                      }}
+                    />
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </AccordionDetails>
       </Accordion>
-    )
-  }
-  const accordionExam = (subtitle)=>{
+    );
+  };
+  const accordionExam = (subtitle) => {
     return (
       <Accordion>
-      
         <AccordionSummary
           expandIcon={<ExpandMoreIcon />}
           aria-controls="panel1a-content"
-          id="panel1a-header"
-        >
-        <div style={{ width:'100%'}}>
-          <Typography style={{color:'var(--primary-color)', fontWeight:'bolder'}}>{subtitle.title}</Typography>
-          <Typography><small>{subtitle.quizzes.length} Quiz(zes)</small></Typography>
-        </div>
+          id="panel1a-header">
+          <div style={{ width: '100%' }}>
+            <Typography style={{ color: 'var(--primary-color)', fontWeight: 'bolder' }}>
+              {subtitle.title}
+            </Typography>
+            <Typography>
+              <small>{subtitle.quizzes.length} Quiz(zes)</small>
+            </Typography>
+          </div>
         </AccordionSummary>
         <AccordionDetails>
-            <div className="my-course__subtitles__subtitles__videos-list">
-              {subtitle.quizzes.map((lquiz,index)=>{
-                return <div className={quiz['_id']===lquiz['_id']? "my-course__subtitles__subtitles__videos-list__video-active":"my-course__subtitles__subtitles__videos-list__video"} onClick={()=>{console.log(lquiz);setQuiz(lquiz)}} > 
-                        <div>
-                        <div>{lquiz.title}</div>
-                        </div>
-                        <div><DriveFileRenameOutlineIcon style={{cursor:'pointer',color:quiz['_id']===lquiz['_id']? 'white':'var(--primary-color)'}}/></div>
-                      </div>
-              })}
-            </div>
+          <div className="my-course__subtitles__subtitles__videos-list">
+            {subtitle.quizzes.map((lquiz, index) => {
+              return (
+                <div
+                  className={
+                    quiz['_id'] === lquiz['_id']
+                      ? 'my-course__subtitles__subtitles__videos-list__video-active'
+                      : 'my-course__subtitles__subtitles__videos-list__video'
+                  }
+                  onClick={() => {
+                    console.log(lquiz);
+                    setQuiz(lquiz);
+                    if (lquiz.solved) {
+                      console.log('set solved');
+                      onChangeSolution(true);
+                    } else {
+                      onChangeView(true);
+                    }
+                  }}>
+                  <div>
+                    <div>{lquiz.title}</div>
+                  </div>
+                  <div>
+                    {lquiz.solved ? (
+                      <VisibilityTwoToneIcon
+                        style={{
+                          cursor: 'pointer',
+                          color: quiz['_id'] === lquiz['_id'] ? 'white' : 'var(--primary-color)'
+                        }}
+                      />
+                    ) : (
+                      <DriveFileRenameOutlineIcon
+                        style={{
+                          cursor: 'pointer',
+                          color: quiz['_id'] === lquiz['_id'] ? 'white' : 'var(--primary-color)'
+                        }}
+                      />
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </AccordionDetails>
       </Accordion>
-    )
-  }
+    );
+  };
   // <div style={{
   //   fontWeight:'bolder',
   //   fontSize:'30px',
   //   color:'var(--primary-color)'
   // }}>Subtitle Title</div>
-  const subtitles = ()=>{
-    return(
+  const subtitles = () => {
+    return (
       <div className="my-course__subtitles">
-        <div className="my-course__subtitles__content" style={{ position:'relative'}}>
-        <div style={{
-          position:'absolute',
-          right:'20px',
-          top:'95%',
-          transform:'translate(0%,-100%)'
-          }}>
-          <TakeNotes videoId={video['_id']} courseId={props.course['_id']}/>
-        </div>
-        <WatchVideo video={video}/>
-
+        <div className="my-course__subtitles__content" style={{ position: 'relative' }}>
+          <div
+            style={{
+              position: 'absolute',
+              right: '20px',
+              top: '95%',
+              transform: 'translate(0%,-100%)'
+            }}>
+            <TakeNotes videoId={video['_id']} courseId={props.course['_id']} />
+          </div>
+          <WatchVideo video={video} />
         </div>
         <div className="my-course__subtitles__subtitles">
-          <div style={{
-            display:'flex',
-            alignItems:'center',
-            justifyContent:'space-around',
-            padding:'10px'
-          }}>
-            <div
+          <div
             style={{
-              color:'var(--secondary-color)',
-              fontWeight:'bolder',
-              fontSize:'20px'
-            }}
-              >{props.course.title}</div>
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-around',
+              padding: '10px'
+            }}>
+            <div
+              style={{
+                color: 'var(--secondary-color)',
+                fontWeight: 'bolder',
+                fontSize: '20px'
+              }}>
+              {props.course.title}
+            </div>
             <div>{getProgress()}</div>
           </div>
-          {props.course.subtitles.map((subtitle)=>{
-            return accordion(subtitle)
+          {props.course.subtitles.map((subtitle) => {
+            return accordion(subtitle);
           })}
-
         </div>
-
       </div>
-    )
-  }
-  
-  const exams = ()=>{
-    return(
+    );
+  };
+
+  const exams = () => {
+    return (
       <div className="my-course__subtitles">
         <div className="my-course__subtitles__content">
-
-
-        <ViewExam courseId={props.course['_id']} examId={quiz['_id']} showSolution={onChangeSolution} />
-
+          {viewExam && (
+            <ViewExam
+              courseId={props.course['_id']}
+              examId={quiz['_id']}
+              showSolution={onChangeSolution}
+            />
+          )}
+          {solveExam && <ExamSolution courseId={props.course['_id']} examId={quiz['_id']} />}
         </div>
         <div className="my-course__subtitles__subtitles">
-          <div style={{
-            display:'flex',
-            alignItems:'center',
-            justifyContent:'space-around',
-            padding:'10px'
-          }}>
-            <div
+          <div
             style={{
-              color:'var(--secondary-color)',
-              fontWeight:'bolder',
-              fontSize:'20px'
-            }}
-              >{props.course.title + ' Exam(s)'}</div>
-
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-around',
+              padding: '10px'
+            }}>
+            <div
+              style={{
+                color: 'var(--secondary-color)',
+                fontWeight: 'bolder',
+                fontSize: '20px'
+              }}>
+              {props.course.title + ' Exam(s)'}
+            </div>
           </div>
-          {props.course.subtitles.map((subtitle)=>{
-            return accordionExam(subtitle)
+          {props.course.subtitles.map((subtitle) => {
+            return accordionExam(subtitle);
           })}
-
         </div>
-
       </div>
-    )
-  }
-  
+    );
+  };
 
-  const getContent = ()=>{
-    if(value === 0) return subtitles();
-    if(value === 1) return exams();
-    return (
-      <div>hi</div>
-    )
-  }
+  const getContent = () => {
+    if (value === 0) return subtitles();
+    if (value === 1) return exams();
+    return <div>hi</div>;
+  };
   return (
-    <div style={{ position: 'relative', display:'flex', flexDirection:'column' }}>
-
+    <div style={{ position: 'relative', display: 'flex', flexDirection: 'column' }}>
       <Modal
         open={openReport}
         onClose={() => {
@@ -404,7 +464,6 @@ export default function TraineeViewMyCourse(props) {
         }}>
         {getReport()}
       </Modal>
-
 
       <Modal
         open={openRating}
@@ -440,12 +499,11 @@ export default function TraineeViewMyCourse(props) {
       </Modal>
       <div
         style={{
-
           background: 'var(--cool-grey)',
           position: 'absolute',
           bottom: '0',
           width: '100%',
-          zIndex:'2000' 
+          zIndex: '2000'
         }}>
         <div
           onClick={() => {
@@ -479,23 +537,29 @@ export default function TraineeViewMyCourse(props) {
             alignItems: 'center',
             color: 'grey',
             fontWeight: 'lighter',
-            width:'150px'
+            width: '150px'
           }}>
-          Report Problem <ReportGmailerrorredIcon/>
+          Report Problem <ReportGmailerrorredIcon />
         </div>
         <BottomNavigation
           showLabels
           value={value}
-          style={{ background: 'var(--cool-grey)', borderTop: '0.5px solid grey'}}
+          style={{ background: 'var(--cool-grey)', borderTop: '0.5px solid grey' }}
           onChange={(event, newValue) => {
             handleMenuChange(newValue);
+            if (props.course.subtitles[0].quizzes[0].solved) {
+              onChangeSolution(true);
+            } else {
+              onChangeView(true);
+            }
           }}>
           <BottomNavigationAction label="Subtitles" icon={<RestoreIcon />} />
           <BottomNavigationAction label="Exercises" icon={<FavoriteIcon />} />
         </BottomNavigation>
-   
       </div>
-      <div className="content" style={{position:'relative', height: '95%', width: '100%',overflow:'scroll' }}>
+      <div
+        className="content"
+        style={{ position: 'relative', height: '95%', width: '100%', overflow: 'scroll' }}>
         {getContent()}
       </div>
     </div>

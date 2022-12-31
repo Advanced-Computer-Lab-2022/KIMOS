@@ -11,11 +11,11 @@ function App(props) {
   const [userSolution, setUserSolution] = useState([]);
   const [myExam, setMyExam] = useState({});
   const [loading, setLoading] = useState({});
+  const [grade, setGrade] = useState(-1);
 
   const [submitSuccess, setSubmitSuccess] = useState(false);
 
   const getExam = async () => {
-
     setLoading(true);
 
     await axios
@@ -46,12 +46,13 @@ function App(props) {
     console.log(res);
     if (res.statusText === 'OK') {
       setSubmitSuccess(true);
+      setGrade(res.data.payload.grade);
     }
   };
 
   useEffect(() => {
     getExam();
-  },[props.examId]);
+  }, [props.examId]);
 
   /* A possible answer was clicked */
   const optionClicked = (option, questionId) => {
@@ -75,31 +76,39 @@ function App(props) {
     setCurrentQuestion(index);
   };
 
-  const displayQuestions = ()=>{
-    return myExam.exercises&&myExam.exercises.map((question, index)=>{
-
-         return(
-             <div id={index} className= {`subtitleD ${currentQuestion === index? 'selected-subtitle':''}`} onClick={() => {changeDisplayedQuestion(index)}}>
-              {'Question ' + (index + 1)}
-             </div>
-         )
-     })
- }
-
- 
+  const displayQuestions = () => {
+    return (
+      myExam.exercises &&
+      myExam.exercises.map((question, index) => {
+        return (
+          <div
+            id={index}
+            className={`subtitleD ${currentQuestion === index ? 'selected-subtitle' : ''}`}
+            onClick={() => {
+              changeDisplayedQuestion(index);
+            }}>
+            {'Question ' + (index + 1)}
+          </div>
+        );
+      })
+    );
+  };
 
   return (
-    <div className="App" style={{height:'100%', display:'flex',flexDirection:'column', overflow:'hidden'}}>
-    {loading&&<Loading/>}
+    <div
+      className="App"
+      style={{ height: '100%', display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+      {loading && <Loading />}
       {submitSuccess ? (
         <>
           <div className="final-results">
             <h1>Your results have been recorded</h1>
+            {grade !== -1 && <h2>`Grade: ${grade}`</h2>}
             <div className="user-options">
-              <PrimaryButton function={props.showSolution} btnText="Show Solution" />
+              <PrimaryButton function={props.showSolution(true)} btnText="Show Solution" />
               <PrimaryButton
                 function={() => {
-                  window.location.href = `/myCourseTrainee`;
+                  //window.location.href = `/myCourseTrainee`;
                 }}
                 btnText="Go back to course page"
               />
@@ -108,10 +117,10 @@ function App(props) {
         </>
       ) : (
         <>
-        <div className='subtitles-display' style={{ position:'absolute', top:'0'}}>
+          <div className="subtitles-display" style={{ position: 'absolute', top: '0' }}>
             {displayQuestions()}
-        </div>
-          
+          </div>
+
           <div className="question-card" style={{ marginTop: 20 }}>
             {/* Current Question  */}
             <h2 className="currentqheader">
