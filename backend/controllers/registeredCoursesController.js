@@ -18,12 +18,11 @@ const getAllRegisteredCourses = asyncHandler(async (req, res) => {
   const userId = res.locals.userId;
   const reg = await RegisteredCourses.find({ userId: userId }).populate('courseId');
   var returnResult;
+  console.log(reg);
   if (reg) {
     returnResult = await Promise.all(
       reg.map(async (course, index) => {
-        //console.log(result.progress);
         var result = course.courseId;
-
         result = await result.populate('instructor', 'firstName lastName');
         result = await result.populate('subject');
         if (result.subtitles.length) {
@@ -102,14 +101,11 @@ const getAllRegisteredCourses = asyncHandler(async (req, res) => {
             })
           );
           const resSpread = { ...result };
-
-          console.log(result.progress);
           if (resSpread._doc)
             result = { ...result.toObject(), exams: exams, progress: course.progress };
           else result = { ...result, exams: exams, progress: course.progress };
-
-          return result;
         }
+        return result;
       })
     );
   } else {
@@ -239,20 +235,16 @@ const getAllRegisteredInvoices = asyncHandler(async (req, res) => {
       });
       var status;
       if (refundRequest) {
-
         status = 'pending';
-
       } else {
         status = refundable ? 'refund' : 'noRefund';
       }
       return {
-
         _id: registeredCourse.courseId,
         courseName: registeredCourseInvoiceCourseInfo.courseId.title,
         date: registeredCourse.createdAt,
         status: status,
         price: registeredCourseInvoice.invoice.payment
-
       };
     })
   );
@@ -263,8 +255,39 @@ const getAllRegisteredInvoices = asyncHandler(async (req, res) => {
     payload: { invoices }
   });
 });
+const updateProgress = asyncHandler(async (req, res) => {
+  const userId = res.locals.userId;
+  const { courseId, videoId } = req.query;
+  const reg = await RegisteredCourses.findOne({
+    userId: userId,
+    courseId: courseId
+  }).populate('videosNotes.notes');
+  var newProgress = reg.progress;
+  var notes = [];
+  const found = reg.videosNotes.find(
+    (videoNotes) => videoNotes.video.toString() === videoId.toString()
+  );
+  if (!found) {
+    const video = await Video.findById(videoId);
+    const course = await Course.findById(courseId);
+    const videoHours = video.hours;
+    const totalHours = course.totalHours;
+    newProgress += videoHours / totalHours;
+    await RegisteredCourses.findOneAndUpdate(
+      { userId: userId, courseId: courseId },
+      { $push: { videosNotes: { video: videoId } }, progress: newProgress }
+    );
+  }
 
-const getAllNotesAndUpdateProgress = asyncHandler(async (req, res) => {
+  res.status(200).json({
+    message: 'Updated progress successfully',
+    payload: { newProgress },
+    statusCode: 200,
+    success: true
+  });
+});
+
+const getAllNotes = asyncHandler(async (req, res) => {
   const userId = res.locals.userId;
   const { courseId, videoId } = req.query;
   const reg = await RegisteredCourses.findOne({
@@ -362,9 +385,7 @@ const updateNotes = asyncHandler(async (req, res) => {
   res.status(200).json({ message: 'Notes updated successfully', statusCode: 200, success: true });
 });
 
-
 const viewMostPopularCourses = asyncHandler(async (req, res) => {
-
   const sortedByCountCourses = await RegisteredCourses.aggregate([
     { $sortByCount: '$courseId' },
     { $limit: 10 }
@@ -378,11 +399,7 @@ const viewMostPopularCourses = asyncHandler(async (req, res) => {
       title: course._id.title,
       price: course._id.price,
       rating: course._id.rating,
-      instructor:
-        course._id.instructor.firstName +
-        ' ' +
-        course._id.instructor.lastName
-
+      instructor: course._id.instructor.firstName + ' ' + course._id.instructor.lastName
     };
   });
   res.status(200).json({
@@ -391,14 +408,13 @@ const viewMostPopularCourses = asyncHandler(async (req, res) => {
     message: 'Fetched most popular courses successfully',
     payload: { returnCourses }
   });
-
 });
-
 
 module.exports = {
   registerUser,
   getAllRegisteredCourses,
-  getAllNotesAndUpdateProgress,
+  getAllNotes,
+  updateProgress,
   updateNotes,
   getAllRegisteredInvoices,
   viewMostPopularCourses,

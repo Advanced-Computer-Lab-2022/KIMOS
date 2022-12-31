@@ -1,11 +1,20 @@
 const stripe = require('stripe')(process.env.STRIPE_PRIVATE_KEY);
 const User = require('../models/userModel');
 const Course = require('../models/courseModel');
+const RegisteredCourse = require('../models/registeredCoursesModel');
 const jwt = require('jsonwebtoken');
 const { getCountryIso, getCorrectPrice } = require('./userController');
 const asyncHandler = require('express-async-handler');
 
 const checkout = asyncHandler(async (req, res) => {
+  const registration = await RegisteredCourse.find({
+    userId: res.locals.userId,
+    courseId: req.query.courseId
+  });
+  if (registration) {
+    res.status(500);
+    throw new Error('Course already registered');
+  }
   const userInfo = await User.findById(res.locals.userId);
   const currency = getCountryIso(userInfo.country.code);
   const courseInfo = await Course.findById(req.query.courseId);

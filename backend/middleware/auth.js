@@ -106,7 +106,6 @@ const registerCourseAuth = asyncHandler(async (req, res, next) => {
 
   jwt.verify(token, process.env.PAYMENT_SECRET, (err, decodedToken) => {
     if (err) {
-
       res.status(401).json({
         statusCode: 401,
         success: false,
@@ -156,25 +155,18 @@ const editCourseAuth = asyncHandler(async (req, res, next) => {
   }
 });
 
-
-
 const seePublicCourseAuth = asyncHandler(async (req, res, next) => {
-  const userId = res.locals.userId.toString();
   const courseInfo = await Course.findById(req.query.courseId);
   if (courseInfo.visibility !== 'public') {
-    res
-      .status(401)
-      .json({
-        statusCode: 401,
-        success: false,
-        message: 'Cannot access courses that are not public'
-      });
-
+    res.status(401).json({
+      statusCode: 401,
+      success: false,
+      message: 'Cannot access courses that are not public'
+    });
   } else {
     next();
   }
 });
-
 
 const editPublicCourseAuth = asyncHandler(async (req, res, next) => {
   const userId = res.locals.userId.toString();
@@ -199,6 +191,4 @@ module.exports = {
   individualAuth,
   corporateAuth,
   seePublicCourseAuth
-
 };
-

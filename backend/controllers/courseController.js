@@ -74,11 +74,10 @@ const createCourse = asyncHandler(async (req, res) => {
 });
 
 const findCourses = asyncHandler(async (req, res) => {
-
   var resultsPerPage = req.query.resultsPerPage || 10;
   var courses = [];
   const instructorId = req.query.instructorSearch ? res.locals.userId : -1;
-  if(req.query.instructorSearch){
+  if (req.query.instructorSearch) {
     resultsPerPage = 100; // just to fix the issue for now.
   }
 
@@ -302,15 +301,13 @@ const addNewSubject = asyncHandler(async (req, res) => {
   res.status(200).json({ success: true, message: 'Successfully inserted', statusCode: 200 });
 });
 
-const addDiscount = asyncHandler(async (req, res) => {
-  const { courseId } = req.query;
-  const { discount } = req.body;
+const addDiscount = asyncHandler(async (courseId, discount) => {
   const { startDate, endDate } = discount.duration;
 
   var todayDate = new Date();
   if (todayDate > new Date(endDate)) {
     res.status(500);
-    throw new Error("end date is not valid");
+    throw new Error('end date is not valid');
   }
 
   const startJob = schedule.scheduledJobs[courseId + 'start'];
@@ -318,8 +315,9 @@ const addDiscount = asyncHandler(async (req, res) => {
   if (startJob) startJob.cancel();
   if (endJob) endJob.cancel();
 
-  
-  await Course.findByIdAndUpdate(courseId, { discount: {duration:discount.duration ,amount: parseInt(discount.amount)} });
+  await Course.findByIdAndUpdate(courseId, {
+    discount: { duration: discount.duration, amount: parseInt(discount.amount) }
+  });
   if (todayDate >= new Date(startDate)) {
     if (todayDate < new Date(endDate)) {
       schedule.scheduleJob(courseId + 'end', endDate, async function () {
@@ -368,7 +366,6 @@ const addDiscount = asyncHandler(async (req, res) => {
       });
     }
   }
-  res.status(200).json({ message: 'Discount added successfully,success:true,statusCode:200' });
 });
 
 const setCoursePromotion = async (req, res) => {
@@ -376,14 +373,13 @@ const setCoursePromotion = async (req, res) => {
   var todayDate = new Date();
   if (todayDate > new Date(discount.duration.endDate)) {
     res.status(500);
-    throw new Error("end date is not valid");
+    throw new Error('end date is not valid');
   }
   for (var i = 0; i < courseIdList.length; i++) {
     coursePromotionHelper(courseIdList[i], discount);
   }
   res.status(200).json({ message: 'Discounts added successfully', statusCode: 200, success: true });
 };
-
 
 const coursePromotionHelper = asyncHandler(async (courseId, discount) => {
   const { startDate, endDate } = discount.duration;
@@ -393,7 +389,9 @@ const coursePromotionHelper = asyncHandler(async (courseId, discount) => {
   if (endJob) endJob.cancel();
   var todayDate = new Date();
 
-  await Course.findByIdAndUpdate(courseId, { discount: {duration:discount.duration ,amount: parseInt(discount.amount)} });
+  await Course.findByIdAndUpdate(courseId, {
+    discount: { duration: discount.duration, amount: parseInt(discount.amount) }
+  });
 
   if (todayDate >= new Date(startDate)) {
     if (todayDate < new Date(endDate)) {
@@ -447,15 +445,15 @@ const coursePromotionHelper = asyncHandler(async (courseId, discount) => {
 });
 
 const viewCourseTrainee = asyncHandler(async (req, res) => {
-
-  const userId = res.locals.userId;
-
   const { courseId } = req.query;
+  console.log(courseId);
   var courseInfo = await Course.findById(courseId);
   var examsArray = [];
   var subtitlesArray = [];
   var course = await Course.findById(courseId);
+  var reg;
   if (res.locals.registered) {
+    reg = await RegisteredCourse.find({ userId: res.locals.userId, courseId: req.query.courseId });
     if (courseInfo.subtitles.length) {
       var courseSubtitles = await course.populate('subtitles');
       courseSubtitles = await course.populate('subtitles.videos');
@@ -503,12 +501,11 @@ const viewCourseTrainee = asyncHandler(async (req, res) => {
         })
       );
     }
-  
 
     if (courseInfo.exams.length) {
       examsArray = await Promise.all(
         courseInfo.exams.map(async (exam, index) => {
-          const s = await getSolution(userId, exam);
+          const s = await getSolution(res.locals.userId, exam);
           const ex = await getExam(exam, false);
           if (s) {
             return {
@@ -532,7 +529,6 @@ const viewCourseTrainee = asyncHandler(async (req, res) => {
 
   courseInfo = await courseInfo.populate('subtitles', 'title hours');
   courseInfo = await courseInfo.populate('exams', 'title');
-  console.log(new Date());
 
   res.status(200).json({
     _id: courseInfo._id,
@@ -544,15 +540,13 @@ const viewCourseTrainee = asyncHandler(async (req, res) => {
     subject: courseInfo.subject,
     instructor: courseInfo.instructor,
     preview: courseInfo.preview,
-
     subtitles: subtitlesArray.length ? subtitlesArray : courseInfo.subtitles,
-
     summary: courseInfo.summary,
     averageRating: courseInfo.rating,
+    progress: res.locals.registered ? reg.progress : undefined,
     exams: examsArray.length ? examsArray : courseInfo.exams
   });
 });
-
 
 const addExam = asyncHandler(async (req, res) => {
   const { courseId } = req.query;
@@ -566,7 +560,6 @@ const addExam = asyncHandler(async (req, res) => {
   });
   res.status(200).json({ success: true, statusCode: 200, message: 'Exam added successfully' });
 });
-
 
 const findExam = asyncHandler(async (req, res) => {
   const userId = res.locals.userId.toString();
@@ -588,7 +581,6 @@ const findExam = asyncHandler(async (req, res) => {
       const exam = await getExam(examId, false);
       console.log(exam);
       console.log(examId);
-
 
       res
         .status(200)
@@ -625,55 +617,56 @@ const editCourse = asyncHandler(async (req, res) => {
       throw new Error('Subject not approved by admin');
     }
   }
-  // if (flagDiscount === 'true') {
-  //   discount = await addDiscount(courseId, course.discount).catch((err) => {
-  //     throw err;
-  //   });
-  // }
+  if (flagDiscount === 'true') {
+    await addDiscount(courseId, course.discount).catch((err) => {
+      throw err;
+    });
+  }
   const oldCourse = await Course.findById(courseId);
-  let subtitleIds = course.subtitles.map((subtitle) => {
-    const subtitleId = subtitle._id;
-    if (subtitleId) {
-      return subtitleId.toString();
-    }
-    return '-1';
-  });
-  oldCourse.subtitles.map(async (subtitleId, index) => {
-    if (!subtitleIds.includes(subtitleId.toString())) {
-      await deleteSubtitle(subtitleId).catch((err) => {
-        throw err;
-      });
-    }
-
-  });
-  subtitles = await Promise.all(
-    course.subtitles.map(async (subtitle, index) => {
-      var sub;
-      if (subtitle._id) {
-        sub = await updateSubtitle(subtitle._id, subtitle).catch((err) => {
-          throw err;
-        });
-      } else {
-        sub = await createSubtitle(subtitle).catch((err) => {
+  if (oldCourse.visibility === 'private') {
+    let subtitleIds = course.subtitles.map((subtitle) => {
+      const subtitleId = subtitle._id;
+      if (subtitleId) {
+        return subtitleId.toString();
+      }
+      return '-1';
+    });
+    oldCourse.subtitles.map(async (subtitleId, index) => {
+      if (!subtitleIds.includes(subtitleId.toString())) {
+        await deleteSubtitle(subtitleId).catch((err) => {
           throw err;
         });
       }
-      return sub;
-    })
-  );
-  subtitles.map((subtitle, index) => {
-    totalHours += parseFloat(subtitle.hours);
-  });
-  await Course.findByIdAndUpdate(courseId, {
-    title: course.title,
-    subtitles: subtitles,
-    subject: subject.id,
-    summary: course.summary,
-    price: course.price,
-    // discount: discount ? discount : oldCourse.discount,
-    totalHours: totalHours,
-    preview: course.preview
-  });
+    });
+    subtitles = await Promise.all(
+      course.subtitles.map(async (subtitle, index) => {
+        var sub;
+        if (subtitle._id) {
+          sub = await updateSubtitle(subtitle._id, subtitle).catch((err) => {
+            throw err;
+          });
+        } else {
+          sub = await createSubtitle(subtitle).catch((err) => {
+            throw err;
+          });
+        }
+        return sub;
+      })
+    );
+    subtitles.map((subtitle, index) => {
+      totalHours += parseFloat(subtitle.hours);
+    });
+    await Course.findByIdAndUpdate(courseId, {
+      title: course.title,
+      subtitles: subtitles,
+      subject: subject.id,
+      summary: course.summary,
+      price: course.price,
+      // discount: discount ? discount : oldCourse.discount,
+      totalHours: totalHours,
+      preview: course.preview
+    });
+  }
   res.status(200).json({ success: true, statusCode: 200, message: 'Edited course successfully' });
 });
 
@@ -723,16 +716,14 @@ const rateCourse = asyncHandler(async (req, res) => {
   const userId = res.locals.userId;
   const { courseId } = req.query;
 
-  const { rating,review } = req.body;
+  const { rating, review } = req.body;
 
   var newRating = 0;
   const courseInfo = await Course.findById(courseId);
   const check = await viewRating(userId, courseId);
   const currRating = courseInfo.rating;
   if (check) {
-
-    await updateRating(userId, courseId, rating,review).catch((err) => {
-
+    await updateRating(userId, courseId, rating, review).catch((err) => {
       throw err;
     });
     newRating =
@@ -742,9 +733,7 @@ const rateCourse = asyncHandler(async (req, res) => {
       rating: { value: newRating, numberOfRatings: currRating.numberOfRatings }
     });
   } else {
-
-    await createRating(userId, courseId, rating,review).catch((err) => {
-
+    await createRating(userId, courseId, rating, review).catch((err) => {
       throw err;
     });
     newRating =
@@ -864,6 +853,5 @@ module.exports = {
   viewCourseTrainee,
   setCoursePromotion,
   makeCoursePublic,
-  closeCourse,
-  addDiscount
+  closeCourse
 };

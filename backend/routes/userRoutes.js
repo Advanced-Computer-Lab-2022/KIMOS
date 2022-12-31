@@ -19,9 +19,7 @@ const {
   getRequests
 } = require('../controllers/userController');
 
-
-const {getAllRatings} = require('../controllers/ratingController');
-
+const { getAllRatings } = require('../controllers/ratingController');
 
 const {
   adminAuth,
@@ -52,6 +50,8 @@ const {
 const { removeRegisteredUser } = require('../controllers/registeredCoursesController');
 const { isLoggedIn } = require('../middleware/helper');
 const { registerUser } = require('../controllers/registeredCoursesController');
+
+router.get('/reviews', getAllRatings);
 
 router.route('/').post(loggedIn, adminAuth, addUser).put(loggedIn, editUser).get(loggedIn, getMe); //all good
 router.get('/viewInstructorDetails', loggedIn, isRegisteredWithInstructor, viewInstructorDetails); //all good

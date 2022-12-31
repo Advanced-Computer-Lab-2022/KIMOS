@@ -3,23 +3,22 @@ const User = require('../models/userModel');
 const registerUser = require('../models/registeredCoursesModel');
 const asyncHandler = require('express-async-handler');
 
-
-const isRegisteredToCourse = asyncHandler(async (req, res,next) => {
-
+const isRegisteredToCourse = asyncHandler(async (req, res, next) => {
   if (!res.locals.userId) {
     res.locals.registered = false;
     next();
-  }
-  const registration = await registerUser.findOne({
-    userId: res.locals.userId,
-    courseId: req.query.courseId
-  });
-  if (registration) {
-    res.locals.registered = true;
-    next();
   } else {
-    res.locals.registered = false;
-    next();
+    const registration = await registerUser.findOne({
+      userId: res.locals.userId,
+      courseId: req.query.courseId
+    });
+    if (registration) {
+      res.locals.registered = true;
+      next();
+    } else {
+      res.locals.registered = false;
+      next();
+    }
   }
 });
 
