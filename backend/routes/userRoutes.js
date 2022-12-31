@@ -67,7 +67,7 @@ router
   .post(loggedIn, registeredCourseAuth, createReport) //all good
   .get(loggedIn, getReports) //all good
   .put(loggedIn, adminAuth, changeStatus) //all good
-  .patch(loggedIn, adminAuth, addMessages); //all good
+  .patch(loggedIn, addMessages); //all good // removed adminAuth from here.
 
 router.post('/createCheckoutSession', loggedIn, individualAuth, checkout); //all good
 router.post('/register', loggedIn, individualAuth, registerCourseAuth, createInvoice, registerUser); //all good

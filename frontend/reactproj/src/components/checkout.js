@@ -2,18 +2,22 @@ import SecondaryBtn from "./buttons/secondaryBtn";
 import axios from 'axios';
 
 const checkout = ({courseId}) => {
-
+    console.log(courseId)
     const onclick = ()=>{
-        axios.post(`https://localhost:5000/checkout`,{items:courseId})
+        
+        axios.post(`http://localhost:5000/users/createCheckoutSession?courseId=`+courseId)
         .then(res=>{
+            console.log(res);
+            const url = res.data.payload.url;
+            window.open(
+                url,
+                '_blank' // <- This is what makes it open in a new window.
+              );
             if(res.ok)  return res.json();
             return res.json().then(json=>Promise.reject(json));
         })
-        .then(({url}) =>{
-            window.location.href = url;
-        })
         .catch(e=>{
-            console.error(e.error);
+            console.log(e.error);
         })
     }
 

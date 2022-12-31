@@ -97,13 +97,20 @@ class instructorCourse extends Component {
             <div className='subtitle' style={{ width:'100%'}}>
                 <div className='subtitle__header'>
                     
-                    <TextField id={subtitle.title + '1'} onChange={this.updateSubTitle} value={subtitle.title} label="Subtitle Title" variant="outlined" />
+                    <TextField           
+                    InputProps={{
+                        readOnly: this.props.course.visibility &&this.props.course.visibility !== 'private',
+                      }}
+                      id={subtitle.title + '1'} onChange={this.updateSubTitle} value={subtitle.title} label="Subtitle Title" variant="outlined" />
 
                 </div>
 
                 <div className='subtitle__info'>
                     <div className='subtitle__info__value' style={{display:'flex',alignItems:'center'}}>
-                        <TextField id={this.state.course.title+'1'} value={subtitle.hours} label="Subtitles Hour(s)" variant="outlined" readOnly/>
+                        <TextField           
+                    InputProps={{
+                        readOnly: this.props.course.visibility &&this.props.course.visibility !== 'private',
+                      }} id={this.state.course.title+'1'} value={subtitle.hours} label="Subtitles Hour(s)" variant="outlined" readOnly/>
                         <div style={{color:'grey', marginLeft:'5px'}}>
                             Hour(s)
                         </div>
@@ -123,13 +130,19 @@ class instructorCourse extends Component {
                 </div>
                 <div className='subtitle__info'>
                     <div className='subtitle__info__key'>
-                        <TextField id={this.state.course.title+'0'} onChange={this.updateSubVideoLink} value={subtitle.videos[this.state.currentSubtitleVideo].link} label="Video URL" variant="outlined" />
+                        <TextField           
+                    InputProps={{
+                        readOnly: this.props.course.visibility &&this.props.course.visibility !== 'private',
+                      }} id={this.state.course.title+'0'} onChange={this.updateSubVideoLink} value={subtitle.videos[this.state.currentSubtitleVideo].link} label="Video URL" variant="outlined" />
                     </div>
                 </div>
 
                 <div className='subtitle__info'>
                     <div className='subtitle__info__key' style={{width:'80%'}}>
-                        <TextField id={this.state.course.title+'2'} onChange={this.updateSubVideoDesc} value={subtitle.videos[this.state.currentSubtitleVideo].description} label="Video Description" variant="outlined" multiline rows={3} fullWidth />
+                        <TextField           
+                    InputProps={{
+                        readOnly: this.props.course.visibility &&this.props.course.visibility !== 'private',
+                      }} id={this.state.course.title+'2'} onChange={this.updateSubVideoDesc} value={subtitle.videos[this.state.currentSubtitleVideo].description} label="Video Description" variant="outlined" multiline rows={3} fullWidth />
                     </div>
                 </div>
             </div>
@@ -376,7 +389,10 @@ class instructorCourse extends Component {
                             Course Preview URL
                         </div>       
                         <div className='instructorCourse-drawer__options__option__sub-header' style={{marginBottom:'10px',marginTop:'10px'}}>
-                            <TextField onChange={this.updatePreviewLink} value={course.preview} label="Videl URL" variant="outlined" />
+                            <TextField           
+                    InputProps={{
+                        readOnly: this.props.course.visibility &&this.props.course.visibility !== 'private',
+                      }} onChange={this.updatePreviewLink} value={course.preview} label="Videl URL" variant="outlined" />
                             <div style={{display:'flex', alignItems:'center', cursor:'pointer'}} onClick={()=>{this.createExam('course')}} >
                                 <PostAddIcon style={{cursor:'pointer',fontSize:'40px', fontWeight:'bolder', color:'var(--primary-color)'}}/>
                                 <div style={{fontWeight:'lighter', fontSize:'20px'}}>Create Final Exam</div>

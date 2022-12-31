@@ -16,7 +16,7 @@ import SecondaryBtn from './buttons/secondaryBtn';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import PaymentPolicy from './paymentPolicy';
-import { showAlert } from '../redux/actions/index';
+import { showAlert,setUser } from '../redux/actions/index';
 import { connect } from 'react-redux';
 import axios from 'axios';
 
@@ -88,30 +88,50 @@ const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
 
   
 class SignUp extends Component {
+    handleLogout = async()=>{
 
+        try{
+            const res = await axios.post("http://localhost:5000/logout");
+
+
+            if(res.data.success){
+                this.props.setUser({username:"",userType:""});
+                window.location.href = '/login';
+            }
+            else{
+                alert("err occurred")
+            }
+
+        }catch(e){
+            console.log(e);
+        }
+
+        
+    }
 
   handleSubmit = (event) => {
 
 
-    axios.post(`http://localhost:5000/signup`,this.state.data)
+    axios.put(`http://localhost:5000/users/`,this.state.data)
     .then(res=>{
       if(res.data.success){
-        this.props.showAlert({shown:true, message:'Signed up successfully',severity:'success'})
-        window.location.href = 'login'
+        this.props.showAlert({shown:true, message:'Updated your details',severity:'success'})
+        this.handleLogout()
       }
       else{
-        this.props.showAlert({shown:true, message:'Couldnt sign up',severity:'error'})
+        this.props.showAlert({shown:true, message:'Couldnt update your details',severity:'error'})
 
       }
 
     })
     .catch(e=>{
-      this.props.showAlert({shown:true, message:'Couldnt sign up',severity:'error'})
+      this.props.showAlert({shown:true, message:'Couldnt update your details',severity:'error'})
     })
   };
 
     steps = ['Your Info', 
-             'Terms And Conditions'];
+             'Terms And Conditions',
+            'Contract'];
     state = {
         currentStep : 0,
         acceptedTerms:false,
@@ -124,10 +144,13 @@ class SignUp extends Component {
         }
     }
     handleBack = ()=>{
+        console.log(this.state);
         this.setState({currentStep: this.state.currentStep - 1 < 0 ? 0 : this.state.currentStep - 1 })
     }
     handleNext = ()=>{
-        this.setState({currentStep: this.state.currentStep + 1 >2 ? 2 : this.state.currentStep + 1 })
+        console.log(this.state);
+
+        this.setState({currentStep: this.state.currentStep + 1 >3 ? 3 : this.state.currentStep + 1 })
     }
     getPolicy = (name, list)=>{
         return (
@@ -161,16 +184,16 @@ class SignUp extends Component {
             return ( 
                 <div className="signUp-container__content">
                         <div className='signUp-container__content__form'>
-                            <div className='signUp-container__content__form__title'>Sign Up</div>
+                            <div className='signUp-container__content__form__title'>Enter Your Details</div>
                             <div className='signUp-container__content__form__names'>
-                                <TextField onChange={this.handleChange} style={{margin:'10px'}} id="firstName" label="First Name" variant="outlined" />
-                                <TextField onChange={this.handleChange} style={{margin:'10px'}} id="lastName" label="Last Name" variant="outlined" />
+                                <TextField value={this.state.data['firstName']} onChange={this.handleChange} style={{margin:'10px'}} id="firstName" label="First Name" variant="outlined" />
+                                <TextField value={this.state.data['lastName']} onChange={this.handleChange} style={{margin:'10px'}} id="lastName" label="Last Name" variant="outlined" />
                             </div>
 
                             <div className='signUp-container__content__form__else'>
-                                <TextField onChange={this.handleChange} style={{margin:'10px'}} id="email" label="Email" variant="outlined" />
-                                <TextField onChange={this.handleChange} style={{margin:'10px'}} id="username" label="Username" variant="outlined" />
-                                <TextField onChange={this.handleChange}  type="password" style={{margin:'10px'}} id="password" label="Password" variant="outlined" />   
+                                <TextField value={this.state.data['email']} onChange={this.handleChange} style={{margin:'10px'}} id="email" label="Email" variant="outlined" />
+                                <TextField value={this.state.data['username']} onChange={this.handleChange} style={{margin:'10px'}} id="username" label="Username" variant="outlined" />
+                                <TextField value={this.state.data['password']} onChange={this.handleChange}  type="password" style={{margin:'10px'}} id="password" label="Password" variant="outlined" />   
                             </div>
 
                         </div>
@@ -191,12 +214,56 @@ class SignUp extends Component {
                         right:0,
                         bottom:0
                     }}>
-                        <FormControlLabel control={<Checkbox  value={this.state.acceptedTerms} onChange={(v)=>{this.setState({acceptedTerms:!this.state.acceptedTerms})}}/>} label="Accept All Terms & Conditions" />
+                        <FormControlLabel control={<Checkbox  checked={this.state.acceptedTerms} onChange={(v)=>{this.setState({acceptedTerms: !this.state.acceptedTerms})}}/>} label="Accept All Terms & Conditions" />
                     </div>
                 </div>
             )
         }
+    if(this.state.currentStep === 2){
+        return (this.contract())
     }
+    }
+  contract = ()=>{
+    return (        <div className='contract'>
+    <div style={{display:'flex', alignItems:'center'}}>
+        <div className='contract__title'>Contract</div>
+
+        </div>
+    <div className='contract__content'>
+
+        <div className='contract__content__rights'>
+            <div className='contract__content__rights__header'>Terms of Service</div>
+            <ul>
+                {[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15].map((item,index)=>{
+                    return (
+                        <li>
+                            Provide consistent and seamless experiences across the Meta Company Products
+                        </li>   
+                    )
+                })}
+            
+
+            </ul>
+
+        </div>
+        <div className='contract__content__percentage-taken'>
+            <div className='contract__content__percentage-taken__info'>
+                <div className='contract__content__percentage-taken__info__left'>
+                    % Taken by the company on each video
+                </div>
+                <div className='contract__content__percentage-taken__info__amount'>
+                    10
+                </div>
+            </div>
+
+        </div>
+
+
+    
+    </div>
+
+</div>)
+  }
   render() {
     return (
       <div className='signUp-container'>
@@ -215,7 +282,7 @@ class SignUp extends Component {
         <div className='addCourse__footer'>
             <div className='addCourse__footer__btns'>
                 <SecondaryBtn function={this.handleBack} btnText="Back"/>
-                <PrimaryBtn disabled={(this.state.currentStep === 0 && !this.validateInfo()) || (this.state.currentStep === 1&& !this.state.acceptedTerms)} function={this.state.currentStep===1 ? this.handleSubmit:this.handleNext} btnText={this.state.currentStep === 1? 'Sign Up':'Next'}/>
+                <PrimaryBtn disabled={(this.state.currentStep === 0 && !this.validateInfo()) || (this.state.currentStep === 1&& !this.state.acceptedTerms)} function={this.state.currentStep===2 ? this.handleSubmit:this.handleNext} btnText={this.state.currentStep === 2? 'Accept & Save':'Next'}/>
             </div>
         </div>
 
@@ -232,4 +299,4 @@ class SignUp extends Component {
 // {this.getPolicy("Payment Policy", [1,2,3,4])}
 
 
-export default connect(null, { showAlert })(SignUp);
+export default connect(null, { showAlert,setUser })(SignUp);

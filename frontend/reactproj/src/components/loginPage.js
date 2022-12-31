@@ -18,12 +18,17 @@ class loginPage extends Component {
 
 
   }
-  redirect = (userType) =>{
-
-
+  redirect = (user) =>{
+    var userType = user.userType;
     var type = userType;
+
     if(userType === 'corporate trainee' || userType === 'individual trainee' )
       type = 'user'
+    var firstLogIn = user.firstLogIn ==='true'? user.firstLogIn : false;
+    if(firstLogIn){
+      window.location.href = type+'/firstLogin';
+      return;
+    }
     window.location.href = type;
   }
   signIn = async () => {
@@ -38,16 +43,16 @@ class loginPage extends Component {
       });
 
       //update the user if payload is success
-      if(res.data.success === true){
+      if(res.data.success){
         this.props.setUser(res.data.payload)
-
-
-        this.redirect(res.data.payload.userType)
+        this.redirect(res.data.payload)
       }
-
+    else
+      this.props.showAlert({shown:true, message:'Check your Info',severity:'error'})
 
       // this.setState({ instructor: info, new_instructor: info });
     } catch (e) {
+      this.props.showAlert({shown:true, message:'Check your Info',severity:'error'})
 
     }
   };

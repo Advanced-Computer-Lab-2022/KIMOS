@@ -107,9 +107,8 @@ const getAllRegisteredCourses = asyncHandler(async (req, res) => {
           if (resSpread._doc)
             result = { ...result.toObject(), exams: exams, progress: course.progress };
           else result = { ...result, exams: exams, progress: course.progress };
-
-          return result;
         }
+        return result;
       })
     );
   } else {

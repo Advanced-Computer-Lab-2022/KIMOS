@@ -3,15 +3,20 @@ import eren from '../assets/eren-yeager.png';
 import erenSmiling from '../assets/eren-smiliing.png';
 import RatingComp from '../components/rating';
 import SecondaryBtn from './buttons/secondaryBtn';
+import PrimaryBtn from './buttons/primaryBtn';
+
 import axios from 'axios';
 import AddIcon from '@mui/icons-material/Add';
 import Modal from '@mui/material/Modal';
 import Rating from '@mui/material/Rating';
+import TextField from '@mui/material/TextField';
 
 class InstructorProfile extends Component {
   state = {
+    instructorId:-1,
     openRating: false,
     instructorRatingValue: 0,
+    reviewText:'',
     editing: false,
     instructor: {
       username: 'Eren',
@@ -27,7 +32,15 @@ class InstructorProfile extends Component {
     }
   };
   componentDidMount() {
-    this.getUserInfo();
+    // instructorId
+    var url =  window.location.href;
+    url = url.split('/');
+    var id = url[url.length - 1];
+    this.setState({instructorId:id}, ()=>{
+      this.getUserInfo();
+      this.getRatings();
+    })
+
   }
   toggleEditing = () => {
     this.setState({ editing: !this.state.editing });
@@ -49,7 +62,7 @@ class InstructorProfile extends Component {
   };
   getUserInfo = async () => {
     try {
-      const res = await axios.get('http://localhost:5000/users/?userId=638117c243cba3f0babcc3a9', {
+      const res = await axios.get('http://localhost:5000/users/?userId='+this.state.instructorId, {
         headers: { 'Access-Control-Allow-Origin': '*' }
       });
 
@@ -68,15 +81,27 @@ class InstructorProfile extends Component {
     }
   };
 
+  getRatings = async () => {
+    const res = await axios.get(
+      'http://localhost:5000/users/viewInstructorDetails',
+      {
+        params: {
+          instructorId: this.state.instructorId
+        }
+      }
+    );
+      console.log(res);
+    if (res.statusText === 'OK') {
+      //setSubmitSuccess(true);
+    }
+  };
   postRating = async () => {
     const res = await axios.post(
       'http://localhost:5000/users/rateInstructor',
-      { rating: this.state.instructorRatingValue },
+      { rating: this.state.instructorRatingValue, review:this.state.reviewText },
       {
         params: {
-          courseId: '638281a7b05c30a726283c28',
-          userId: '63811834d00e598aac52a58a',
-          instructorId: '638117c243cba3f0babcc3a9'
+          instructorId: this.state.instructorId
         }
       }
     );
@@ -141,25 +166,37 @@ class InstructorProfile extends Component {
               borderRadius: '10px',
               backgroundColor: 'white',
               display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              width: '30%',
-              height: '10%',
+              flexDirection:'column',
+              width: '40%',
+              height: 'fit-content',
+              padding:'50px',
               position: 'absolute',
               left: '50%',
               top: '35%',
-              transform: 'translate(-50%,-35%)'
+              transform: 'translate(-50%,-35%)',
+              color:'black',
+
+
             }}>
-            Rate This Instructor
-            <div>
+            <div style={{
+              color:'var(--primary-color)',
+              fontWeight:'bolder',
+              fontSize:'30px',
+              paddingBottom:'30px'
+            }}>Rate This Instructor</div>
+            <div style={{border:'2px solid red'}}>
               <Rating
                 name="rating-the-couse"
                 value={this.state.instructorRatingValue}
                 onChange={(event, newValue) => {
-                  this.setState({ instructorRatingValue: newValue }, this.postRating);
+                  this.setState({ instructorRatingValue: newValue });
                 }}
-                sx={{ width: '100%', height: '100%', fontSize: '3.5vw' }}
+                sx={{ width: '100%', height: '100%', fontSize: '1.5vw' }}
               />
+              <TextField onChange={(e)=>{this.setState({reviewText:e.target.value})}} sx ={{width:'100%'}} id="outlined-basic" label="Outlined" variant="outlined" multiline rows={4}/>
+              <div>
+                <PrimaryBtn function={this.postRating} btnText="Send Review"/>
+              </div>
             </div>
           </div>
         </Modal>

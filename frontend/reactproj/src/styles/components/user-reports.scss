@@ -118,14 +118,15 @@
 
 
 .submit-report{
-    border: 2px solid red;
+
     height: 100%;
+    width: 100%;
     @include flex-center-all;
     &__form{    
         position: relative;
 
-        height: 70%;
-        width: 50%;
+        height: 100%;
+        width: 100%;
         background: white;
         border-radius: 10px;
         display: flex;

@@ -73,11 +73,11 @@ function CustomizedSwitches(props) {
 
 
   var fontColorDark = 'white';
-  var backgroundColorDark = '#0f0f0f';
-  var primaryColorDark = '#B33F40';
+  var backgroundColorDark = 'black';
+  var primaryColorDark = '#990000';
 
   var coolGreyLight = ' rgb(239, 243, 244)';
-  var coolGreyDark = 'black';
+  var coolGreyDark = '#0f0f0f';
   useEffect(() => {
     
     const root = document.documentElement;

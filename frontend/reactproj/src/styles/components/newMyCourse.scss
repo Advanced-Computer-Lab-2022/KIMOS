@@ -9,9 +9,10 @@
         &__subtitles{
             border-left: 0.5px solid var(--primary-color);
             &__videos-list{
-                background-color: var(--cool-grey);
+                // background-color: var(--cool-grey);
 
                 &__video{
+                    cursor: pointer;
                     margin-top: 5px;
                     margin-bottom: 5px;
                     padding:5px;
@@ -22,6 +23,8 @@
                     align-items: center;
                 }
                 &__video-active{
+                    cursor: pointer;
+
                     margin-top: 5px;
                     margin-bottom: 5px;
                     padding:5px;

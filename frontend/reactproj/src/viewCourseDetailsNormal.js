@@ -48,6 +48,7 @@ function TraineeViewMyCourse(props) {
   const [solveExam, setSolveExam] = useState(false);
   const [currentSubtitle, setCurrentSubtitle] = useState(-1);
   const [currentExam, setCurrentExam] = useState(-1);
+  const [courseRatingValue, setCourseRatingValue] = useState(0);
   const onChangeExam = (newExamId) => {
 
     setCurrentExam(newExamId);
@@ -67,51 +68,23 @@ function TraineeViewMyCourse(props) {
 
   };
 
-
-  const drawerContent = () => {
-    return (
-      <div className="questions-display-2">
-        <div className="user-course__content">
-          <div className="user-course__content__section">
-            <div className="user-course__content__section__title">Subtitle(s)</div>
-            <div className="user-course__content__section__content">
-              <div className="user-course__content__section__content__accordions">
-                {props.course.subtitles.map((subtitle, index) => {
-                  return (
-                    <AccordionSubtitle
-                      subtitleId={index}
-                      changeCurrentSubtitle={onChangeSubtitle}
-                      title={`${subtitle.title}`}
-                      duration={`${subtitle.hours} hrs`}
-                      link={subtitle.video.link}
-                    />
-                  );
-                })}
-              </div>
-            </div>
-            <div className="user-course__content__section__title">Exercise(s)</div>
-            <div className="user-course__content__section__content">
-              <div className="user-course__content__section__content__accordions">
-                {props.course.exams.map((exam) => {
-                  return (
-                    <Accordion
-                      examId={exam._id}
-                      title={exam.title}
-                      solved={exam.solved}
-                      changeCurrentExam={onChangeExam}
-                      changeSolveExam={onChangeSolution}
-                      changeViewExam={onChangeView}
-                      content={`Grade: ${exam.grade}`}
-                    />
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+  const postRating = async () => {
+    const res = await axios.post(
+      'http://localhost:5000/courses/rate',
+      { rating: courseRatingValue },
+      {
+        params: {
+          courseId: '638281a7b05c30a726283c28',
+          userId: '63811834d00e598aac52a58a'
+        }
+      }
     );
+
+    if (res.statusText === 'OK') {
+      setSubmitSuccess(true);
+    }
   };
+
   useEffect(() => {
     if(props.course.subtitles[0].videos)
       setVideo(props.course.subtitles[0].videos[0])
@@ -122,7 +95,9 @@ function TraineeViewMyCourse(props) {
     handleMenuChange(0);
   }, []);
 
-
+  useEffect(() => {
+    postRating();
+  }, [courseRatingValue]);
   var subTitleCount = 1;
   var exerciseCount = 1;
   const handleMenuChange = (newValue) => {
@@ -137,19 +112,7 @@ function TraineeViewMyCourse(props) {
     }
   };
 
-  const getSubs = () => {
-    return props.course.subtitles.map((subtitle, index) => {
-      return (
-        <div
-          className={`question ${currentSubtitle === index ? 'selected-q' : ''}`}
-          onClick={() => {
-            onChangeSubtitle(index);
-          }}>
-          {subtitle.title}
-        </div>
-      );
-    });
-  };
+
   const [report, setReport] = useState({title:'',type:'technical',issue:''});
 
   const handleReportChange = (e)=>{
@@ -388,31 +351,7 @@ function TraineeViewMyCourse(props) {
       </div>
     )
   }
-  const [courseRatingValue, setCourseRatingValue] = useState(0);
-  const [reviewText, setReviewText] = useState("");
   
-  const postRating = async () => {
-
-
-    const res = await axios.post(
-      'http://localhost:5000/courses/rate',
-      { rating: courseRatingValue, review: reviewText },
-      {
-        params: {
-          courseId: props.course['_id'],
-
-        }
-      }
-    );
-
-    if(res.data.success){
-      setOpenRating(false);
-      props.showAlert({shown:true, message:'Submitted Your Review',severity:'success'})
-    }
-    else
-      props.showAlert({shown:true, message:'Couldnt Submit Your Review',severity:'error'})
-
-  };
 
   const getContent = ()=>{
     if(value === 0) return subtitles();
@@ -456,43 +395,32 @@ function TraineeViewMyCourse(props) {
           setOpenRating(false);
         }}>
         <div
-        style={{
-          borderRadius: '10px',
-          backgroundColor: 'white',
-          display: 'flex',
-          flexDirection:'column',
-          width: '40%',
-          height: 'fit-content',
-          padding:'50px',
-          position: 'absolute',
-          left: '50%',
-          top: '35%',
-          transform: 'translate(-50%,-35%)',
-          color:'black',
-
-
-        }}>
-        <div style={{
-          color:'var(--primary-color)',
-          fontWeight:'bolder',
-          fontSize:'30px',
-          paddingBottom:'30px'
-        }}>Rate This Instructor</div>
-        <div style={{border:'2px solid red'}}>
-          <Rating
-            name="rating-the-couse"
-            value={courseRatingValue}
-            onChange={(event, newValue) => {
-              setCourseRatingValue(newValue)
-            }}
-            sx={{ width: '100%', height: '100%', fontSize: '1.5vw' }}
-          />
-          <TextField onChange={(e)=>{setReviewText(e.target.value)}} sx ={{width:'100%'}} id="outlined-basic" label="Outlined" variant="outlined" multiline rows={4}/>
+          style={{
+            borderRadius: '10px',
+            backgroundColor: 'white',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: '30%',
+            height: '10%',
+            position: 'absolute',
+            left: '50%',
+            top: '35%',
+            transform: 'translate(-50%,-35%)',
+            color:'black'
+          }}>
+          Rate this course
           <div>
-            <PrimaryBtn function={postRating} btnText="Send Review"/>
+            <Rating
+              name="rating-the-couse"
+              value={courseRatingValue}
+              onChange={(event, newValue) => {
+                setCourseRatingValue(newValue);
+              }}
+              sx={{ width: '100%', height: '100%', fontSize: '3.5vw' }}
+            />
           </div>
         </div>
-      </div>
       </Modal>
       <div
         style={{
@@ -559,4 +487,11 @@ function TraineeViewMyCourse(props) {
 }
 
 
-export default connect(null, {showAlert})(TraineeViewMyCourse);
+const mapStateToProps = (state) =>{
+   
+  return {
+      user: state.user
+  };
+}
+
+export default connect(mapStateToProps, {showAlert})(TraineeViewMyCourse);

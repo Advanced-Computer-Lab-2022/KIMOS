@@ -82,6 +82,11 @@ export default function paymentPolicy() {
             <img src={refund} width="350px" height="350px" alt="payment"/>
         </div>
     </div>
+
+
+    
+
+    
     </>
   )
 }

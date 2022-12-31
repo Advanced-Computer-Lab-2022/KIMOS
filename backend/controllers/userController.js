@@ -18,10 +18,12 @@ const { addNotification } = require('./notificationController');
 
 //All user
 const signUp = asyncHandler(async (req, res) => {
+  console.log(req.body)
+
   const { firstName, lastName, email, password, username, gender, country } = req.body;
   const salt = await bcrypt.genSalt();
   const hashedPassword = await bcrypt.hash(password, salt);
-  if (firstName && lastName && email && password && username && gender) {
+  if (firstName && lastName && email && password && username) {
     const user = await User.create({
       firstName: firstName,
       lastName: lastName,
@@ -29,7 +31,7 @@ const signUp = asyncHandler(async (req, res) => {
       email: email,
       userType: 'individual trainee',
       password: hashedPassword,
-      gender: gender,
+      gender: gender || 'M',
       wallet: 0,
       country: country || { name: 'Egypt', code: 'EG' },
       reset: 'false',
@@ -80,7 +82,7 @@ const login = asyncHandler(async (req, res) => {
           success: true,
           statusCode: 200,
           message: 'Logged in Successfully',
-          payload: { userType: user.userType }
+          payload: { userType: user.userType,username:user.username, }
         });
       }
     } else {
@@ -518,7 +520,7 @@ const changeRefundStatus = asyncHandler(async (req, res, next) => {
 //     payload: courseRequests,
 //     statusCode: 200
 //   });
-// });
+// });  
 
 const changeAccessStatus = async (req, res, next) => {
   const { requestId } = req.query;
