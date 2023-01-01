@@ -1,19 +1,29 @@
 import SecondaryBtn from "./buttons/secondaryBtn";
 import axios from 'axios';
+import {showAlert} from '../redux/actions';
+import {connect} from 'react-redux';
 
-const checkout = ({courseId}) => {
+
+
+const checkout = ({courseId, showAlert}) => {
 
     const onclick = ()=>{
-        axios.post(`https://localhost:5000/checkout`,{items:courseId})
+        
+        axios.post(`http://localhost:5000/users/createCheckoutSession?courseId=`+courseId)
         .then(res=>{
+            console.log(res);
+            const url = res.data.payload.url;
+            window.open(
+                url,
+                '_blank' // <- This is what makes it open in a new window.
+              );
             if(res.ok)  return res.json();
             return res.json().then(json=>Promise.reject(json));
         })
-        .then(({url}) =>{
-            window.location.href = url;
-        })
         .catch(e=>{
-            console.error(e.error);
+            console.log(e.error);
+            showAlert({shown:true, message:'Couldnt Check out this course',severity:'error'})
+
         })
     }
 
@@ -25,4 +35,5 @@ const checkout = ({courseId}) => {
     );
 }
  
-export default checkout;
+
+export default connect(null, {showAlert})(checkout);

@@ -57,7 +57,6 @@ const getAllRatings = asyncHandler(async (req, res) => {
       });
     });
 });
-
 module.exports = {
   createRating,
   updateRating,

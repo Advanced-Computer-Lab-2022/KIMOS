@@ -11,8 +11,13 @@ import AccordionSubtitle from './accordionSubtitle.js';
 import { textAlign } from '@mui/system';
 import PrimaryBtn from './buttons/primaryBtn';
 import Loading from './loadingPage';
+import {connect} from 'react-redux';
+import { showAlert } from '../redux/actions/index';
 
-export default function TraineeViewMyCourse() {
+
+import Checkout from './checkout'
+
+function TraineeViewMyCourse(props) {
   var subTitleCount = 1;
   var exerciseCount = 1;
 
@@ -32,7 +37,6 @@ export default function TraineeViewMyCourse() {
   const [viewContent, setViewContent] = useState(false);
   const [loading, setLoading] = useState(true);
   const [reviews, setReviews] = useState([]);
-
 
   const getCourse = async (courseId) => {
     // await axios.post('http://localhost:5000/login',{username:"individual",password:"individual123"})
@@ -59,11 +63,22 @@ export default function TraineeViewMyCourse() {
   };
   const { courseId } = useParams()
   useEffect(() => {
-
-    getCourse(courseId);
     getRatings(courseId);
+    getCourse(courseId);
 
   }, []);
+
+  const reqAccess = async (course)=>{  
+    const res =  await axios.post(("http://localhost:5000/courses/access?courseId="+courseId));
+    if(res.data.success)
+      props.showAlert({shown:true, message:'Sent Request Successfully',severity:'success'})
+  
+    else
+      props.showAlert({shown:true, message:'Couldnt Send Request ',severity:'error'})
+  
+    console.log(res);
+  }
+  
   const goToProfile =()=>{
     var url = 'http://localhost:3000/user/instructor/'+myCourse.instructor['_id'];
     window.open(
@@ -91,7 +106,7 @@ export default function TraineeViewMyCourse() {
   // };
 
   if(loading){
-    return <div style={{position:'relative'}}><Loading/ ></div>
+    return <div><Loading/ ></div>
   }
   if(viewContent){
     return (
@@ -144,7 +159,6 @@ export default function TraineeViewMyCourse() {
         </div>
 
         <div className="user-course__content">
-        
           <div className="user-course__content__section">
             <div className="user-course__content__section__title">Subtitle(s)</div>
             <div className="user-course__content__section__content">
@@ -176,6 +190,7 @@ export default function TraineeViewMyCourse() {
             <div className="user-course__content__section__content">
               <div className="user-course__content__section__title">Exercise(s)</div>
               <div className="user-course__content__section__content__accordions">
+
                 {myCourse.exams.map((exam, index) => {
                   return (
                     <div
@@ -200,19 +215,19 @@ export default function TraineeViewMyCourse() {
             </div>
           </div>
         </div>
-
-
         <div className="user-course__content__section">
         <div className="user-course__content__section__title">Review(s)</div>
         <div className="user-course__content__section__content">
           <div className="user-course__content__section__content__accordions">
-            {reviews.length === 0 && <div>No Reviews</div>}
-            {reviews.map((review, index) => {
+          {reviews.length === 0 && <div>No Reviews</div>}
+            
+          {reviews.map((review, index) => {
               return (
                 <div
                   style={{
 
                     marginBottom: '5px',
+
                     paddingLeft:'20px',
                     paddingRight:'20px',
                     paddingTop:'15px',
@@ -234,14 +249,22 @@ export default function TraineeViewMyCourse() {
         </div>
       </div>
         <div style={{display:'flex', justifyContent:'flex-end'}}>
-        <SecondaryBtn
-        btnText="Course Content"
-        function={() => {
-          setViewContent(true);
-        }}
-      />
-      </div>
+          {props.user.userType!=='corporate trainee'&&<Checkout courseId={myCourse['_id']}/>}
+          {props.user.userType==='corporate trainee'&&<SecondaryBtn function={reqAccess} btnText="Request Access"/>}
+
+        </div>
       </div>
   )
 
 }
+
+const mapStateToProps = (state) =>{
+   
+  return {
+      user: state.user
+  };
+}
+
+
+export default connect(mapStateToProps,{showAlert})(TraineeViewMyCourse)
+

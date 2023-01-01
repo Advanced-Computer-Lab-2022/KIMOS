@@ -55,7 +55,7 @@ router
 
 // router.post('/discount', loggedIn, editPublicCourseAuth, addDiscount); //// all good
 router.post('/close', loggedIn, editPublicCourseAuth, closeCourse); //// all good
-
+router.get('/reviews', getAllRatings);
 router.route('/rate').post(loggedIn, registeredCourseAuth, rateCourse); //all good
 router
   .route('/exam')

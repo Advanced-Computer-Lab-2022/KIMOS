@@ -1,17 +1,17 @@
+import React from 'react'
+import ReactPlayer from 'react-player/youtube'
+
 const WatchVideo = (props) => {
-  console.log(props);
+
   return (
     <div  style={{height:'100%', display:'flex',flexDirection:'column', alignItems:'center', }}>
-      <iframe
 
-        width="100%"
-        height="70%"
-        src={props.video.link}
-        frameBorder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowFullScreen
-        title="Embedded youtube"
-      />
+      <ReactPlayer 
+      controls={true}
+      width="100%"
+      height="70%"
+      url={props.video.link}
+       />
       <div style={{marginTop:'10px'}}>
         <div
         style={{color:'var(--primary-color)',
@@ -28,3 +28,4 @@ const WatchVideo = (props) => {
 };
 
 export default WatchVideo;
+

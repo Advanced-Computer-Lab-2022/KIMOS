@@ -110,7 +110,7 @@ class homeLand extends Component {
                     </div>
                 </div>
 
-                <div className='homeland__section section_2' style={{border:'2px solid lime'}}>
+                <div className='homeland__section section_2' >
                     <div className='bg-filter'></div>
                     <div className='header'>Explore Our Popular courses</div>
                     <PopularCourses></PopularCourses>

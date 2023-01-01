@@ -24,7 +24,6 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import { Typography } from '@mui/material';
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
-import VisibilityTwoToneIcon from '@mui/icons-material/VisibilityTwoTone';
 
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
@@ -33,8 +32,10 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import TakeNotes from './takeNotes2';
 
 import PlayCircleFilledWhiteIcon from '@mui/icons-material/PlayCircleFilledWhite';
+import { showAlert } from '../redux/actions';
+import { connect } from 'react-redux';
 
-export default function TraineeViewMyCourse(props) {
+function TraineeViewMyCourse(props) {
   const [viewExam, setViewExam] = useState(false);
   const [submitSuccess, setSubmitSuccess] = useState(false);
   const [value, setValue] = useState(0);
@@ -46,7 +47,6 @@ export default function TraineeViewMyCourse(props) {
   const [solveExam, setSolveExam] = useState(false);
   const [currentSubtitle, setCurrentSubtitle] = useState(-1);
   const [currentExam, setCurrentExam] = useState(-1);
-  const [courseRatingValue, setCourseRatingValue] = useState(0);
   const onChangeExam = (newExamId) => {
     setCurrentExam(newExamId);
     setCurrentSubtitle(-1);
@@ -64,21 +64,6 @@ export default function TraineeViewMyCourse(props) {
     setCurrentExam(-1);
   };
 
-  const postRating = async () => {
-    const res = await axios.post(
-      'http://localhost:5000/courses/rate',
-      { rating: courseRatingValue },
-      {
-        params: {
-          courseId: props.course['_id']
-        }
-      }
-    );
-
-    if (res.statusText === 'OK') {
-      setSubmitSuccess(true);
-    }
-  };
   const drawerContent = () => {
     return (
       <div className="questions-display-2">
@@ -125,15 +110,11 @@ export default function TraineeViewMyCourse(props) {
   };
   useEffect(() => {
     if (props.course.subtitles[0].videos) setVideo(props.course.subtitles[0].videos[0]);
-    if (props.course.subtitles[0].quizzes) {
-      setQuiz(props.course.subtitles[0].quizzes[0]);
-    } else console.log(props.course);
+    if (props.course.subtitles[0].quizzes) setQuiz(props.course.subtitles[0].quizzes[0]);
+    else console.log(props.course);
     handleMenuChange(0);
   }, []);
 
-  useEffect(() => {
-    postRating();
-  }, [courseRatingValue]);
   var subTitleCount = 1;
   var exerciseCount = 1;
   const handleMenuChange = (newValue) => {
@@ -169,7 +150,28 @@ export default function TraineeViewMyCourse(props) {
     r[key] = e.target.value;
     setReport(r);
   };
-  const submitReport = () => {};
+
+  const submitReport = async () => {
+    const res = await axios.post('http://localhost:5000/users/report', report, {
+      params: {
+        courseId: props.course['_id']
+      }
+    });
+
+    if (res.data.success) {
+      setOpenReport(false);
+      props.showAlert({
+        shown: true,
+        message: 'Updated your course Visibility',
+        severity: 'success'
+      });
+    } else
+      props.showAlert({
+        shown: true,
+        message: 'Couldnt Update your course Visibility',
+        severity: 'error'
+      });
+  };
   const getReport = () => {
     return (
       <div className="submit-report">
@@ -233,7 +235,10 @@ export default function TraineeViewMyCourse(props) {
   const getProgress = () => {
     return (
       <Box sx={{ position: 'relative', display: 'inline-flex' }}>
-        <CircularProgress variant="determinate" value={83} />
+        <CircularProgress
+          variant="determinate"
+          value={props.course.progress ? props.course.progress : 12}
+        />
         <Box
           sx={{
             top: 0,
@@ -246,7 +251,7 @@ export default function TraineeViewMyCourse(props) {
             justifyContent: 'center'
           }}>
           <Typography variant="caption" component="div">
-            {`${Math.round(83)}%`}
+            {`${Math.round(props.course.progress ? props.course.progress : 12)}%`}
           </Typography>
         </Box>
       </Box>
@@ -331,32 +336,17 @@ export default function TraineeViewMyCourse(props) {
                   onClick={() => {
                     console.log(lquiz);
                     setQuiz(lquiz);
-                    if (lquiz.solved) {
-                      console.log('set solved');
-                      onChangeSolution(true);
-                    } else {
-                      onChangeView(true);
-                    }
                   }}>
                   <div>
                     <div>{lquiz.title}</div>
                   </div>
                   <div>
-                    {lquiz.solved ? (
-                      <VisibilityTwoToneIcon
-                        style={{
-                          cursor: 'pointer',
-                          color: quiz['_id'] === lquiz['_id'] ? 'white' : 'var(--primary-color)'
-                        }}
-                      />
-                    ) : (
-                      <DriveFileRenameOutlineIcon
-                        style={{
-                          cursor: 'pointer',
-                          color: quiz['_id'] === lquiz['_id'] ? 'white' : 'var(--primary-color)'
-                        }}
-                      />
-                    )}
+                    <DriveFileRenameOutlineIcon
+                      style={{
+                        cursor: 'pointer',
+                        color: quiz['_id'] === lquiz['_id'] ? 'white' : 'var(--primary-color)'
+                      }}
+                    />
                   </div>
                 </div>
               );
@@ -416,14 +406,11 @@ export default function TraineeViewMyCourse(props) {
     return (
       <div className="my-course__subtitles">
         <div className="my-course__subtitles__content">
-          {viewExam && (
-            <ViewExam
-              courseId={props.course['_id']}
-              examId={quiz['_id']}
-              showSolution={onChangeSolution}
-            />
-          )}
-          {solveExam && <ExamSolution courseId={props.course['_id']} examId={quiz['_id']} />}
+          <ViewExam
+            courseId={props.course['_id']}
+            examId={quiz['_id']}
+            showSolution={onChangeSolution}
+          />
         </div>
         <div className="my-course__subtitles__subtitles">
           <div
@@ -449,6 +436,26 @@ export default function TraineeViewMyCourse(props) {
       </div>
     );
   };
+  const [courseRatingValue, setCourseRatingValue] = useState(0);
+  const [reviewText, setReviewText] = useState('');
+
+  const postRating = async () => {
+    const res = await axios.post(
+      'http://localhost:5000/courses/rate',
+      { rating: courseRatingValue, review: reviewText },
+      {
+        params: {
+          courseId: props.course['_id']
+        }
+      }
+    );
+
+    if (res.data.success) {
+      setOpenRating(false);
+      props.showAlert({ shown: true, message: 'Submitted Your Review', severity: 'success' });
+    } else
+      props.showAlert({ shown: true, message: 'Couldnt Submit Your Review', severity: 'error' });
+  };
 
   const getContent = () => {
     if (value === 0) return subtitles();
@@ -462,7 +469,23 @@ export default function TraineeViewMyCourse(props) {
         onClose={() => {
           setOpenReport(false);
         }}>
-        {getReport()}
+        <div
+          style={{
+            borderRadius: '10px',
+            backgroundColor: 'white',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            width: '50%',
+            height: '70%',
+            position: 'absolute',
+            left: '50%',
+            top: '35%',
+            transform: 'translate(-50%,-35%)',
+            color: 'black'
+          }}>
+          {getReport()}
+        </div>
       </Modal>
 
       <Modal
@@ -475,16 +498,25 @@ export default function TraineeViewMyCourse(props) {
             borderRadius: '10px',
             backgroundColor: 'white',
             display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            width: '30%',
-            height: '10%',
+            flexDirection: 'column',
+            width: '40%',
+            height: 'fit-content',
+            padding: '50px',
             position: 'absolute',
             left: '50%',
             top: '35%',
-            transform: 'translate(-50%,-35%)'
+            transform: 'translate(-50%,-35%)',
+            color: 'black'
           }}>
-          Rate this course
+          <div
+            style={{
+              color: 'var(--primary-color)',
+              fontWeight: 'bolder',
+              fontSize: '30px',
+              paddingBottom: '30px'
+            }}>
+            Rate This Course
+          </div>
           <div>
             <Rating
               name="rating-the-couse"
@@ -492,8 +524,22 @@ export default function TraineeViewMyCourse(props) {
               onChange={(event, newValue) => {
                 setCourseRatingValue(newValue);
               }}
-              sx={{ width: '100%', height: '100%', fontSize: '3.5vw' }}
+              sx={{ width: '100%', height: '100%', fontSize: '1.5vw' }}
             />
+            <TextField
+              onChange={(e) => {
+                setReviewText(e.target.value);
+              }}
+              sx={{ width: '100%' }}
+              id="outlined-basic"
+              label="Outlined"
+              variant="outlined"
+              multiline
+              rows={4}
+            />
+            <div style={{ paddingTop: '30px' }}>
+              <PrimaryBtn function={postRating} btnText="Send Review" />
+            </div>
           </div>
         </div>
       </Modal>
@@ -502,8 +548,7 @@ export default function TraineeViewMyCourse(props) {
           background: 'var(--cool-grey)',
           position: 'absolute',
           bottom: '0',
-          width: '100%',
-          zIndex: '2000'
+          width: '100%'
         }}>
         <div
           onClick={() => {
@@ -547,11 +592,6 @@ export default function TraineeViewMyCourse(props) {
           style={{ background: 'var(--cool-grey)', borderTop: '0.5px solid grey' }}
           onChange={(event, newValue) => {
             handleMenuChange(newValue);
-            if (props.course.subtitles[0].quizzes[0].solved) {
-              onChangeSolution(true);
-            } else {
-              onChangeView(true);
-            }
           }}>
           <BottomNavigationAction label="Subtitles" icon={<RestoreIcon />} />
           <BottomNavigationAction label="Exercises" icon={<FavoriteIcon />} />
@@ -565,3 +605,5 @@ export default function TraineeViewMyCourse(props) {
     </div>
   );
 }
+
+export default connect(null, { showAlert })(TraineeViewMyCourse);

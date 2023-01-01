@@ -42,7 +42,7 @@ class courseItem extends Component {
 // </CardActions>
     render() {
         return (
-            <div className="course-item">
+            <div className="course-item" onClick={()=>{window.location.href= this.props.course['_id']}} style={{cursor:'pointer'}}>
                 <Card sx={{ maxWidth: 345, height: 350, display: 'flex', flexDirection:'column', alignItems:'start', justifyContent:'space-between' }}>
                     <CardMedia
                     component="img"
@@ -58,7 +58,7 @@ class courseItem extends Component {
                         {Math.round(this.props.course.rating.value) + '/5.0'}
                     </Typography>}
                     {this.props.type !== 'i' && <Typography variant="body2" color="text.secondary">
-                        {this.props.course.totalHours + ' Hour(s)'}
+                        {Math.round(this.props.course.totalHours) + ' Hour(s)'}
                     </Typography>}
                     <Typography variant="h6" >
                             {this.coursePrice()}

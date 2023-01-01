@@ -46,6 +46,7 @@ class navbar extends Component {
         searchContent:'',
         loading:false,
         courses:[], 
+        notifications:[],
         showNot:false
     }
     changeInput = (event)=>{
@@ -73,7 +74,20 @@ class navbar extends Component {
             </div>
         )
     }
+//users/notifications
+    getNotificationsAPI = async()=>{
+        try{
+            const res = await axios.get("http://localhost:5000/users/notifications");
+            if(res.data.success){
+                this.setState({notifications:res.data.payload},()=>{console.log(this.state.notifications)})
+            }
+        }catch(e){
 
+        }
+    }
+    componentDidMount(){
+        this.getNotificationsAPI();
+    }
     handleLogout = async()=>{
 
         try{
@@ -95,11 +109,16 @@ class navbar extends Component {
         
     }
     actions = [
-        { icon: <Person2Icon />, name: 'Profile', function: ()=>{ window.location.href = '/'+this.props.user.userType+'/profile'} },
+        { icon: <Person2Icon />, name: 'Profile', function: ()=>{ this.redirect()} },
         { icon: <LogoutIcon />, name: 'Logout',  function: ()=>{ this.handleLogout()} },
 
       ];
-
+    redirect = ()=>{
+        var type = this.props.user.userType;
+        if(type === 'individual trainee' || type === 'corporate trainee' )
+            type = 'user'
+        window.location.href = '/'+type+'/profile'
+    }
     handleClose = ()=>{
         console.log('closing')
         this.setState({showNot: false})
@@ -109,25 +128,26 @@ class navbar extends Component {
         this.setState({showNot: true})
     }
     getNotifications = ()=>{
-        const mssgs = ["Open your mail please", "Your Refund Request is approved", "Your Refund Request is approved", "Your Refund Request is approved", "Your Refund Request is approved", "Your Refund Request is approved"];
+        
         var nots = []
         var types = ['info','succ','err'];
-        mssgs.forEach((mssg, index)=>{
+        this.state.notifications.forEach((mssg, index)=>{
             var obj = {};
-            obj['type'] = types[index%3]
-            obj['mssg'] = mssg;
+            obj['type'] = types[0]
+            obj['mssg'] = mssg.message;
             nots.push(obj);
         })
 
         return (
             <Dialog 
             maxWidth = 'sm'
-            PaperProps={{ sx: { overFlow:'hidden',borderRadius:'10px', position:'absolute',right:'0',top:'0',width: "20%", height: "50%", marginTop:'50px', marginRight:'90px' } }}
+            PaperProps={{ sx: { overFlow:'hidden',borderRadius:'10px', position:'absolute',right:'0',top:'0',width: "20%", height: 'fit-content',maxHeight:'600px' ,marginTop:'50px', marginRight:'90px' } }}
             onClose={this.handleClose} open={this.state.showNot} className='nots-dialog'>
                 <div className="nots-dialog__in">
                 
                     <DialogTitle>Notification(s)</DialogTitle>
                     <List sx={{ pt: 0,  paddingLeft:'10px', paddingRight:'10px', paddingTop:'10px' }}>
+                    {nots.length === 0 &&<div style={{color:'grey',border:'2px solid lime', textAlign:'center'}}>Empty</div>}
                     {nots.map((notItem,index) => {
                         var color = '#1DA1F2';
                         var icon =  <InfoIcon />
@@ -142,7 +162,7 @@ class navbar extends Component {
                                 {icon}
                             </Avatar>
                             </ListItemAvatar>
-                            <ListItemText primary={notItem.mssg} />
+                            <p style={{fontSize:'14px'}}>{notItem.mssg}</p>
                         </ListItemButton>
                         </ListItem>
                         )
@@ -176,10 +196,10 @@ class navbar extends Component {
 
                     {this.props.user.username !=='' && <IconButton
                         size="large"
-                        aria-label="show 17 new notifications"
+                        aria-label={`show ${this.state.notifications.length} new notifications`}
                         onClick={this.handleOpen}
                     >
-                        <Badge badgeContent={17} color="error">
+                        <Badge badgeContent={this.state.notifications.length} color="error">
                         <NotificationsIcon />
                         </Badge>
 

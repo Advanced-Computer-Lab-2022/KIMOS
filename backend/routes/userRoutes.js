@@ -19,6 +19,8 @@ const {
   getRequests
 } = require('../controllers/userController');
 
+const { getUnseenNotifications } = require('../controllers/notificationController');
+
 const { getAllRatings } = require('../controllers/ratingController');
 
 const {
@@ -67,12 +69,14 @@ router
   .post(loggedIn, registeredCourseAuth, createReport) //all good
   .get(loggedIn, getReports) //all good
   .put(loggedIn, adminAuth, changeStatus) //all good
-  .patch(loggedIn, adminAuth, addMessages); //all good
+  .patch(loggedIn, addMessages); //all good // removed adminAuth from here.
 
 router.post('/createCheckoutSession', loggedIn, individualAuth, checkout); //all good
 router.post('/register', loggedIn, individualAuth, registerCourseAuth, createInvoice, registerUser); //all good
 router.get('/invoices/instructor', loggedIn, instructorAuth, getAllInvoicesInstructor); //all good
 router.get('/invoices/user', loggedIn, individualAuth, getAllInvoicesUser); //all good
+
+router.get('/notifications', loggedIn, getUnseenNotifications); //all good
 
 router.post(
   '/refundStatus',

@@ -5,6 +5,7 @@ const RegisteredCourse = require('../models/registeredCoursesModel');
 const jwt = require('jsonwebtoken');
 const { getCountryIso, getCorrectPrice } = require('./userController');
 const asyncHandler = require('express-async-handler');
+const RegisteredCourse = require('../models/registeredCoursesModel');
 
 const checkout = asyncHandler(async (req, res) => {
   const registration = await RegisteredCourse.find({

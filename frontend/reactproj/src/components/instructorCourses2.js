@@ -11,6 +11,9 @@ import DisplaySettingsIcon from '@mui/icons-material/DisplaySettings';
 import {showAlert} from '../redux/actions';
 import {connect} from 'react-redux';
 
+import LockIcon from '@mui/icons-material/Lock';
+import LockOpenIcon from '@mui/icons-material/LockOpen';
+
 import axios from 'axios';
 
 
@@ -18,8 +21,12 @@ import axios from 'axios';
 function InstructorCourses2(props) {
 
 const [rows, setRows] = React.useState([]);
+const [originalRows, setOriginalRows] = React.useState([]);
+
 const [drawer, setDrawer] = React.useState(false);
 const [displayedCourse, setDisplayedCourse] = React.useState({});
+const [drafts, setDrafts] = React.useState(false);
+
 const [loading, setLoading] = React.useState(true);
 const columns = [
   { 
@@ -65,7 +72,7 @@ const columns = [
         return <Rating value={rowData.row.rating.value}/>;
     },
     headerName: 'Course Rating',
-    flex: 1,
+    flex: 0.6,
     minWidth: 40,
     align:'center',
     headerAlign:'center'
@@ -75,10 +82,15 @@ const columns = [
     field: 'visibility',
     headerName: 'Visibility',
     renderCell: rowData => {
-      var status = rowData.row.visibility === 'public' ? 'Public':'Private' 
+      var status = rowData.row.visibility;
+      var leftP = 'Closed'
+      if(status === 'private')
+        leftP = 'Private'
+
       return (      <Stack direction="row" spacing={1} alignItems="center">
+                         <p>{leftP}</p>
                          <Switch onChange={(e)=>{handleSwitchChange(e, rowData.row['_id'])}} defaultChecked={rowData.row.visibility === 'public'} inputProps={{ 'aria-label': 'ant design' }} />
-                         <p>{status}</p>
+                         <p>Public</p>
                      </Stack>)
  },
     flex: 1,
@@ -86,6 +98,7 @@ const columns = [
     align:'center',
     headerAlign:'center'
   },
+
   {
     field: 'details',
     headerName: 'Course Details',
@@ -106,10 +119,19 @@ const columns = [
 
 ];
 
-
+const openCourse = (course)=>{
+  console.log('openining')
+}
+const closeCourse = (course)=>{
+  console.log('closing')
+  
+}
+const handleSwitchCourses = ()=>{
+  setDrafts(!drafts);
+  generateRows(originalRows, !drafts);
+}
 const handleSwitchChange = async (e, id) =>{
-  console.log('hi hi hi');
-  console.log(e.target.checked)
+
   var res;
   try{
     if(!e.target.checked){
@@ -146,7 +168,6 @@ var courseObj ={id : 1, title: "Course Name",price:100,rating:3,  totalHours: 99
 subtitles:[{title:"Subtitle Title",hours: 23, video: {link:"link as a string", description: "string"} },
            {title:"Subtitle Title Two",hours: 93, video: {link:"link as a string", description: "string"} }]};
 React.useEffect(() => {
-    // generateRows();
     getInstructorCourses();
   }, []);
 
@@ -161,25 +182,30 @@ React.useEffect(() => {
         headers: { 'Access-Control-Allow-Origin': '*' }
       });
 
-      setRows(res.data.payload);
+      // setRows(res.data.payload);
+      setOriginalRows(res.data.payload);
+      generateRows(res.data.payload, drafts);
       setLoading(false);
     } catch (e) {
       console.log(e)
     }
   };
-    const generateRows = ()=>{
-
-        var i = 0;
-        var tmp = [];
-        while(i<20){
-            var courseObjnew = {...courseObj};
-            courseObjnew.id = i+1;
-            courseObjnew.rating = (i+1)%5 + 1;
-
-            tmp.push(courseObjnew);
-            i++;
+    const generateRows = (rows, showDrafts)=>{
+      var res = [];
+      console.log('rege')
+      rows.forEach((row)=>{
+        if(showDrafts){
+          if(row.visibility === 'private'){
+            res.push(row);
+          }
         }
-        setRows(tmp);
+        else{
+          if(row.visibility !== 'private'){
+            res.push(row);
+          }
+        }
+      })
+      setRows(res);
     }
   const showCourse = (rowData)=>{
     console.log(rowData.row);
@@ -189,7 +215,17 @@ React.useEffect(() => {
   return (
 
     <div className='instructor-courses'>
-        <div className='instructor-courses__title'>My Courses</div>
+        <div className='instructor-courses__title' style={{display:'flex', alignItems:'center',}}>
+          <div>My Courses</div>
+          {!loading&&<Stack direction="row"  alignItems="center" justifyContent='center' style={{marginLeft:'20px',fontSize:'15px', height:'100%'}}>
+                    <p>Drafts</p>
+                    <Switch onChange={(e)=>{handleSwitchCourses(e)}} checked={!drafts} inputProps={{ 'aria-label': 'ant design' }} />
+                    <p>Published</p>
+          </Stack>}
+        </div>
+        <div>
+ 
+        </div>
         <div className='instructor-courses__table' style={{position:'relative'}}>
         {loading && <Loading />}
 

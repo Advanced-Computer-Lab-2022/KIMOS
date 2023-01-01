@@ -35,7 +35,11 @@ export default function MyEnrolledCourses() {
       .get('http://localhost:5000/courses/register')
         .then((result) => {
           setLoading(false)
-        setMyCourses(result.data.payload.courses);
+        var results = [];
+        result.data.payload.courses.forEach(course=>{
+          if(course !== null) results.push(course)
+        })
+        setMyCourses(results);
       });
   };
 
@@ -59,7 +63,7 @@ export default function MyEnrolledCourses() {
                 {myCourses.length>0 && myCourses.map((course) => {
                     return(
                         <>
-                        <div onClick={()=>{window.location.href = 'courses/'+course['_id']}} class="image" style={{display:"flex",columnGap:80,justifyContent:"flex-start",alignItems:"flex-start",marginTop:20,marginBottom:20,marginLeft:30}}>
+                        <div onClick={()=>{window.location.href = 'myCourses/'+course['_id']}} class="image" style={{display:"flex",columnGap:80,justifyContent:"flex-start",alignItems:"flex-start",marginTop:20,marginBottom:20,marginLeft:30}}>
                             <div>
                                 <img  width="250" height="150" src={courseImage} alt="course img"/>
                             </div>

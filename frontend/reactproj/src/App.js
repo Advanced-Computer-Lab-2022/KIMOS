@@ -13,6 +13,7 @@ import InstructorProfile from './components/instructorProfile';
 import InstructorCourses2 from './components/instructorCourses2';
 import Trainee from './components/trainee';
 import TraineeViewMyCourse from './components/traineeViewMyCourse';
+import ViewCourseDetailsNormal from './components/viewCourseDetailsNormal';
 import Courses from './components/courses';
 import InstructorCourses from './components/instructorCourses';
 import CreateQuiz from './components/createQuiz';
@@ -34,7 +35,7 @@ import NewCreateCourse from './components/newCreateCourse';
 import SignUpPage from './components/signUp';
 import Alert from './components/alert';
 import Auth from './components/auth';
-
+import FirstLogin from './components/firstLogin';
 import PaymentLoading from './components/paymentLoading';
 import PaymentCancelled from './components/paymentCancelled';
 
@@ -111,7 +112,7 @@ class App extends Component {
 
   routeTo(path, component){
 
-    console.log(path.split('/'))
+
     var userType = path.split('/')[1];
 
     
@@ -128,7 +129,13 @@ class App extends Component {
   }
 
 
+  showSide = ()=>{
 
+
+
+    if(this.props.user.firstLogIn &&  this.props.user.firstLogIn==='true') return false
+    return this.props.user.userType !== '' && window.location.href !== 'http://localhost:3000/'
+  }
   
   render() {
     return (
@@ -143,9 +150,9 @@ class App extends Component {
           <Navbar selectCourses={this.handleCoursesChange} />
           <div style={{
             display:'grid',
-            gridTemplateColumns: (this.props.user.userType !== '' && window.location.href !== 'http://localhost:3000/'  )? '80px 1fr':'1fr'
+            gridTemplateColumns: ( this.showSide() )? '80px 1fr':'1fr'
         }}>
-              {(window.location.href !== 'http://localhost:3000/'&& this.props.user.userType !== '')&&<Sidenav userType={this.props.user.userType}/>}
+              { this.showSide()&&<Sidenav userType={this.props.user.userType}/>}
               <Alert/>
               <Routes >
           
@@ -183,6 +190,8 @@ class App extends Component {
               {this.routeTo('/instructor/myCourses', <InstructorCourses2 />)}
               {this.routeTo('/instructor/contracts', <Contracts />)}
               {this.routeTo('/instructor/money', <MoneyOwedPerMonth />)}
+              {this.routeTo('/instructor/firstLogin', <FirstLogin />)}
+
               
 
   
@@ -195,14 +204,17 @@ class App extends Component {
               {this.routeTo3('/user', <UserProfile />,'user')}
               {this.routeTo3('/user/profile', <UserProfile />,'user')}
               {this.routeTo3('/user/profile', <UserProfile />,'user')}
-              {this.routeTo3('/user/courses', <MyEnrolledCourses />,'user')}
+              {this.routeTo3('/user/myCourses', <MyEnrolledCourses />,'user')}
               {this.routeTo3('/user/myReports', <UserReports />,'user')}
               {this.routeTo3('/user/purchases', <UserPurchases />,'user')}
 
               {this.routeTo3('/user/requestCourseAccess', <RequestCourseAccess />,'corporate trainee')}
               {this.routeTo3('/user/topCourses', <PopularCourses />,'user')}
-              {this.routeTo3('/user/courses/:courseId', <TraineeViewMyCourse />,'user')}
+              {this.routeTo3('/user/myCourses/:courseId', <TraineeViewMyCourse />,'user')}
               {this.routeTo3('/user/instructor/:id', <ViewInstructorProfile />,'user')}
+              {this.routeTo3('/user/firstLogin', <FirstLogin />,'user')}
+              <Route exact path="/paymentLoading" element={<PaymentLoading />}></Route>
+              <Route exact path="/paymentCancelled" element={<PaymentCancelled />}></Route>
 
 
 
@@ -225,8 +237,10 @@ class App extends Component {
   
   
               <Route  path="viewInstructorProfile/:id" element={<ViewInstructorProfile />}></Route>
-  
-              <Route path="/courses/:search" element={<Courses />}></Route>
+
+              <Route path="/courses/:courseId" element={<ViewCourseDetailsNormal />}></Route>
+              
+              <Route path="/courses/search" element={<Courses />}></Route>
   
               <Route path="/*" element={<NotFoundPage />}></Route>
   
