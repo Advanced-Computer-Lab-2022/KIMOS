@@ -261,12 +261,9 @@ const updateProgress = asyncHandler(async (req, res) => {
   const reg = await RegisteredCourses.findOne({
     userId: userId,
     courseId: courseId
-  }).populate('videosNotes.notes');
+  });
   var newProgress = reg.progress;
-  var notes = [];
-  const found = reg.videosNotes.find(
-    (videoNotes) => videoNotes.video.toString() === videoId.toString()
-  );
+  const found = reg.videosWatched.find((video) => video.toString() === videoId.toString());
   if (!found) {
     const video = await Video.findById(videoId);
     const course = await Course.findById(courseId);
@@ -275,7 +272,7 @@ const updateProgress = asyncHandler(async (req, res) => {
     newProgress += videoHours / totalHours;
     await RegisteredCourses.findOneAndUpdate(
       { userId: userId, courseId: courseId },
-      { $push: { videosNotes: { video: videoId } }, progress: newProgress }
+      { $push: { videosWatched: { videoId } }, progress: newProgress }
     );
   }
 
@@ -300,14 +297,9 @@ const getAllNotes = asyncHandler(async (req, res) => {
     (videoNotes) => videoNotes.video.toString() === videoId.toString()
   );
   if (!found) {
-    const video = await Video.findById(videoId);
-    const course = await Course.findById(courseId);
-    const videoHours = video.hours;
-    const totalHours = course.totalHours;
-    newProgress += videoHours / totalHours;
     await RegisteredCourses.findOneAndUpdate(
       { userId: userId, courseId: courseId },
-      { $push: { videosNotes: { video: videoId } }, progress: newProgress }
+      { $push: { videosNotes: { video: videoId } } }
     );
   } else {
     notes = found.notes;
@@ -316,7 +308,7 @@ const getAllNotes = asyncHandler(async (req, res) => {
     message: 'Successfully retrieved notes',
     statusCode: 200,
     success: true,
-    payload: { notes: notes, progress: newProgress }
+    payload: { notes: notes }
   });
 });
 

@@ -18,7 +18,7 @@ const { addNotification } = require('./notificationController');
 
 //All user
 const signUp = asyncHandler(async (req, res) => {
-  console.log(req.body)
+  console.log(req.body);
 
   const { firstName, lastName, email, password, username, gender, country } = req.body;
   const salt = await bcrypt.genSalt();
@@ -74,15 +74,20 @@ const login = asyncHandler(async (req, res) => {
           statusCode: 200,
           message: 'Logged in Successfully',
 
-          payload: {userId:user['_id'],username:user.username, email:user.email ,userType: user.userType, firstLogIn: user.firstLogIn }
-
+          payload: {
+            userId: user['_id'],
+            username: user.username,
+            email: user.email,
+            userType: user.userType,
+            firstLogIn: user.firstLogIn
+          }
         });
       } else {
         res.status(200).json({
           success: true,
           statusCode: 200,
           message: 'Logged in Successfully',
-          payload: { userType: user.userType,username:user.username, }
+          payload: { userType: user.userType, username: user.username }
         });
       }
     } else {
@@ -281,15 +286,14 @@ const rateInstructor = asyncHandler(async (req, res) => {
   const userId = res.locals.userId;
   const { instructorId } = req.query;
 
-  const { rating , review} = req.body;
+  const { rating, review } = req.body;
 
   var newRating = 0;
   const ratedInstructor = await User.findById(instructorId);
   const check = await viewRating(userId, instructorId);
   const currRating = ratedInstructor.rating;
   if (check) {
-
-    await updateRating(userId, instructorId, rating,review);
+    await updateRating(userId, instructorId, rating, review);
 
     newRating =
       (currRating.value * currRating.numberOfRatings - check.rating + rating) /
@@ -298,8 +302,7 @@ const rateInstructor = asyncHandler(async (req, res) => {
       rating: { value: newRating, numberOfRatings: currRating.numberOfRatings }
     });
   } else {
-
-    await createRating(userId, instructorId, rating,review);
+    await createRating(userId, instructorId, rating, review);
 
     newRating =
       (currRating.value * currRating.numberOfRatings + rating) / (currRating.numberOfRatings + 1);
@@ -345,7 +348,6 @@ const resetPasswordSendEmail = asyncHandler(async (req, res) => {
     } else {
       console.log('Email sent successfully');
       res.status(200).json({ statusCode: 200, success: true, message: 'success' });
-
     }
   });
 });
@@ -362,7 +364,6 @@ const resetPassword = asyncHandler(async (req, res) => {
   } else {
     res.status(401);
     throw new Error('Token timed out!');
-
   }
   if (user) {
     res
@@ -520,7 +521,7 @@ const changeRefundStatus = asyncHandler(async (req, res, next) => {
 //     payload: courseRequests,
 //     statusCode: 200
 //   });
-// });  
+// });
 
 const changeAccessStatus = async (req, res, next) => {
   const { requestId } = req.query;
@@ -544,6 +545,8 @@ const changeAccessStatus = async (req, res, next) => {
 const getRequests = async (req, res) => {
   const { requestType } = req.query;
   const courseRequests = await Request.find({ requestType: requestType })
+    .populate('userId', 'username')
+    .populate('courseId', 'title');
   res.status(200).json({
     message: 'Requests fetched successfully',
     success: true,

@@ -48,13 +48,21 @@ var registeredCoursesSchema = new mongoose.Schema(
         }
       ],
       default: []
+    },
+    videosWatched: {
+      type: [
+        {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: 'Video'
+        }
+      ],
+      default: []
     }
   },
   {
     timestamps: true
   }
 );
-
 
 //Export the model
 module.exports = mongoose.model('RegisteredCourses', registeredCoursesSchema);

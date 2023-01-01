@@ -15,6 +15,10 @@ import PrimaryBtn from './buttons/primaryBtn';
 import SecondaryBtn from './buttons/secondaryBtn';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
+import PaymentPolicy from './paymentPolicy';
+import { showAlert } from '../redux/actions/index';
+import { connect } from 'react-redux';
+import axios from 'axios';
 
 const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
     [`&.${stepConnectorClasses.alternativeLabel}`]: {
@@ -83,12 +87,41 @@ const ColorlibConnector = styled(StepConnector)(({ theme }) => ({
   }
 
   
-export default class SignUp extends Component {
+class SignUp extends Component {
+
+
+  handleSubmit = (event) => {
+
+
+    axios.post(`http://localhost:5000/signup`,this.state.data)
+    .then(res=>{
+      if(res.data.success){
+        this.props.showAlert({shown:true, message:'Signed up successfully',severity:'success'})
+        window.location.href = 'login'
+      }
+      else{
+        this.props.showAlert({shown:true, message:'Couldnt sign up',severity:'error'})
+
+      }
+
+    })
+    .catch(e=>{
+      this.props.showAlert({shown:true, message:'Couldnt sign up',severity:'error'})
+    })
+  };
+
     steps = ['Your Info', 
              'Terms And Conditions'];
     state = {
         currentStep : 0,
-        acceptedTerms:false
+        acceptedTerms:false,
+        data:{
+          username:'',
+          email:'',
+          firstName:'',
+          lastName:'',
+          password:''
+        }
     }
     handleBack = ()=>{
         this.setState({currentStep: this.state.currentStep - 1 < 0 ? 0 : this.state.currentStep - 1 })
@@ -110,6 +143,19 @@ export default class SignUp extends Component {
             </div>
         )
     }
+    validateInfo = ()=>{
+      var flag = true;
+      Object.keys(this.state.data).forEach((key)=>{
+        if(this.state.data[key] === '') flag = false;
+      })
+      return flag;
+    }
+    handleChange = (e)=>{
+      var data ={...this.state.data};
+      data[e.target.id] = e.target.value;
+      this.setState({data:data});
+      console.log(data);
+    }
     getContent= ()=>{
         if(this.state.currentStep === 0){
             return ( 
@@ -117,14 +163,14 @@ export default class SignUp extends Component {
                         <div className='signUp-container__content__form'>
                             <div className='signUp-container__content__form__title'>Sign Up</div>
                             <div className='signUp-container__content__form__names'>
-                                <TextField style={{margin:'10px'}} id="outlined-basic" label="First Name" variant="outlined" />
-                                <TextField style={{margin:'10px'}} id="outlined-basic" label="Last Name" variant="outlined" />
+                                <TextField onChange={this.handleChange} style={{margin:'10px'}} id="firstName" label="First Name" variant="outlined" />
+                                <TextField onChange={this.handleChange} style={{margin:'10px'}} id="lastName" label="Last Name" variant="outlined" />
                             </div>
 
                             <div className='signUp-container__content__form__else'>
-                                <TextField style={{margin:'10px'}} id="outlined-basic" label="Email" variant="outlined" />
-                                <TextField style={{margin:'10px'}} id="outlined-basic" label="Username" variant="outlined" />
-                                <TextField style={{margin:'10px'}} id="outlined-basic" label="Password" variant="outlined" />   
+                                <TextField onChange={this.handleChange} style={{margin:'10px'}} id="email" label="Email" variant="outlined" />
+                                <TextField onChange={this.handleChange} style={{margin:'10px'}} id="username" label="Username" variant="outlined" />
+                                <TextField onChange={this.handleChange}  type="password" style={{margin:'10px'}} id="password" label="Password" variant="outlined" />   
                             </div>
 
                         </div>
@@ -137,10 +183,8 @@ export default class SignUp extends Component {
                 <div className="signUp-container__content" style={{position:'relative'}}>
                     <div className="signUp-container__content__policy">
 
-                        {this.getPolicy("Website & Company Policy", [1,2,3,4])}
-                        {this.getPolicy("Refund Policy", [1,2,3,4])}
-                        {this.getPolicy("Payment Policy", [1,2,3,4])}
 
+                        <PaymentPolicy />
                     </div>
                     <div style={{
                         position:'absolute',
@@ -171,7 +215,7 @@ export default class SignUp extends Component {
         <div className='addCourse__footer'>
             <div className='addCourse__footer__btns'>
                 <SecondaryBtn function={this.handleBack} btnText="Back"/>
-                <PrimaryBtn disabled={this.state.currentStep === 1&& !this.state.acceptedTerms} function={this.handleNext} btnText={this.state.currentStep === 1? 'Sign Up':'Next'}/>
+                <PrimaryBtn disabled={(this.state.currentStep === 0 && !this.validateInfo()) || (this.state.currentStep === 1&& !this.state.acceptedTerms)} function={this.state.currentStep===1 ? this.handleSubmit:this.handleNext} btnText={this.state.currentStep === 1? 'Sign Up':'Next'}/>
             </div>
         </div>
 
@@ -180,3 +224,12 @@ export default class SignUp extends Component {
   }
 }
 
+
+
+
+// {this.getPolicy("Website & Company Policy", [1,2,3,4])}
+// {this.getPolicy("Refund Policy", [1,2,3,4])}
+// {this.getPolicy("Payment Policy", [1,2,3,4])}
+
+
+export default connect(null, { showAlert })(SignUp);
