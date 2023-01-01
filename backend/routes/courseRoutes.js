@@ -49,7 +49,7 @@ router
   .route('/')
   .get(isLoggedIn, isCorporateTrainee, findCourses) //all good
   .post(loggedIn, instructorAuth, createCourse) //all good
-  .put(loggedIn, editCourseAuth, editCourse) //all good
+  .put(loggedIn, editPublicCourseAuth, editCourse) //all good
 
   .patch(loggedIn, editCourseAuth, makeCoursePublic); //// all good
 

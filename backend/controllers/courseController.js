@@ -306,7 +306,6 @@ const addDiscount = asyncHandler(async (courseId, discount) => {
 
   var todayDate = new Date();
   if (todayDate > new Date(endDate)) {
-    res.status(500);
     throw new Error('end date is not valid');
   }
 
@@ -603,20 +602,7 @@ const modifyExam = asyncHandler(async (req, res) => {
 
 const editCourse = asyncHandler(async (req, res) => {
   const { courseId } = req.query;
-  const { course } = req.body;
-  var subtitles;
-  //var discount;
-  var totalHours = 0;
-  var subject;
-  //console.log(new Date());
-  subject = await Subject.findById(course.subject);
-  if (!subject) {
-    subject = await Subject.findOne({ name: course.subject });
-    if (!subject) {
-      res.status(500);
-      throw new Error('Subject not approved by admin');
-    }
-  }
+  const { course, flagDiscount } = req.body;
   if (flagDiscount === 'true') {
     await addDiscount(courseId, course.discount).catch((err) => {
       throw err;
@@ -624,6 +610,19 @@ const editCourse = asyncHandler(async (req, res) => {
   }
   const oldCourse = await Course.findById(courseId);
   if (oldCourse.visibility === 'private') {
+    var subtitles;
+    //var discount;
+    var totalHours = 0;
+    var subject;
+    //console.log(new Date());
+    subject = await Subject.findById(course.subject);
+    if (!subject) {
+      subject = await Subject.findOne({ name: course.subject });
+      if (!subject) {
+        res.status(500);
+        throw new Error('Subject not approved by admin');
+      }
+    }
     let subtitleIds = course.subtitles.map((subtitle) => {
       const subtitleId = subtitle._id;
       if (subtitleId) {

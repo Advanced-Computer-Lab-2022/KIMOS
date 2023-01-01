@@ -4,10 +4,10 @@ const { createVideo, editVideo, deleteVideo } = require('./videoController');
 const mongoose = require('mongoose');
 var url = require('url');
 const asyncHandler = require('express-async-handler');
-const importMJSModule = async () => {
-  const fetchInfo = await import('../youtubeInfoFetcher.mjs').default;
-  return fetchInfo;
-};
+var ytInfo;
+(async function () {
+  ytInfo = (await import('../youtubeInfoFetcher.mjs')).default;
+})();
 
 const getSubtitle = async (id) => {
   const sub = await Subtitle.findById(id);
@@ -31,11 +31,10 @@ const createSubtitle = async (subtitle) => {
       if (videoId === -1) {
         throw new Error('Invalid link');
       }
-      const ytInfo = await importMJSModule();
       const result = await ytInfo(videoId);
-      totalHours += parseInt(result.hours);
+      totalHours += parseInt(result[0].duration);
       const v = await createVideo({
-        hours: result.hours,
+        hours: result[0].duration,
         description: video.description,
         link: video.link
       }).catch((err) => {
@@ -85,13 +84,12 @@ const updateSubtitle = async (subtitleId, subtitle) => {
       if (videoId === -1) {
         throw new Error('Invalid link');
       }
-      const ytInfo = await importMJSModule();
       const result = await ytInfo(videoId);
-      totalHours += parseInt(result.hours);
+      totalHours += parseInt(result[0].duration);
 
       if (video._id) {
         res = await editVideo(video._id, {
-          hours: result.hours,
+          hours: result[0].duration,
           description: video.description,
           link: video.link
         }).catch((err) => {
@@ -99,7 +97,7 @@ const updateSubtitle = async (subtitleId, subtitle) => {
         });
       } else {
         res = await createVideo({
-          hours: result.hours,
+          hours: result[0].duration,
           description: video.description,
           link: video.link
         }).catch((err) => {

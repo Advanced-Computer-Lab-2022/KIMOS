@@ -26,7 +26,11 @@ const getDuration = (durationString = '') => {
     duration['seconds'] = durationParts[0];
   }
 
-  return parseInt(duration['hours'] || 0) * 60 + parseInt(duration['minutes'] || 0);
+  return (
+    parseInt(duration['hours'] || 0) * 60 +
+    parseInt(duration['minutes'] || 0) +
+    (parseInt(duration['seconds']) > 30 ? 1 : 0)
+  );
 };
 
 export default async (youtubeVideoId = '') => {

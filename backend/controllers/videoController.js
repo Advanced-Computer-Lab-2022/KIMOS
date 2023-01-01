@@ -1,6 +1,7 @@
 const Video = require('../models/videoModel');
 
 const createVideo = async (video) => {
+  console.log(video);
   const { description, link, hours } = video;
   const vid = await Video.create({
     link: link,
