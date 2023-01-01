@@ -39,6 +39,8 @@ export default function MyEnrolledCourses() {
         result.data.payload.courses.forEach(course=>{
           if(course !== null) results.push(course)
         })
+        console.log("courses")
+        console.log(results);
         setMyCourses(results);
       });
   };
@@ -51,7 +53,7 @@ export default function MyEnrolledCourses() {
   return (
     <div>
         {loading && <Loading/>}
-        <div style={{display:"flex",justifyContent:"center",marginTop:20}}>
+        <div style={{display:"flex",marginLeft:20,marginTop:20}}>
             <h1 style={{color:"var(--primary-color)"}}>MY COURSES</h1>
         </div>
       
@@ -72,8 +74,8 @@ export default function MyEnrolledCourses() {
                                 <label style={{fontWeight:100,fontSize:"12"}}>{course.subject.name}</label>
                                 <label style={{fontWeight:600,fontSize:"18"}}>{course.title}</label>
                                 <Box style={{display:"flex",flexDirection:"column",marginTop:20,rowGap:7}}>
-                                    <BorderLinearProgress variant="determinate" value={Math.ceil(parseInt(course.progress)) *100}/>
-                                    <label>{Math.ceil(parseInt(course.progress)) *100}% complete</label>
+                                    <BorderLinearProgress variant="determinate" value={Math.ceil(parseInt(course.progress || 0)) *100}/>
+                                    <label>{Math.ceil(parseInt(course.progress|| 0)) *100}% complete</label>
                                 </Box>
                                 
                             </div>

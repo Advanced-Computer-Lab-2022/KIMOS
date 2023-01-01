@@ -108,24 +108,47 @@ function TraineeViewMyCourse(props) {
       </div>
     );
   };
+  const examExists = ()=>{
+    //check subtitles;
+    var exam = null;
+    props.course.subtitles.forEach((subtitle)=>{
+      if(subtitle.quizzes.length > 0){
+        exam = subtitle.quizzes[0]
+      }
+    })
+  return exam;
+  }
   useEffect(() => {
     if (props.course.subtitles[0].videos) setVideo(props.course.subtitles[0].videos[0]);
-    if (props.course.subtitles[0].quizzes) setQuiz(props.course.subtitles[0].quizzes[0]);
-    else console.log(props.course);
+    if(examExists!==null){
+      setQuiz(examExists());
+    }
     handleMenuChange(0);
   }, []);
 
   var subTitleCount = 1;
   var exerciseCount = 1;
   const handleMenuChange = (newValue) => {
-    setValue(newValue);
     if (newValue === 0) {
+    setValue(newValue);
       //show first subtitle
       onChangeSubtitle(0);
     } else if (newValue === 1) {
       //show first exercise
-      onChangeView(true);
-      onChangeExam(props.course.exams[0]['_id']);
+      console.log("HJER");
+      if(examExists() !== null){
+        setValue(newValue);
+        onChangeView(true);
+        onChangeExam(examExists()["_id"]);
+      }
+      else{
+        props.showAlert({
+          shown: true,
+          message: 'No Exams',
+          severity: 'error'
+        });
+      }
+
     }
   };
 
@@ -307,6 +330,53 @@ function TraineeViewMyCourse(props) {
       </Accordion>
     );
   };
+  const accordionExam2 = (exams)=>{
+    return <Accordion>
+    <AccordionSummary
+      expandIcon={<ExpandMoreIcon />}
+      aria-controls="panel1a-content"
+      id="panel1a-header">
+      <div style={{ width: '100%' }}>
+        <Typography style={{ color: 'var(--primary-color)', fontWeight: 'bolder' }}>
+          Final Exams
+        </Typography>
+        <Typography>
+          <small>{exams.length} Exam(s)</small>
+        </Typography>
+      </div>
+    </AccordionSummary>
+    <AccordionDetails>
+      <div className="my-course__subtitles__subtitles__videos-list">
+        {exams.map((lquiz, index) => {
+          return (
+            <div
+              className={
+                quiz['_id'] === lquiz['_id']
+                  ? 'my-course__subtitles__subtitles__videos-list__video-active'
+                  : 'my-course__subtitles__subtitles__videos-list__video'
+              }
+              onClick={() => {
+                console.log(lquiz);
+                setQuiz(lquiz);
+              }}>
+              <div>
+                <div>{lquiz.title}</div>
+              </div>
+              <div>
+                <DriveFileRenameOutlineIcon
+                  style={{
+                    cursor: 'pointer',
+                    color: quiz['_id'] === lquiz['_id'] ? 'white' : 'var(--primary-color)'
+                  }}
+                />
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </AccordionDetails>
+  </Accordion>
+  }
   const accordionExam = (subtitle) => {
     return (
       <Accordion>
@@ -432,6 +502,10 @@ function TraineeViewMyCourse(props) {
           {props.course.subtitles.map((subtitle) => {
             return accordionExam(subtitle);
           })}
+
+          {accordionExam2(props.course.exams)}
+
+
         </div>
       </div>
     );
@@ -548,7 +622,8 @@ function TraineeViewMyCourse(props) {
           background: 'var(--cool-grey)',
           position: 'absolute',
           bottom: '0',
-          width: '100%'
+          width: '100%',
+          zIndex:'500'
         }}>
         <div
           onClick={() => {

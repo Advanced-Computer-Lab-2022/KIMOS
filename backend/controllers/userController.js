@@ -78,6 +78,7 @@ const login = asyncHandler(async (req, res) => {
             userId: user['_id'],
             username: user.username,
             email: user.email,
+            wallet: user.wallet || 0,
             userType: user.userType,
             firstLogIn: user.firstLogIn
           }
@@ -237,7 +238,7 @@ const editUser = asyncHandler(async (req, res) => {
       throw new Error('All fields must be filled upon first login');
     }
   }
-  if (userInfo.userType == 'instructor') {
+  else {
     userInfo.email = email || userInfo.email;
     userInfo.biography = biography || userInfo.biography;
     userInfo.password = password ? hashedPassword : userInfo.password;
@@ -528,6 +529,7 @@ const changeAccessStatus = async (req, res, next) => {
   const { newStatus } = req.body;
   const request = await Request.findByIdAndDelete(requestId);
   res.locals.courseId = request.courseId;
+  res.locals.registeredUser = request.userId;
   const courseInfo = await Course.findById(res.locals.courseId);
   if (newStatus === 'accepted') {
     next();

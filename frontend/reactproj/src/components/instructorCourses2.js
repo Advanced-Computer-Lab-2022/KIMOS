@@ -150,8 +150,8 @@ const handleSwitchChange = async (e, id) =>{
 
   }catch(e){
 
-    var mssg = e.response.data.message? e.response.data.message[Object.keys(e.response.data.message)[0]] :'Couldnt Update your course Visibility2'
-    props.showAlert({shown:true, message:mssg,severity:'error'})
+
+    props.showAlert({shown:true, message:'Closed courses cant become public again',severity:'error'})
 
   }
 

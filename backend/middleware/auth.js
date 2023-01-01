@@ -157,14 +157,28 @@ const editCourseAuth = asyncHandler(async (req, res, next) => {
 
 const seePublicCourseAuth = asyncHandler(async (req, res, next) => {
   const courseInfo = await Course.findById(req.query.courseId);
-  if (courseInfo.visibility !== 'public') {
+  if (courseInfo.visibility === 'public') {
+    next();
+  }
+  else if (courseInfo.visibility === 'private') {
     res.status(401).json({
       statusCode: 401,
       success: false,
       message: 'Cannot access courses that are not public'
     });
   } else {
-    next();
+    if (courseInfo.visibility === 'closed' ) {
+      const registration = await RegisteredCourse.findOne({
+        userId: res.locals.userId,
+        courseId: req.query.courseId
+      });
+      if (registration) {
+        next();
+      } else {
+        res.status(401).json({ statusCode: 401, success: false, message: 'Unauthorized access' });
+      }
+    }
+
   }
 });
 

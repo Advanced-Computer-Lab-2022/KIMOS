@@ -32,6 +32,17 @@ class UserProfile extends Component {
       password: ''
     }
   };
+  validateNewData = ()=>{
+    var flag = true;
+    if(this.state.new_instructor.username === '')
+      flag = false;
+    if(this.state.new_instructor.email === '')
+      flag = false;
+    if(this.state.new_instructor.password === '')
+      flag = false;
+    return !flag;
+
+  }
   componentDidMount() {
     this.getUserInfo();
   }
@@ -187,7 +198,7 @@ class UserProfile extends Component {
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                   <SecondaryBtn btnText="Cancel" function={this.cancel} />
                   <div className="date-picker__sep" />
-                  <PrimaryBtn btnText="Save" function={this.save} />
+                  <PrimaryBtn disabled ={this.validateNewData()} btnText="Save" function={this.save} />
                 </div>
               )}
             </div>
@@ -195,20 +206,7 @@ class UserProfile extends Component {
         </div>
         <div className="instructor-profile__content"  style={{display:'flex', justifyContent:'space-between', position:'relative'}}>
 
-          <div className="instructor-profile__content__reviews" style={{width:'50%'}}>
-          <div className="instructor-profile__content__reviews__header">My Menu</div>
-          <div className="instructor-profile__content__reviews__comments"
-          >
 
-              {this.getOption(<WhatshotIcon style={{fontSize:'30px', color:'red'}}/>, 'Top Courses', 'topCourses')}
-              {this.getOption(<MenuBookIcon style={{fontSize:'30px', color:'var(--secondary-color)'}}/>, 'My Courses', 'myCourses')}
-              {this.getOption(<ReportIcon style={{fontSize:'30px',  color:'var(--secondary-color)'}}/>, 'My Reports', 'myReports')}
-              {this.props.user.userType==='corporate trainee' && this.getOption(<SwitchAccessShortcutIcon style={{fontSize:'30px',  color:'var(--secondary-color)'}}/>, 'Grant Access', 'requestCourseAccess')}
-
-          </div>
-
-          
-        </div>
         {this.props.user.userType!=='corporate trainee'&& <div className="instructor-profile__content__reviews" style={{ width:'50%'}}>
         <div className="instructor-profile__content__reviews__header">My Wallet</div>
         <div className="instructor-profile__content__reviews__comments" >
@@ -217,7 +215,7 @@ class UserProfile extends Component {
                     {this.getStars()}
                     
 
-                    <div className="wallet__content__value">319$</div>
+                    <div className="wallet__content__value">{this.props.user.wallet * this.props.rate.rate + " "+this.props.rate.symbol}</div>
                         <div className="wallet__content__icon wallet__content__icon-1"><AttachMoneyIcon sx={{fontSize:'150px'}}/></div>
                         <div className="wallet__content__icon wallet__content__icon-2"><PaidIcon sx={{fontSize:'150px'}}/></div>
                     </div>
@@ -235,7 +233,9 @@ class UserProfile extends Component {
 
 const mapStateToProps = (state) => {
   return {
-    user: state.user
+    user: state.user,
+    rate: state.rateAndSymbol,
+
   };
 };
 

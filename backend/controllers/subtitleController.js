@@ -72,6 +72,7 @@ const updateSubtitle = async (subtitleId, subtitle) => {
   });
   const newVids = await Promise.all(
     videos.map(async (video, index) => {
+      const stringUrl = video.link;
       var res = {};
       var videoId;
       var regExp = new RegExp(/^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/);

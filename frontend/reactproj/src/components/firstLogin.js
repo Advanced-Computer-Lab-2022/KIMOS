@@ -129,9 +129,11 @@ class SignUp extends Component {
     })
   };
 
-    steps = ['Your Info', 
+    steps = this.props.user.userType !== 'corporate trainee'?['Your Info', 
              'Terms And Conditions',
-            'Contract'];
+            'Contract'] : ['Your Info', 
+            'Terms And Conditions'];
+    lastStep =  this.props.user.userType !== 'corporate trainee'? 3 : 2;
     state = {
         currentStep : 0,
         acceptedTerms:false,
@@ -150,7 +152,7 @@ class SignUp extends Component {
     handleNext = ()=>{
         console.log(this.state);
 
-        this.setState({currentStep: this.state.currentStep + 1 >3 ? 3 : this.state.currentStep + 1 })
+        this.setState({currentStep: this.state.currentStep + 1 >this.lastStep ? this.lastStep : this.state.currentStep + 1 })
     }
     getPolicy = (name, list)=>{
         return (
@@ -282,7 +284,7 @@ class SignUp extends Component {
         <div className='addCourse__footer'>
             <div className='addCourse__footer__btns'>
                 <SecondaryBtn function={this.handleBack} btnText="Back"/>
-                <PrimaryBtn disabled={(this.state.currentStep === 0 && !this.validateInfo()) || (this.state.currentStep === 1&& !this.state.acceptedTerms)} function={this.state.currentStep===2 ? this.handleSubmit:this.handleNext} btnText={this.state.currentStep === 2? 'Accept & Save':'Next'}/>
+                <PrimaryBtn disabled={(this.state.currentStep === 0 && !this.validateInfo()) || (this.state.currentStep === 1&& !this.state.acceptedTerms)} function={this.state.currentStep===(this.lastStep -1) ? this.handleSubmit:this.handleNext} btnText={this.state.currentStep === this.lastStep -1? 'Accept & Save':'Next'}/>
             </div>
         </div>
 
@@ -298,5 +300,11 @@ class SignUp extends Component {
 // {this.getPolicy("Refund Policy", [1,2,3,4])}
 // {this.getPolicy("Payment Policy", [1,2,3,4])}
 
+const mapStateToProps = (state) =>{
+   
+  return {
+      user: state.user
+  };
+}
 
-export default connect(null, { showAlert,setUser })(SignUp);
+export default connect(mapStateToProps, { showAlert,setUser })(SignUp);

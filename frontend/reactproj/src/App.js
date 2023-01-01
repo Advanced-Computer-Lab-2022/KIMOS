@@ -32,7 +32,7 @@ import AdminCourseReqs from './components/adminCourseReqs';
 import UserProfile from './components/userProfile';
 import Loading from './components/loadingPage';
 import NewCreateCourse from './components/newCreateCourse';
-import SignUpPage from './components/signUp';
+import SignUpPage from './components/signup';
 import Alert from './components/alert';
 import Auth from './components/auth';
 import FirstLogin from './components/firstLogin';
@@ -78,6 +78,7 @@ class App extends Component {
   theme = createTheme({
     
     palette: {
+
       primary: {
         main: this.props.primaryColor,
         },

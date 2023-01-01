@@ -8,6 +8,7 @@ const createInvoice = asyncHandler(async (req, res, next) => {
   const userId = res.locals.userId;
   const courseId = res.locals.courseId;
   const courseInfo = await Course.findById(courseId);
+  res.locals.registeredUser = userId;
   const inv = await Invoice.create({
     userId: userId,
     instructorId: courseInfo.instructor,

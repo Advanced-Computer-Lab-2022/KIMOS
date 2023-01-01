@@ -13,7 +13,7 @@ import PrimaryBtn from './buttons/primaryBtn';
 import Loading from './loadingPage';
 import {connect} from 'react-redux';
 import { showAlert } from '../redux/actions/index';
-
+import NotFoundPage from './notFoundPage';
 
 import Checkout from './checkout'
 
@@ -40,16 +40,21 @@ function TraineeViewMyCourse(props) {
 
   const getCourse = async (courseId) => {
     // await axios.post('http://localhost:5000/login',{username:"individual",password:"individual123"})
-    await axios
+    try{await axios
       .get('http://localhost:5000/courses/getMyCourse', {
         params: {
           courseId: courseId,
         }
       })
       .then((course) => {
+        console.log(course);
         setLoading(false);
         setMyCourse(course.data);
-      });
+      });}catch(e){
+        console.log(e);
+        setLoading(false);
+
+      }
   };
   const getRatings = async (id) => {
     const res = await axios.get(
@@ -108,10 +113,8 @@ function TraineeViewMyCourse(props) {
   if(loading){
     return <div><Loading/ ></div>
   }
-  if(viewContent){
-    return (
-      <TraineeViewCourseDetails course={myCourse} />
-    )
+  if(myCourse.title ===""){
+    return (<NotFoundPage/>)
   }
   else return (
     <div className="user-course" >

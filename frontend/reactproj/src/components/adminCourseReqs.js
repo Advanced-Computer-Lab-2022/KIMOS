@@ -28,24 +28,22 @@ function AdminCourseReqs(props) {
 
   const columns = [
 
-    { field: 'title', headerName: 'Course Name',
+    { 
+      field: 'id', headerName: 'ID',
+      flex: 1,
+      minWidth: 40,
+      hide:true,
+      align:'center',
+      headerAlign:'center'
+    },
+    { field: 'courseTitle', headerName: 'Course Name',
       flex: 1,
       minWidth: 40,
       align:'center',
       headerAlign:'center',
   
       },
-      { 
-        field: 'id', headerName: 'Course ID',
-        renderCell: (rowData,index)=> {
-          return index
-        },
-        flex: 1,
-        minWidth: 40,
-        hide:true,
-        align:'center',
-        headerAlign:'center'
-      },
+
       { 
         field: 'courseId', headerName: 'Course ID',
         flex: 1,
@@ -105,9 +103,9 @@ const [displayedCourse, setDisplayedCourse] = React.useState({});
 const sendRes = async (status, id)=>{
   try{
     const res = await axios.post("http://localhost:5000/users/accessStatus?requestId="+id,{
-      newState:status
+      newStatus:status
     })
-
+    console.log(res);
     if(res.data.success){
       props.showAlert({shown:true, message:'Submitted your action',severity:'success'})
       getInstructorCourses();
@@ -127,7 +125,7 @@ const CorrectActionBtn = (rowData)=>{
     <IconButton
       size="small"
       sx ={{background:'#ACE1AF',color:'#006A4E'}}
-      onClick={()=>sendRes('accepted', rowData.row['_id'])}
+      onClick={()=>sendRes('accepted', rowData.row['reqId'])}
       >
         <CheckIcon />
   </IconButton>
@@ -138,7 +136,7 @@ const rejectActionBtn = (rowData)=>{
     <IconButton
       size="small"
       sx ={{background:'#F08080',color:'#CC0000'}}
-      onClick={()=>sendRes('rejected', rowData.row['_id'])}
+      onClick={()=>sendRes('rejected', rowData.row['reqId'])}
 
       >
         <ClearIcon />
@@ -168,7 +166,19 @@ React.useEffect(() => {
 
 
       if(res.data.payload){
-        setRows(res.data.payload);
+        var tmpRows = [];
+        res.data.payload.forEach((req,index)=>{
+          var tmpObj = {};
+          tmpObj.id = index+1;
+          tmpObj.reqId = req["_id"];
+          tmpObj.username = req["userId"]["username"]
+          tmpObj.userId = req["userId"]["_id"]
+          tmpObj.courseTitle = req["courseId"]["title"]
+          tmpObj.courseId = req["courseId"]["_id"]
+          tmpRows.push(tmpObj);
+        })
+        console.log(tmpRows);
+        setRows(tmpRows);
       }
       setLoading(false);
     } catch (e) {
@@ -256,7 +266,6 @@ React.useEffect(() => {
                 columns={columns}
                 pageSize={20}
                 rowsPerPageOptions={[20]}
-                getRowId = {(row)=>{return row['_id']}}
                 checkboxSelection
                 disableSelectionOnClick
 

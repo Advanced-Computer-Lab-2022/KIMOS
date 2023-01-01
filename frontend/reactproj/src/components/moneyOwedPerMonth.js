@@ -66,6 +66,7 @@ var x=0;
           case 10:return "October";break;
           case 11:return "November";break;
           case 12:return "December";break;
+          default: return 'N/A'
         }
     }
   
@@ -104,7 +105,7 @@ var x=0;
                     
                   {myInvoices.length>0 && myInvoices.map((row,index) => (
                     <>
-                      {(new Date(row.date).getMonth()+1)==display && 
+                      {(new Date(row.date).getMonth()+1)===display && 
                       <>
                       <TableRow key={row.date}>
                         <TableCell align="center">{row.date}</TableCell>
@@ -141,7 +142,7 @@ export default function MoneyOwedPerMonth() {
   var oldKey=0;
 
   const getInvoices = async () => {
-    await axios.post('http://localhost:5000/login',{username:"erenYeager",password:"instructor123"})
+
 
     await axios
       .get('http://localhost:5000/users/invoices/instructor')
@@ -158,19 +159,20 @@ export default function MoneyOwedPerMonth() {
 
   return (
     <div>
-    <h1 style={{marginLeft:590,marginTop:30,marginBottom:30,color:"var(--primary-color)"}}>My Profit</h1>
+    <h1 style={{marginLeft:20,marginTop:30,marginBottom:30,color:"var(--primary-color)"}}>My Profit</h1>
     <TableContainer component={Paper} style={{width:700,margin:"auto"}}>
       <Table aria-label="collapsible table">
         <TableHead style={{backgroundColor:"black"}}>
           <TableRow>
             <TableCell />
             <TableCell style={{color:"white",paddingLeft:170}}>Month</TableCell>
+
           </TableRow>
         </TableHead>
         <TableBody>
           {myInvoices.length>0 && myInvoices.map((row,index) => (
               <>
-            {new Date(row.date).getMonth()+1!=oldKey && <Row display={new Date(row.date).getMonth()+1} key={new Date(row.date).getMonth()+1} row={row} />}
+            {new Date(row.date).getMonth()+1!==oldKey && <Row display={new Date(row.date).getMonth()+1} key={new Date(row.date).getMonth()+1} row={row} />}
             <div hidden="hidden">{oldKey=new Date(row.date).getMonth()+1}</div>
             </>
           ))}

@@ -28,7 +28,7 @@ class instructorCourse extends Component {
         currentSubtitleVideo:0,
         displayedStartDate:new Date(),
         displayedEndDate:new Date(),
-        discountFlag: false,
+        flagDiscount: false,
         updated:false
     }
     getRatings = async () => {
@@ -244,10 +244,10 @@ class instructorCourse extends Component {
         // console.log(this.state.course.preview);
         console.log(this.state.course)
         var toBeSubmitted = {}
-        toBeSubmitted.discountFlag = this.state.discountFlag;
+        toBeSubmitted.flagDiscount = this.state.flagDiscount;
         toBeSubmitted.courseId = this.state.course['_id'];
         toBeSubmitted.course = this.state.course;
-        if(this.state.discountFlag){
+        if(this.state.flagDiscount){
 
             if(this.state.course.discount.amount > 0){
 
@@ -294,19 +294,19 @@ class instructorCourse extends Component {
     updateDiscount = (e)=>{
         var course = {...this.state.course};
         course.discount.amount = e.target.value;
-        this.setState({updated:true, course:course, discountFlag:true});
+        this.setState({updated:true, course:course, flagDiscount:true});
     }
     setStartDate = (newValue)=>{
         console.log(newValue);
         // var course = {...this.state.course};
         // course.discount.startDate = newValue;
-        this.setState({updated:true, discountFlag:true, displayedStartDate:newValue});
+        this.setState({updated:true, flagDiscount:true, displayedStartDate:newValue});
     };
 
     setEndDate = (newValue)=>{
         // var course = {...this.state.course};
         // course.discount.endDate = newValue;
-        this.setState({updated:true, discountFlag:true, displayedEndDate:newValue});
+        this.setState({updated:true, flagDiscount:true, displayedEndDate:newValue});
 
     };
     createExam = (type)=>{

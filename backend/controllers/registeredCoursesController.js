@@ -120,7 +120,7 @@ const getAllRegisteredCourses = asyncHandler(async (req, res) => {
 });
 
 const registerUser = asyncHandler(async (req, res) => {
-  const userId = res.locals.userId;
+  const userId = res.locals.registeredUser;
   const courseId = res.locals.courseId;
   const courseInfo = await Course.findById(courseId);
   const userInfo = await User.findById(userId);

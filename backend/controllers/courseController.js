@@ -603,7 +603,8 @@ const modifyExam = asyncHandler(async (req, res) => {
 const editCourse = asyncHandler(async (req, res) => {
   const { courseId } = req.query;
   const { course, flagDiscount } = req.body;
-  if (flagDiscount === 'true') {
+  if (flagDiscount === true) {
+    console.log("HEEREE")
     await addDiscount(courseId, course.discount).catch((err) => {
       throw err;
     });

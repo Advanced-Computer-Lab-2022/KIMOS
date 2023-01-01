@@ -6,7 +6,7 @@ const jwt = require('jsonwebtoken');
 const { getCountryIso, getCorrectPrice } = require('./userController');
 const asyncHandler = require('express-async-handler');
 const checkout = asyncHandler(async (req, res) => {
-  const registration = await RegisteredCourse.find({
+  const registration = await RegisteredCourse.findOne({
     userId: res.locals.userId,
     courseId: req.query.courseId
   });

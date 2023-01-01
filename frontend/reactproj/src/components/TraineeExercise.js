@@ -31,8 +31,11 @@ function App(props) {
       });
   };
 
+  const verifySolution = ()=>{
+
+  }
   const postSolution = async () => {
-    console.log('here');
+    console.log(userSolution)
     const res = await axios.post(
       'http://localhost:5000/courses/exam/solution',
       { solutions: userSolution },
@@ -52,6 +55,7 @@ function App(props) {
 
   useEffect(() => {
     getExam();
+    setCurrentQuestion(0);
   }, [props.examId]);
 
   /* A possible answer was clicked */
