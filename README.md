@@ -52,6 +52,8 @@ Also, we are competing with more than 40+ team to be the chosen project from the
     - used to allow Cross-origin-access between the frontend and the backend
 - **cookie-parse** 1.4.6
     - Parse HTTP request cookies
+- **stripe** 
+    - To Secure transactions
 
 ## Frontend
 
@@ -95,7 +97,25 @@ Also, we are competing with more than 40+ team to be the chosen project from the
 ### Watching a Course and taking notes
 ![Alt text](/samples/course-notes.png?raw=true "Optional Title")
 
+### Admin Reports Page
+![Alt text](/samples/admin-reported-problems.png?raw=true "Optional Title")
 
+### Course Preview
+![Alt text](/samples/course-preview.png?raw=true "Optional Title")
+
+### Chatting about a problem 
+![Alt text](/samples/chat.png?raw=true "Optional Title")
+
+### Course details page for instruction
+![Alt text](/samples/course-details.png?raw=true "Optional Title")
+
+
+### Instructor Courses
+![Alt text](/samples/instr-courses.png?raw=true "Optional Title")
+
+
+### Instructor Money
+![Alt text](/samples/inst-money.png?raw=true "Optional Title")
 
 
 
