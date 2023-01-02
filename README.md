@@ -1,8 +1,18 @@
 
 
-# KIMOS
+# Canadian Chamber of Commerce eLearning website
 
-A brief description of what this project does and who it's for
+This is an eLearning website that is developed using 
+the MERN stack for the Canadian Chamber of Commerce to 
+help students learn at their own pace and place providing them
+with up-to-date courses on various subjects from experienced
+instructors.
+
+
+# Build Status
+
+This project has been tested and is fully functional but, not
+yet deployed.
 
 # How to Use?
 First, you have to install all of the required packages (libraries) in the frontend folder
@@ -20,17 +30,31 @@ You can contribute to this project by securing all of its end points, and by add
 - Log system to keep track of all of the admins actions as they can do many dangerous actions
 
 
-# Code Style
-We didn't follow a specific convention in the JS files.
-However, in naming the classes in the scss files (not normal css) we followed the **BEM** convention, which works as following 
-https://www.freecodecamp.org/news/css-naming-conventions-that-will-save-you-hours-of-debugging-35cea737d849/ 
 
-
-# Motivation
+# Why did we develop this website
 We built this website for **Canadian Chamber Of Commerce**. As we want to be part of their 
 educational project because we believe it will be very beneficial for teens all around Egypt. As they got their own trustworthy instructors unlike most of the other educational online systems.
 Also, we are competing with more than 40+ team to be the chosen project from the company as the chosen project will be awarded.
 
+
+# Code Style
+JavaScript Standard Style where no configuration and the code
+is formatted autotmatically.
+However, in naming the classes in the scss files (not normal css) we followed the **BEM** convention, which works as following 
+https://www.freecodecamp.org/news/css-naming-conventions-that-will-save-you-hours-of-debugging-35cea737d849/ 
+
+# Features
+1) Individual Trainee/ Corporate Trainee can see all his/her grades for exercises (or exams) he/she did previously.
+2) Individual Trainee/ Corporate Trainee can retake an exercise (or exam) if he/she failed it **before** viewing the
+    answers to the exam/ exercise.
+3) Instructor can see the total number of students enrolled in his/her course.
+4) Individual Trainee/ Corporate Trainee can edit or delete his/her review of an instrcutor or a course.
+5) Instructor can save his/her progress in creating a course WITHOUT publishing the
+    course.
+6) Instructor can publish his/her course. A published course CANNOT be edited nor
+    deleted.
+7) Instructor can edit or delete a non published course.
+8) Instructor can close a published course.
 
 
 # Tech/Framework used
@@ -75,6 +99,606 @@ Also, we are competing with more than 40+ team to be the chosen project from the
 - **JSpdf** 2.5.1
     - library to create PDF files using HTML content.
     
+    
+
+## API Reference
+
+#### Get all subjects
+
+```http
+  GET /courses/subjects
+```
+
+#### POST a new subject
+
+```http
+  GET /courses/subjects
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `name`     | `string` | **Required**. subjects|
+
+
+#### GET all courses
+
+```http
+  GET /courses
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `resultsPerPage`     | `string` |the courses to display per page|
+| `instructorSearch`     | `string` |the variable to know the type of the user session|
+| `page`     | `string` | page|
+
+returns all the courses that satisfies the search parameter
+
+
+
+#### POST a new course
+
+```http
+  POST /courses
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `course`     | `Object` |**Required**. the details of the course to be added to the database|
+
+
+#### PUT an existing course
+
+```http
+  PUT /courses
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `course`     | `Object` |**Required**. the new course|
+| `flagDiscount`     | `bool` |**Required**. Is set to true if the discount was changed|
+| `couresId`     | `string` |**Required**. the Id of the course to be updated|
+
+#### Delete an existing course
+
+```http
+  Delete /courses
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `couresId`     | `string` |**Required**. the Id of the course to be deleted|
+
+
+
+#### PATCH make course public 
+
+```http
+  Patch /courses
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `couresId`     | `string` |**Required**. the Id of the course to be amde public|
+
+
+
+#### POST close a public course
+
+```http
+  POST /courses/close
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `couresId`     | `string` |**Required**. the Id of the course to be closed|
+
+
+#### GET the reviews of a course
+
+```http
+  GET /courses/reviews
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `couresId`     | `string` |**Required**. the Id of the course|
+
+returns all the ratings and reviews for the specified course
+
+#### POST a review of a course
+
+```http
+  POST /courses/rate
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `couresId`     | `string` |**Required**. the Id of the course|
+| `rating`     | `Number` |**Required**. the rating of the course|
+| `review`     | `string` |review of the course|
+
+#### GET details of an exam
+
+```http
+  GET /courses/exam
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `couresId`     | `string` |**Required**. the Id of the course|
+| `examId`     | `string` |**Required**. the exma id|
+
+returns the details of exam specified
+
+#### POST adds an exam to a course
+
+```http
+  POST /courses/exam
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `couresId`     | `string` |**Required**. the Id of the course|
+| `exam`     | `Object` |**Required**. the exam to be added to the course|
+
+#### PUT edit an already existing exam
+
+```http
+  PUT /courses/exam
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `couresId`     | `string` |**Required**. the Id of the course|
+| `examId`     | `string` |**Required**. the id of the exam|
+| `exam`     | `Object` |**Required**. the exam object|
+
+#### DELETE remove exam
+
+```http
+  DELETE /courses/exam
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `couresId`     | `string` |**Required**. the Id of the course|
+| `examId`     | `string` |**Required**. the of the exam to be deleted|
+
+
+#### POST a new quiz to the subtitle
+
+```http
+  POST /courses/subtitle/quiz
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `couresId`     | `string` |**Required**. the Id of the course|
+| `subtitleId`     | `string` |**Required**. the rating of the course|
+
+
+
+#### PUT update and existing quiz
+
+```http
+  PUT /courses/subtitle/quiz
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `couresId`     | `string` |**Required**. the Id of the course|
+| `quizId`     | `string` |**Required**. the id of the quiz|
+| `quiz`     | `Object` |**Required**. quiz object with new values|
+
+
+#### POST a solution to a quiz
+
+```http
+  POST /courses/exam/solution
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `examId`     | `string` |**Required**. the Id of the exam|
+| `solutions`     | `[Object]` |**Required**. array of solutions|
+
+
+#### GET a solution to a quiz
+
+```http
+  GET /courses/exam/solution
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `examId`     | `string` |**Required**. the Id of the exam|
+
+returns the solution of this exam to the user
+
+
+#### GET course details
+
+```http
+  GET /courses/getMyCourse
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `courseId`     | `string` |**Required**. the Id of the course|
+
+returns the information of this course
+
+
+#### GET all the registered courses of an user
+
+```http
+  GET /register
+```
+returns all the registered courses of a user
+
+
+#### GET notes of an user
+
+```http
+  GET /courses/notes
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `courseId`     | `string` |**Required**. the Id of the course|
+| `videoId`     | `string` |**Required**. the Id of the video|
+
+returns all the notes for this specific video of this course
+
+#### POST notes of an user
+
+```http
+  POST /courses/notes
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `courseId`     | `string` |**Required**. the Id of the course|
+| `videoId`     | `string` |**Required**. the Id of the video|
+| `notes`     | `[Objects]` |**Required**. array of notes to be added/updated|
+
+
+#### POST update a progress
+
+```http
+  POST /courses/progress
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `courseId`     | `string` |**Required**. the Id of the course|
+| `videoId`     | `string` |**Required**. the Id of the video|
+
+returns the updated progress for this user
+
+#### GET most popular courses
+
+```http
+  GET /courses/popular
+```
+
+returns the most popular courses
+
+#### POST the request of the refund is processed by the system
+
+```http
+  POST /courses/refund
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `courseId`     | `string` |**Required**. the Id of the course|
+
+#### POST the request of the access is processed by the system
+
+```http
+  POST /courses/access
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `courseId`     | `string` |**Required**. the Id of the course|
+
+
+#### POST a discount for a specific course
+
+```http
+  POST /courses/promotion
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `courseIds`     | `[string]` |**Required**. array of the Ids of the courses|
+| `discount`     | `Object` |**Required**. discount to be added|
+
+### GET all reviews of this instructor
+
+```http
+  GET /users/reviews
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `instrcutorId`     | `string` |**Required**. the id of the instructor|
+
+returns all the reviews of this instructor
+
+### POST create a user
+
+```http
+  POST /users
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `userDetails`     | `Object` |**Required**. the details of the user to be added to the system|
+
+
+### PUT an existing user
+
+```http
+  PUT /users
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `user`     | `Object` |**Required**. the new details of the user|
+
+
+### GET all the detials of an user
+
+```http
+  GET /users
+```
+
+returns all the details of an user
+
+### GET the details of a specific instructor
+
+```http
+  GET /users/viewInstructorDetails
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `instructorId`     | `string` |**Required**. the id of the instructor|
+
+returns the details of a specific instructor
+
+### POST a review on a specific instrcutor
+
+```http
+  POST /users/rateInstructor
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `instrcutorId`     | `string` |**Required**. the id of the instructor|
+| `rating`     | `Number` |**Required**. the rating that will be given to this instructor|
+| `review`     | `string` |**Required**. the review that will be given to this instructor|
+
+### GET country of the user
+
+```http
+  GET /users/country
+```
+returns the country of the user
+
+
+### PUT a country of this user
+
+```http
+  PUT /users/country
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `country`     | `string` |**Required**. the new country of the userr|
+
+### GET the exchange rate of the currency
+
+```http
+  GET /users/rate
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `countryCode`      | `string` | **Required**. the country code to get the exchange rate of its currency |
+returns the exchange rate of the currency
+
+### PUT changes the password of the user
+
+```http
+  PUT /users/changePassword
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `password`      | `string` | **Required**. the new password |
+
+
+### POST sends a passwrod reset link to the user's email
+```http
+  POST /users/passwordResetEmail
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `email`      | `string` | **Required**. the user's email |
+
+
+### POST reset a password to the given password
+```http
+  POST /users/passwordReset
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `token`      | `string` | **Required**. the access token sent to the user email |
+| `password`      | `string` | **Required**. the new password  |
+
+
+### GET a certificate
+```http
+  GET /users/certificate
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `cousreId`      | `string` | **Required**. the id of the course |
+
+
+returns the certificate of the given courseId
+
+### POST a report for the given course id
+```http
+  POST /users/report
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `cousreId`      | `string` | **Required**. the id of the course |
+| `report`      | `Object` | **Required**. the report to be added to this course  |
+
+
+### GET all the reports by this user
+```http
+  GET /users/report
+```
+returns all the reports by this user
+
+### PUT changes the status of a given report
+```http
+  PUT /users/report
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `newStatus`      | `string` | **Required**. the new Status of the report |
+| `reportId`      | `string` | **Required**. Id of the report |
+
+
+
+### PATCH adds the followup conversation to the system
+```http
+  PATCH /users/report
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `messages`      | `[Objects]` | **Required**. array of messages |
+| `reportId`      | `string` | **Required**. Id of the report |
+
+
+
+### POST
+```http
+  POST /users/createCheckoutSession
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `courseId`      | `string` | **Required**. the course id |
+
+returns a payment link
+
+### POST the registeration of the user to the course
+```http
+  POST /users/register
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `cousreId`      | `string` | **Required**. the course id |
+| `token`      | `string` | **Required**. authentication token to ensure successful payment|
+
+
+### GET all the old invoices
+```http
+  GET /users/invoices/instructor
+```
+
+returns all the owed invoices
+
+
+### GET all unseed notifications
+```http
+  GET /users/notifications
+```
+
+returns all the unseen notifications
+
+
+### POST the systems processes the new status of the refund
+```http
+  POST /users/refundStatus
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `newStatus`      | `string` | **Required**. the new Status of the refund |
+| `requestId`      | `string` | **Required**. Id of the report |
+
+### POST the systems processes the new status of the access request
+```http
+  POST /users/accessStatus
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `newStatus`      | `string` | **Required**. the new Status of the access request |
+| `requestId`      | `string` | **Required**. Id of the request |
+
+
+### GET all the requests of the given type
+```http
+  GET /users/requests
+```
+
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `requestType`      | `string` | **Required**. the type of the request |
+
+returns all the requests of the given type
+
+
+### GET all the invoices for the user registered
+```http
+  GET /users/registeredInvoices
+```
+returns all the invoices for the user registered
+
+
+### POST logs the user in
+```http
+  POST /login
+```
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `username`**OR**`email`      | `string` | **Required**. username or the email |
+| `password`      | `string` | **Required**. password of the user |
+
+
+### POST the user details to the system
+```http
+  POST /signup
+```
+| Parameter | Type     | Description                       |
+| :-------- | :------- | :-------------------------------- |
+| `userInfo`      | `Object` | **Required**. the info of the user to be registered |
+
+
+### POST logs the user out
+```http
+  POST /logout
+```
+
 # Screenshots
 ### Homeland
 ![Alt text](/samples/land.png?raw=true "Optional Title")
