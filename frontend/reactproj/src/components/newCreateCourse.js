@@ -120,10 +120,10 @@ class NewCreateCourse extends Component {
         //validate all essential info exists
         //course name, course subject, summary and price
         var flag = true;
-        if(this.state.course.title) flag = false;
-        if(this.state.course.subject) flag = false;
-        if(this.state.course.summary) flag = false;
-        if(this.state.course.price) flag = false;
+        if(this.state.course.title === '') {flag = false;console.log("title")}
+        if(this.state.course.subject=== '') {flag = false;console.log("subject")}
+        if(this.state.course.summary=== '') {flag = false;console.log("summary")}
+        if(this.state.course.price=== ''){flag = false;console.log("price")}
 
         return flag;
 
@@ -146,9 +146,9 @@ class NewCreateCourse extends Component {
           )
           
         if(res.data.success)
-          this.props.showAlert({shown:true, message:'Updated your Info',severity:'success'})
+          this.props.showAlert({shown:true, message:'Created the course',severity:'success'})
         else
-          this.props.showAlert({shown:true, message:'Couldnt Update your Info',severity:'error'})
+          this.props.showAlert({shown:true, message:'Couldnt create the course',severity:'error'})
 
       };
     componentDidMount(){
@@ -172,6 +172,7 @@ class NewCreateCourse extends Component {
         },
         course :{
             title: '',
+            preview:'',
             subtitles: [{
 
                     title:'',
@@ -189,7 +190,7 @@ class NewCreateCourse extends Component {
             rating: 0,
             totalHours: '',
             discount: '',
-            subject: 'Math' ,
+            subject: 'Math',
             exercises: []
         }
     }
@@ -222,7 +223,9 @@ class NewCreateCourse extends Component {
             currCourse[e.target.name] = e.target.value;
 
         }
-        this.setState({course:currCourse})
+        this.setState({course:currCourse},()=>{
+            console.log(currCourse);
+        })
     }
     getContent = ()=>{
         if(this.state.currentStep === 0){
@@ -239,15 +242,15 @@ class NewCreateCourse extends Component {
         return <div className="addCourse__content__page-1">
             <div className='page-name'>Course Info</div>
 
-            <TextField  onChange={this.handleChange} sx={{width:'50%'}} id="title" label="Course Name" variant="outlined" />
-            <FormControl sx={{width:'30%', marginLeft:'20px'}}>
+            <TextField  value={this.state.course.title} onChange={this.handleChange} sx={{width:'50%'}} id="title" label="Course Name" variant="outlined" />
+            <TextField  style={{marginLeft:"10px"}} value={this.state.course.preview} onChange={this.handleChange} sx={{width:'50%'}} id="preview" label="Preview Link" variant="outlined" />
+
+            <FormControl sx={{width:'50%', marginLeft:'20px'}}>
                 <InputLabel id="demo-simple-select-label">Subject</InputLabel>
                 <Select
                 labelId="demo-simple-select-label"
                 id="subject"
                 value={this.state.course.subject}
-
-
                 label="Subject"
                 name='subject'
                 onChange={this.handleChange}
@@ -268,9 +271,9 @@ class NewCreateCourse extends Component {
         return <div className="addCourse__content__page-2">
             <div className='page-name'>Course Summary & Price</div>
 
-            <TextField onChange={this.handleChange}  sx={{width:'50%'}} id="summary" label="Course Summary" variant="outlined" multiline rows={6}/>
+            <TextField value={this.state.course.summary} onChange={this.handleChange}  sx={{width:'50%'}} id="summary" label="Course Summary" variant="outlined" multiline rows={6}/>
             <div style={{width:'50%'}}>
-                <TextField onChange={this.handleChange}  type="number" sx={{width:'30%', marginTop:'10px'}} id="price" label="Price" variant="outlined" />
+                <TextField value={this.state.course.price} onChange={this.handleChange}  type="number" sx={{width:'30%', marginTop:'10px'}} id="price" label="Price" variant="outlined" />
             
             </div>
 
@@ -409,9 +412,9 @@ class NewCreateCourse extends Component {
 
                 <div className='subtitle__info'>
                     <div className='subtitle__info__value' style={{display:'flex',alignItems:'center'}}>
-                        <TextField id={this.state.course.title+'1'} onChange={this.updateSubHours} value={subtitle.hours} label="Subtitles Hour(s)" variant="outlined" />
+                        <TextField id={this.state.course.title+'1'} onChange={this.updateSubHours} value={subtitle.hours} label="Subtitles Minute(s)" variant="outlined" />
                         <div style={{color:'grey', marginLeft:'5px'}}>
-                            Hour(s)
+                            Minute(s)
                         </div>
                     </div>
                 </div>

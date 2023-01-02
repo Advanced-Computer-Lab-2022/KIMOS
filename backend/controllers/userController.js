@@ -377,10 +377,11 @@ const resetPassword = asyncHandler(async (req, res) => {
 });
 
 const getCertificate = asyncHandler(async (req, res) => {
-  const userId = res.locals('userId');
+  const userId = res.locals['userId'];
   const { courseId } = req.query;
   const { title, instructor } = await getCourseInfo(courseId);
-  const instructorName = instructor.firstName + ' ' + instructor.lastName;
+  const u = await User.findById(instructor)
+  const instructorName = u.firstName + ' ' + u.lastName;
   const userInfo = await User.findById(userId, 'firstName lastName');
   const studentName = userInfo.firstName + ' ' + userInfo.lastName;
   const doc = new PDFDocument({
@@ -404,7 +405,8 @@ const sendCertificateEmail = asyncHandler(async (userId, courseId) => {
     }
   });
   const { title, instructor } = await getCourseInfo(courseId);
-  const instructorName = instructor.firstName + ' ' + instructor.lastName;
+  const u = await User.findById(instructor)
+  const instructorName = u.firstName + ' ' + u.lastName;
   const userInfo = await User.findById(userId);
   const studentName = userInfo.firstName + ' ' + userInfo.lastName;
   const buffers = [];

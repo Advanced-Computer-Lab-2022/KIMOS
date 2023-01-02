@@ -74,11 +74,11 @@ class homeLand extends Component {
                     <div className='homeland__section section_1__right'>
                     <div className='features'>
                         <div className='features__text'>Our Features!</div>
-                        <ul className='ul'>
-                            <li className='ul__text'>&#x2022; Choose from 213,000 online video courses with new additions published every month</li>
-                            <li className='ul__text'>&#x2022; Choose from 213,000 online video courses with new additions published every month</li>
-                            <li className='ul__text'>&#x2022; Choose from 213,000 online video courses with new additions published every month</li>
-                            <li className='ul__text'>&#x2022; Choose from 213,000 online video courses with new additions published every month</li>
+                        <ul className='ul' style={{fontSize:'22px'}}>
+                            <li className='ul__text'>&#x2022; More than 1000 online course to choose from and to increase your knowledge in different fields.</li>
+                            <li className='ul__text'>&#x2022; More than 5 exam(s) per course to test your knowledge</li>
+                            <li className='ul__text'>&#x2022; Certified certificates</li>
+
 
                         </ul>
                     </div>

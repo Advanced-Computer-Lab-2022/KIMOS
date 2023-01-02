@@ -123,21 +123,21 @@ class instructorCourse extends Component {
                         <TextField           
                     InputProps={{
                         readOnly: this.props.course.visibility &&this.props.course.visibility !== 'private',
-                      }} id={this.state.course.title+'1'} value={subtitle.hours} label="Subtitles Hour(s)" variant="outlined" readOnly/>
+                      }} id={this.state.course.title+'1'} value={subtitle.hours} label="Subtitles Minute(s)" variant="outlined" readOnly/>
                         <div style={{color:'grey', marginLeft:'5px'}}>
-                            Hour(s)
+                            Minute(s)
                         </div>
                     </div>
-                    <div style={{display:'flex', alignItems:'center', cursor:'pointer'}} onClick={()=>{this.createExam('subtitle')}} >
+                    {this.state.course.visibility==='private'&&<div style={{display:'flex', alignItems:'center', cursor:'pointer'}} onClick={()=>{this.createExam('subtitle')}} >
                         <PostAddIcon style={{cursor:'pointer',fontSize:'40px', fontWeight:'bolder', color:'var(--primary-color)'}}/>
                         <div style={{fontWeight:'lighter', fontSize:'20px'}}>Create Quiz</div>
-                    </div>
+                    </div>}
                 </div>
 
 
 
                 <div className='subtitles-display' style={{ width:'100%'}}>
-                    <VideoCallIcon onClick={this.addVideo} style={{cursor:'pointer',fontSize:'40px', fontWeight:'bolder', color:'var(--primary-color)'}}/> 
+                    {this.state.course.visibility==='private'&&<VideoCallIcon onClick={this.addVideo} style={{cursor:'pointer',fontSize:'40px', fontWeight:'bolder', color:'var(--primary-color)'}}/> }
 
                     {this.displayVideos()}
                 </div>
@@ -363,6 +363,30 @@ class instructorCourse extends Component {
         else
             return <div></div>
     }
+
+
+    deleteCourse = async (course) => {
+        try {
+          const res = await axios.delete('http://localhost:5000/courses?courseId='+ this.state.course['_id'],course, {
+            headers: {  }
+          });
+
+        if(res.data.success){
+            this.props.showAlert({shown:true, message:'Deleted successfully',severity:'success'})
+            this.props.onClose()
+            this.props.getInstructorCourses();
+        }
+        else
+          this.props.showAlert({shown:true, message:'Couldnt delete your Course',severity:'error'})
+
+        
+        } catch (e) {
+
+          this.props.showAlert({shown:true, message:'Couldnt delete your Course',severity:'error'})
+
+
+        }
+      };
     render() {
         var course = this.state.course;
         const data01 = [
@@ -393,6 +417,9 @@ class instructorCourse extends Component {
                 <div className='instructorCourse-drawer__left'>
                 <div className='instructorCourse-drawer__header'>
                     {course.title}
+                    <div>
+                        {course.visibility==='private'&&<PrimaryBtn function={this.deleteCourse} btnText="Delete"/>}
+                    </div>
                 </div>
                 <div className='instructorCourse-drawer__options'>
 
@@ -406,10 +433,10 @@ class instructorCourse extends Component {
                     InputProps={{
                         readOnly: this.props.course.visibility &&this.props.course.visibility !== 'private',
                       }} onChange={this.updatePreviewLink} value={course.preview} label="Videl URL" variant="outlined" />
-                            <div style={{display:'flex', alignItems:'center', cursor:'pointer'}} onClick={()=>{this.createExam('course')}} >
+                            {this.state.course.visibility==='private'&&<div style={{display:'flex', alignItems:'center', cursor:'pointer'}} onClick={()=>{this.createExam('course')}} >
                                 <PostAddIcon style={{cursor:'pointer',fontSize:'40px', fontWeight:'bolder', color:'var(--primary-color)'}}/>
                                 <div style={{fontWeight:'lighter', fontSize:'20px'}}>Create Final Exam</div>
-                            </div>
+                            </div>}
                         </div>   
                                     
                     </div>
@@ -438,7 +465,7 @@ class instructorCourse extends Component {
 
                         </div>      
                         <div className='subtitles-display'>
-                            <AddToPhotosIcon onClick={this.addSubtitle} style={{cursor:'pointer',fontSize:'40px', fontWeight:'bolder', color:'var(--primary-color)'}}/> 
+                            {this.state.course.visibility==='private'&&<AddToPhotosIcon onClick={this.addSubtitle} style={{cursor:'pointer',fontSize:'40px', fontWeight:'bolder', color:'var(--primary-color)'}}/>} 
 
                             {this.displaySubtitles()} 
                         </div>

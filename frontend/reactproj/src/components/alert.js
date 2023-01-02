@@ -11,7 +11,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 function AlertFunc(props) {
 
 
-
+try{
   return (
     <Snackbar open={props.alert.shown} autoHideDuration={6000} onClose={props.closeAlert}>
         <Alert onClose={props.closeAlert} severity={props.alert.severity} sx={{ width: '100%' }}>
@@ -20,6 +20,17 @@ function AlertFunc(props) {
     </Snackbar>
 
   );
+}catch(e){
+  return (
+
+    <Snackbar open={true} autoHideDuration={6000} onClose={props.closeAlert}>
+        <Alert onClose={props.closeAlert} severity={props.alert.severity} sx={{ width: '100%' }}>
+            Error
+        </Alert>
+    </Snackbar>
+  )
+}
+
 }
 
 

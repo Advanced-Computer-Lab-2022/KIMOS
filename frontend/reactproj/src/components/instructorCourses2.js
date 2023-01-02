@@ -246,7 +246,7 @@ React.useEffect(() => {
             sx: { width: "80%" },
           }}
     >
-            <InstructorCourse onClose={toggleDrawer} course={displayedCourse}/>
+            <InstructorCourse getInstructorCourses={getInstructorCourses} onClose={toggleDrawer} course={displayedCourse}/>
     </Drawer>
     </div>
 

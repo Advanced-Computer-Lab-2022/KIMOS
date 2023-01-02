@@ -90,17 +90,17 @@ export default function UserPurchases() {
     };
 
   return (
-    <div style={{position:'relative',display:"flex",flexDirection:"column",justifyContent:"center",alignItems:"center",marginTop:30}}>
+    <div style={{position:'relative',display:"flex",flexDirection:"column",justifyContent:"center",marginTop:0}}>
       <h1 style={{color:"var(--primary-color)"}}>My Purchases</h1>
       {loading && <Loading/>}
       <TableContainer component={Paper} style={{margin:"auto",width:"75%",marginTop:50}}>
         <Table aria-label="customized table">
-          <TableHead>
-            <TableRow>
-              <StyledTableCell align="center">Course Name</StyledTableCell>
-              <StyledTableCell align="center">Date</StyledTableCell>
-              <StyledTableCell align="center">Price</StyledTableCell>
-              <StyledTableCell align="center">Refund Request</StyledTableCell>
+          <TableHead style={{background:"var(--primary-color)"}}>
+            <TableRow style={{background:"var(--primary-color)"}}>
+              <StyledTableCell style={{background:"var(--primary-color)"}} align="center">Course Name</StyledTableCell>
+              <StyledTableCell style={{background:"var(--primary-color)"}} align="center">Date</StyledTableCell>
+              <StyledTableCell style={{background:"var(--primary-color)"}} align="center">Price</StyledTableCell>
+              <StyledTableCell style={{background:"var(--primary-color)"}} align="center">Refund Request</StyledTableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -121,8 +121,14 @@ export default function UserPurchases() {
                   <div>
                   {
                     popup?
-                    <div className="main" style={{textAlign:"left"}}>
-                        <div className="popup">
+                    <div  style={{ textAlign:"left"}}>
+                        <div className="popup" style={{ 
+                          position:'absolute',
+                          left:'50%',
+                          top:'50%',
+                          transform:'translate(-50%,-50%)',
+                          backdropFilter: 'blur(1px)'
+                        }}>
                             <div className="popup-header">
                                 <DisabledByDefaultIcon class="x" onClick={closePopup}></DisabledByDefaultIcon>
                             </div>

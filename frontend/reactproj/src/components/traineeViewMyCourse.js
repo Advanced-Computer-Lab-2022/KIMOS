@@ -11,6 +11,7 @@ import AccordionSubtitle from './accordionSubtitle.js';
 import { textAlign } from '@mui/system';
 import PrimaryBtn from './buttons/primaryBtn';
 import Loading from './loadingPage';
+import DownloadCertificateButton from './buttons/downloadCertificateButton';
 
 export default function TraineeViewMyCourse() {
   var subTitleCount = 1;
@@ -116,7 +117,7 @@ export default function TraineeViewMyCourse() {
               <div className="user-course__header__left__extras__hours">
                 {' '}
                 <span style={{ fontWeight: 'bolder' }}>Total Hours</span> {myCourse.totalHours}{' '}
-                hour(s)
+                Minute(s)
               </div>
 
               {/* Instructor Name */}
@@ -166,7 +167,7 @@ export default function TraineeViewMyCourse() {
                         alignItems:'center',
                         justifyContent:'space-between'
 
-                      }}><div style={{fontWeight:'bolder'}}>{index+1}. {subtitle.title}</div> <div> {subtitle.hours} Hour(s)</div></div>
+                      }}><div style={{fontWeight:'bolder'}}>{index+1}. {subtitle.title}</div> <div> {subtitle.hours} Minute(s)</div></div>
                   );
                 })}
               </div>
@@ -240,6 +241,8 @@ export default function TraineeViewMyCourse() {
           setViewContent(true);
         }}
       />
+      <div style={{width:'20px'}}></div>
+      {(myCourse.certificate === 'true')&&<DownloadCertificateButton courseId={myCourse['_id']}/>}
       </div>
       </div>
   )

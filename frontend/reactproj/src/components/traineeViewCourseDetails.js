@@ -24,7 +24,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import Box from '@mui/material/Box';
 import { Typography } from '@mui/material';
 import DriveFileRenameOutlineIcon from '@mui/icons-material/DriveFileRenameOutline';
-
+import VisibilityTwoToneIcon from '@mui/icons-material/VisibilityTwoTone';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 
@@ -45,6 +45,8 @@ function TraineeViewMyCourse(props) {
   const [quiz, setQuiz] = useState({});
 
   const [solveExam, setSolveExam] = useState(false);
+  const [progress, setProgress] = useState(0);
+
   const [currentSubtitle, setCurrentSubtitle] = useState(-1);
   const [currentExam, setCurrentExam] = useState(-1);
   const onChangeExam = (newExamId) => {
@@ -52,6 +54,7 @@ function TraineeViewMyCourse(props) {
     setCurrentSubtitle(-1);
   };
   const onChangeSolution = (newState) => {
+
     setSolveExam(newState);
     setViewExam(!newState);
   };
@@ -119,8 +122,10 @@ function TraineeViewMyCourse(props) {
   return exam;
   }
   useEffect(() => {
+
+    setProgress(props.course.progress)
     if (props.course.subtitles[0].videos) setVideo(props.course.subtitles[0].videos[0]);
-    if(examExists!==null){
+    if(examExists()!==null){
       setQuiz(examExists());
     }
     handleMenuChange(0);
@@ -260,7 +265,7 @@ function TraineeViewMyCourse(props) {
       <Box sx={{ position: 'relative', display: 'inline-flex' }}>
         <CircularProgress
           variant="determinate"
-          value={props.course.progress ? props.course.progress : 12}
+          value={progress }
         />
         <Box
           sx={{
@@ -274,7 +279,7 @@ function TraineeViewMyCourse(props) {
             justifyContent: 'center'
           }}>
           <Typography variant="caption" component="div">
-            {`${Math.round(props.course.progress ? props.course.progress : 12)}%`}
+            {`${Math.round(progress )}%`}
           </Typography>
         </Box>
       </Box>
@@ -293,7 +298,7 @@ function TraineeViewMyCourse(props) {
               {subtitle.title}
             </Typography>
             <Typography>
-              <small>{subtitle.hours} Hour(s)</small>
+              <small>{subtitle.hours} Minutes(s)</small>
             </Typography>
           </div>
         </AccordionSummary>
@@ -356,19 +361,35 @@ function TraineeViewMyCourse(props) {
                   : 'my-course__subtitles__subtitles__videos-list__video'
               }
               onClick={() => {
-                console.log(lquiz);
                 setQuiz(lquiz);
+                console.log('Final ');
+                console.log(lquiz);
+                if (lquiz.solved) {
+                  console.log('set solved');
+                  onChangeSolution(true);
+                } else {
+                  onChangeView(true);
+                }
               }}>
               <div>
                 <div>{lquiz.title}</div>
               </div>
               <div>
+              {lquiz.solved ? (
+                <VisibilityTwoToneIcon
+                  style={{
+                    cursor: 'pointer',
+                    color: quiz['_id'] === lquiz['_id'] ? 'white' : 'var(--primary-color)'
+                  }}
+                />
+              ) : (
                 <DriveFileRenameOutlineIcon
                   style={{
                     cursor: 'pointer',
                     color: quiz['_id'] === lquiz['_id'] ? 'white' : 'var(--primary-color)'
                   }}
                 />
+              )}
               </div>
             </div>
           );
@@ -404,19 +425,36 @@ function TraineeViewMyCourse(props) {
                       : 'my-course__subtitles__subtitles__videos-list__video'
                   }
                   onClick={() => {
+                    console.log('quiz l');
+
                     console.log(lquiz);
                     setQuiz(lquiz);
+                    if (lquiz.solved) {
+                      console.log('set solved');
+                      onChangeSolution(true);
+                    } else {
+                      onChangeView(true);
+                    }
                   }}>
                   <div>
                     <div>{lquiz.title}</div>
                   </div>
                   <div>
+                  {lquiz.solved ? (
+                    <VisibilityTwoToneIcon
+                      style={{
+                        cursor: 'pointer',
+                        color: quiz['_id'] === lquiz['_id'] ? 'white' : 'var(--primary-color)'
+                      }}
+                    />
+                  ) : (
                     <DriveFileRenameOutlineIcon
                       style={{
                         cursor: 'pointer',
                         color: quiz['_id'] === lquiz['_id'] ? 'white' : 'var(--primary-color)'
                       }}
                     />
+                  )}
                   </div>
                 </div>
               );
@@ -431,6 +469,9 @@ function TraineeViewMyCourse(props) {
   //   fontSize:'30px',
   //   color:'var(--primary-color)'
   // }}>Subtitle Title</div>
+  const updateProgress =(newprgoress)=>{
+    setProgress(newprgoress)
+  }
   const subtitles = () => {
     return (
       <div className="my-course__subtitles">
@@ -444,7 +485,7 @@ function TraineeViewMyCourse(props) {
             }}>
             <TakeNotes videoId={video['_id']} courseId={props.course['_id']} />
           </div>
-          <WatchVideo video={video} />
+          <WatchVideo updateProgress={updateProgress} video={video} courseId={props.course['_id']}/>
         </div>
         <div className="my-course__subtitles__subtitles">
           <div
@@ -476,11 +517,14 @@ function TraineeViewMyCourse(props) {
     return (
       <div className="my-course__subtitles">
         <div className="my-course__subtitles__content">
+        {viewExam && (
           <ViewExam
             courseId={props.course['_id']}
             examId={quiz['_id']}
             showSolution={onChangeSolution}
           />
+        )}
+        {solveExam && <ExamSolution courseId={props.course['_id']} examId={quiz['_id']} />}
         </div>
         <div className="my-course__subtitles__subtitles">
           <div
@@ -606,7 +650,7 @@ function TraineeViewMyCourse(props) {
               }}
               sx={{ width: '100%' }}
               id="outlined-basic"
-              label="Outlined"
+              label="Review"
               variant="outlined"
               multiline
               rows={4}
@@ -667,6 +711,14 @@ function TraineeViewMyCourse(props) {
           style={{ background: 'var(--cool-grey)', borderTop: '0.5px solid grey' }}
           onChange={(event, newValue) => {
             handleMenuChange(newValue);
+            if (examExists() !== null && (examExists().solved)) {
+              console.log('changed to sol')
+              onChangeSolution(true);
+            } else {
+              console.log('didnt change to sol')
+
+              onChangeView(true);
+            }
           }}>
           <BottomNavigationAction label="Subtitles" icon={<RestoreIcon />} />
           <BottomNavigationAction label="Exercises" icon={<FavoriteIcon />} />

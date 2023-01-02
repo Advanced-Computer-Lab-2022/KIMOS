@@ -10,7 +10,7 @@ const CertificateButton = (props) => {
           'Content-Type': 'application/json',
           Accept: 'application/pdf'
         },
-        params: { courseId: props.courseId || '638281a7b05c30a726283c28' }
+        params: { courseId: props.courseId  }
       })
       .then(async (res) => {
         if (res.status === 200) {

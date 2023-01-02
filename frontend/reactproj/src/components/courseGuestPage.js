@@ -135,7 +135,7 @@ export default function CourseGuestPage() {
                             alignItems:'center',
                             justifyContent:'space-between'
 
-                          }}><div style={{fontWeight:'bolder'}}>{index+1}. {subtitle.title}</div> <div> {subtitle.hours} Hour(s)</div></div>
+                          }}><div style={{fontWeight:'bolder'}}>{index+1}. {subtitle.title}</div> <div> {subtitle.hours} Minute(s)</div></div>
                       );
                     })}
                   </div>

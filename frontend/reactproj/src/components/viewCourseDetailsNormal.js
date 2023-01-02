@@ -134,7 +134,7 @@ function TraineeViewMyCourse(props) {
               <div className="user-course__header__left__extras__hours">
                 {' '}
                 <span style={{ fontWeight: 'bolder' }}>Total Hours</span> {myCourse.totalHours}{' '}
-                hour(s)
+                minute(s)
               </div>
 
               {/* Instructor Name */}
@@ -183,7 +183,7 @@ function TraineeViewMyCourse(props) {
                         alignItems:'center',
                         justifyContent:'space-between'
 
-                      }}><div style={{fontWeight:'bolder'}}>{index+1}. {subtitle.title}</div> <div> {subtitle.hours} Hour(s)</div></div>
+                      }}><div style={{fontWeight:'bolder'}}>{index+1}. {subtitle.title}</div> <div> {subtitle.hours} Minute(s)</div></div>
                   );
                 })}
               </div>

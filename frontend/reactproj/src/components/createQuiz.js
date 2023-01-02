@@ -67,13 +67,22 @@ class createQuiz extends Component {
     var url = 'http://localhost:5000/courses/exam?courseId='+courseId;
 
     var data = {
-      exam : { title: 'Final Exam',
-      exercises: this.state.questions}
+      exam : { 
+        title: 'Exam',
+        exercises: this.state.questions
+      }
     }
+      
     if(queryParams.get('subtitleId')){
       console.log("submitting a subtitel quiz")
       data['subtitleId'] = queryParams.get('subtitleId');
       url = 'http://localhost:5000/courses/subtitle/quiz?courseId='+courseId+'&subtitleId='+ queryParams.get('subtitleId');
+      data = {
+        quiz : { 
+          title: 'Quiz',
+          exercises: this.state.questions
+        }
+      }
     }else{
       console.log("subbm final exam")
     }
@@ -97,8 +106,8 @@ class createQuiz extends Component {
       // console.log(res);
     } catch (e) {
 
-      var mssg = e.response.data.message? e.response.data.message :'Couldnt Update your course Visibility2'
-      this.props.showAlert({shown:true, message:mssg,severity:'error'})
+
+      this.props.showAlert({shown:true, message:"Couldn't create the exam",severity:'error'})
     }
   };
   state = {

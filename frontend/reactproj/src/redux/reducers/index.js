@@ -39,7 +39,7 @@ const userType = (type='Any', action) => {
     return type;
 }
 
-const user = (user={username:"emptyasf",userType:"",userEmail:"", userId:""}, action) => {
+const user = (user={username:"",userType:"",userEmail:"", userId:""}, action) => {
     if(action.type === 'LOG_IN'){
         console.log('payload');
 

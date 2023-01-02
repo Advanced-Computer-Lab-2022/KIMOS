@@ -4,9 +4,9 @@ const createVideo = async (video) => {
   console.log(video);
   const { description, link, hours } = video;
   const vid = await Video.create({
-    link: link,
+    link: link ||'',
     description: description || '',
-    hours: hours
+    hours: hours||0
   });
   return vid;
 };

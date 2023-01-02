@@ -46,6 +46,13 @@ export default function PopularCourses() {
         var slider=document.getElementById('slider');
         slider.scrollLeft+=210;
     }
+    const showTitle=()=>{
+        var flag = false;
+        if(window.location.href.indexOf('topCourses') > -1){
+            flag = true
+        }
+        return flag;
+    }
 
   return (
     <div style={{position:'relative',display:"flex",justifyContent:"center",alignItems:"center",columnGap:5,  width:'100%'}}>
@@ -53,11 +60,19 @@ export default function PopularCourses() {
         <div className="arrowLeft" onClick={slideLeft}>
             <ArrowBackIosIcon></ArrowBackIosIcon>
         </div> 
-
+        
+        {showTitle() && <div style={{
+            position:'absolute',
+            left:'20px',
+            top:'20px',
+            fontSize:'30px',
+            fontWeight:'bolder',
+            color:'var(--primary-color)'
+        }}>Most Popular Courses</div>}
+        
         <Grow in>
             <Container>
                 <AppBar className="appBarX" position="static" color="inherit">
-                    Most Popular Courses
                     <div id="slider" className="homeland__section section_3__allPopular">
                         {popularCourses.length>0 && popularCourses.map((course) => (
                             <div className="homeland__section section_3__allPopular__popularDiv" onClick={()=>{

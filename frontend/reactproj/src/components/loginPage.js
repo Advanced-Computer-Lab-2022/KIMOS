@@ -98,7 +98,7 @@ class loginPage extends Component {
 
         <div className='login-page__form'>
             <div className="login-page__form__left">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean ac nulla fringilla sem lacinia commodo.
+            Education is the passport to the future, for tomorrow belongs to those who prepare for it today. 
             </div>
             <div className="login-page__form__info">
                 <div className='login-page__form__input'>   

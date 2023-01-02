@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import eren from '../assets/eren-yeager.png';
 import erenSmiling from '../assets/eren-smiliing.png';
 import Loading from './loadingPage';
+import RatingComp from '../components/rating';
 
 import Rating from '../components/rating';
 import SecondaryBtn from './buttons/secondaryBtn';
@@ -16,6 +17,7 @@ class InstructorProfile extends Component {
   state = {
     editing: false,
     loading:true,
+    reviews:[],
     instructor: {
       username: '',
       email: '',
@@ -32,6 +34,16 @@ class InstructorProfile extends Component {
   componentDidMount() {
     this.getUserInfo();
   }
+  getRatings = async (id) => {
+    const res = await axios.get(
+      'http://localhost:5000/users/reviews/?instructorId='+id,
+    );
+      console.log(res);
+    if (res.data.success) {
+      //setSubmitSuccess(true);
+      this.setState({reviews:res.data.payload, loading: false})
+    }
+  };
   toggleEditing = () => {
     this.setState({ editing: !this.state.editing });
   };
@@ -63,7 +75,10 @@ class InstructorProfile extends Component {
           password: res.data.payload.password || '',
           rating: res.data.payload.rating.value || 1
         };
-        this.setState({ instructor: info, new_instructor: info }, ()=>{this.setState({loading:false})});
+
+        this.setState({ instructor: info, new_instructor: info }, ()=>{
+          this.getRatings(res.data.payload['_id']);
+            });
       }
 
     } catch (e) {
@@ -103,23 +118,17 @@ class InstructorProfile extends Component {
     }
   };
   getComments = () => {
-    return [
-      'bad instructor',
-      'bad instructor bad instructor bad instructor',
-      'bad instructor',
-      'bad instructor',
-      'bad instructor bad instructor bad instructor bad instructor'
-    ].map((comment) => {
+    return this.state.reviews.map((review) => {
       return (
         <div className="comment">
           <div className="comment__header">
-            <div className="comment__header__name">Username</div>
+            <div className="comment__header__name">{review.name}</div>
             <div className="comment__header__rating">
-              <Rating value={3} />
+              <RatingComp value={review.rating} />
             </div>
           </div>
 
-          <div className="comment__comment">{comment}</div>
+          <div className="comment__comment">{review.review}</div>
         </div>
       );
     });

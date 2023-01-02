@@ -16,25 +16,32 @@ const getSubtitle = async (id) => {
 
 const createSubtitle = async (subtitle) => {
   const { title, videos } = subtitle;
+
+
   var totalHours = 0;
+  var result;
   const vids = await Promise.all(
     videos.map(async (video, index) => {
-      const stringUrl = video.link;
-      var videoId;
-      var regExp = new RegExp(/^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/);
-      var match = stringUrl.match(regExp);
-      if (match && match[2].length == 11) {
-        videoId = match[2];
-      } else {
-        videoId = -1;
+
+      if (video.link !== '') {
+        const stringUrl = video.link;
+        var videoId;
+        var regExp = new RegExp(/^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/);
+        var match = stringUrl.match(regExp);
+        if (match && match[2].length == 11) {
+          videoId = match[2];
+        } else {
+          videoId = -1;
+        }
+        if (videoId === -1) {
+          throw new Error('Invalid link');
+        }
+        result = await ytInfo(videoId);
+        totalHours += parseInt(result[0].duration);
       }
-      if (videoId === -1) {
-        throw new Error('Invalid link');
-      }
-      const result = await ytInfo(videoId);
-      totalHours += parseInt(result[0].duration);
+
       const v = await createVideo({
-        hours: result[0].duration,
+        hours: result? result[0].duration : 0,
         description: video.description,
         link: video.link
       }).catch((err) => {
@@ -43,6 +50,8 @@ const createSubtitle = async (subtitle) => {
       return v._id;
     })
   );
+
+
   const sub = await Subtitle.create({
     title: title,
     hours: totalHours,
@@ -72,7 +81,11 @@ const updateSubtitle = async (subtitleId, subtitle) => {
   });
   const newVids = await Promise.all(
     videos.map(async (video, index) => {
+      
       const stringUrl = video.link;
+      var result;
+      if (video.link !== '') {
+
       var res = {};
       var videoId;
       var regExp = new RegExp(/^.*(youtu\.be\/|v\/|u\/\w\/|embed\/|watch\?v=|\&v=)([^#\&\?]*).*/);
@@ -85,12 +98,12 @@ const updateSubtitle = async (subtitleId, subtitle) => {
       if (videoId === -1) {
         throw new Error('Invalid link');
       }
-      const result = await ytInfo(videoId);
+      result = await ytInfo(videoId);
       totalHours += parseInt(result[0].duration);
-
+      }
       if (video._id) {
         res = await editVideo(video._id, {
-          hours: result[0].duration,
+          hours: result ? result[0].duration : 0,
           description: video.description,
           link: video.link
         }).catch((err) => {
@@ -98,7 +111,7 @@ const updateSubtitle = async (subtitleId, subtitle) => {
         });
       } else {
         res = await createVideo({
-          hours: result[0].duration,
+          hours: result ? result[0].duration : 0,
           description: video.description,
           link: video.link
         }).catch((err) => {

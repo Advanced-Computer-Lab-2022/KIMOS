@@ -41,6 +41,7 @@ const createCourse = asyncHandler(async (req, res) => {
     var totalHours = 0;
     if (course.subtitles.length) {
       const promises = course.subtitles.map(async (subtitle, index) => {
+
         const sub = await createSubtitle(subtitle).catch((err) => {
           throw err;
         });
@@ -452,7 +453,7 @@ const viewCourseTrainee = asyncHandler(async (req, res) => {
   var course = await Course.findById(courseId);
   var reg;
   if (res.locals.registered) {
-    reg = await RegisteredCourse.find({ userId: res.locals.userId, courseId: req.query.courseId });
+    reg = await RegisteredCourse.findOne({ userId: res.locals.userId, courseId: req.query.courseId });
     if (courseInfo.subtitles.length) {
       var courseSubtitles = await course.populate('subtitles');
       courseSubtitles = await course.populate('subtitles.videos');
@@ -542,7 +543,8 @@ const viewCourseTrainee = asyncHandler(async (req, res) => {
     subtitles: subtitlesArray.length ? subtitlesArray : courseInfo.subtitles,
     summary: courseInfo.summary,
     averageRating: courseInfo.rating,
-    progress: res.locals.registered ? reg.progress : undefined,
+    progress: res.locals.registered ? reg.progress : 0,
+    certificate: res.locals.registered ? reg.emailSent : undefined,
     exams: examsArray.length ? examsArray : courseInfo.exams
   });
 });
@@ -600,6 +602,23 @@ const modifyExam = asyncHandler(async (req, res) => {
   res.status(200).json({ success: true, statusCode: 200, message: 'Exam updated' });
 });
 
+const deleteCourse = asyncHandler(async (req, res) => {
+  const oldCourse = await Course.findById(req.query.courseId);
+  if (oldCourse.visibility === 'private') {
+    const oldCourse = await Course.findByIdAndDelete(req.query.courseId);
+    oldCourse.subtitles.map(async (subtitle, index) => {
+      await deleteSubtitle(subtitle).catch((err) => {
+        throw err;
+      });
+    });
+    oldCourse.exams.map(async (exam, index) => {
+      await deleteExam(exam).catch((err) => {
+        throw err;
+      });
+    });
+  }
+  res.status(200).json({ message: 'Deleted courses successfully', statusCode: 200, success: true });
+});
 const editCourse = asyncHandler(async (req, res) => {
   const { courseId } = req.query;
   const { course, flagDiscount } = req.body;
@@ -846,6 +865,7 @@ module.exports = {
   findExam,
   addExam,
   editCourse,
+  deleteCourse,
   rateCourse,
   removeExam,
   submitSolution,

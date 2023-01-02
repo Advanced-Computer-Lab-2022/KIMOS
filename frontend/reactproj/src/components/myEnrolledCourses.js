@@ -74,8 +74,8 @@ export default function MyEnrolledCourses() {
                                 <label style={{fontWeight:100,fontSize:"12"}}>{course.subject.name}</label>
                                 <label style={{fontWeight:600,fontSize:"18"}}>{course.title}</label>
                                 <Box style={{display:"flex",flexDirection:"column",marginTop:20,rowGap:7}}>
-                                    <BorderLinearProgress variant="determinate" value={Math.ceil(parseInt(course.progress || 0)) *100}/>
-                                    <label>{Math.ceil(parseInt(course.progress|| 0)) *100}% complete</label>
+                                    <BorderLinearProgress variant="determinate" value={Math.ceil(course.progress || 0)}/>
+                                    <label>{Math.ceil(course.progress|| 0) }% complete</label>
                                 </Box>
                                 
                             </div>

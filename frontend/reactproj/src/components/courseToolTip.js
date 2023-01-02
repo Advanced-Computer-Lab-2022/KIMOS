@@ -80,7 +80,7 @@ const courseDetails = (
             return (
               <div key={index} style={{ display: 'flex', justifyContent: 'space-between' }}>
                 <div>{s.title}</div>
-                <div>{s.hours} Hour(s)</div>
+                <div>{s.hours} Minute(s)</div>
               </div>
             );
           })}

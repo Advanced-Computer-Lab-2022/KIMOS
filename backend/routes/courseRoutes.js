@@ -14,6 +14,7 @@ const {
   findCourses,
   createCourse,
   editCourse,
+  deleteCourse,
   findExam,
   getExamSolution,
   submitSolution,
@@ -50,7 +51,7 @@ router
   .get(isLoggedIn, isCorporateTrainee, findCourses) //all good
   .post(loggedIn, instructorAuth, createCourse) //all good
   .put(loggedIn, editPublicCourseAuth, editCourse) //all good
-
+  .delete(loggedIn, editPublicCourseAuth, deleteCourse) //all good
   .patch(loggedIn, editCourseAuth, makeCoursePublic); //// all good
 
 // router.post('/discount', loggedIn, editPublicCourseAuth, addDiscount); //// all good

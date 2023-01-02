@@ -230,6 +230,12 @@ class SignUp extends Component {
 // {this.getPolicy("Website & Company Policy", [1,2,3,4])}
 // {this.getPolicy("Refund Policy", [1,2,3,4])}
 // {this.getPolicy("Payment Policy", [1,2,3,4])}
+const mapStateToProps = (state) =>{
+   
+  return {
+      user: state.user
+  };
+}
 
 
-export default connect(null, { showAlert })(SignUp);
+export default connect(mapStateToProps, { showAlert })(SignUp);

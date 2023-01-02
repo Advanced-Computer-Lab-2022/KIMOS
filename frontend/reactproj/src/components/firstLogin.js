@@ -236,14 +236,64 @@ class SignUp extends Component {
         <div className='contract__content__rights'>
             <div className='contract__content__rights__header'>Terms of Service</div>
             <ul>
-                {[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15].map((item,index)=>{
-                    return (
-                        <li>
-                            Provide consistent and seamless experiences across the Meta Company Products
-                        </li>   
-                    )
-                })}
-            
+            <li style={{lineHeight:1.5}}>
+            &#x2022; Each month, We will calculate the total monthly subscription fees paid to us on
+            behalf of all current Subscription Customers of such collection minus any 
+            applicable Transaction Taxes, foreign exchange fees, and third-party fees, 
+            such as reseller, promotion, distribution, or payment processing fees.
+        </li>
+
+        <li style={{lineHeight:1.5}}>
+        &#x2022; Twenty-five percent (25%) of this amount will be allocated to instructors 
+            participating in such collection ("Instructor Revenue Pool") as further 
+            described below.
+        </li>
+
+        <li style={{lineHeight:1.5}}>
+        &#x2022; Each month, We will calculate the total minutes of content (including course 
+          videos, quizzes, practice tests, and coding exercises) in such collection 
+          consumed by all current Subscription Customers through their subscription to 
+          such collection ("Total Minutes Consumed"). For clarity, the Total Minutes 
+          Consumed does not include any consumption by access through a free trial.
+        </li>
+
+        <li style={{lineHeight:1.5}}>
+        &#x2022; Each month, We will also calculate how many of the Total Minutes Consumed are
+           attributable to each of your items of content that was included in such 
+           collection that month ("Your Content Minutes").
+        </li>
+
+        <li style={{lineHeight:1.5}}>
+        &#x2022; To calculate your revenue share each month, We will divide the Instructor 
+          Revenue Pool by the Total Minutes Consumed, then multiply that per-minute
+           amount by Your Content Minutes.
+        </li>
+
+        <li style={{lineHeight:1.5}}>
+        &#x2022; You can submit content for publication on the 
+            platform and you can also communicate with the students who have enrolled 
+            in your courses or other content. In both cases, you must abide by the law 
+            and respect the rights of others: you cannot post any course, question, answer,
+             review or other content that violates applicable local or national laws or
+              regulations of your country. You are solely responsible for any courses, 
+              content, and actions you post or take via the platform and Services and 
+              their consequences.
+        </li>
+
+        <li style={{lineHeight:1.5}}> &#x2022; Make sure you understand all the copyright restrictions
+          set forth in the Instructor Terms before you submit any content for 
+          publication.
+        </li>
+        
+        <li style={{lineHeight:1.5}}> &#x2022; If we are put on notice that your course or content
+        violates the law or the rights of others (for example, if it is established
+          that it violates intellectual property or image rights of others, or is
+          about an illegal activity), if we discover that your content or behavior
+            violates our Trust & Safety Guidelines, or if we believe your content or
+            behavior is unlawful, inappropriate, or objectionable (for example if
+              you impersonate someone else), we may remove your content from our
+              platform. We complies with copyright laws.
+        </li>  
 
             </ul>
 
@@ -254,7 +304,7 @@ class SignUp extends Component {
                     % Taken by the company on each video
                 </div>
                 <div className='contract__content__percentage-taken__info__amount'>
-                    10
+                    40
                 </div>
             </div>
 

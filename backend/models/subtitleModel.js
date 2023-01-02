@@ -4,13 +4,15 @@ const subtitleSchema = mongoose.Schema(
   {
     title: {
       type: String,
-      required: true
+      default: ""
+
     },
     hours: {
       type: Number,
       default: 0
     },
     quizzes: {
+      default:[],
       type: [
         {
           type: mongoose.Schema.Types.ObjectId,
@@ -19,13 +21,14 @@ const subtitleSchema = mongoose.Schema(
       ]
     },
     videos: {
+      default:[],
       type: [
         {
           type: mongoose.Schema.Types.ObjectId,
           ref: 'Video'
         }
       ],
-      validate: [arraySize, 'Must have at least one video']
+
     }
   },
   {

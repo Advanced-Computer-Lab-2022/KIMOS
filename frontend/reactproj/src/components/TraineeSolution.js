@@ -28,8 +28,9 @@ function TraineeSolution(props) {
   };
 
   useEffect(() => {
+    setCurrentQuestion(0);
     getSolution();
-  }, []);
+  }, [props.examId]);
 
   const changeDisplayedQuestion = (index) => {
     setCurrentQuestion(index);
@@ -115,12 +116,7 @@ function TraineeSolution(props) {
           </div>
           <div style={{ display: 'none' }}>{counter++}</div>
         </div>
-        <PrimaryButton
-          function={() => {
-            window.location.href = `/myCourseTrainee`;
-          }}
-          btnText="Go back to course page"
-        />
+
       </div>
     </div>
   );

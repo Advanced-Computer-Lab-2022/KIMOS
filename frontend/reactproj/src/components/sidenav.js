@@ -36,6 +36,10 @@ export default function Sidenav({userType}) {
     ]
 
 
+    // {title:'contract',
+    // icon:<GavelIcon/>,
+    // href:'contracts'},
+
 
     const instructorItems = [
 
@@ -46,10 +50,6 @@ export default function Sidenav({userType}) {
         {title:'Profile',
         icon:<Person2Icon/>,
         href:'profile'},
-
-        {title:'contract',
-        icon:<GavelIcon/>,
-        href:'contracts'},
     
         {title:'My Courses',
         icon:<LibraryBooksIcon/>,

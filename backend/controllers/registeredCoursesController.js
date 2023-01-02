@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const RegisteredCourses = require('../models/registeredCoursesModel');
 const Course = require('../models/courseModel');
 const User = require('../models/userModel');
@@ -102,9 +103,13 @@ const getAllRegisteredCourses = asyncHandler(async (req, res) => {
           );
           const resSpread = { ...result };
           if (resSpread._doc)
-            result = { ...result.toObject(), exams: exams, progress: course.progress };
-          else result = { ...result, exams: exams, progress: course.progress };
+            result = { ...result.toObject(), exams: exams };
+          else result = { ...result, exams: exams };
         }
+        const resSpread = { ...result };
+        if (resSpread._doc)
+          result = { ...result.toObject(),  progress: course.progress };
+        else result = { ...result, progress: course.progress };
         return result;
       })
     );
@@ -262,20 +267,28 @@ const updateProgress = asyncHandler(async (req, res) => {
     userId: userId,
     courseId: courseId
   });
-  var newProgress = reg.progress;
+
+  var newProgress = reg.progress/100;
   const found = reg.videosWatched.find((video) => video.toString() === videoId.toString());
   if (!found) {
     const video = await Video.findById(videoId);
-    const course = await Course.findById(courseId);
+    const course = await Course.findById(courseId).populate('subtitles');
+    var counter = 0;
+    course.subtitles.map((subtitle)=>{
+      counter += subtitle.videos.length;
+    })
     const videoHours = video.hours;
     const totalHours = course.totalHours;
     newProgress += videoHours / totalHours;
+    if(reg.videosWatched.length + 1 === counter)
+      newProgress = 1;
+
     await RegisteredCourses.findOneAndUpdate(
       { userId: userId, courseId: courseId },
-      { $push: { videosWatched: { videoId } }, progress: newProgress }
+      { $push: { videosWatched: videoId   }, progress: newProgress*100 }
     );
   }
-
+  newProgress = newProgress*100;
   res.status(200).json({
     message: 'Updated progress successfully',
     payload: { newProgress },

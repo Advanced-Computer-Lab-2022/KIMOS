@@ -128,6 +128,7 @@ const registerCourseAuth = asyncHandler(async (req, res, next) => {
 });
 
 const registeredCourseAuth = asyncHandler(async (req, res, next) => {
+  console.log(req.query);
   const registration = await RegisteredCourse.findOne({
     userId: res.locals.userId,
     courseId: req.query.courseId

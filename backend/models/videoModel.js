@@ -4,14 +4,16 @@ const mongoose = require('mongoose'); // Erase if already required
 var videoSchema = new mongoose.Schema({
   link: {
     type: String,
-    required: [true, 'Insert video link']
+    default:""
   },
   hours: {
     type: Number,
-    required: [true, 'Specify number of hours']
+    default:0
+
   },
   description: {
-    type: String
+    type: String,
+    default:"N/A"
   }
 });
 

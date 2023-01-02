@@ -164,9 +164,9 @@ export default function MoneyOwedPerMonth() {
       <Table aria-label="collapsible table">
         <TableHead style={{backgroundColor:"black"}}>
           <TableRow>
-            <TableCell />
-            <TableCell style={{color:"white",paddingLeft:170}}>Month</TableCell>
-
+            <TableCell style={{background:"var(--primary-color)"}}/>
+            <TableCell  style={{background:"var(--primary-color)",color:"white",paddingLeft:170}}>Month</TableCell>
+            
           </TableRow>
         </TableHead>
         <TableBody>
