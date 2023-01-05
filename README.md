@@ -119,6 +119,10 @@ https://www.freecodecamp.org/news/css-naming-conventions-that-will-save-you-hour
     
 ## Credits
 - We got all of the pictures from https://www.pinterest.com/20randallcs/cool-anime-pictures/
+- The channels of the courses' videos 
+    - https://www.youtube.com/@ImanGadzhi
+    - https://www.youtube.com/@GeeksforGeeksVideos
+    - https://www.youtube.com/@crashcourse
 
 ## Authors 
 - @Ace1221
@@ -127,6 +131,8 @@ https://www.freecodecamp.org/news/css-naming-conventions-that-will-save-you-hour
 - @youssefkhadragy
 - @mokhallid80
 
+## License
+- Stripe's license https://www.apache.org/licenses/LICENSE-2.0
 
 
 ## Code Examples
