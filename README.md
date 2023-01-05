@@ -10,12 +10,26 @@ instructors.
 
 
 # Build Status
+- The dark mode is not fully functional as in some pages, the text color remained black, so in the dark mode the text didn't appear.
 
-This project has been tested and is fully functional but, not
-yet deployed.
+- Course was deleted without any confirmation.
+
+- For a user that is not registered in any course, an empty div was displayed instead of a text indicating there are no courses.
+Instructor rating was reflected in the frontend.
+
+- Once you decide to add the video, there is no opton to reverse it.
+
+- Graphs have static data.
+
+- Months are repeated in the instructor wallet.
+
+- We forgot a static login request before requesting a refund which causes an authentication problem.
+
+- An empty container appears when the user doesn't have any course, instead, we should have wrote something like " No courses regusterd yet".
+
 
 # How to Use?
-First, you have to install all of the required packages (libraries) in the frontend folder
+First, you have to clonse the repository from github then, install all of the required packages (libraries) in the frontend folder
 and in the backend folder using `npm install`.
 Also, you must make sure that the .env file exists in the project folder, so the app can access all of the environmental variables.
 then, after installing everything, you have to start the backend server using `npm start server` inside the backend folder, and `npm start` in the frontend folder.
@@ -29,6 +43,10 @@ You can contribute to this project by securing all of its end points, and by add
 - Log system to keep track of the transactions
 - Log system to keep track of all of the admins actions as they can do many dangerous actions
 
+
+
+# Tests
+We tested all of our APIs using POSTMAN, we wrote the URL we wanted to test and provided the required data ( in the body of the request or in the query). And then, we check the response status and the data in the response and compared it with the data we expected getting from the database.
 
 
 # Why did we develop this website
@@ -100,6 +118,161 @@ https://www.freecodecamp.org/news/css-naming-conventions-that-will-save-you-hour
     - library to create PDF files using HTML content.
     
     
+
+## Code Examples
+### Make a course public
+``` 
+const makeCoursePublic = asyncHandler(async (req, res) => {
+  const { courseId } = req.query;
+  const courseInfo = await Course.findById(courseId);
+  if (courseInfo.exams.length > 0) {
+    if (courseInfo.preview) {
+      if (courseInfo.subtitles.length > 0) {
+        if (courseInfo.summary) {
+          await Course.findByIdAndUpdate(courseId, { visibility: 'public' });
+          res.status(200).json({ message: 'Course is now public', success: true, statusCode: 200 });
+        } else {
+          res.status(500);
+          throw new Error('Course summary must be defined');
+        }
+      } else {
+        res.status(500);
+        throw new Error('There must be at least one subtitle');
+      }
+    } else {
+      res.status(500);
+      throw new Error('Course preview video must be defined');
+    }
+  } else {
+    res.status(500);
+    throw new Error('There must be at least one exam');
+  }
+});
+```
+
+### Create a course
+``` 
+
+const createCourse = asyncHandler(async (req, res) => {
+  const userId = res.locals.userId;
+  const { course } = req.body;
+  const subject = await Subject.findOne({ name: course.subject });
+  if (subject) {
+    var subtitles = [];
+    var totalHours = 0;
+    if (course.subtitles.length) {
+      const promises = course.subtitles.map(async (subtitle, index) => {
+
+        const sub = await createSubtitle(subtitle).catch((err) => {
+          throw err;
+        });
+        return sub;
+      });
+      subtitles = await Promise.all(promises);
+      subtitles.map((subtitle, index) => {
+        totalHours += parseFloat(subtitle.hours);
+      });
+    }
+    await Course.create({
+      title: course.title,
+      subject: subject._id,
+      subtitles: subtitles,
+      price: course.price,
+      totalHours: totalHours,
+      summary: course.summary || '',
+      exams: [],
+      preview: course.preview || '',
+      instructor: userId
+    });
+    res.status(200).json({
+      statusCode: 200,
+      success: true,
+      message: 'Course created successfully'
+    });
+  } else {
+    res.status(500);
+    throw new Error('Subject not approved by admin');
+  }
+});
+```
+
+
+
+### Request Refund
+``` 
+
+const requestRefund = asyncHandler(async (req, res) => {
+  const userId = res.locals.userId;
+  const { courseId } = req.query;
+  const record = await RegisteredCourses.findOne({ userId: userId, courseId: courseId }).populate();
+  if (record.progress < 50) {
+    await Request.create({ userId: userId, courseId: courseId, requestType: 'refund' });
+    res
+      .status(200)
+      .json({ success: true, statusCode: 200, message: 'Request received Successfully!' });
+  } else {
+    res.status(500).json({
+      success: false,
+      statusCode: 500,
+      message: 'Student Attended More than 50% of Course!'
+    });
+  }
+});
+```
+
+
+
+### Genrate flip cards in the home land page
+``` 
+generateFlipCard = (front, back, icon)=>{
+
+    return (
+        <div class="flip-card">
+            <div class="flip-card-inner">
+                <div class="flip-card-front">
+                    <div><h1>{front}</h1></div>
+                    <div class="flip-card-front__icons">
+                        <div class="flip-card-front__icons__icon">{icon}</div>
+                    </div>
+                </div>
+                <div class="flip-card-back" >
+                    <p>{back}</p>
+                </div>
+            </div>
+        </div>
+    )
+}
+```
+```
+<div className='homeland__section section_2'>
+    <div className='bg-filter'></div>
+    <div className='header'>Explore Our Features</div>
+    <div className='cards'>
+        <div className='cards__item'>
+            {this.generateFlipCard("More Than 1000 Course", "Explore many courses in different fields given by our best instructors", <ImportContactsIcon  style={{fontSize:'150px'}}/>)}
+        </div>
+        <div className='cards__item'>
+            {this.generateFlipCard("More Than 300 Exercise", "Test your knowledge by taking an online assesment and review the solution afterward!", <QuizIcon style={{fontSize:'150px'}}/>)}
+        </div>
+        <div className='cards__item'>
+            {this.generateFlipCard("Get a certified certificate", "Our certificate is certified in many countries and companies!", <CardMembershipIcon style={{fontSize:'150px'}}/>)}
+        </div>
+        <img src={features1} alt="" className="image-features"/>
+
+    
+    </div>
+</div>
+
+```
+
+
+
+
+
+
+
+
+
 
 ## API Reference
 
