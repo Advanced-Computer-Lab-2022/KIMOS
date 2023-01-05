@@ -9,7 +9,7 @@ with up-to-date courses on various subjects from experienced
 instructors.
 
 
-[Go to Real Cool Heading section](#How to Use)
+[Go to Real Cool Heading section](#how-to-use)
 
 
 # Why did we develop this website 🔥
@@ -39,6 +39,7 @@ Instructor rating was reflected in the frontend.
 
 
 # How to Use? 📥
+#how-to-use
 1-```clone``` the repository from github.
 2- install all of the required packages (libraries) in the frontend folder
 and in the backend folder using `npm install`.
