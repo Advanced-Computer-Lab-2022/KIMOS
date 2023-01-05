@@ -9,6 +9,7 @@ with up-to-date courses on various subjects from experienced
 instructors.
 
 
+[Go to Real Cool Heading section](# How to Use)
 
 
 # Why did we develop this website 🔥
