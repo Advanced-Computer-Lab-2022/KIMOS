@@ -130,10 +130,10 @@ https://www.freecodecamp.org/news/css-naming-conventions-that-will-save-you-hour
 
 ## Authors 
 - [@Ace1221](https://github.com/Ace1221)
-- [@shahd-elawad](https://github.com/Ace1221)
-- [@I-Diab](https://github.com/Ace1221)
-- [@youssefkhadragy](https://github.com/Ace1221)
-- [@mokhallid80](https://github.com/Ace1221)
+- [@shahd-elawad](https://github.com/shahd-elawad)
+- [@I-Diab](https://github.com/I-Diab)
+- [@youssefkhadragy](https://github.com/youssefkhadragy)
+- [@mokhallid80](https://github.com/mokhallid80)
 
 ## License
 - Stripe's license https://www.apache.org/licenses/LICENSE-2.0
