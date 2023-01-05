@@ -874,20 +874,58 @@ returns all the invoices for the user registered
 ## Environment Variables
 ```
 PORT : Used to speify the port the backend runs on
-NODE_ENV : Used to specify if the project is in devoplment mode or deployment mode
-MONGO_URI : MongoDB URL
-EMAIL_USER : Email address used for sending emails
-EMAIL_PASSWORD : API Key password used for sending emails
-EMAIL_SERVICE : service used for sending emails
-EMAIL_SUBJECT : Email Subject
-PASSWORD_SECRET : Secret used for encrypting passwords
-JWT_SECRET : Secret used for generating jwt tokens
-RESET_SECRET : Secret used for resetting password
-VERIFICATION_SECRET : Secret used for verifying emails
-STRIPE_PRIVATE_KEY : STRIPE API private key
-PAYMENT_SECRET : key used to verify payments 
-YOUTUBE_API_KEY: Youtube api key used to auto calculate video duration
+```
 
+```
+NODE_ENV : Used to specify if the project is in devoplment mode or deployment mode
+```
+
+```
+MONGO_URI : MongoDB URL
+```
+
+```
+EMAIL_USER : Email address used for sending emails
+```
+
+```
+EMAIL_PASSWORD : API Key password used for sending emails
+```
+
+```
+EMAIL_SERVICE : service used for sending emails
+```
+
+```
+EMAIL_SUBJECT : Email Subject
+```
+
+```
+PASSWORD_SECRET : Secret used for encrypting passwords
+```
+
+```
+JWT_SECRET : Secret used for generating jwt tokens
+```
+
+```
+RESET_SECRET : Secret used for resetting password
+```
+
+```
+VERIFICATION_SECRET : Secret used for verifying emails
+```
+
+```
+STRIPE_PRIVATE_KEY : STRIPE API private key
+```
+
+```
+PAYMENT_SECRET : key used to verify payments 
+```
+
+```
+YOUTUBE_API_KEY: Youtube api key used to auto calculate video duration
 ```
 # Screenshots 📷
 ### Homeland
