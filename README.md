@@ -1,6 +1,6 @@
 
 
-# Canadian Chamber of Commerce eLearning website
+# Canadian Chamber of Commerce eLearning website 🍁
 
 This is an eLearning website that is developed using 
 the MERN stack for the Canadian Chamber of Commerce to 
@@ -9,7 +9,7 @@ with up-to-date courses on various subjects from experienced
 instructors.
 
 
-# [Star Formation Theory][sft]
+
 
 
 # Why did we develop this website 🔥
@@ -38,8 +38,8 @@ Instructor rating was reflected in the frontend.
 - An empty container appears when the user doesn't have any course, instead, we should have wrote something like " No courses regusterd yet".
 
 
-# How to Use? 📥
-[Reference to this section](#sft)
+# How to Use? 🧑🏻‍💻
+
 1-```clone``` the repository from github.
 2- install all of the required packages (libraries) in the frontend folder
 and in the backend folder using `npm install`.
@@ -48,7 +48,7 @@ then, after installing everything, you have to start the backend server using `n
 Now, it will starts the website on localhost:3000
 
 
-# Contribute
+# Contribute 💡
 You can contribute to this project by securing all of its end points, and by adding more features such as 
 - Live Video lectures
 - Blog. To share information between the users
@@ -57,17 +57,17 @@ You can contribute to this project by securing all of its end points, and by add
 
 
 
-# Tests
+# Tests 👀
 We tested all of our APIs using POSTMAN, we wrote the URL we wanted to test and provided the required data ( in the body of the request or in the query). And then, we check the response status and the data in the response and compared it with the data we expected getting from the database.
 
 
-# Code Style
+# Code Style 🖥️ 
 JavaScript Standard Style where no configuration and the code
 is formatted autotmatically.
 However, in naming the classes in the scss files (not normal css) we followed the **BEM** convention, which works as following 
 https://www.freecodecamp.org/news/css-naming-conventions-that-will-save-you-hours-of-debugging-35cea737d849/ 
 
-# Features
+# Features ✨ 
 1) Individual Trainee/ Corporate Trainee can see all his/her grades for exercises (or exams) he/she did previously.
 2) Individual Trainee/ Corporate Trainee can retake an exercise (or exam) if he/she failed it **before** viewing the
     answers to the exam/ exercise.
@@ -81,7 +81,7 @@ https://www.freecodecamp.org/news/css-naming-conventions-that-will-save-you-hour
 8) Instructor can close a published course.
 
 
-# Tech/Framework used
+# Tech/Framework used 👜
 
 ## Backend
 - **NodeJS** 6.14.13
@@ -123,23 +123,6 @@ https://www.freecodecamp.org/news/css-naming-conventions-that-will-save-you-hour
 - **JSpdf** 2.5.1
     - library to create PDF files using HTML content.
     
-## Credits
-- We got all of the pictures from https://www.pinterest.com/20randallcs/cool-anime-pictures/
-- The channels of the courses' videos 
-    - https://www.youtube.com/@ImanGadzhi
-    - https://www.youtube.com/@GeeksforGeeksVideos
-    - https://www.youtube.com/@crashcourse
-
-## Authors 
-- [@Ace1221](https://github.com/Ace1221)
-- [@shahd-elawad](https://github.com/shahd-elawad)
-- [@I-Diab](https://github.com/I-Diab)
-- [@youssefkhadragy](https://github.com/youssefkhadragy)
-- [@mokhallid80](https://github.com/mokhallid80)
-
-## License
-- Stripe's license https://www.apache.org/licenses/LICENSE-2.0
-
 
 ## Code Examples
 ### Make a course public
@@ -290,13 +273,7 @@ generateFlipCard = (front, back, icon)=>{
 
 
 
-
-
-
-
-
-
-## API Reference
+## API Reference 🌐
 
 #### Get all subjects
 
@@ -894,7 +871,7 @@ returns all the invoices for the user registered
   POST /logout
 ```
 
-# Screenshots
+# Screenshots 📷
 ### Homeland
 ![Alt text](/samples/land.png?raw=true "Optional Title")
 
