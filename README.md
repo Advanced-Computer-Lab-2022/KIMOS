@@ -117,7 +117,17 @@ https://www.freecodecamp.org/news/css-naming-conventions-that-will-save-you-hour
 - **JSpdf** 2.5.1
     - library to create PDF files using HTML content.
     
-    
+## Credits
+- We got all of the pictures from https://www.pinterest.com/20randallcs/cool-anime-pictures/
+
+## Authors 
+- @Ace1221
+- @shahd-elawad
+- @I-Diab
+- @youssefkhadragy
+- @mokhallid80
+
+
 
 ## Code Examples
 ### Make a course public
