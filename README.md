@@ -871,7 +871,7 @@ returns all the invoices for the user registered
   POST /logout
 ```
 
-##Environment Variables
+## Environment Variables
 ```
 PORT : Used to speify the port the backend runs on
 NODE_ENV : Used to specify if the project is in devoplment mode or deployment mode
