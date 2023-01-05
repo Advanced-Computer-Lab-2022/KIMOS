@@ -9,7 +9,16 @@ with up-to-date courses on various subjects from experienced
 instructors.
 
 
-# Build Status
+
+
+# Why did we develop this website 🔥
+We built this website for **Canadian Chamber Of Commerce**. As we want to be part of their 
+educational project because we believe it will be very beneficial for teens all around Egypt. As they got their own trustworthy instructors unlike most of the other educational online systems.
+Also, we are competing with more than 40+ team to be the chosen project from the company as the chosen project will be awarded.
+
+
+
+# Build Status 🔨
 - The dark mode is not fully functional as in some pages, the text color remained black, so in the dark mode the text didn't appear.
 
 - Course was deleted without any confirmation.
@@ -28,8 +37,9 @@ Instructor rating was reflected in the frontend.
 - An empty container appears when the user doesn't have any course, instead, we should have wrote something like " No courses regusterd yet".
 
 
-# How to Use?
-First, you have to clonse the repository from github then, install all of the required packages (libraries) in the frontend folder
+# How to Use? 📥
+1-```clone``` the repository from github.
+2- install all of the required packages (libraries) in the frontend folder
 and in the backend folder using `npm install`.
 Also, you must make sure that the .env file exists in the project folder, so the app can access all of the environmental variables.
 then, after installing everything, you have to start the backend server using `npm start server` inside the backend folder, and `npm start` in the frontend folder.
@@ -47,12 +57,6 @@ You can contribute to this project by securing all of its end points, and by add
 
 # Tests
 We tested all of our APIs using POSTMAN, we wrote the URL we wanted to test and provided the required data ( in the body of the request or in the query). And then, we check the response status and the data in the response and compared it with the data we expected getting from the database.
-
-
-# Why did we develop this website
-We built this website for **Canadian Chamber Of Commerce**. As we want to be part of their 
-educational project because we believe it will be very beneficial for teens all around Egypt. As they got their own trustworthy instructors unlike most of the other educational online systems.
-Also, we are competing with more than 40+ team to be the chosen project from the company as the chosen project will be awarded.
 
 
 # Code Style
