@@ -1036,8 +1036,8 @@ We tested all of our APIs using POSTMAN, we wrote the URL we wanted to test and 
 
 # How to Use? 🧑🏻‍💻
  While you are at the parent folder
-1- Run the backend using `cd backend && nodemon server.js` or `cd backend && npm start server`
-2- Run the frontend using `cd frontend && npm start` 
+1) Run the backend using `cd backend && nodemon server.js` or `cd backend && npm start server`
+2) Run the frontend using `cd frontend && npm start` 
 
 
 
