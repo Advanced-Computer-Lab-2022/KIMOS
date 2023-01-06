@@ -107,8 +107,8 @@ https://www.freecodecamp.org/news/css-naming-conventions-that-will-save-you-hour
         - And accept the contract which includes all the rights to the posted videos
             and materials as well as the % taken by the company on each video per registered trainee.
         - All the titles, ratings and reviews of the courses given by him/her and 
-            filter them based on a subject or price or 
-            search for a course given by him/her based on course title or subject or Instructor.
+            filter them based on a subject or price or you can also 
+            search for a course given by you based on course title or subject or Instructor.
         - his/her rating and reviews as an Instructor.
         - the amount of money owed per month.
         - the price of each course and filter the courses based on price.
