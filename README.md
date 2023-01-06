@@ -1,5 +1,3 @@
-
-
 # Canadian Chamber of Commerce eLearning website 🍁
 
 This is an eLearning website that is developed using 
@@ -14,36 +12,36 @@ instructors.
 
 # Motivation 🔥
 We built this website for **Canadian Chamber Of Commerce**. As we want to be part of their 
-educational project because we believe it will be very beneficial for teens all around Egypt. As they got their own trustworthy instructors unlike most of the other educational online systems.
-Also, we are competing with more than 40+ team to be the chosen project from the company as the chosen project will be awarded.
+educational project because we believe it will be very beneficial for teens all around Egypt. As they got their own trustworthy instructors, unlike most of the other educational online systems.
+Also, we are competing with more than 40+ teams to be the chosen project from the company as the chosen project will be awarded.
 
 
 
 # Build Status 🔨
-- The dark mode is not fully functional as in some pages, the text color remained black, so in the dark mode the text didn't appear.
+- The dark mode is not fully functional as in some pages, the text color remained black, therefore in the dark mode, there were pages where the contrast of colors made it difficult to see.
 
 - Course was deleted without any confirmation.
 
 - For a user that is not registered in any course, an empty div was displayed instead of a text indicating there are no courses.
 Instructor rating was reflected in the frontend.
 
-- Once you decide to add the video, there is no opton to reverse it.
+- Once you decide to add the video, there is no option to reverse it.
 
 - Graphs have static data.
 
-- Months are repeated in the instructor wallet.
+- Months are repeated in the instructor's wallet.
 
 - We forgot a static login request before requesting a refund which causes an authentication problem.
 
-- An empty container appears when the user doesn't have any course, instead, we should have wrote something like " No courses regusterd yet".
+- An empty container appears when the user doesn't have any courses, instead, we should have written something like " No courses registered yet".
 
 - Guests can't search for courses as we added an extra SIGNED IN verification in the backend function.
 
 
 # Code Style 🖥️ 
 JavaScript Standard Style where no configuration and the code
-is formatted autotmatically.
-However, in naming the classes in the scss files (not normal css) we followed the **BEM** convention, which works as following 
+is formatted automatically.
+However, in naming the classes in the scss files (not normal css) we followed the **BEM** convention, which works as follows 
 https://www.freecodecamp.org/news/css-naming-conventions-that-will-save-you-hours-of-debugging-35cea737d849/ 
 
 
@@ -52,13 +50,13 @@ https://www.freecodecamp.org/news/css-naming-conventions-that-will-save-you-hour
 
 ## Backend
 - **NodeJS** 6.14.13
-    - It is the main building block for our project, was used building the backend and the front end as well as we are using React.
+    - It is the main building block for our project, was used for building the backend and the front end as well as we are using React.
 - **MongoDB** 
     - It is a NoSQL database. We used it as we don't have a fixed structure for our models and we wanted the data to be on the cloud.
 - **Mongoose** 6.6.5
     - It is a library that is used along with NodeJS to manage the MongoDB and support us with functions to find/update/delete and much more any item in the Database.
 - **Express** 4.18.2
-    - A libraries to host the backend ( make it a server ) to allow communication with other clients.
+    - A library to host the backend ( make it a server ) to allow communication with other clients.
 - **country-to-currency** 1.0.6
     - A library to get the rate between two countries using their country code.
 - **Bcrypt** 5.1.0
@@ -70,7 +68,7 @@ https://www.freecodecamp.org/news/css-naming-conventions-that-will-save-you-hour
 - **stripe** 
     - To Secure transactions
 - **Nodemon**
-    - To restart the server by its own on changes instead of re-running it manually.
+    - To restart the server on its own on changes instead of re-running it manually.
 
 ## Frontend
 
@@ -78,19 +76,19 @@ https://www.freecodecamp.org/news/css-naming-conventions-that-will-save-you-hour
 - **ReactJS** 18.2.0
     - Was used for building the frontend.
 - **SASS** 1.55.0
-    - SASS stands for Syntactically Awesome Stylesheet which is extension to CSS. We used it to organize our styling sheets files as it can get out of hand. And to get use of its awesome functionalities such as **mixins** which can be used to define a set of styling attributes and we can call it inside any selector and the same styling will be applied there.
+    - SASS stands for Syntactically Awesome Stylesheet which is an extension to CSS. We used it to organize our styling sheets files as it can get out of hand as well as to use one of its awesome functionalities such as **mixins** which can be used to define a set of styling attributes and we can call it inside any selector and the same styling will be applied there.
 - **Redux** 4.2.0
-    - Redux is a global state management library. We used it as for some variables it will be very complicated to keep sending the data from the parent to its child and so on. We used Redux to store the data that will be accessed from different parts in the project and keep them there so that they can be accessed easily.
+    - Redux is a global state management library. We used it for some variables as it would have been very complicated to keep sending the data from the parent to its child and so on. We used Redux to store the data that will be accessed from different parts of the project and keep them there so that they can be accessed easily.
 - **Material UI (MUI5)** 5.11.2
-    - React components library that provide us with many UI components such as buttons, modals and switches. We used only one library to have a consistent UI looking website.
+    - React components library that provides us with many UI components such as buttons, modals, and switches. We used only one library to have a consistent UI throughout the website.
 - **Axios** 1.1.3
     - A library to send HTTP requests. We used it to communicate with the backend to send and get data.
 - **React-draggable** 4.4.5
     - Used to make the notes draggable across the screen.
 - **RechartsJS** 2.1.16
-    - library that provide us with many graphs/charts to use.
+    - A library that provides us with many graphs/charts to use.
 - **JSpdf** 2.5.1
-    - library to create PDF files using HTML content.
+    - A library to create PDF files using HTML content.
     
 
 
@@ -98,30 +96,30 @@ https://www.freecodecamp.org/news/css-naming-conventions-that-will-save-you-hour
 
 1. As an Instructor you can :
 
-    - Select your country so that prices can be shown in you currency.
-    - Filter the courses based on a subject and/or rating or search for a course based on course title or subject or Instructor.
+    - Select your country so that prices can be shown in your currency.
+    - Filter the courses based on a subject and/or rating or search for a course based on the course title, subject, or Instructor.
     - View :
         - all the titles of the courses available including the total hours of the course and course rating.
         - a preview video of the course and the course outline before registering for it.
         - the most viewed/ most popular courses.
         - and accept the contract which includes all the rights to the posted videos
             and materials as well as the % taken by the company on each video per registered trainee.
-        - all the titles, ratings and reviews of the courses given by him/her and 
+        - all the titles, ratings, and reviews of the courses given by him/her and 
             filter them based on a subject or price or you can also 
-            search for a course given by you based on course title or subject or Instructor.
+            search for a course given by you based on the course title, subject, or Instructor.
         - his/her rating and reviews as an Instructor.
         - the amount of money owed per month.
         - the price of each course and filter the courses based on price.
 
     - Create a new course and fill in all its details including title, 
-     subtitles, price and a description of the course.
+     subtitles, price, and a description of the course.
     - Upload a video link from YouTube under each subtitle and 
-    enter a short description of the video or a vido link as a preview of the course.
-    - Create a multiple choice exam with 4 choices per question and set the correct answer for each question.
-    - Edit his/her mini biography or email.
+    enter a short description of the video and a video link as a preview of the course.
+    - Create a multiple-choice exam with 4 choices per question and set the correct answer for each question.
+    - Edit his/her mini-biography or email.
     - Define a promotion for the course and for how long.
-    - Choose a course from the results and view its details including course subtitles, excercises ,
-     total hours of each subtitle, total hours of the course and price according 
+    - Choose a course from the results and view its details including course subtitles, exercises,
+     total hours of each subtitle, total hours of the course, and price according 
      to the country selected.
     - View and accept the website/ company refund/ payment policy while signing up.
     - Log in using a username and password.
@@ -129,8 +127,8 @@ https://www.freecodecamp.org/news/css-naming-conventions-that-will-save-you-hour
 
 2. As an Individual Trainee you can :
 
-    - Select your country so that prices can be shown in you currency.
-    - Filter the courses based on a subject and/or rating or search for a course based on course title or subject or Instructor.
+    - Select your country so that prices can be shown in your currency.
+    - Filter the courses based on a subject and/or rating or search for a course based on the course title, subject, or Instructor.
     - View :
         - all the titles of the courses available including the total hours of the course and course rating.
         - a preview video of the course and the course outline before registering for it.
@@ -141,15 +139,15 @@ https://www.freecodecamp.org/news/css-naming-conventions-that-will-save-you-hour
         - and accept the website/ company refund/ payment policy while signing up.
         - the amount available in their wallet from refunded courses.
         - a list of all the courses he/she is enrolled in on their profile.
-        - all previously repoted problems and their statuses.
+        - all previously reported problems and their statuses.
         - the amount available in their wallet from refunded courses.
 
     - Rate an Instructor and/or a course.
     - Solve a multiple choice exercise and submit his/her answers.
     - Watch a video from a course he/she is registered for.
-    - Open all the items inside a course he/she is registered for including videos and excercises.
-    - Choose a course from the results and view its details including course subtitles, excercises ,
-     total hours of each subtitle, total hours of the course and price according 
+    - Open all the items inside a course he/she is registered for including videos and exercises.
+    - Choose a course from the results and view its details including course subtitles, exercises,
+     total hours of each subtitle, total hours of the course, and price according 
      to the country selected.
     - Enter their credit card details to pay for a course they want to register for and pay for a course.
     - Change his/her password or if you forgot your password you can receive an email to change a forgotten password.
@@ -159,32 +157,32 @@ https://www.freecodecamp.org/news/css-naming-conventions-that-will-save-you-hour
     - Download: 
         - the certificate as a PDF from the website.
         - the notes as a PDF.
-    - Write notes with markdown and drag it anywhere on the page while watching the video.
+    - Write notes with markdown and drag them anywhere on the page while watching the video.
     - Request a refund only if less than 50% of the course has been attended.
     - Report a problem with a course. The problem can be "technical", "financial" or "other".
     - Follow up on an unresolved problem.
 
 3. As a Corporate Trainee you can :
 
-    - Select your country so that prices can be shown in you currency.
+    - Select your country so that prices can be shown in your currency.
     - View all the titles of the courses available including the total hours of the course and course rating.
-    - Filter the courses based on a subject and/or rating or search for a course based on course title or subject or Instructor.
+    - Filter the courses based on a subject and/or rating or search for a course based on the course title, subject, or Instructor.
     - View :
         - a preview video of the course and the course outline before registering for it.
         - the most viewed/ most popular courses.
         - his/her grade from the exercise.
         - the questions with the correct solution to view the incorrect answers.
         - a list of all the courses he/she is enrolled in on their profile.
-        - all previously repoted problems and their statuses.
+        - all previously reported problems and their statuses.
 
     - Request access to a specific course they do not have access to.
     - Rate an Instructor and/or a course.
     - Solve a multiple choice exercise and submit his/her answers.
     - Watch a video from a course he/she is registered for.
-    - Open all the items inside a course he/she is registered for including videos and excercises.
+    - Open all the items inside a course he/she is registered for including videos and exercises.
     - See his/her progress in the course as a percentage of how much of the course has been completed so far
     - Change his/her password or if you forgot your password you can receive an email to change a forgotten password.
-    - Write notes with markdown and drag it anywhere on the page while watching the video.
+    - Write notes with markdown and drag them anywhere on the page while watching the video.
     - Download: 
         - the certificate as a PDF.
         - the notes as a PDF.
@@ -194,28 +192,28 @@ https://www.freecodecamp.org/news/css-naming-conventions-that-will-save-you-hour
 
 4. As a Guest you can :
 
-    - Sign up for an account as an Individual Trainee using a username, email, password, first name, last name.
-    - Select your country so that prices can be shown in you currency.
-    - Filter the courses based on a subject and/or rating or search for a course based on course title or subject or Instructor.
+    - Sign up for an account as an Individual Trainee using a username, email, password, first name, and last name.
+    - Select your country so that prices can be shown in your currency.
+    - Filter the courses based on a subject and/or rating or search for a course based on the course title, subject, or Instructor.
     - View :
         - all the titles of the courses available including the total hours of the course and course rating.
         - a preview video of the course and the course outline before registering for it.
         - the most viewed/ most popular courses.
         - the price of each course and filter the courses based on price.
         - and accept the website/ company refund/ payment policy while signing up
-    - Choose a course from the results and view its details including course subtitles, excercises ,
-    total hours of each subtitle, total hours of the course and price according 
+    - Choose a course from the results and view its details including course subtitles, exercises,
+    total hours of each subtitle, total hours of the course, and price according 
     to the country selected.
 
 
 5. As an Admin you can :
 
     - Add another Administrator with a set username and password.
-    - Add Instructors or Corporate Trainee and create their usernames and passwords.
-    - View reported problems, see if they are already seen or not and mark them as "resolved" or "pending".
+    - Add Instructors or Corporate Trainees and create their usernames and passwords.
+    - View reported problems, see if they are already seen or not, and mark them as "resolved" or "pending".
     - Refund an amount to a trainee to their wallet.
     - View course requests from Corporate Trainees and grant them access to specific courses if possible.
-    - Set a promotion for specific courses, several courses or all courses.
+    - Set a promotion for specific courses, several courses, or all courses.
 
 # Code Examples
 ### Make a course public
@@ -320,7 +318,7 @@ const requestRefund = asyncHandler(async (req, res) => {
 
 
 
-### Genrate flip cards in the home land page
+### Generate flip cards in the home land page
 ``` 
 generateFlipCard = (front, back, icon)=>{
 
@@ -402,14 +400,13 @@ generateFlipCard = (front, back, icon)=>{
     justify-content: center;
 }
 ```
+
 # Installation
-    1) **clone** the repository from github.
-    2) Go inside the parent folder using **cd KIMOS**
-    3) Go inside the backend folder **cd backend** and install all of the required packages (libraries) using **npm i**
-    4) Go inside the frontend/reactproj folder **cd frontend/reactproj** and install all of the required packages (libraries) using **npm i**
-    5) Create the .env file in the parent folder and add all of the mentioned env variables below. 
-
-
+1) __clone__ the repository from github.
+2) Go inside the parent folder using **cd KIMOS**
+3) Go inside the backend folder **cd backend** and install all of the required packages (libraries) using **npm i**
+4) Go inside the frontend/reactproj folder **cd frontend/reactproj** and install all of the required packages (libraries) using **npm i**
+5) Create the .env file in the parent folder and add all of the mentioned env variables below. 
 
 # API Reference 🌐
 
@@ -489,7 +486,7 @@ returns all the courses that satisfies the search parameter
 
 | Parameter | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
-| `couresId`     | `string` |**Required**. the Id of the course to be amde public|
+| `couresId`     | `string` |**Required**. the Id of the course to be made public|
 
 
 
@@ -537,9 +534,9 @@ returns all the ratings and reviews for the specified course
 | Parameter | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
 | `couresId`     | `string` |**Required**. the Id of the course|
-| `examId`     | `string` |**Required**. the exma id|
+| `examId`     | `string` |**Required**. the exam id|
 
-returns the details of exam specified
+returns the details of the exam specified
 
 #### POST adds an exam to a course
 
@@ -589,7 +586,7 @@ returns the details of exam specified
 
 
 
-#### PUT update and existing quiz
+#### PUT update an existing quiz
 
 ```http
   PUT /courses/subtitle/quiz
@@ -640,7 +637,7 @@ returns the solution of this exam to the user
 returns the information of this course
 
 
-#### GET all the registered courses of an user
+#### GET all the registered courses of a user
 
 ```http
   GET /register
@@ -648,7 +645,7 @@ returns the information of this course
 returns all the registered courses of a user
 
 
-#### GET notes of an user
+#### GET notes of a user
 
 ```http
   GET /courses/notes
@@ -661,7 +658,7 @@ returns all the registered courses of a user
 
 returns all the notes for this specific video of this course
 
-#### POST notes of an user
+#### POST notes of a user
 
 ```http
   POST /courses/notes
@@ -695,7 +692,7 @@ returns the updated progress for this user
 
 returns the most popular courses
 
-#### POST the request of the refund is processed by the system
+#### POST the request for the refund is processed by the system
 
 ```http
   POST /courses/refund
@@ -705,7 +702,7 @@ returns the most popular courses
 | :-------- | :------- | :-------------------------------- |
 | `courseId`     | `string` |**Required**. the Id of the course|
 
-#### POST the request of the access is processed by the system
+#### POST the request for access to a course is processed by the system
 
 ```http
   POST /courses/access
@@ -761,13 +758,13 @@ returns all the reviews of this instructor
 | `user`     | `Object` |**Required**. the new details of the user|
 
 
-### GET all the detials of an user
+### GET all the details of a user
 
 ```http
   GET /users
 ```
 
-returns all the details of an user
+returns all the details of a user
 
 ### GET the details of a specific instructor
 
@@ -781,7 +778,7 @@ returns all the details of an user
 
 returns the details of a specific instructor
 
-### POST a review on a specific instrcutor
+### POST a review on a specific instructor
 
 ```http
   POST /users/rateInstructor
@@ -809,7 +806,7 @@ returns the country of the user
 
 | Parameter | Type     | Description                       |
 | :-------- | :------- | :-------------------------------- |
-| `country`     | `string` |**Required**. the new country of the userr|
+| `country`     | `string` |**Required**. the new country of the user |
 
 ### GET the exchange rate of the currency
 
@@ -833,7 +830,7 @@ returns the exchange rate of the currency
 | `password`      | `string` | **Required**. the new password |
 
 
-### POST sends a passwrod reset link to the user's email
+### POST sends a password reset link to the user's email
 ```http
   POST /users/passwordResetEmail
 ```
@@ -895,7 +892,7 @@ returns all the reports by this user
 
 
 
-### PATCH adds the followup conversation to the system
+### PATCH adds the follow-up conversation to the system
 ```http
   PATCH /users/report
 ```
@@ -918,7 +915,7 @@ returns all the reports by this user
 
 returns a payment link
 
-### POST the registeration of the user to the course
+### POST the registration of the user to the course
 ```http
   POST /users/register
 ```
@@ -937,7 +934,7 @@ returns a payment link
 returns all the owed invoices
 
 
-### GET all unseed notifications
+### GET all unseen notifications
 ```http
   GET /users/notifications
 ```
@@ -945,7 +942,7 @@ returns all the owed invoices
 returns all the unseen notifications
 
 
-### POST the systems processes the new status of the refund
+### POST the system processes the new status of the refund
 ```http
   POST /users/refundStatus
 ```
@@ -955,7 +952,7 @@ returns all the unseen notifications
 | `newStatus`      | `string` | **Required**. the new Status of the refund |
 | `requestId`      | `string` | **Required**. Id of the report |
 
-### POST the systems processes the new status of the access request
+### POST the system processes the new status of the access request
 ```http
   POST /users/accessStatus
 ```
@@ -1013,8 +1010,8 @@ returns all the invoices for the user registered
 
 | Variable Name | Description |
 | :-------- | :------- |
-| `PORT`     | `Used to speify the port the backend runs on` |
-| `NODE_ENV`     | `Used to specify if the project is in devoplment mode or deployment mode` |
+| `PORT`     | `Used to specify the port the backend runs on` |
+| `NODE_ENV`     | `Used to specify if the project is in development mode or deployment mode` |
 | `MONGO_URI`     | `MongoDB URL` |
 | `EMAIL_USER`     | ` Email address used for sending emails` |
 | `EMAIL_PASSWORD`     | `API Key password used for sending emails` |
@@ -1030,12 +1027,12 @@ returns all the invoices for the user registered
 
 
 # Tests 👀
-We tested all of our APIs using POSTMAN, we wrote the URL we wanted to test and provided the required data ( in the body of the request or in the query). And then, we check the response status and the data in the response and compared it with the data we expected getting from the database.
+We tested all of our APIs using POSTMAN. We wrote the URL we wanted to test, and provided the required data ( in the body of the request or in the query). And then, we check the response status and the data in the response and compared it with the data we expected to get from the database.
 
 
 
 # How to Use? 🧑🏻‍💻
- While you are at the parent folder
+ While you are in the parent folder
 1) Run the backend using `cd backend && nodemon server.js` or `cd backend && npm start server`
 2) Run the frontend using `cd frontend && npm start` 
 
@@ -1043,11 +1040,11 @@ We tested all of our APIs using POSTMAN, we wrote the URL we wanted to test and 
 
 
 # Contribute 💡
-You can contribute to this project by securing all of its end points, and by adding more features such as 
+You can contribute to this project by securing all of its endpoints, and by adding more features such as 
 - Live Video lectures
 - Blog. To share information between the users
 - Log system to keep track of the transactions
-- Log system to keep track of all of the admins actions as they can do many dangerous actions
+- Log system to keep track of all of the admin's actions as they can do many dangerous actions
 
 # Credits
 - We got all of the pictures from https://www.pinterest.com/20randallcs/cool-anime-pictures/
@@ -1131,9 +1128,3 @@ You can contribute to this project by securing all of its end points, and by add
 
 ### Instructor Money
 ![Alt text](/samples/inst-money.png?raw=true "Optional Title")
-
-
-
-
-
-
