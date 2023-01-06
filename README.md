@@ -265,7 +265,7 @@ generateFlipCard = (front, back, icon)=>{
 
 
 
-## API Reference 🌐
+# API Reference 🌐
 
 #### Get all subjects
 
@@ -863,7 +863,7 @@ returns all the invoices for the user registered
   POST /logout
 ```
 
-## Environment Variables
+# Environment Variables
 
 | Variable Name | Description |
 | :-------- | :------- |
@@ -888,7 +888,7 @@ We tested all of our APIs using POSTMAN, we wrote the URL we wanted to test and 
 
 
 
- # How to Use? 🧑🏻‍💻
+# How to Use? 🧑🏻‍💻
  While you are at the parent folder
 1- Run the backend using `cd backend && nodemon server.js` or `cd backend && npm start server`
 2- Run the frontend using `cd frontend && npm start` 
@@ -903,14 +903,14 @@ You can contribute to this project by securing all of its end points, and by add
 - Log system to keep track of the transactions
 - Log system to keep track of all of the admins actions as they can do many dangerous actions
 
-## Credits
+# Credits
 - We got all of the pictures from https://www.pinterest.com/20randallcs/cool-anime-pictures/
 - The channels of the courses' videos 
     - https://www.youtube.com/@ImanGadzhi
     - https://www.youtube.com/@GeeksforGeeksVideos
     - https://www.youtube.com/@crashcourse
 
-## Authors 
+# Authors 
 - [@Ace1221](https://github.com/Ace1221)
 - [@shahd-elawad](https://github.com/shahd-elawad)
 - [@I-Diab](https://github.com/I-Diab)
@@ -919,6 +919,12 @@ You can contribute to this project by securing all of its end points, and by add
 
 ## License
 - Stripe's license https://www.apache.org/licenses/LICENSE-2.0
+
+# Colors
+- ![#D80621](https://placehold.co/15x15/f03c15/f03c15.png) `#D80621`
+- ![#46000a](https://placehold.co/15x15/f03c15/f03c15.png) `#46000a`
+- ![#000066](https://placehold.co/15x15/f03c15/f03c15.png) `#000066`
+
 
 
 
