@@ -233,7 +233,7 @@ https://www.freecodecamp.org/news/css-naming-conventions-that-will-save-you-hour
 
 # Code Examples
 ### Make a course public
-``` 
+```javascript 
 const makeCoursePublic = asyncHandler(async (req, res) => {
   const { courseId } = req.query;
   const courseInfo = await Course.findById(courseId);
@@ -263,8 +263,7 @@ const makeCoursePublic = asyncHandler(async (req, res) => {
 ```
 
 ### Create a course
-``` 
-
+```javascript 
 const createCourse = asyncHandler(async (req, res) => {
   const userId = res.locals.userId;
   const { course } = req.body;
@@ -311,8 +310,7 @@ const createCourse = asyncHandler(async (req, res) => {
 
 
 ### Request Refund
-``` 
-
+```javascript 
 const requestRefund = asyncHandler(async (req, res) => {
   const userId = res.locals.userId;
   const { courseId } = req.query;
@@ -335,7 +333,7 @@ const requestRefund = asyncHandler(async (req, res) => {
 
 
 ### Generate flip cards in the home land page
-``` 
+```javascript 
 generateFlipCard = (front, back, icon)=>{
 
     return (
@@ -355,7 +353,7 @@ generateFlipCard = (front, back, icon)=>{
     )
 }
 ```
-```
+```javascript 
 <div className='homeland__section section_2'>
     <div className='bg-filter'></div>
     <div className='header'>Explore Our Features</div>
@@ -377,7 +375,7 @@ generateFlipCard = (front, back, icon)=>{
 
 ```
 ### Styling the front of the flipping cards in the homeland page
-```
+```scss
   .flip-card-front {
     background-color: var(--cool-grey);
     border-radius:0% 100% 0% 100% / 85% 10% 90% 15% ;
@@ -402,14 +400,14 @@ generateFlipCard = (front, back, icon)=>{
   }
 ```
 ### Mixins Examples
-```
+```scss
 @mixin flex-h-center-spaceB {
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
 ```
-```
+```scss
 @mixin flex-center-all{
     display: flex;
     align-items: center;
