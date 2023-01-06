@@ -257,10 +257,10 @@ generateFlipCard = (front, back, icon)=>{
 
 
 # Installation
-    1) ```clone``` the repository from github.
-    2) Go inside the parent folder using ```cd KIMOS```
-    3) Go inside the backend folder ```cd backend``` and install all of the required packages (libraries) using ```npm i```
-    4) Go inside the frontend/reactproj folder ```cd frontend/reactproj``` and install all of the required packages (libraries) using ```npm i```
+    1) **clone** the repository from github.
+    2) Go inside the parent folder using **cd KIMOS**
+    3) Go inside the backend folder **cd backend** and install all of the required packages (libraries) using **npm i**
+    4) Go inside the frontend/reactproj folder **cd frontend/reactproj** and install all of the required packages (libraries) using **npm i**
     5) Create the .env file in the parent folder and add all of the mentioned env variables below. 
 
 
