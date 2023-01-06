@@ -98,40 +98,40 @@ https://www.freecodecamp.org/news/css-naming-conventions-that-will-save-you-hour
 
 1. As an Instructor you can :
 
-    - select your country so that prices can be shown in you currency.
-    - filter the courses based on a subject and/or rating or search for a course based on course title or subject or Instructor.
-    - view :
+    - Select your country so that prices can be shown in you currency.
+    - Filter the courses based on a subject and/or rating or search for a course based on course title or subject or Instructor.
+    - View :
         - all the titles of the courses available including the total hours of the course and course rating.
-        - A preview video of the course and the course outline before registering for it.
-        - The most viewed/ most popular courses.
-        - And accept the contract which includes all the rights to the posted videos
+        - a preview video of the course and the course outline before registering for it.
+        - the most viewed/ most popular courses.
+        - and accept the contract which includes all the rights to the posted videos
             and materials as well as the % taken by the company on each video per registered trainee.
-        - All the titles, ratings and reviews of the courses given by him/her and 
+        - all the titles, ratings and reviews of the courses given by him/her and 
             filter them based on a subject or price or you can also 
             search for a course given by you based on course title or subject or Instructor.
         - his/her rating and reviews as an Instructor.
         - the amount of money owed per month.
         - the price of each course and filter the courses based on price.
 
-    - create a new course and fill in all its details inclding title, 
+    - Create a new course and fill in all its details including title, 
      subtitles, price and a description of the course.
-    - upload a video link from YouTube under each subtitle and 
+    - Upload a video link from YouTube under each subtitle and 
     enter a short description of the video or a vido link as a preview of the course.
-    - create a multiple choice exam with 4 choices per question and set the correct answer for each question.
-    - edit his/her mini biography or email.
-    - define a promotion for the course and for how long.
-    - choose a course from the results and view its details including course subtitles, excercises ,
+    - Create a multiple choice exam with 4 choices per question and set the correct answer for each question.
+    - Edit his/her mini biography or email.
+    - Define a promotion for the course and for how long.
+    - Choose a course from the results and view its details including course subtitles, excercises ,
      total hours of each subtitle, total hours of the course and price according 
      to the country selected.
-    - view and accept the website/ company refund/ payment policy while signing up.
-    - log in using a username and password.
-    - log out.
+    - View and accept the website/ company refund/ payment policy while signing up.
+    - Log in using a username and password.
+    - Log out.
 
 2. As an Individual Trainee you can :
 
-    - select your country so that prices can be shown in you currency.
-    - filter the courses based on a subject and/or rating or search for a course based on course title or subject or Instructor.
-    - view :
+    - Select your country so that prices can be shown in you currency.
+    - Filter the courses based on a subject and/or rating or search for a course based on course title or subject or Instructor.
+    - View :
         - all the titles of the courses available including the total hours of the course and course rating.
         - a preview video of the course and the course outline before registering for it.
         - the most viewed/ most popular courses.
@@ -144,32 +144,32 @@ https://www.freecodecamp.org/news/css-naming-conventions-that-will-save-you-hour
         - all previously repoted problems and their statuses.
         - the amount available in their wallet from refunded courses.
 
-    - rate an Instructor and/or a course.
-    - solve a multiple choice exercise and submit his/her answers.
-    - watch a video from a course he/she is registered for.
-    - open all the items inside a course he/she is registered for including videos and excercises.
-    - choose a course from the results and view its details including course subtitles, excercises ,
+    - Rate an Instructor and/or a course.
+    - Solve a multiple choice exercise and submit his/her answers.
+    - Watch a video from a course he/she is registered for.
+    - Open all the items inside a course he/she is registered for including videos and excercises.
+    - Choose a course from the results and view its details including course subtitles, excercises ,
      total hours of each subtitle, total hours of the course and price according 
      to the country selected.
-    - enter their credit card details to pay for a course they want to register for and pay for a course.
-    - change his/her password or if you forgot your password you can receive an email to change a forgotten password.
-    - see his/her progress in the course as a percentage of how much of the course has been completed so far.
-    - log in using a username and password.
-    - log out.
-    - download: 
+    - Enter their credit card details to pay for a course they want to register for and pay for a course.
+    - Change his/her password or if you forgot your password you can receive an email to change a forgotten password.
+    - See his/her progress in the course as a percentage of how much of the course has been completed so far.
+    - Log in using a username and password.
+    - Log out.
+    - Download: 
         - the certificate as a PDF from the website.
         - the notes as a PDF.
-    - write notes with markdown and drag it anywhere on the page while watching the video.
-    - request a refund only if less than 50% of the course has been attended.
-    - report a problem with a course. The problem can be "technical", "financial" or "other".
-    - follow up on an unresolved problem.
+    - Write notes with markdown and drag it anywhere on the page while watching the video.
+    - Request a refund only if less than 50% of the course has been attended.
+    - Report a problem with a course. The problem can be "technical", "financial" or "other".
+    - Follow up on an unresolved problem.
 
-3. As a Corporate tainee you can :
+3. As a Corporate Trainee you can :
 
-    - select your country so that prices can be shown in you currency.
-    - view all the titles of the courses available including the total hours of the course and course rating.
-    - filter the courses based on a subject and/or rating or search for a course based on course title or subject or Instructor.
-    - view :
+    - Select your country so that prices can be shown in you currency.
+    - View all the titles of the courses available including the total hours of the course and course rating.
+    - Filter the courses based on a subject and/or rating or search for a course based on course title or subject or Instructor.
+    - View :
         - a preview video of the course and the course outline before registering for it.
         - the most viewed/ most popular courses.
         - his/her grade from the exercise.
@@ -177,45 +177,45 @@ https://www.freecodecamp.org/news/css-naming-conventions-that-will-save-you-hour
         - a list of all the courses he/she is enrolled in on their profile.
         - all previously repoted problems and their statuses.
 
-    - request access to a specific course they do not have access to.
-    - rate an Instructor and/or a course.
-    - solve a multiple choice exercise and submit his/her answers.
-    - watch a video from a course he/she is registered for.
-    - open all the items inside a course he/she is registered for including videos and excercises.
-    - see his/her progress in the course as a percentage of how much of the course has been completed so far
-    - change his/her password or if you forgot your password you can receive an email to change a forgotten password.
-    - write notes with markdown and drag it anywhere on the page while watching the video.
-    - download: 
+    - Request access to a specific course they do not have access to.
+    - Rate an Instructor and/or a course.
+    - Solve a multiple choice exercise and submit his/her answers.
+    - Watch a video from a course he/she is registered for.
+    - Open all the items inside a course he/she is registered for including videos and excercises.
+    - See his/her progress in the course as a percentage of how much of the course has been completed so far
+    - Change his/her password or if you forgot your password you can receive an email to change a forgotten password.
+    - Write notes with markdown and drag it anywhere on the page while watching the video.
+    - Download: 
         - the certificate as a PDF.
         - the notes as a PDF.
-    - report a problem with a course. The problem can be "technical", "financial" or "other".
-    - follow up on an unresolved problem.
-    - request access to a specific course you don't have access to.
+    - Report a problem with a course. The problem can be "technical", "financial" or "other".
+    - Follow up on an unresolved problem.
+    - Request access to a specific course you don't have access to.
 
 4. As a Guest you can :
 
-    - sign up for an account as an Individual Trainee using a username, email, password, first name, last name.
-    - select your country so that prices can be shown in you currency.
-    - filter the courses based on a subject and/or rating or search for a course based on course title or subject or Instructor.
-    - view :
+    - Sign up for an account as an Individual Trainee using a username, email, password, first name, last name.
+    - Select your country so that prices can be shown in you currency.
+    - Filter the courses based on a subject and/or rating or search for a course based on course title or subject or Instructor.
+    - View :
         - all the titles of the courses available including the total hours of the course and course rating.
         - a preview video of the course and the course outline before registering for it.
         - the most viewed/ most popular courses.
         - the price of each course and filter the courses based on price.
         - and accept the website/ company refund/ payment policy while signing up
-    - choose a course from the results and view its details including course subtitles, excercises ,
+    - Choose a course from the results and view its details including course subtitles, excercises ,
     total hours of each subtitle, total hours of the course and price according 
     to the country selected.
 
 
 5. As an Admin you can :
 
-    - add another Administrator with a set username and password.
-    - add Instructors or Corporate Trainee and create their usernames and passwords.
-    - view reported problems, see if they are already seen or not and mark them as "resolved" or "pending".
-    - refund an amount to a trainee to their wallet.
-    - view course requests from Corporate Trainees and grant them access to specific courses if possible.
-    - set a promotion for specific courses, several courses or all courses.
+    - Add another Administrator with a set username and password.
+    - Add Instructors or Corporate Trainee and create their usernames and passwords.
+    - View reported problems, see if they are already seen or not and mark them as "resolved" or "pending".
+    - Refund an amount to a trainee to their wallet.
+    - View course requests from Corporate Trainees and grant them access to specific courses if possible.
+    - Set a promotion for specific courses, several courses or all courses.
 
 # Code Examples
 ### Make a course public
