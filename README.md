@@ -255,11 +255,11 @@ generateFlipCard = (front, back, icon)=>{
 
 
 # Installation
-1- ```clone``` the repository from github.
-2- Go inside the parent folder using `cd KIMOS`
-3- Go inside the backend folder `cd backend` and install all of the required packages (libraries) using `npm i`
-4- Go inside the frontend/reactproj folder `cd frontend/reactproj` and install all of the required packages (libraries) using `npm i`
-5- Create the .env file in the parent folder and add all of the mentioned env variables below. 
+    - ```clone``` the repository from github.
+    - Go inside the parent folder using `cd KIMOS`
+    - Go inside the backend folder `cd backend` and install all of the required packages (libraries) using `npm i`
+    - Go inside the frontend/reactproj folder `cd frontend/reactproj` and install all of the required packages (libraries) using `npm i`
+    - Create the .env file in the parent folder and add all of the mentioned env variables below. 
 
 
 
@@ -901,6 +901,22 @@ You can contribute to this project by securing all of its end points, and by add
 - Log system to keep track of the transactions
 - Log system to keep track of all of the admins actions as they can do many dangerous actions
 
+## Credits
+- We got all of the pictures from https://www.pinterest.com/20randallcs/cool-anime-pictures/
+- The channels of the courses' videos 
+    - https://www.youtube.com/@ImanGadzhi
+    - https://www.youtube.com/@GeeksforGeeksVideos
+    - https://www.youtube.com/@crashcourse
+
+## Authors 
+- [@Ace1221](https://github.com/Ace1221)
+- [@shahd-elawad](https://github.com/shahd-elawad)
+- [@I-Diab](https://github.com/I-Diab)
+- [@youssefkhadragy](https://github.com/youssefkhadragy)
+- [@mokhallid80](https://github.com/mokhallid80)
+
+## License
+- Stripe's license https://www.apache.org/licenses/LICENSE-2.0
 
 
 
