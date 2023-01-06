@@ -69,6 +69,8 @@ https://www.freecodecamp.org/news/css-naming-conventions-that-will-save-you-hour
     - Parse HTTP request cookies
 - **stripe** 
     - To Secure transactions
+- **Nodemon**
+    - To restart the server by its own on changes instead of re-running it manually.
 
 ## Frontend
 
@@ -107,7 +109,7 @@ https://www.freecodecamp.org/news/css-naming-conventions-that-will-save-you-hour
 
 
 
-## Code Examples
+# Code Examples
 ### Make a course public
 ``` 
 const makeCoursePublic = asyncHandler(async (req, res) => {
@@ -255,11 +257,11 @@ generateFlipCard = (front, back, icon)=>{
 
 
 # Installation
-    - ```clone``` the repository from github.
-    - Go inside the parent folder using ```cd KIMOS```
-    - Go inside the backend folder ```cd backend``` and install all of the required packages (libraries) using ```npm i```
-    - Go inside the frontend/reactproj folder ```cd frontend/reactproj``` and install all of the required packages (libraries) using ```npm i```
-    - Create the .env file in the parent folder and add all of the mentioned env variables below. 
+    1) ```clone``` the repository from github.
+    2) Go inside the parent folder using ```cd KIMOS```
+    3) Go inside the backend folder ```cd backend``` and install all of the required packages (libraries) using ```npm i```
+    4) Go inside the frontend/reactproj folder ```cd frontend/reactproj``` and install all of the required packages (libraries) using ```npm i```
+    5) Create the .env file in the parent folder and add all of the mentioned env variables below. 
 
 
 
