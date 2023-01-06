@@ -254,8 +254,46 @@ generateFlipCard = (front, back, icon)=>{
 </div>
 
 ```
+### Styling the front of the flipping cards in the homeland page
+```
+  .flip-card-front {
+    background-color: var(--cool-grey);
+    border-radius:0% 100% 0% 100% / 85% 10% 90% 15% ;
+    color: white;
+    font-weight: lighter !important;
+    background: linear-gradient(45deg, $primary-color-linear, $primary-color);
+    background-color: var(--cool-grey);
+    padding:20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
 
+    &__icons{
+        &__icon{
+            color: white !important;
+            font-size: 40px !important;
+            font-weight: bolder !important;
+        }
+    }
 
+  }
+```
+### Mixins Examples
+```
+@mixin flex-h-center-spaceB {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+```
+```
+@mixin flex-center-all{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+```
 # Installation
     1) **clone** the repository from github.
     2) Go inside the parent folder using **cd KIMOS**
