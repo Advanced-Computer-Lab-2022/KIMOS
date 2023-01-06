@@ -8,6 +8,22 @@ instructors.
 
 
 
+# Badges
+![ Node JS ](https://img.shields.io/badge/Node.js-43853D?style=for-the-badge&logo=node.js&logoColor=white)
+![ JS ](https://img.shields.io/badge/Javascript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=white)
+![ React ](https://img.shields.io/badge/React-61DAFB?style=for-the-badge&logo=react&logoColor=white)
+![ Redux ](https://img.shields.io/badge/Redux-764ABC?style=for-the-badge&logo=redux&logoColor=white)
+![ SASS ](https://img.shields.io/badge/Sass-CC6699?style=for-the-badge&logo=sass&logoColor=white)
+![ MongoDB ](https://img.shields.io/badge/MongoDB-47A248?style=for-the-badge&logo=MongoDB&logoColor=white)
+![ GIT ](https://img.shields.io/badge/Git-F05032?style=for-the-badge&logo=git&logoColor=white)
+![ GITHUB ](https://img.shields.io/badge/Github-181717?style=for-the-badge&logo=github&logoColor=white)
+![ MUI5 ](https://img.shields.io/badge/Mui-007FFF?style=for-the-badge&logo=mui&logoColor=white)
+![ Postman ](https://img.shields.io/badge/Postman-FF6C37?style=for-the-badge&logo=postman&logoColor=white)
+
+
+
+
+
 
 
 # Motivation 🔥
@@ -402,10 +418,10 @@ generateFlipCard = (front, back, icon)=>{
 ```
 
 # Installation
-1) __clone__ the repository from github.
-2) Go inside the parent folder using **cd KIMOS**
-3) Go inside the backend folder **cd backend** and install all of the required packages (libraries) using **npm i**
-4) Go inside the frontend/reactproj folder **cd frontend/reactproj** and install all of the required packages (libraries) using **npm i**
+1) ```clone``` the repository from github.
+2) Go inside the parent folder using ```cd KIMOS```
+3) Go inside the backend folder ```cd backend``` and install all of the required packages (libraries) using ```npm i```
+4) Go inside the frontend/reactproj folder ```cd frontend/reactproj``` and install all of the required packages (libraries) using ```npm i```
 5) Create the .env file in the parent folder and add all of the mentioned env variables below. 
 
 # API Reference 🌐
