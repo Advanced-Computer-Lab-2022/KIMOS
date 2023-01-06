@@ -95,19 +95,123 @@ https://www.freecodecamp.org/news/css-naming-conventions-that-will-save-you-hour
 
 
 # Features ✨ 
-1) Individual Trainee/ Corporate Trainee can see all his/her grades for exercises (or exams) he/she did previously.
-2) Individual Trainee/ Corporate Trainee can retake an exercise (or exam) if he/she failed it **before** viewing the
-    answers to the exam/ exercise.
-3) Instructor can see the total number of students enrolled in his/her course.
-4) Individual Trainee/ Corporate Trainee can edit or delete his/her review of an instrcutor or a course.
-5) Instructor can save his/her progress in creating a course WITHOUT publishing the
-    course.
-6) Instructor can publish his/her course. A published course CANNOT be edited nor
-    deleted.
-7) Instructor can edit or delete a non published course.
-8) Instructor can close a published course.
+
+1. As an Instructor you can :
+
+- select my country.
+- view all the titles of the courses available including the total hours of the course and course rating.
+- filter the courses based on a subject and/or rating or search for a course based on course title or subject or Instructor.
+- view a preview video of the course and the course outline before registering for it.
+- view the most viewed/ most popular courses.
+- view and accept the contract which includes all the rights to the posted videos
+ and materials as well as the % taken by the company on each video per registered trainee.
+- view all the titles, ratings and reviews of the courses given by him/her.
+- filter the courses given by him/her based on a subject or price or 
+search for a course given by him/her based on course title or subject or Instructor.
+- create a new course and fill in all its details inclding title, 
+subtitles, price and short summary about the entire course.
+- upload a video link from YouTube under each subtitle and 
+enter a short description of the video or a vido link as a preview of the course.
+- create a multiple choice exam with 4 choices per question and set the correct answer for each question.
+- view his/her rating and reviews as an Instructor.
+- edit his/her mini biography or email.
+- define a promotion for the course and for how long.
+- view the amount of money owed per month.
+- view the price of each course and filter the courses based on price.
+- choose a course from the results and view its details including course subtitles, excercises ,
+ total hours of each subtitle, total hours of the course and price according 
+to the country selected.
+- view and accept the website/ company refund/ payment policy while signing up.
+- log in using a username and password.
+- log out.
+
+2. As an Individual Trainee you can :
+
+- select my country.
+- view all the titles of the courses available including the total hours of the course and course rating.
+- filter the courses based on a subject and/or rating or search for a course based on course title or subject or Instructor.
+- view a preview video of the course and the course outline before registering for it.
+- view the most viewed/ most popular courses.
+- rate an Instructor and/or a course.
+- solve a multiple choice exercise by choosing the correct answer.
+- submit the answers to the exercise after completing it.
+- view his/her grade from the exercise.
+- view the questions with the correct solution to view the incorrect answers.
+- watch a video from a course he/she is registered for.
+- open all the items inside a course he/she is registered for including videos and excercises.
+- view the price of each course and filter the courses based on price.
+- choose a course from the results and view its details including course subtitles, excercises ,
+ total hours of each subtitle, total hours of the course and price according 
+ to the country selected.
+- view and accept the website/ company refund/ payment policy while signing up.
+- enter their credit card details to pay for a course they want to register for and pay for a course.
+- view the amount available in their wallet from refunded courses.
+- change his/her password.
+- receive an email to change a forgotten password.
+- see his/her progress in the course as a percentage of how much of the course has been completed so far.
+- log in using a username and password.
+- log out.
+- download the certificate as a PDF from the website.
+- write notes while watching the video.
+- download the notes as a PDF.
+- request a refund only if less than 50% of the course has been attended.
+- see a list of all the courses he/she is enrolled in on their profile.
+- report a problem with a course. The problem can be "technical", "financial" or "other".
+- see all previously repoted problems and their statuses.
+- follow up on an unresolved problem.
+- view the amount available in their wallet from refunded courses.
+
+3. As a Corporate tainee you can :
+
+- select my country.
+- view all the titles of the courses available including the total hours of the course and course rating.
+- filter the courses based on a subject and/or rating or search for a course based on course title or subject or Instructor.
+- view a preview video of the course and the course outline before registering for it.
+- view the most viewed/ most popular courses.
+- request access to a specific course they do not have access to.
+- rate an Instructor and/or a course.
+- solve a multiple choice exercise by choosing the correct answer.
+- submit the answers to the exercise after completing it.
+- view his/her grade from the exercise.
+- view the questions with the correct solution to view the incorrect answers.
+- watch a video from a course he/she is registered for.
+- open all the items inside a course he/she is registered for including videos and excercises.
+- see his/her progress in the course as a percentage of how much of the course has been completed so far
+- change his/her password.
+- receive an email to change a forgotten password.
+- download the certificate as a PDF from the website.
+- write notes while watching the video.
+- download the notes as a PDF.
+- see a list of all the courses he/she is enrolled in on their profile.
+- report a problem with a course. The problem can be "technical", "financial" or "other".
+- see all previously repoted problems and their statuses.
+- follow up on an unresolved problem.
+- request access to a specific course they do not have access to.
+
+4. As a Guest you can :
+
+- sign up for an account as an Individual Trainee using a username, email, password, first name, last name.
+- select my country.
+- view all the titles of the courses available including the total hours of the course and course rating.
+- filter the courses based on a subject and/or rating or search for a course based on course title or subject or Instructor.
+- view a preview video of the course and the course outline before registering for it.
+- view the most viewed/ most popular courses.
+- view the price of each course and filter the courses based on price.
+- choose a course from the results and view its details including course subtitles, excercises ,
+ total hours of each subtitle, total hours of the course and price according 
+to the country selected.
+- view and accept the website/ company refund/ payment policy while signing up.
 
 
+5. As an Admin you can :
+
+- add another Administrator with a set username and password.
+- add Instructors or Corporate Trainee and create their usernames and passwords.
+- view reported problems - should automaticalled be marked as "unseen".
+- mark reported problems as "resolved" or "pending".
+- refund an amount to a trainee to their wallet.
+- view course requests from Corporate Trainees and grant them access to specific courses if possible.
+- set a promotion (% sale) for specific courses.
 
 # Code Examples
 ### Make a course public
