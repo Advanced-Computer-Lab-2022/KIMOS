@@ -927,7 +927,7 @@ You can contribute to this project by securing all of its end points, and by add
 - ![#000066](https://placehold.co/60x60/000066/000066.png) `#000066`
 - ![#FFFFFF](https://placehold.co/60x60/FFFFFF/FFFFFF.png) `#FFFFFF`
 
-## Used in dark theme
+### Used in dark theme
 - ![#000000](https://placehold.co/60x60/000000/000000.png) `#000000`
 - ![#0f0f0f](https://placehold.co/60x60/0f0f0f/0f0f0f.png) `#0f0f0f`
 - ![#990000](https://placehold.co/60x60/990000/990000.png) `#990000`
