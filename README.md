@@ -921,9 +921,9 @@ You can contribute to this project by securing all of its end points, and by add
 - Stripe's license https://www.apache.org/licenses/LICENSE-2.0
 
 # Colors
-- ![#D80621](https://placehold.co/15x15/f03c15/f03c15.png) `#D80621`
-- ![#46000a](https://placehold.co/15x15/f03c15/f03c15.png) `#46000a`
-- ![#000066](https://placehold.co/15x15/f03c15/f03c15.png) `#000066`
+- ![#D80621](https://placehold.co/60x60/D80621/D80621.png) `#D80621`
+- ![#46000a](https://placehold.co/60x60/46000a/46000a.png) `#46000a`
+- ![#000066](https://placehold.co/60x60/000066/000066.png) `#000066`
 
 
 
