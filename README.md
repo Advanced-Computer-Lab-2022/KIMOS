@@ -12,7 +12,7 @@ instructors.
 
 
 
-# Why did we develop this website 🔥
+# Motivation 🔥
 We built this website for **Canadian Chamber Of Commerce**. As we want to be part of their 
 educational project because we believe it will be very beneficial for teens all around Egypt. As they got their own trustworthy instructors unlike most of the other educational online systems.
 Also, we are competing with more than 40+ team to be the chosen project from the company as the chosen project will be awarded.
@@ -37,28 +37,7 @@ Instructor rating was reflected in the frontend.
 
 - An empty container appears when the user doesn't have any course, instead, we should have wrote something like " No courses regusterd yet".
 
-
-# How to Use? 🧑🏻‍💻
-
-1-```clone``` the repository from github.
-2- install all of the required packages (libraries) in the frontend folder
-and in the backend folder using `npm install`.
-Also, you must make sure that the .env file exists in the project folder, so the app can access all of the environmental variables.
-then, after installing everything, you have to start the backend server using `npm start server` inside the backend folder, and `npm start` in the frontend folder.
-Now, it will starts the website on localhost:3000
-
-
-# Contribute 💡
-You can contribute to this project by securing all of its end points, and by adding more features such as 
-- Live Video lectures
-- Blog. To share information between the users
-- Log system to keep track of the transactions
-- Log system to keep track of all of the admins actions as they can do many dangerous actions
-
-
-
-# Tests 👀
-We tested all of our APIs using POSTMAN, we wrote the URL we wanted to test and provided the required data ( in the body of the request or in the query). And then, we check the response status and the data in the response and compared it with the data we expected getting from the database.
+- Guests can't search for courses as we added an extra SIGNED IN verification in the backend function.
 
 
 # Code Style 🖥️ 
@@ -67,18 +46,6 @@ is formatted autotmatically.
 However, in naming the classes in the scss files (not normal css) we followed the **BEM** convention, which works as following 
 https://www.freecodecamp.org/news/css-naming-conventions-that-will-save-you-hours-of-debugging-35cea737d849/ 
 
-# Features ✨ 
-1) Individual Trainee/ Corporate Trainee can see all his/her grades for exercises (or exams) he/she did previously.
-2) Individual Trainee/ Corporate Trainee can retake an exercise (or exam) if he/she failed it **before** viewing the
-    answers to the exam/ exercise.
-3) Instructor can see the total number of students enrolled in his/her course.
-4) Individual Trainee/ Corporate Trainee can edit or delete his/her review of an instrcutor or a course.
-5) Instructor can save his/her progress in creating a course WITHOUT publishing the
-    course.
-6) Instructor can publish his/her course. A published course CANNOT be edited nor
-    deleted.
-7) Instructor can edit or delete a non published course.
-8) Instructor can close a published course.
 
 
 # Tech/Framework used 👜
@@ -123,6 +90,22 @@ https://www.freecodecamp.org/news/css-naming-conventions-that-will-save-you-hour
 - **JSpdf** 2.5.1
     - library to create PDF files using HTML content.
     
+
+
+# Features ✨ 
+1) Individual Trainee/ Corporate Trainee can see all his/her grades for exercises (or exams) he/she did previously.
+2) Individual Trainee/ Corporate Trainee can retake an exercise (or exam) if he/she failed it **before** viewing the
+    answers to the exam/ exercise.
+3) Instructor can see the total number of students enrolled in his/her course.
+4) Individual Trainee/ Corporate Trainee can edit or delete his/her review of an instrcutor or a course.
+5) Instructor can save his/her progress in creating a course WITHOUT publishing the
+    course.
+6) Instructor can publish his/her course. A published course CANNOT be edited nor
+    deleted.
+7) Instructor can edit or delete a non published course.
+8) Instructor can close a published course.
+
+
 
 ## Code Examples
 ### Make a course public
@@ -270,6 +253,13 @@ generateFlipCard = (front, back, icon)=>{
 
 ```
 
+
+# Installation
+1- ```clone``` the repository from github.
+2- Go inside the parent folder using `cd KIMOS`
+3- Go inside the backend folder `cd backend` and install all of the required packages (libraries) using `npm i`
+4- Go inside the frontend/reactproj folder `cd frontend/reactproj` and install all of the required packages (libraries) using `npm i`
+5- Create the .env file in the parent folder and add all of the mentioned env variables below. 
 
 
 
@@ -889,6 +879,27 @@ returns all the invoices for the user registered
 | `STRIPE_PRIVATE_KEY`     | `STRIPE API private key` |
 | `PAYMENT_SECRET`     | `key used to verify payments ` |
 | `YOUTUBE_API_KEY`     | `Youtube api key used to auto calculate video duration` |
+
+
+# Tests 👀
+We tested all of our APIs using POSTMAN, we wrote the URL we wanted to test and provided the required data ( in the body of the request or in the query). And then, we check the response status and the data in the response and compared it with the data we expected getting from the database.
+
+
+
+ # How to Use? 🧑🏻‍💻
+ While you are at the parent folder
+1- Run the backend using `cd backend && nodemon server.js` or `cd backend && npm start server`
+2- Run the frontend using `cd frontend && npm start` 
+
+
+
+
+# Contribute 💡
+You can contribute to this project by securing all of its end points, and by adding more features such as 
+- Live Video lectures
+- Blog. To share information between the users
+- Log system to keep track of the transactions
+- Log system to keep track of all of the admins actions as they can do many dangerous actions
 
 
 
