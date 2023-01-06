@@ -1051,6 +1051,16 @@ You can contribute to this project by securing all of its end points, and by add
 
 # Credits
 - We got all of the pictures from https://www.pinterest.com/20randallcs/cool-anime-pictures/
+- Logo and color palette https://cancham.org.eg/en/
+- BEM coding style https://www.freecodecamp.org/news/css-naming-conventions-that-will-save-you-hours-of-debugging-35cea737d849/ 
+- React docs https://reactjs.org/docs/getting-started.html
+- Redux docs https://redux.js.org/introduction/getting-started
+- SASS docs https://sass-lang.com/documentation/
+- Express docs https://expressjs.com/en/guide/routing.html
+- How to write mixins https://sass-lang.com/documentation/at-rules/mixin
+- MVC structure https://www.geeksforgeeks.org/model-view-controllermvc-architecture-for-node-applications/
+- How to make my website looks professional https://www.outbrain.com/blog/professional-looking-website/
+- Axios and API requests freecodecamp.org/news/axios-react-how-to-make-get-post-and-delete-api-requests/
 - The channels of the courses' videos 
     - https://www.youtube.com/@ImanGadzhi
     - https://www.youtube.com/@GeeksforGeeksVideos
